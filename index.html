@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="m-5">
+            <div class="row mb-3">
+                <div class="col">
+                  <input type="text" id="firstNumber" class="form-control" placeholder="First Number" aria-label="First Number">
+                </div>
+                <div class="col">
+                  <input type="text" id="secondNumber" class="form-control" placeholder="Second Number" aria-label="Second Number">
+                </div>
+                <div class="col">
+                    <input type="text" id="resultNumber" class="form-control" placeholder="คำตอบ" aria-label="คำตอบ">
+                  </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col">
+                  </div>
+                <div class="col">
+                  <input type="button" class="form-control btn btn-success" value="ตรวจคำตอบ" onclick="validatePlusResult()">
+                </div>
+                <div class="col">
+                </div>
+              </div>
+        </div>
+        <div class="m-5">
+            <div class="" id="resultList">
+              </div>
+        </div>
+    </body>
+</html>
+<script type="text/javascript" src="bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="jquery-3.7.1.min.js"></script>
+<script>
+    var numRows = 1;
+
+    function validatePlusResult(){
+        let firstNumber = +$('#firstNumber').val();
+        let secondNumber = +$('#secondNumber').val();
+        let resultNumber = +$('#resultNumber').val();
+
+        let isCorrect = (firstNumber + secondNumber) == resultNumber;
+        if(isCorrect){
+            addResultToItemList({"symbol": "+", "firstNumber":firstNumber , "secondNumber":secondNumber, "resultNumber":resultNumber})
+        }
+    }
+
+    function addResultToItemList(item){
+        elementItem = `<div class="row mb-3" id="resultList">
+            <p>${numRows}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
+                </div>`
+        $('#resultList').append(elementItem)
+
+        $('#firstNumber').val('');
+        $('#secondNumber').val('');
+        $('#resultNumber').val('');
+
+        numRows++;
+    }
+</script>
