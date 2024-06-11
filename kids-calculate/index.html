@@ -2,62 +2,139 @@
 <html>
     <head>
         <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="sweetalert2/sweetalert2.min.css">
     </head>
     <body>
         <div class="m-5">
             <div class="row mb-3">
-                <div class="col">
-                  <input type="text" id="firstNumber" class="form-control" placeholder="First Number" aria-label="First Number">
+                <div class="col-3">
                 </div>
-                <div class="col">
-                  <input type="text" id="secondNumber" class="form-control" placeholder="Second Number" aria-label="Second Number">
-                </div>
-                <div class="col">
-                    <input type="text" id="resultNumber" class="form-control" placeholder="คำตอบ" aria-label="คำตอบ">
+                <div class="col shadow list-group">
+                  <div class="row m-3">
+                    <div class="col">
+                      <input type="number" id="firstNumber" class="form-control" placeholder="First Number" aria-label="First Number">
+                    </div>
+                    <div class="col">
+                      <input type="number" id="secondNumber" class="form-control" placeholder="Second Number" aria-label="Second Number">
+                    </div>
+                    <div class="col">
+                        <input type="number" id="resultNumber" class="form-control" placeholder="คำตอบ" aria-label="คำตอบ">
+                      </div>
                   </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col">
+                  <div class="row mb-3">
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                      <input type="button" class="form-control btn btn-success" value="ตรวจคำตอบ" onclick="validatePlusResult()">
+                    </div>
+                    <div class="col">
+                    </div>
                   </div>
-                <div class="col">
-                  <input type="button" class="form-control btn btn-success" value="ตรวจคำตอบ" onclick="validatePlusResult()">
                 </div>
-                <div class="col">
-                </div>
+                  <div class="col-3">
+                  </div>
               </div>
         </div>
         <div class="m-5">
-            <div class="" id="resultList">
+          <div class="row mb-3">
+            <div class="col-3">
+            </div>
+            <div class="col shadow list-group" id="contentResult" style="display: none;">
+              <div class="m-3" id="resultList">
               </div>
+            </div>
+            <div class="col shadow list-group" id="contentHistory" style="display: none;">
+              <div class="m-3" id="historyList">
+              </div>
+            </div>
+            <div class="col-3">
+            </div>
+          </div>
         </div>
     </body>
 </html>
 <script type="text/javascript" src="bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="sweetalert2/sweetalert2.all.min.js"></script>
 <script>
     var numRows = 1;
+    var numRowsHistory = 1;
 
     function validatePlusResult(){
+      let textColor = "green"
+      let textMessage = "ถูกต้อง"
+
         let firstNumber = +$('#firstNumber').val();
         let secondNumber = +$('#secondNumber').val();
         let resultNumber = +$('#resultNumber').val();
 
+        if(firstNumber == 0 && secondNumber == 0){
+          Swal.fire({
+            title: 'แจ้งเตือน!',
+            text: 'กรุณาใส่ตัวเลขมากกว่า 0',
+            icon: 'info',
+            confirmButtonText: 'ตกลง'
+          })
+          return
+        }
+
         let isCorrect = (firstNumber + secondNumber) == resultNumber;
         if(isCorrect){
             addResultToItemList({"symbol": "+", "firstNumber":firstNumber , "secondNumber":secondNumber, "resultNumber":resultNumber})
+
+            Swal.fire({
+              title: 'ถูกต้อง!',
+              icon: 'success',
+              confirmButtonText: 'ตกลง'
+            })
+
+            $('#contentResult').show();
+
+            addSuggestValue(secondNumber, resultNumber);
         }
+        else{
+          textColor = "red"
+          Swal.fire({
+            title: 'ยังไม่ถูก!',
+            text: 'ลองดูอีกครั้งนะ',
+            icon: 'error',
+            confirmButtonText: 'ตกลง'
+          })
+        }
+
+        addResultToHistoryList({"symbol": "+", "firstNumber":firstNumber , "secondNumber":secondNumber, "resultNumber":resultNumber, "color": textColor})
     }
 
     function addResultToItemList(item){
-        elementItem = `<div class="row mb-3" id="resultList">
+        elementItem = `<div class="row mb-3">
             <p>${numRows}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
                 </div>`
         $('#resultList').append(elementItem)
+      
+        clearValue()
 
+        numRows++;
+    }
+
+    function addResultToHistoryList(item){
+        elementItem = `<div class="row mb-3">
+            <p style="color: ${item.color}">${numRowsHistory}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
+                </div>`
+        $('#historyList').append(elementItem)
+
+        if(item.color == "green"){
+          numRowsHistory++;
+        }
+    }
+
+    function clearValue(){
         $('#firstNumber').val('');
         $('#secondNumber').val('');
         $('#resultNumber').val('');
+    }
 
-        numRows++;
+    function addSuggestValue(firstNumberm, secondNumber){
+        $('#firstNumber').val(firstNumberm);
+        $('#secondNumber').val(secondNumber);
     }
 </script>
