@@ -83,10 +83,11 @@
             addResultToItemList({"symbol": "+", "firstNumber":firstNumber , "secondNumber":secondNumber, "resultNumber":resultNumber})
 
             Swal.fire({
-              title: 'ถูกต้อง!',
-              icon: 'success',
-              confirmButtonText: 'ตกลง'
-            })
+              icon: "success",
+              title: "ถูกต้อง!",
+              showConfirmButton: false,
+              timer: 1500
+            });
 
             $('#contentResult').show();
 
