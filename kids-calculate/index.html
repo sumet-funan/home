@@ -1,141 +1,281 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="sweetalert2/sweetalert2.min.css">
-    </head>
-    <body>
-        <div class="m-5">
+
+<head>
+  <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="sweetalert2/sweetalert2.min.css">
+  <link rel="stylesheet" href="bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+  <div class="row">
+    <div class="col-2">
+      <nav class="m-4" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item active" aria-current="page">เมนู (Menu)</li>
+        </ol>
+      </nav>
+      <div class="list-group m-4" id="list-tab" role="tablist">
+        <a class="border-0 list-group-item list-group-item-action active" id="menu_plus" data-bs-toggle="list"
+          href="#content_plus" role="tab" aria-controls="content_plus">บวก (Plus)</a>
+        <a class="border-0 list-group-item list-group-item-action" id="menu_minus" data-bs-toggle="list"
+          href="#content_minus" role="tab" aria-controls="content_minus">ลบ (Minus)</a>
+        <a class="border-0 list-group-item list-group-item-action" id="menu_multiply" data-bs-toggle="list"
+          href="#content_multiply" role="tab" aria-controls="content_multiply">คูณ (Multiply)</a>
+        <a class="border-0 list-group-item list-group-item-action" id="menu_divide" data-bs-toggle="list"
+          href="#content_divide" role="tab" aria-controls="content_divide">หาร (Divide)</a>
+      </div>
+    </div>
+    <div class="col-10">
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="content_plus" role="tabpanel" aria-labelledby="menu_plus">
+          <div class="m-5">
+            <nav class="m-4" aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">บวก (Plus)</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="m-5">
             <div class="row mb-3">
-                <div class="col-sm-1">
+              <div class="col-sm-1">
+              </div>
+              <div class="col shadow list-group">
+                <div class="row m-3">
+                  <div class="col">
+                    <label for="firstNumber" class="form-label">ตัวเลขช่องแรก</label>
+                    <input type="number" id="firstNumber" class="form-control" placeholder="" aria-label="First Number">
+                  </div>
+                  <div class="col-1">
+                    <button type="button" class="form-control btn btn-outline-dark btn-lg mt-4 p-2" disabled><i
+                        class="bi bi-plus-lg"></i></button>
+                  </div>
+                  <div class="col">
+                    <label for="secondNumber" class="form-label">ตัวเลขช่องสอง</label>
+                    <input type="number" id="secondNumber" class="form-control" placeholder=""
+                      aria-label="Second Number">
+                  </div>
+                  <div class="col-1">
+                    <button type="button" class="form-control btn btn-outline-dark btn-lg mt-4 p-2" disabled>=</button>
+                  </div>
+                  <div class="col">
+                    <label for="resultNumber" class="form-label">คำตอบ</label>
+                    <input type="number" id="resultNumber" class="form-control" placeholder="" aria-label="">
+                  </div>
                 </div>
-                <div class="col shadow list-group">
-                  <div class="row m-3">
-                    <div class="col">
-                      <input type="number" id="firstNumber" class="form-control" placeholder="First Number" aria-label="First Number">
-                    </div>
-                    <div class="col">
-                      <input type="number" id="secondNumber" class="form-control" placeholder="Second Number" aria-label="Second Number">
-                    </div>
-                    <div class="col">
-                        <input type="number" id="resultNumber" class="form-control" placeholder="คำตอบ" aria-label="คำตอบ">
-                      </div>
+                <div class="row mb-3">
+                  <div class="col">
                   </div>
-                  <div class="row mb-3">
-                    <div class="col">
-                    </div>
-                    <div class="col">
-                      <input type="button" class="form-control btn btn-success" value="ตรวจคำตอบ" onclick="validatePlusResult()">
-                    </div>
-                    <div class="col">
-                    </div>
+                  <div class="col-3">
+                    <button type="button" class="form-control btn btn-success mt-4 p-4" onclick="validatePlusResult()">
+                      ตรวจคำตอบ
+                      <i class="bi bi-arrow-return-left"></i>
+                    </button>
+                  </div>
+                  <div class="col">
                   </div>
                 </div>
-                  <div class="col-sm-1">
-                  </div>
               </div>
-        </div>
-        <div class="m-5">
-          <div class="row mb-3">
-            <div class="col-sm-1">
-            </div>
-            <div class="col shadow list-group" id="contentResult" style="display: none;">
-              <div class="m-3" id="resultList">
+              <div class="col-sm-1">
               </div>
             </div>
-            <div class="col shadow list-group" id="contentHistory" style="display: none;">
-              <div class="m-3" id="historyList">
+          </div>
+          <div class="m-5">
+            <div class="row mb-3">
+              <div class="col-sm-1">
               </div>
-            </div>
-            <div class="col-sm-1">
+              <div class="col shadow list-group" id="contentResult" style="display: none;">
+                <div class="m-3" id="resultList">
+                </div>
+              </div>
+              <div class="col shadow list-group" id="contentHistory" style="display: none;">
+                <div class="m-3" id="historyList">
+                </div>
+              </div>
+              <div class="col-sm-1">
+              </div>
             </div>
           </div>
         </div>
-    </body>
+        <div class="tab-pane fade" id="content_minus" role="tabpanel" aria-labelledby="menu_minus">
+          <div class="m-5">
+            <nav class="m-4" aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">ลบ (Minus)</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="m-5" style="display: none;">
+            <div class="row mb-3">
+              <div class="col-sm-1">
+              </div>
+              <div class="col shadow list-group">
+                <div class="row m-3">
+                  <div class="col">
+                    <label for="firstNumber" class="form-label">ตัวเลขช่องแรก</label>
+                    <input type="number" id="firstNumberOfMinus" class="form-control" placeholder=""
+                      aria-label="First Number">
+                  </div>
+                  <div class="col-1">
+                    <button type="button" class="form-control btn btn-outline-dark btn-lg mt-4 p-2" disabled><i
+                        class="bi bi-dash-lg"></i></button>
+                  </div>
+                  <div class="col">
+                    <label for="secondNumber" class="form-label">ตัวเลขช่องสอง</label>
+                    <input type="number" id="secondNumberOfMinus" class="form-control" placeholder=""
+                      aria-label="Second Number">
+                  </div>
+                  <div class="col-1">
+                    <button type="button" class="form-control btn btn-outline-dark btn-lg mt-4 p-2" disabled>=</button>
+                  </div>
+                  <div class="col">
+                    <label for="resultNumber" class="form-label">คำตอบ</label>
+                    <input type="number" id="resultNumberOfMinus" class="form-control" placeholder="คำตอบ"
+                      aria-label="">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col">
+                  </div>
+                  <div class="col">
+                    <button type="button" class="form-control btn btn-success mt-4" onclick="validateMinusResult()">
+                      ตรวจคำตอบ
+                      <i class="bi bi-arrow-return-left"></i>
+                    </button>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-1">
+              </div>
+            </div>
+          </div>
+          <div class="m-5">
+            <div class="row mb-3">
+              <div class="col-sm-1">
+              </div>
+              <div class="col shadow list-group" id="contentResultMinus" style="display: none;">
+                <div class="m-3" id="resultListMinus">
+                </div>
+              </div>
+              <div class="col shadow list-group" id="contentHistoryMinus" style="display: none;">
+                <div class="m-3" id="historyListMinus">
+                </div>
+              </div>
+              <div class="col-sm-1">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="content_multiply" role="tabpanel" aria-labelledby="menu_multiply">
+          <div class="m-5">
+            <nav class="m-4" aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">คูณ (Multiply)</li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="content_divide" role="tabpanel" aria-labelledby="menu_divide">
+          <div class="m-5">
+            <nav class="m-4" aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">หาร (Divide)</li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
 </html>
 <script type="text/javascript" src="bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="sweetalert2/sweetalert2.all.min.js"></script>
 <script>
-    var numRows = 1;
-    var numRowsHistory = 1;
+  var numRows = 1;
+  var numRowsHistory = 1;
 
-    function validatePlusResult(){
-      let textColor = "green"
-      let textMessage = "ถูกต้อง"
+  function validatePlusResult() {
+    let textColor = "green"
+    let textMessage = "ถูกต้อง"
 
-        let firstNumber = +$('#firstNumber').val();
-        let secondNumber = +$('#secondNumber').val();
-        let resultNumber = +$('#resultNumber').val();
+    let firstNumber = +$('#firstNumber').val();
+    let secondNumber = +$('#secondNumber').val();
+    let resultNumber = +$('#resultNumber').val();
 
-        if(firstNumber == 0 && secondNumber == 0){
-          Swal.fire({
-            title: 'แจ้งเตือน!',
-            text: 'กรุณาใส่ตัวเลขมากกว่า 0',
-            icon: 'info',
-            confirmButtonText: 'ตกลง'
-          })
-          return
-        }
-
-        let isCorrect = (firstNumber + secondNumber) == resultNumber;
-        if(isCorrect){
-            addResultToItemList({"symbol": "+", "firstNumber":firstNumber , "secondNumber":secondNumber, "resultNumber":resultNumber})
-
-            Swal.fire({
-              icon: "success",
-              title: "ถูกต้อง!",
-              showConfirmButton: false,
-              timer: 1500
-            });
-
-            $('#contentResult').show();
-
-            addSuggestValue(secondNumber, resultNumber);
-        }
-        else{
-          textColor = "red"
-          Swal.fire({
-            title: 'ยังไม่ถูก!',
-            text: 'ลองดูอีกครั้งนะ',
-            icon: 'error',
-            confirmButtonText: 'ตกลง'
-          })
-        }
-
-        addResultToHistoryList({"symbol": "+", "firstNumber":firstNumber , "secondNumber":secondNumber, "resultNumber":resultNumber, "color": textColor})
+    if (firstNumber == 0 && secondNumber == 0) {
+      Swal.fire({
+        title: 'แจ้งเตือน!',
+        text: 'กรุณาใส่ตัวเลขมากกว่า 0',
+        icon: 'info',
+        confirmButtonText: 'ตกลง'
+      })
+      return
     }
 
-    function addResultToItemList(item){
-        elementItem = `<div class="row mb-3">
+    let isCorrect = (firstNumber + secondNumber) == resultNumber;
+    if (isCorrect) {
+      addResultToItemList({ "symbol": "+", "firstNumber": firstNumber, "secondNumber": secondNumber, "resultNumber": resultNumber })
+
+      Swal.fire({
+        icon: "success",
+        title: "ถูกต้อง!",
+        showConfirmButton: false,
+        timer: 1500
+      });
+
+      $('#contentResult').show();
+
+      addSuggestValue(secondNumber, resultNumber);
+    }
+    else {
+      textColor = "red"
+      Swal.fire({
+        title: 'ยังไม่ถูก!',
+        text: 'ลองดูอีกครั้งนะ',
+        icon: 'error',
+        confirmButtonText: 'ตกลง'
+      })
+    }
+
+    addResultToHistoryList({ "symbol": "+", "firstNumber": firstNumber, "secondNumber": secondNumber, "resultNumber": resultNumber, "color": textColor })
+  }
+
+  function addResultToItemList(item) {
+    elementItem = `<div class="row mb-3">
             <p>${numRows}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
                 </div>`
-        $('#resultList').append(elementItem)
-      
-        clearValue()
+    $('#resultList').append(elementItem)
 
-        numRows++;
-    }
+    clearValue()
 
-    function addResultToHistoryList(item){
-        elementItem = `<div class="row mb-3">
+    numRows++;
+  }
+
+  function addResultToHistoryList(item) {
+    elementItem = `<div class="row mb-3">
             <p style="color: ${item.color}">${numRowsHistory}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
                 </div>`
-        $('#historyList').append(elementItem)
+    $('#historyList').append(elementItem)
 
-        if(item.color == "green"){
-          numRowsHistory++;
-        }
+    if (item.color == "green") {
+      numRowsHistory++;
     }
+  }
 
-    function clearValue(){
-        $('#firstNumber').val('');
-        $('#secondNumber').val('');
-        $('#resultNumber').val('');
-    }
+  function clearValue() {
+    $('#firstNumber').val('');
+    $('#secondNumber').val('');
+    $('#resultNumber').val('');
+  }
 
-    function addSuggestValue(firstNumberm, secondNumber){
-        $('#firstNumber').val(firstNumberm);
-        $('#secondNumber').val(secondNumber);
-    }
+  function addSuggestValue(firstNumberm, secondNumber) {
+    $('#firstNumber').val(firstNumberm);
+    $('#secondNumber').val(secondNumber);
+  }
 </script>
