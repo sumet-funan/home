@@ -37,50 +37,85 @@
             </nav>
           </div>
           <div class="m-5">
-            <div class="row mb-3">
-              <div class="col-sm-1">
-              </div>
-              <div class="col shadow list-group">
-                <div class="row m-3">
+            <div class="row mb-3 shadow ">
+              <div class="col ">
+                <div class="row m-3 pt-3">
+                  <div class="col-1"></div>
                   <div class="col">
-                    <label for="firstNumber" class="form-label">ตัวเลขช่องแรก</label>
-                    <input type="number" id="firstNumber" class="form-control" placeholder="" aria-label="First Number">
+                    <input type="number" id="firstNumber" class="form-control text-end" placeholder=""
+                      aria-label="First Number">
                   </div>
-                  <div class="col-1">
-                    <button type="button" class="form-control btn btn-outline-dark btn-lg mt-4 p-2" disabled><i
+                  <div class="col-1"></div>
+                </div>
+                <div class="row m-3">
+                  <div class="col"></div>
+                  <div class="col-2">
+                    <button type="button" class="form-control btn btn-outline-dark btn-lg" disabled><i
                         class="bi bi-plus-lg"></i></button>
                   </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row m-3">
+                  <div class="col-1"></div>
                   <div class="col">
-                    <label for="secondNumber" class="form-label">ตัวเลขช่องสอง</label>
-                    <input type="number" id="secondNumber" class="form-control" placeholder=""
+                    <input type="number" id="secondNumber" class="form-control text-end" placeholder=""
                       aria-label="Second Number">
                   </div>
+                  <div class="col-1"></div>
+                </div>
+                <div class="row m-3">
+                  <div class="col"></div>
+                  <div class="col-2">
+                    <button type="button" class="form-control btn btn-outline-dark btn-lg" disabled>=</button>
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row m-3">
                   <div class="col-1">
-                    <button type="button" class="form-control btn btn-outline-dark btn-lg mt-4 p-2" disabled>=</button>
                   </div>
                   <div class="col">
-                    <label for="resultNumber" class="form-label">คำตอบ</label>
-                    <input type="number" id="resultNumber" class="form-control" placeholder="" aria-label="">
+                    <input type="number" id="resultNumber" class="form-control text-end" placeholder="" aria-label="">
+                  </div>
+                  <div class="col-1">
                   </div>
                 </div>
                 <div class="row mb-3">
-                  <div class="col">
+                  <div class="col-4">
                   </div>
-                  <div class="col-3">
+                  <div class="col">
                     <button type="button" class="form-control btn btn-success mt-4 p-4" onclick="validatePlusResult()">
                       ตรวจคำตอบ
                       <i class="bi bi-arrow-return-left"></i>
                     </button>
                   </div>
-                  <div class="col">
+                  <div class="col-4">
                   </div>
                 </div>
               </div>
-              <div class="col-sm-1">
+              <div class="col ">
+                <div class="row m-3">
+                  
+                </div>
+              </div>
+              <div class="col ">
+                <div class="row mb-3">
+                  <div class="col-sm-1">
+                  </div>
+                  <div class="col list-group" id="contentResult" style="display: none;">
+                    <div class="m-3" id="resultList">
+                    </div>
+                  </div>
+                  <div class="col list-group" id="contentHistory" style="display: none;">
+                    <div class="m-3" id="historyList">
+                    </div>
+                  </div>
+                  <div class="col-sm-1">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="m-5">
+          <!--<div class="m-5">
             <div class="row mb-3">
               <div class="col-sm-1">
               </div>
@@ -95,7 +130,7 @@
               <div class="col-sm-1">
               </div>
             </div>
-          </div>
+          </div>-->
         </div>
         <div class="tab-pane fade" id="content_minus" role="tabpanel" aria-labelledby="menu_minus">
           <div class="m-5">
