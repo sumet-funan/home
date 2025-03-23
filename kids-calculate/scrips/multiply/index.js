@@ -58,8 +58,8 @@ function clearMultiplyValue() {
 
 function addSuggestMultiplyValue() {
     // $('#firstMultiplyNumber').val(parseInt((Math.random() * 500) + 500));
-    $('#firstMultiplyNumber').val(parseInt(Math.random() * 9));
-    $('#secondMultiplyNumber').val(parseInt(Math.random() * 9));
+    $('#firstMultiplyNumber').val(parseInt((Math.random() * 900) + 100));
+    $('#secondMultiplyNumber').val(parseInt((Math.random() * 99)));
 }
 
 addSuggestMultiplyValue()
