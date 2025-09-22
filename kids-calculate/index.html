@@ -302,9 +302,90 @@
           <div class="m-5">
             <nav class="m-4" aria-label="breadcrumb">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">หาร (Divide)</li>
+                <li class="breadcrumb-item active" aria-current="page">หาร (Divide) test</li>
               </ol>
             </nav>
+          </div>
+          <div class="m-5">
+            <div class="row mb-3 shadow ">
+              <div class="col ">
+                <div class="row m-3 pt-3">
+                  <div class="col-1"></div>
+                  <div class="col">
+                    <input type="number" id="firstDivideNumber" class="form-control text-end" placeholder=""
+                      aria-label="First Number">
+                  </div>
+                  <div class="col-1"></div>
+                </div>
+                <div class="row m-3">
+                  <div class="col"></div>
+                  <div class="col-2 text-center">
+                    <h1>*</h1>
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row m-3">
+                  <div class="col-1"></div>
+                  <div class="col">
+                    <input type="number" id="secondDivideNumber" class="form-control text-end" placeholder=""
+                      aria-label="Second Number">
+                  </div>
+                  <div class="col-1"></div>
+                </div>
+                <div class="row m-3">
+                  <div class="col"></div>
+                  <div class="col-2 text-center">
+                    <h1>=</h1>
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row m-3">
+                  <div class="col-1">
+                  </div>
+                  <div class="col">
+                    <input type="number" id="resultDivideNumber" class="form-control text-end" placeholder="" aria-label="">
+                  </div>
+                  <div class="col-1">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col">
+                  </div>
+                  <div class="col text-center">
+                    <button type="button" class="btn btn-success mt-4 p-4" onclick="validateDivideResult()">
+                      ตรวจคำตอบ
+                      <i class="bi bi-arrow-return-left"></i>
+                    </button>
+                  </div>
+                  <div class="col">
+                  </div>
+                </div>
+              </div>
+              <div class="col ">
+                <div class="row mb-3">
+                  <div class="col-sm-1">
+                  </div>
+                  <div class="col list-group" id="contentDivideResult" style="display: none;">
+                    <div class="m-3" id="resultDivideList">
+                    </div>
+                  </div>
+                  <div class="col-sm-1">
+                  </div>
+                </div>
+              </div>
+              <div class="col ">
+                <div class="row mb-3">
+                  <div class="col-sm-1">
+                  </div>
+                  <div class="col list-group" id="contentDivideHistory" style="display: none;">
+                    <div class="m-3" id="historyDivideList">
+                    </div>
+                  </div>
+                  <div class="col-sm-1">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
