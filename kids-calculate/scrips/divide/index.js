@@ -5,7 +5,7 @@ var multiplyObj = {
 
 function validateDivideResult() {
     let textColor = "green"
-    let symbol = "*"
+    let symbol = "/"
 
     let firstNumber = +$('#firstDivideNumber').val();
     let secondNumber = +$('#secondDivideNumber').val();
