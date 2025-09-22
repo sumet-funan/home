@@ -67,7 +67,7 @@ function addSuggestDivideValue() {
 
         let secondDivideNumber = 0;
         while (secondDivideNumber == 0) {
-            secondDivideNumber = parseInt((Math.random() * 99))
+            secondDivideNumber = parseInt((Math.random() * 9))
         }
         $('#secondDivideNumber').val(secondDivideNumber);
 
