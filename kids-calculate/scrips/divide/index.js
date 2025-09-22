@@ -57,9 +57,22 @@ function clearDivideValue() {
 }
 
 function addSuggestDivideValue() {
-    // $('#firstDivideNumber').val(parseInt((Math.random() * 500) + 500));
-    $('#firstDivideNumber').val(parseInt((Math.random() * 99)));
-    $('#secondDivideNumber').val(parseInt((Math.random() * 9)));
+    let modToZero = 1;
+    while (modToZero != 0) {
+        let firstDivideNumber = 0;
+        while (firstDivideNumber == 0) {
+            firstDivideNumber = parseInt((Math.random() * 99))
+        }
+        $('#firstDivideNumber').val(firstDivideNumber);
+
+        let secondDivideNumber = 0;
+        while (secondDivideNumber == 0) {
+            secondDivideNumber = parseInt((Math.random() * 99))
+        }
+        $('#secondDivideNumber').val(secondDivideNumber);
+
+        modToZero = firstDivideNumber % secondDivideNumber;
+    }
 }
 
 addSuggestDivideValue()
