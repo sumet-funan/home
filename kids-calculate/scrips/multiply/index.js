@@ -41,9 +41,10 @@ function validateMultiplyResult() {
 }
 
 function addResultMultiplyToItemList(item) {
-    elementItem = `<div class="row mb-3">
-            <p>${multiplyObj.numRows}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
-                </div>`
+    elementItem = `<div class="answer-chip">
+            <span class="answer-index">${multiplyObj.numRows}</span>
+            <span class="answer-expr">${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</span>
+        </div>`
     $('#resultMultiplyList').append(elementItem)
 
     clearMultiplyValue()
@@ -52,9 +53,12 @@ function addResultMultiplyToItemList(item) {
 }
 
 function addResultMultiplyToHistoryList(item) {
-    elementItem = `<div class="row mb-3">
-            <p style="color: ${item.color}">${multiplyObj.numRowsHistory}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
-                </div>`
+    let isCorrect = item.color == "green";
+    elementItem = `<div class="answer-chip ${isCorrect ? 'is-correct' : 'is-incorrect'}">
+            <i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
+            <span class="answer-index">${multiplyObj.numRowsHistory}</span>
+            <span class="answer-expr">${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</span>
+        </div>`
     $('#historyMultiplyList').append(elementItem)
 
     if (item.color == "green") {

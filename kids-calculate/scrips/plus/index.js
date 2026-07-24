@@ -41,9 +41,10 @@ function validatePlusResult() {
 }
 
 function addResultToItemList(item) {
-    elementItem = `<div class="row mb-3">
-            <p>${plusObj.numRows}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
-                </div>`
+    elementItem = `<div class="answer-chip">
+            <span class="answer-index">${plusObj.numRows}</span>
+            <span class="answer-expr">${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</span>
+        </div>`
     $('#resultList').append(elementItem)
 
     clearValue()
@@ -52,9 +53,12 @@ function addResultToItemList(item) {
 }
 
 function addResultToHistoryList(item) {
-    elementItem = `<div class="row mb-3">
-            <p style="color: ${item.color}">${plusObj.numRowsHistory}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
-                </div>`
+    let isCorrect = item.color == "green";
+    elementItem = `<div class="answer-chip ${isCorrect ? 'is-correct' : 'is-incorrect'}">
+            <i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
+            <span class="answer-index">${plusObj.numRowsHistory}</span>
+            <span class="answer-expr">${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</span>
+        </div>`
     $('#historyList').append(elementItem)
 
     if (item.color == "green") {

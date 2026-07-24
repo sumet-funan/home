@@ -1,445 +1,232 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>เครื่องคิดเลขน้อย - Kids Calculator</title>
   <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="sweetalert2/sweetalert2.min.css">
   <link rel="stylesheet" href="bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="row">
-    <div class="col-2">
-      <nav class="m-4" aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item active" aria-current="page">เมนู (Menu)</li>
-        </ol>
-      </nav>
-      <div class="list-group m-4" id="list-tab" role="tablist">
-        <a class="border-0 list-group-item list-group-item-action active" id="menu_plus" data-bs-toggle="list"
-          href="#content_plus" role="tab" aria-controls="content_plus">บวก (Plus)</a>
-        <a class="border-0 list-group-item list-group-item-action" id="menu_minus" data-bs-toggle="list"
-          href="#content_minus" role="tab" aria-controls="content_minus">ลบ (Minus)</a>
-        <a class="border-0 list-group-item list-group-item-action" id="menu_multiply" data-bs-toggle="list"
-          href="#content_multiply" role="tab" aria-controls="content_multiply">คูณ (Multiply)</a>
-        <a class="border-0 list-group-item list-group-item-action" id="menu_divide" data-bs-toggle="list"
-          href="#content_divide" role="tab" aria-controls="content_divide">หาร (Divide)</a>
+  <div class="app-shell">
+    <aside class="app-sidebar">
+      <div class="app-brand">
+        <i class="bi bi-calculator-fill"></i>
+        <span>เครื่องคิดเลขน้อย</span>
       </div>
-    </div>
-    <div class="col-10">
+      <div class="nav-menu" id="list-tab" role="tablist">
+        <a class="nav-menu-item active" id="menu_plus" data-bs-toggle="list" href="#content_plus" role="tab"
+          aria-controls="content_plus" data-op="plus">
+          <i class="bi bi-plus-circle-fill"></i><span>บวก</span>
+        </a>
+        <a class="nav-menu-item" id="menu_minus" data-bs-toggle="list" href="#content_minus" role="tab"
+          aria-controls="content_minus" data-op="minus">
+          <i class="bi bi-dash-circle-fill"></i><span>ลบ</span>
+        </a>
+        <a class="nav-menu-item" id="menu_multiply" data-bs-toggle="list" href="#content_multiply" role="tab"
+          aria-controls="content_multiply" data-op="multiply">
+          <i class="bi bi-x-circle-fill"></i><span>คูณ</span>
+        </a>
+        <a class="nav-menu-item" id="menu_divide" data-bs-toggle="list" href="#content_divide" role="tab"
+          aria-controls="content_divide" data-op="divide">
+          <i class="bi bi-slash-circle-fill"></i><span>หาร</span>
+        </a>
+      </div>
+    </aside>
+
+    <main class="app-main">
       <div class="tab-content">
+
         <div class="tab-pane fade show active" id="content_plus" role="tabpanel" aria-labelledby="menu_plus">
-          <div class="m-5">
-            <nav class="m-4" aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">บวก (Plus)</li>
-              </ol>
-            </nav>
-          </div>
-          <div class="m-5">
-            <div class="row mb-3 shadow ">
-              <div class="col ">
-                <div class="row m-3 pt-3">
-                  <div class="col-1"></div>
-                  <div class="col">
-                    <input type="number" id="firstNumber" class="form-control text-end" placeholder=""
-                      aria-label="First Number">
-                  </div>
-                  <div class="col-1"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col"></div>
-                  <div class="col-2 text-center">
-                    <h1>+</h1>
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col-1"></div>
-                  <div class="col">
-                    <input type="number" id="secondNumber" class="form-control text-end" placeholder=""
-                      aria-label="Second Number">
-                  </div>
-                  <div class="col-1"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col"></div>
-                  <div class="col-2 text-center">
-                    <h1>=</h1>
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col-1">
-                  </div>
-                  <div class="col">
-                    <input type="number" id="resultNumber" class="form-control text-end" placeholder="" aria-label="">
-                  </div>
-                  <div class="col-1">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col">
-                  </div>
-                  <div class="col text-center">
-                    <button type="button" class="btn btn-success mt-4 p-4" onclick="validatePlusResult()">
-                      ตรวจคำตอบ
-                      <i class="bi bi-arrow-return-left"></i>
-                    </button>
-                  </div>
-                  <div class="col">
-                  </div>
-                </div>
+          <div class="operation-panel" data-op="plus">
+            <div class="panel-header">
+              <h2><i class="bi bi-plus-circle-fill"></i> บวก (Plus)</h2>
+              <p>ฝึกการบวกเลขให้แม่นยำ</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <input type="number" id="firstNumber" class="calc-input" placeholder="0" aria-label="First Number">
+                <div class="calc-symbol">+</div>
+                <input type="number" id="secondNumber" class="calc-input" placeholder="0" aria-label="Second Number">
+                <div class="calc-symbol">=</div>
+                <input type="number" id="resultNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Result">
+                <button type="button" class="calc-submit" onclick="validatePlusResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
               </div>
-              <div class="col ">
-                <div class="row mb-3">
-                  <div class="col-sm-1">
-                  </div>
-                  <div class="col list-group" id="contentResult" style="display: none;">
-                    <div class="m-3" id="resultList">
-                    </div>
-                  </div>
-                  <div class="col-sm-1">
-                  </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultList"></div>
                 </div>
-              </div>
-              <div class="col ">
-                <div class="row mb-3">
-                  <div class="col-sm-1">
-                  </div>
-                  <div class="col list-group" id="contentHistory" style="display: none;">
-                    <div class="m-3" id="historyList">
-                    </div>
-                  </div>
-                  <div class="col-sm-1">
-                  </div>
+                <div class="side-panel" id="contentHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyList"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
         <div class="tab-pane fade" id="content_minus" role="tabpanel" aria-labelledby="menu_minus">
-          <div class="m-5">
-            <nav class="m-4" aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">ลบ (Minus)</li>
-              </ol>
-            </nav>
-          </div>
-          <div class="m-5">
-            <div class="row mb-3 shadow ">
-              <div class="col ">
-                <div class="row m-3 pt-3">
-                  <div class="col-1"></div>
-                  <div class="col">
-                    <input type="number" id="firstMinusNumber" class="form-control text-end" placeholder=""
-                      aria-label="First Number">
-                  </div>
-                  <div class="col-1"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col"></div>
-                  <div class="col-2 text-center">
-                    <h1>-</h1>
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col-1"></div>
-                  <div class="col">
-                    <input type="number" id="secondMinusNumber" class="form-control text-end" placeholder=""
-                      aria-label="Second Number">
-                  </div>
-                  <div class="col-1"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col"></div>
-                  <div class="col-2 text-center">
-                    <h1>=</h1>
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col-1">
-                  </div>
-                  <div class="col">
-                    <input type="number" id="resultMinusNumber" class="form-control text-end" placeholder="" aria-label="">
-                  </div>
-                  <div class="col-1">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col">
-                  </div>
-                  <div class="col text-center">
-                    <button type="button" class="btn btn-success mt-4 p-4" onclick="validateMinusResult()">
-                      ตรวจคำตอบ
-                      <i class="bi bi-arrow-return-left"></i>
-                    </button>
-                  </div>
-                  <div class="col">
-                  </div>
-                </div>
+          <div class="operation-panel" data-op="minus">
+            <div class="panel-header">
+              <h2><i class="bi bi-dash-circle-fill"></i> ลบ (Minus)</h2>
+              <p>ฝึกการลบเลขให้แม่นยำ</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <input type="number" id="firstMinusNumber" class="calc-input" placeholder="0"
+                  aria-label="First Number">
+                <div class="calc-symbol">-</div>
+                <input type="number" id="secondMinusNumber" class="calc-input" placeholder="0"
+                  aria-label="Second Number">
+                <div class="calc-symbol">=</div>
+                <input type="number" id="resultMinusNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Result">
+                <button type="button" class="calc-submit" onclick="validateMinusResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
               </div>
-              <div class="col ">
-                <div class="row mb-3">
-                  <div class="col-sm-1">
-                  </div>
-                  <div class="col list-group" id="contentMinusResult" style="display: none;">
-                    <div class="m-3" id="resultMinusList">
-                    </div>
-                  </div>
-                  <div class="col-sm-1">
-                  </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentMinusResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultMinusList"></div>
                 </div>
-              </div>
-              <div class="col ">
-                <div class="row mb-3">
-                  <div class="col-sm-1">
-                  </div>
-                  <div class="col list-group" id="contentMinusHistory" style="display: none;">
-                    <div class="m-3" id="historyMinusList">
-                    </div>
-                  </div>
-                  <div class="col-sm-1">
-                  </div>
+                <div class="side-panel" id="contentMinusHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyMinusList"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
         <div class="tab-pane fade" id="content_multiply" role="tabpanel" aria-labelledby="menu_multiply">
-          <div class="m-5">
-            <nav class="m-4" aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">คูณ (Multiply)</li>
-              </ol>
-            </nav>
-          </div>
-          <div class="m-5">
-            <div class="row mb-3 shadow ">
-              <div class="col ">
-                <div class="row m-3 pt-3">
-                  <div class="col-1"></div>
-                  <div class="col">
-                    <input type="number" id="firstMultiplyNumber" class="form-control text-end" placeholder=""
-                      aria-label="First Number">
-                  </div>
-                  <div class="col-1"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col"></div>
-                  <div class="col-2 text-center">
-                    <h1>*</h1>
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col-1"></div>
-                  <div class="col">
-                    <input type="number" id="secondMultiplyNumber" class="form-control text-end" placeholder=""
-                      aria-label="Second Number">
-                  </div>
-                  <div class="col-1"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col"></div>
-                  <div class="col-2 text-center">
-                    <h1>=</h1>
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col-1">
-                  </div>
-                  <div class="col">
-                    <input type="number" id="resultMultiplyNumber" class="form-control text-end" placeholder="" aria-label="">
-                  </div>
-                  <div class="col-1">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col">
-                  </div>
-                  <div class="col text-center">
-                    <button type="button" class="btn btn-success mt-4 p-4" onclick="validateMultiplyResult()">
-                      ตรวจคำตอบ
-                      <i class="bi bi-arrow-return-left"></i>
-                    </button>
-                  </div>
-                  <div class="col">
-                  </div>
-                </div>
+          <div class="operation-panel" data-op="multiply">
+            <div class="panel-header">
+              <h2><i class="bi bi-x-circle-fill"></i> คูณ (Multiply)</h2>
+              <p>ฝึกการคูณเลขให้แม่นยำ</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <input type="number" id="firstMultiplyNumber" class="calc-input" placeholder="0"
+                  aria-label="First Number">
+                <div class="calc-symbol">&times;</div>
+                <input type="number" id="secondMultiplyNumber" class="calc-input" placeholder="0"
+                  aria-label="Second Number">
+                <div class="calc-symbol">=</div>
+                <input type="number" id="resultMultiplyNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Result">
+                <button type="button" class="calc-submit" onclick="validateMultiplyResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
               </div>
-              <div class="col ">
-                <div class="row mb-3">
-                  <div class="col-sm-1">
-                  </div>
-                  <div class="col list-group" id="contentMultiplyResult" style="display: none;">
-                    <div class="m-3" id="resultMultiplyList">
-                    </div>
-                  </div>
-                  <div class="col-sm-1">
-                  </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentMultiplyResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultMultiplyList"></div>
                 </div>
-              </div>
-              <div class="col ">
-                <div class="row mb-3">
-                  <div class="col-sm-1">
-                  </div>
-                  <div class="col list-group" id="contentMultiplyHistory" style="display: none;">
-                    <div class="m-3" id="historyMultiplyList">
-                    </div>
-                  </div>
-                  <div class="col-sm-1">
-                  </div>
+                <div class="side-panel" id="contentMultiplyHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyMultiplyList"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
         <div class="tab-pane fade" id="content_divide" role="tabpanel" aria-labelledby="menu_divide">
-          <div class="m-5">
-            <nav class="m-4" aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">หาร (Divide) test</li>
-              </ol>
-            </nav>
-          </div>
-          <div class="m-5">
-            <div class="row mb-3 shadow ">
-              <div class="col ">
-                <div class="row m-3 pt-3">
-                  <div class="col-1"></div>
-                  <div class="col">
-                    <input type="number" id="firstDivideNumber" class="form-control text-end" placeholder=""
-                      aria-label="First Number">
-                  </div>
-                  <div class="col-1"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col"></div>
-                  <div class="col-2 text-center">
-                    <h1>/</h1>
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col-1"></div>
-                  <div class="col">
-                    <input type="number" id="secondDivideNumber" class="form-control text-end" placeholder=""
-                      aria-label="Second Number">
-                  </div>
-                  <div class="col-1"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col"></div>
-                  <div class="col-2 text-center">
-                    <h1>=</h1>
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row m-3">
-                  <div class="col-1">
-                  </div>
-                  <div class="col">
-                    <input type="number" id="resultDivideNumber" class="form-control text-end" placeholder="" aria-label="">
-                  </div>
-                  <div class="col-1">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col">
-                  </div>
-                  <div class="col text-center">
-                    <button type="button" class="btn btn-success mt-4 p-4" onclick="validateDivideResult()">
-                      ตรวจคำตอบ
-                      <i class="bi bi-arrow-return-left"></i>
-                    </button>
-                  </div>
-                  <div class="col">
-                  </div>
-                </div>
+          <div class="operation-panel" data-op="divide">
+            <div class="panel-header">
+              <h2><i class="bi bi-slash-circle-fill"></i> หาร (Divide)</h2>
+              <p>ฝึกการหารเลขให้แม่นยำ</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <input type="number" id="firstDivideNumber" class="calc-input" placeholder="0"
+                  aria-label="First Number">
+                <div class="calc-symbol">&divide;</div>
+                <input type="number" id="secondDivideNumber" class="calc-input" placeholder="0"
+                  aria-label="Second Number">
+                <div class="calc-symbol">=</div>
+                <input type="number" id="resultDivideNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Result">
+                <button type="button" class="calc-submit" onclick="validateDivideResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
               </div>
-              <div class="col ">
-                <div class="row mb-3">
-                  <div class="col-sm-1">
-                  </div>
-                  <div class="col list-group" id="contentDivideResult" style="display: none;">
-                    <div class="m-3" id="resultDivideList">
-                    </div>
-                  </div>
-                  <div class="col-sm-1">
-                  </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentDivideResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultDivideList"></div>
                 </div>
-              </div>
-              <div class="col ">
-                <div class="row mb-3">
-                  <div class="col-sm-1">
-                  </div>
-                  <div class="col list-group" id="contentDivideHistory" style="display: none;">
-                    <div class="m-3" id="historyDivideList">
-                    </div>
-                  </div>
-                  <div class="col-sm-1">
-                  </div>
+                <div class="side-panel" id="contentDivideHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyDivideList"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
-    </div>
+    </main>
   </div>
 
+  <script type="text/javascript" src="bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="jquery-3.7.1.min.js"></script>
+  <script type="text/javascript" src="sweetalert2/sweetalert2.all.min.js"></script>
+  <script>
+    function validateResult(firstNumber, secondNumber, resultNumber, symbol) {
+      let isCorrect;
+      switch (symbol) {
+        case "+":
+          isCorrect = (firstNumber + secondNumber) == resultNumber;
+          break;
+        case "-":
+          isCorrect = (firstNumber - secondNumber) == resultNumber;
+          break;
+        case "*":
+          isCorrect = (firstNumber * secondNumber) == resultNumber;
+          break;
+        case "/":
+          isCorrect = (firstNumber / secondNumber) == resultNumber;
+          break;
+        default:
+          return false;
+      }
+
+      if (isCorrect) {
+        Swal.fire({
+          icon: "success",
+          title: "ถูกต้อง!",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+      else {
+        Swal.fire({
+          title: 'ยังไม่ถูก!',
+          text: 'ลองดูอีกครั้งนะ',
+          icon: 'error',
+          confirmButtonText: 'ตกลง'
+        })
+
+      }
+
+      return { status: isCorrect, message: "" };
+    }
+  </script>
+  <script type="text/javascript" src="scrips/plus/index.js"></script>
+  <script type="text/javascript" src="scrips/minus/index.js"></script>
+  <script type="text/javascript" src="scrips/multiply/index.js"></script>
+  <script type="text/javascript" src="scrips/divide/index.js"></script>
 </body>
 
 </html>
-<script type="text/javascript" src="bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="sweetalert2/sweetalert2.all.min.js"></script>
-<script>
-  function validateResult(firstNumber, secondNumber, resultNumber, symbol) {
-    let isCorrect;
-    switch (symbol) {
-      case "+":
-        isCorrect = (firstNumber + secondNumber) == resultNumber;
-        break;
-      case "-":
-        isCorrect = (firstNumber - secondNumber) == resultNumber;
-        break;
-      case "*":
-        isCorrect = (firstNumber * secondNumber) == resultNumber;
-        break;
-      case "/":
-        isCorrect = (firstNumber / secondNumber) == resultNumber;
-        break;
-      default:
-        return false;
-    }
-
-    if (isCorrect) {
-      Swal.fire({
-        icon: "success",
-        title: "ถูกต้อง!",
-        showConfirmButton: false,
-        timer: 1500
-      });
-    }
-    else {
-      Swal.fire({
-        title: 'ยังไม่ถูก!',
-        text: 'ลองดูอีกครั้งนะ',
-        icon: 'error',
-        confirmButtonText: 'ตกลง'
-      })
-      
-    }
-
-    return { status: isCorrect, message: ""};
-  }
-</script>
-<script type="text/javascript" src="scrips/plus/index.js"></script>
-<script type="text/javascript" src="scrips/minus/index.js"></script>
-<script type="text/javascript" src="scrips/multiply/index.js"></script>
-<script type="text/javascript" src="scrips/divide/index.js"></script>

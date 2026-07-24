@@ -41,9 +41,10 @@ function validateMinusResult() {
 }
 
 function addResultMinusToItemList(item) {
-    elementItem = `<div class="row mb-3">
-            <p>${minusObj.numRows}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
-                </div>`
+    elementItem = `<div class="answer-chip">
+            <span class="answer-index">${minusObj.numRows}</span>
+            <span class="answer-expr">${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</span>
+        </div>`
     $('#resultMinusList').append(elementItem)
 
     clearMinusValue()
@@ -52,9 +53,12 @@ function addResultMinusToItemList(item) {
 }
 
 function addResultMinusToHistoryList(item) {
-    elementItem = `<div class="row mb-3">
-            <p style="color: ${item.color}">${minusObj.numRowsHistory}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
-                </div>`
+    let isCorrect = item.color == "green";
+    elementItem = `<div class="answer-chip ${isCorrect ? 'is-correct' : 'is-incorrect'}">
+            <i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
+            <span class="answer-index">${minusObj.numRowsHistory}</span>
+            <span class="answer-expr">${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</span>
+        </div>`
     $('#historyMinusList').append(elementItem)
 
     if (item.color == "green") {

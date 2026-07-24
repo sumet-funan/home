@@ -41,9 +41,10 @@ function validateDivideResult() {
 }
 
 function addResultDivideToItemList(item) {
-    elementItem = `<div class="row mb-3">
-            <p>${divideObj.numRows}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
-                </div>`
+    elementItem = `<div class="answer-chip">
+            <span class="answer-index">${divideObj.numRows}</span>
+            <span class="answer-expr">${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</span>
+        </div>`
     $('#resultDivideList').append(elementItem)
 
     clearDivideValue()
@@ -52,9 +53,12 @@ function addResultDivideToItemList(item) {
 }
 
 function addResultDivideToHistoryList(item) {
-    elementItem = `<div class="row mb-3">
-            <p style="color: ${item.color}">${divideObj.numRowsHistory}) ${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</p>
-                </div>`
+    let isCorrect = item.color == "green";
+    elementItem = `<div class="answer-chip ${isCorrect ? 'is-correct' : 'is-incorrect'}">
+            <i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
+            <span class="answer-index">${divideObj.numRowsHistory}</span>
+            <span class="answer-expr">${item.firstNumber} ${item.symbol} ${item.secondNumber} = ${item.resultNumber}</span>
+        </div>`
     $('#historyDivideList').append(elementItem)
 
     if (item.color == "green") {
