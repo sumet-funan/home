@@ -73,6 +73,32 @@
             </a>
           </div>
         </div>
+
+        <div class="nav-group">
+          <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-p5"
+            aria-expanded="false" aria-controls="group-p5">
+            <i class="bi bi-mortarboard-fill"></i><span>ป.5</span>
+            <i class="bi bi-chevron-down group-caret"></i>
+          </button>
+          <div class="collapse nav-group-items" id="group-p5">
+            <a class="nav-menu-item" id="menu_p5_decimal" data-bs-toggle="list" href="#content_p5_decimal" role="tab"
+              aria-controls="content_p5_decimal" data-op="decimal">
+              <i class="bi bi-123"></i><span>ทศนิยม</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_percentage" data-bs-toggle="list" href="#content_p5_percentage"
+              role="tab" aria-controls="content_p5_percentage" data-op="percentage">
+              <i class="bi bi-percent"></i><span>ร้อยละ</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_fraction" data-bs-toggle="list" href="#content_p5_fraction"
+              role="tab" aria-controls="content_p5_fraction" data-op="fraction">
+              <i class="bi bi-slash-square"></i><span>เศษส่วน</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_gcflcm" data-bs-toggle="list" href="#content_p5_gcflcm" role="tab"
+              aria-controls="content_p5_gcflcm" data-op="gcflcm">
+              <i class="bi bi-intersect"></i><span>ห.ร.ม. / ค.ร.น.</span>
+            </a>
+          </div>
+        </div>
       </div>
     </aside>
 
@@ -402,6 +428,153 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="content_p5_decimal" role="tabpanel" aria-labelledby="menu_p5_decimal">
+          <div class="operation-panel" data-op="decimal">
+            <div class="panel-header">
+              <h2><i class="bi bi-123"></i> ทศนิยม (ป.5)</h2>
+              <p>ฝึกการบวก ลบ คูณ ทศนิยม</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <input type="number" step="0.1" id="firstDecimalNumber" class="calc-input" placeholder="0"
+                  aria-label="First Number">
+                <div class="calc-symbol" id="decimalSymbol">+</div>
+                <input type="number" step="0.1" id="secondDecimalNumber" class="calc-input" placeholder="0"
+                  aria-label="Second Number">
+                <div class="calc-symbol">=</div>
+                <input type="number" step="0.1" id="resultDecimalNumber" class="calc-input calc-input-result"
+                  placeholder="?" aria-label="Result">
+                <button type="button" class="calc-submit" onclick="validateDecimalResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackDecimal"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentDecimalResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultDecimalList"></div>
+                </div>
+                <div class="side-panel" id="contentDecimalHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyDecimalList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_percentage" role="tabpanel" aria-labelledby="menu_p5_percentage">
+          <div class="operation-panel" data-op="percentage">
+            <div class="panel-header">
+              <h2><i class="bi bi-percent"></i> ร้อยละ (ป.5)</h2>
+              <p>หาค่าร้อยละของจำนวนที่กำหนด</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question">
+                  ร้อยละ <span id="percentageValue">20</span> ของ <span id="percentageBase">150</span> เท่ากับเท่าไร
+                </div>
+                <input type="number" id="percentageAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validatePercentageResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackPercentage"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentPercentageResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultPercentageList"></div>
+                </div>
+                <div class="side-panel" id="contentPercentageHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyPercentageList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_fraction" role="tabpanel" aria-labelledby="menu_p5_fraction">
+          <div class="operation-panel" data-op="fraction">
+            <div class="panel-header">
+              <h2><i class="bi bi-slash-square"></i> เศษส่วน (ป.5)</h2>
+              <p>ฝึกการบวกลบเศษส่วนที่มีตัวส่วนเท่ากัน</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="fraction-row">
+                  <div class="fraction">
+                    <span class="fraction-num" id="firstFractionNumerator">1</span>
+                    <span class="fraction-bar"></span>
+                    <span class="fraction-den" id="firstFractionDenominator">4</span>
+                  </div>
+                  <div class="fraction-symbol" id="fractionSymbol">+</div>
+                  <div class="fraction">
+                    <span class="fraction-num" id="secondFractionNumerator">2</span>
+                    <span class="fraction-bar"></span>
+                    <span class="fraction-den" id="secondFractionDenominator">4</span>
+                  </div>
+                  <div class="fraction-symbol">=</div>
+                  <div class="fraction">
+                    <input type="number" id="fractionAnswerNumerator" class="calc-input fraction-answer-input"
+                      placeholder="?" aria-label="Numerator">
+                    <span class="fraction-bar"></span>
+                    <span class="fraction-den" id="resultFractionDenominator">4</span>
+                  </div>
+                </div>
+                <button type="button" class="calc-submit" onclick="validateFractionResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackFraction"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentFractionResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultFractionList"></div>
+                </div>
+                <div class="side-panel" id="contentFractionHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyFractionList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_gcflcm" role="tabpanel" aria-labelledby="menu_p5_gcflcm">
+          <div class="operation-panel" data-op="gcflcm">
+            <div class="panel-header">
+              <h2><i class="bi bi-intersect"></i> ห.ร.ม. และ ค.ร.น. (ป.5)</h2>
+              <p>หาตัวหารร่วมมาก (ห.ร.ม.) หรือตัวคูณร่วมน้อย (ค.ร.น.) ของสองจำนวน</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question">
+                  <span id="gcflcmLabel">ห.ร.ม.</span> ของ <span id="gcflcmFirstNumber">12</span> และ
+                  <span id="gcflcmSecondNumber">18</span> เท่ากับเท่าไร
+                </div>
+                <input type="number" id="gcflcmAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateGcflcmResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackGcflcm"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentGcflcmResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultGcflcmList"></div>
+                </div>
+                <div class="side-panel" id="contentGcflcmHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyGcflcmList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -475,6 +648,10 @@
   <script type="text/javascript" src="scrips/p1compare/index.js"></script>
   <script type="text/javascript" src="scrips/p1pattern/index.js"></script>
   <script type="text/javascript" src="scrips/p1placevalue/index.js"></script>
+  <script type="text/javascript" src="scrips/p5decimal/index.js"></script>
+  <script type="text/javascript" src="scrips/p5percentage/index.js"></script>
+  <script type="text/javascript" src="scrips/p5fraction/index.js"></script>
+  <script type="text/javascript" src="scrips/p5gcflcm/index.js"></script>
 </body>
 
 </html>

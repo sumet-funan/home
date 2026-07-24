@@ -26,6 +26,15 @@
   --pattern-bg: #fffbeb;
   --placevalue: #4f46e5;
   --placevalue-bg: #eef2ff;
+
+  --decimal: #0d9488;
+  --decimal-bg: #f0fdfa;
+  --percentage: #e11d48;
+  --percentage-bg: #fff1f2;
+  --fraction: #0284c7;
+  --fraction-bg: #f0f9ff;
+  --gcflcm: #475569;
+  --gcflcm-bg: #f1f5f9;
 }
 
 * {
@@ -164,6 +173,10 @@ body {
 .nav-menu-item[data-op="compare"] { --accent: var(--compare); --accent-bg: var(--compare-bg); }
 .nav-menu-item[data-op="pattern"] { --accent: var(--pattern); --accent-bg: var(--pattern-bg); }
 .nav-menu-item[data-op="placevalue"] { --accent: var(--placevalue); --accent-bg: var(--placevalue-bg); }
+.nav-menu-item[data-op="decimal"] { --accent: var(--decimal); --accent-bg: var(--decimal-bg); }
+.nav-menu-item[data-op="percentage"] { --accent: var(--percentage); --accent-bg: var(--percentage-bg); }
+.nav-menu-item[data-op="fraction"] { --accent: var(--fraction); --accent-bg: var(--fraction-bg); }
+.nav-menu-item[data-op="gcflcm"] { --accent: var(--gcflcm); --accent-bg: var(--gcflcm-bg); }
 
 .nav-menu-item.active {
   background: var(--accent-bg);
@@ -185,6 +198,10 @@ body {
 .operation-panel[data-op="compare"] { --accent: var(--compare); --accent-bg: var(--compare-bg); }
 .operation-panel[data-op="pattern"] { --accent: var(--pattern); --accent-bg: var(--pattern-bg); }
 .operation-panel[data-op="placevalue"] { --accent: var(--placevalue); --accent-bg: var(--placevalue-bg); }
+.operation-panel[data-op="decimal"] { --accent: var(--decimal); --accent-bg: var(--decimal-bg); }
+.operation-panel[data-op="percentage"] { --accent: var(--percentage); --accent-bg: var(--percentage-bg); }
+.operation-panel[data-op="fraction"] { --accent: var(--fraction); --accent-bg: var(--fraction-bg); }
+.operation-panel[data-op="gcflcm"] { --accent: var(--gcflcm); --accent-bg: var(--gcflcm-bg); }
 
 .panel-header {
   margin-bottom: 24px;
@@ -438,6 +455,70 @@ input[type=number] {
   padding: 0 6px;
 }
 
+/* ---------- word question (percentage / gcf-lcm) ---------- */
+
+.word-question {
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--text);
+  padding: 10px 4px 18px;
+}
+
+.word-question span {
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+/* ---------- fractions ---------- */
+
+.fraction-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.fraction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.fraction-num,
+.fraction-den {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.fraction-bar {
+  width: 34px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.fraction-symbol {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.calc-input.fraction-answer-input {
+  width: 64px;
+  min-width: 64px;
+  height: 44px;
+  padding: 0 6px;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
 /* ---------- place value ---------- */
 
 .place-value-number {
@@ -594,6 +675,10 @@ input[type=number] {
     --compare-bg: #0b2530;
     --pattern-bg: #2c2008;
     --placevalue-bg: #1c1a35;
+    --decimal-bg: #062420;
+    --percentage-bg: #2c0f16;
+    --fraction-bg: #0b1f2e;
+    --gcflcm-bg: #1c222b;
   }
 
   .answer-chip.is-incorrect {
