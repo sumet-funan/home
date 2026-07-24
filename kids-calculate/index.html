@@ -400,16 +400,6 @@
 <script type="text/javascript" src="sweetalert2/sweetalert2.all.min.js"></script>
 <script>
   function validateResult(firstNumber, secondNumber, resultNumber, symbol) {
-    if (firstNumber == 0 && secondNumber == 0) {
-      Swal.fire({
-        title: 'แจ้งเตือน!',
-        text: 'กรุณาใส่ตัวเลขมากกว่า 0',
-        icon: 'info',
-        confirmButtonText: 'ตกลง'
-      })
-      return { status: false, message: "zero"};
-    }
-
     let isCorrect;
     switch (symbol) {
       case "+":

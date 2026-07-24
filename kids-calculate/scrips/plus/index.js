@@ -7,13 +7,25 @@ function validatePlusResult() {
     let textColor = "green"
     let symbol = "+"
 
-    let firstNumber = +$('#firstNumber').val();
-    let secondNumber = +$('#secondNumber').val();
-    let resultNumber = +$('#resultNumber').val();
+    let firstNumberRaw = $('#firstNumber').val();
+    let secondNumberRaw = $('#secondNumber').val();
+    let resultNumberRaw = $('#resultNumber').val();
+
+    if (firstNumberRaw === '' || secondNumberRaw === '' || resultNumberRaw === '') {
+        Swal.fire({
+            title: 'แจ้งเตือน!',
+            text: 'กรุณาใส่ตัวเลขให้ครบ',
+            icon: 'info',
+            confirmButtonText: 'ตกลง'
+        })
+        return;
+    }
+
+    let firstNumber = +firstNumberRaw;
+    let secondNumber = +secondNumberRaw;
+    let resultNumber = +resultNumberRaw;
 
     let isCorrect = validateResult(firstNumber, secondNumber, resultNumber, symbol);
-
-    if(isCorrect.message == "zero") return;
 
     if (isCorrect.status) {
         addResultToItemList({ "symbol": symbol, "firstNumber": firstNumber, "secondNumber": secondNumber, "resultNumber": resultNumber })

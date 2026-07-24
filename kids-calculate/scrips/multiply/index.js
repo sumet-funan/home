@@ -7,13 +7,25 @@ function validateMultiplyResult() {
     let textColor = "green"
     let symbol = "*"
 
-    let firstNumber = +$('#firstMultiplyNumber').val();
-    let secondNumber = +$('#secondMultiplyNumber').val();
-    let resultNumber = +$('#resultMultiplyNumber').val();
+    let firstNumberRaw = $('#firstMultiplyNumber').val();
+    let secondNumberRaw = $('#secondMultiplyNumber').val();
+    let resultNumberRaw = $('#resultMultiplyNumber').val();
+
+    if (firstNumberRaw === '' || secondNumberRaw === '' || resultNumberRaw === '') {
+        Swal.fire({
+            title: 'แจ้งเตือน!',
+            text: 'กรุณาใส่ตัวเลขให้ครบ',
+            icon: 'info',
+            confirmButtonText: 'ตกลง'
+        })
+        return;
+    }
+
+    let firstNumber = +firstNumberRaw;
+    let secondNumber = +secondNumberRaw;
+    let resultNumber = +resultNumberRaw;
 
     let isCorrect = validateResult(firstNumber, secondNumber, resultNumber, symbol);
-
-    if(isCorrect.message == "zero") return;
 
     if (isCorrect.status) {
         addResultMultiplyToItemList({ "symbol": symbol, "firstNumber": firstNumber, "secondNumber": secondNumber, "resultNumber": resultNumber })
