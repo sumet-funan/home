@@ -60,6 +60,18 @@
               aria-controls="content_p1_minus" data-op="minus">
               <i class="bi bi-dash-circle-fill"></i><span>ลบ (ไม่เกิน 100)</span>
             </a>
+            <a class="nav-menu-item" id="menu_p1_compare" data-bs-toggle="list" href="#content_p1_compare" role="tab"
+              aria-controls="content_p1_compare" data-op="compare">
+              <i class="bi bi-arrow-left-right"></i><span>เปรียบเทียบจำนวน</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p1_pattern" data-bs-toggle="list" href="#content_p1_pattern" role="tab"
+              aria-controls="content_p1_pattern" data-op="pattern">
+              <i class="bi bi-list-ol"></i><span>แบบรูป</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p1_placevalue" data-bs-toggle="list" href="#content_p1_placevalue"
+              role="tab" aria-controls="content_p1_placevalue" data-op="placevalue">
+              <i class="bi bi-columns-gap"></i><span>หลักหน่วย/หลักสิบ</span>
+            </a>
           </div>
         </div>
       </div>
@@ -270,6 +282,118 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="content_p1_compare" role="tabpanel" aria-labelledby="menu_p1_compare">
+          <div class="operation-panel" data-op="compare">
+            <div class="panel-header">
+              <h2><i class="bi bi-arrow-left-right"></i> เปรียบเทียบจำนวน (ป.1)</h2>
+              <p>เลือกเครื่องหมายมากกว่า น้อยกว่า หรือเท่ากับ ให้ถูกต้อง</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="compare-row">
+                  <div class="compare-number" id="firstCompareNumber">0</div>
+                  <div class="compare-symbols" id="compareSymbolPicker">
+                    <button type="button" class="symbol-btn" data-symbol="gt">&gt;</button>
+                    <button type="button" class="symbol-btn" data-symbol="lt">&lt;</button>
+                    <button type="button" class="symbol-btn" data-symbol="eq">=</button>
+                  </div>
+                  <div class="compare-number" id="secondCompareNumber">0</div>
+                </div>
+                <button type="button" class="calc-submit" onclick="validateCompareResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentCompareResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultCompareList"></div>
+                </div>
+                <div class="side-panel" id="contentCompareHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyCompareList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p1_pattern" role="tabpanel" aria-labelledby="menu_p1_pattern">
+          <div class="operation-panel" data-op="pattern">
+            <div class="panel-header">
+              <h2><i class="bi bi-list-ol"></i> แบบรูปตัวเลข (ป.1)</h2>
+              <p>หาตัวเลขที่หายไปให้ถูกต้องตามแบบรูป</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="pattern-sequence">
+                  <span class="pattern-num" id="patternNum1">2</span>
+                  <span class="pattern-comma">,</span>
+                  <span class="pattern-num" id="patternNum2">4</span>
+                  <span class="pattern-comma">,</span>
+                  <span class="pattern-num" id="patternNum3">6</span>
+                  <span class="pattern-comma">,</span>
+                  <span class="pattern-num" id="patternNum4">8</span>
+                  <span class="pattern-comma">,</span>
+                  <input type="number" id="patternAnswerNumber" class="calc-input pattern-answer-input"
+                    placeholder="?" aria-label="Answer">
+                </div>
+                <button type="button" class="calc-submit" onclick="validatePatternResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentPatternResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultPatternList"></div>
+                </div>
+                <div class="side-panel" id="contentPatternHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyPatternList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p1_placevalue" role="tabpanel" aria-labelledby="menu_p1_placevalue">
+          <div class="operation-panel" data-op="placevalue">
+            <div class="panel-header">
+              <h2><i class="bi bi-columns-gap"></i> หลักหน่วย หลักสิบ (ป.1)</h2>
+              <p>บอกเลขหลักสิบและหลักหน่วยของจำนวนที่กำหนด</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="place-value-number" id="placeValueNumber">45</div>
+                <div class="place-value-fields">
+                  <div class="place-value-field">
+                    <label for="placeValueTensNumber">หลักสิบ</label>
+                    <input type="number" id="placeValueTensNumber" class="calc-input" placeholder="?"
+                      aria-label="Tens digit">
+                  </div>
+                  <div class="place-value-field">
+                    <label for="placeValueUnitsNumber">หลักหน่วย</label>
+                    <input type="number" id="placeValueUnitsNumber" class="calc-input" placeholder="?"
+                      aria-label="Units digit">
+                  </div>
+                </div>
+                <button type="button" class="calc-submit" onclick="validatePlaceValueResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentPlaceValueResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultPlaceValueList"></div>
+                </div>
+                <div class="side-panel" id="contentPlaceValueHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyPlaceValueList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -324,6 +448,9 @@
   <script type="text/javascript" src="scrips/divide/index.js"></script>
   <script type="text/javascript" src="scrips/p1plus/index.js"></script>
   <script type="text/javascript" src="scrips/p1minus/index.js"></script>
+  <script type="text/javascript" src="scrips/p1compare/index.js"></script>
+  <script type="text/javascript" src="scrips/p1pattern/index.js"></script>
+  <script type="text/javascript" src="scrips/p1placevalue/index.js"></script>
 </body>
 
 </html>

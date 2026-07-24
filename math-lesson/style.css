@@ -19,6 +19,13 @@
   --multiply-bg: #f4efff;
   --divide: #db2777;
   --divide-bg: #fdeff6;
+
+  --compare: #0891b2;
+  --compare-bg: #ecfeff;
+  --pattern: #d97706;
+  --pattern-bg: #fffbeb;
+  --placevalue: #4f46e5;
+  --placevalue-bg: #eef2ff;
 }
 
 * {
@@ -154,6 +161,9 @@ body {
 .nav-menu-item[data-op="minus"] { --accent: var(--minus); --accent-bg: var(--minus-bg); }
 .nav-menu-item[data-op="multiply"] { --accent: var(--multiply); --accent-bg: var(--multiply-bg); }
 .nav-menu-item[data-op="divide"] { --accent: var(--divide); --accent-bg: var(--divide-bg); }
+.nav-menu-item[data-op="compare"] { --accent: var(--compare); --accent-bg: var(--compare-bg); }
+.nav-menu-item[data-op="pattern"] { --accent: var(--pattern); --accent-bg: var(--pattern-bg); }
+.nav-menu-item[data-op="placevalue"] { --accent: var(--placevalue); --accent-bg: var(--placevalue-bg); }
 
 .nav-menu-item.active {
   background: var(--accent-bg);
@@ -172,6 +182,9 @@ body {
 .operation-panel[data-op="minus"] { --accent: var(--minus); --accent-bg: var(--minus-bg); }
 .operation-panel[data-op="multiply"] { --accent: var(--multiply); --accent-bg: var(--multiply-bg); }
 .operation-panel[data-op="divide"] { --accent: var(--divide); --accent-bg: var(--divide-bg); }
+.operation-panel[data-op="compare"] { --accent: var(--compare); --accent-bg: var(--compare-bg); }
+.operation-panel[data-op="pattern"] { --accent: var(--pattern); --accent-bg: var(--pattern-bg); }
+.operation-panel[data-op="placevalue"] { --accent: var(--placevalue); --accent-bg: var(--placevalue-bg); }
 
 .panel-header {
   margin-bottom: 24px;
@@ -283,6 +296,128 @@ input[type=number]::-webkit-outer-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+/* ---------- compare numbers ---------- */
+
+.compare-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.compare-number {
+  flex: 1;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding: 14px 12px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.compare-symbols {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.symbol-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.symbol-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.symbol-btn.selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ---------- number patterns ---------- */
+
+.pattern-sequence {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pattern-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  height: 56px;
+  padding: 0 10px;
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  border: 2px solid var(--border);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pattern-comma {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.calc-input.pattern-answer-input {
+  width: 90px;
+  min-width: 90px;
+  flex: 0 0 auto;
+  height: 56px;
+  padding: 0 6px;
+}
+
+/* ---------- place value ---------- */
+
+.place-value-number {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--accent);
+  padding: 6px 0 18px;
+}
+
+.place-value-fields {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+.place-value-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.place-value-field label {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
 }
 
 /* ---------- side panels (answers / history) ---------- */
@@ -408,6 +543,9 @@ input[type=number] {
     --minus-bg: #2c1a0e;
     --multiply-bg: #221a38;
     --divide-bg: #2b1524;
+    --compare-bg: #0b2530;
+    --pattern-bg: #2c2008;
+    --placevalue-bg: #1c1a35;
   }
 
   .answer-chip.is-incorrect {
