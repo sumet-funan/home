@@ -76,6 +76,58 @@ body {
   gap: 6px;
 }
 
+.nav-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-weight: 700;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.nav-group-toggle:hover {
+  background: var(--bg);
+}
+
+.nav-group-toggle span {
+  flex: 1;
+  text-align: left;
+}
+
+.nav-group-toggle i:first-child {
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.group-caret {
+  font-size: .8rem;
+  color: var(--muted);
+  transition: transform .2s ease;
+}
+
+.nav-group-toggle[aria-expanded="true"] .group-caret {
+  transform: rotate(180deg);
+}
+
+.nav-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 0 8px 14px;
+}
+
 .nav-menu-item {
   display: flex;
   align-items: center;
@@ -333,20 +385,11 @@ input[type=number] {
   .app-sidebar {
     width: auto;
     flex: none;
-    flex-direction: row;
-    align-items: center;
-    padding: 14px 16px;
-    gap: 16px;
-    overflow-x: auto;
-  }
-
-  .nav-menu {
-    flex-direction: row;
-    gap: 8px;
-  }
-
-  .nav-menu-item span {
-    display: none;
+    padding: 16px;
+    max-height: 45vh;
+    overflow-y: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
   }
 
   .app-main {
