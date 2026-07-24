@@ -6,38 +6,18 @@ var p1PatternObj = {
 }
 
 function validatePatternResult() {
-    let answerRaw = $('#patternAnswerNumber').val();
-
-    if (answerRaw === '') {
-        Swal.fire({
-            title: 'แจ้งเตือน!',
-            text: 'กรุณาใส่ตัวเลขให้ครบ',
-            icon: 'info',
-            confirmButtonText: 'ตกลง'
-        })
+    if (focusFirstEmptyField(['patternAnswerNumber'])) {
         return;
     }
 
-    let answer = +answerRaw;
+    let answer = +$('#patternAnswerNumber').val();
     let expected = p1PatternObj.terms[3] + p1PatternObj.step;
     let isCorrect = answer === expected;
     let textColor = "green";
 
-    if (isCorrect) {
-        Swal.fire({
-            icon: "success",
-            title: "ถูกต้อง!",
-            showConfirmButton: false,
-            timer: 1500
-        });
-    }
-    else {
-        Swal.fire({
-            title: 'ยังไม่ถูก!',
-            text: 'ลองดูอีกครั้งนะ',
-            icon: 'error',
-            confirmButtonText: 'ตกลง'
-        })
+    showFeedback('feedbackPattern', isCorrect);
+
+    if (!isCorrect) {
         textColor = "red";
     }
 

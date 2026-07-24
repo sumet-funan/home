@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>บทเรียนคณิตศาสตร์ - Math Lesson</title>
   <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="sweetalert2/sweetalert2.min.css">
   <link rel="stylesheet" href="bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -97,6 +96,7 @@
                 <button type="button" class="calc-submit" onclick="validatePlusResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
+                <div class="calc-feedback" id="feedbackPlus"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentResult" style="display: none;">
@@ -131,6 +131,7 @@
                 <button type="button" class="calc-submit" onclick="validateMinusResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
+                <div class="calc-feedback" id="feedbackMinus"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentMinusResult" style="display: none;">
@@ -165,6 +166,7 @@
                 <button type="button" class="calc-submit" onclick="validateMultiplyResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
+                <div class="calc-feedback" id="feedbackMultiply"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentMultiplyResult" style="display: none;">
@@ -199,6 +201,7 @@
                 <button type="button" class="calc-submit" onclick="validateDivideResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
+                <div class="calc-feedback" id="feedbackDivide"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentDivideResult" style="display: none;">
@@ -233,6 +236,7 @@
                 <button type="button" class="calc-submit" onclick="validateP1PlusResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
+                <div class="calc-feedback" id="feedbackP1Plus"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentP1PlusResult" style="display: none;">
@@ -267,6 +271,7 @@
                 <button type="button" class="calc-submit" onclick="validateP1MinusResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
+                <div class="calc-feedback" id="feedbackP1Minus"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentP1MinusResult" style="display: none;">
@@ -302,6 +307,7 @@
                 <button type="button" class="calc-submit" onclick="validateCompareResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
+                <div class="calc-feedback" id="feedbackCompare"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentCompareResult" style="display: none;">
@@ -340,6 +346,7 @@
                 <button type="button" class="calc-submit" onclick="validatePatternResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
+                <div class="calc-feedback" id="feedbackPattern"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentPatternResult" style="display: none;">
@@ -379,6 +386,7 @@
                 <button type="button" class="calc-submit" onclick="validatePlaceValueResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
+                <div class="calc-feedback" id="feedbackPlaceValue"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentPlaceValueResult" style="display: none;">
@@ -400,7 +408,6 @@
 
   <script type="text/javascript" src="bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="jquery-3.7.1.min.js"></script>
-  <script type="text/javascript" src="sweetalert2/sweetalert2.all.min.js"></script>
   <script>
     function validateResult(firstNumber, secondNumber, resultNumber, symbol) {
       let isCorrect;
@@ -421,25 +428,42 @@
           return false;
       }
 
-      if (isCorrect) {
-        Swal.fire({
-          icon: "success",
-          title: "ถูกต้อง!",
-          showConfirmButton: false,
-          timer: 1500
-        });
-      }
-      else {
-        Swal.fire({
-          title: 'ยังไม่ถูก!',
-          text: 'ลองดูอีกครั้งนะ',
-          icon: 'error',
-          confirmButtonText: 'ตกลง'
-        })
-
-      }
-
       return { status: isCorrect, message: "" };
+    }
+
+    function showFeedback(feedbackId, isCorrect) {
+      let $feedback = $('#' + feedbackId);
+      clearTimeout($feedback.data('hideTimer'));
+      $feedback.removeClass('show is-correct is-incorrect');
+      void $feedback[0].offsetWidth;
+      $feedback
+        .addClass(isCorrect ? 'is-correct' : 'is-incorrect')
+        .html(isCorrect
+          ? '<i class="bi bi-check-circle-fill"></i> ถูกต้อง เก่งมาก!'
+          : '<i class="bi bi-x-circle-fill"></i> ยังไม่ถูก ลองอีกครั้งนะ')
+        .addClass('show');
+      let timer = setTimeout(function () { $feedback.removeClass('show'); }, 1800);
+      $feedback.data('hideTimer', timer);
+    }
+
+    function flagFieldRequired(elementId) {
+      let $el = $('#' + elementId);
+      $el.removeClass('field-required');
+      void $el[0].offsetWidth;
+      $el.addClass('field-required');
+      setTimeout(function () { $el.removeClass('field-required'); }, 500);
+    }
+
+    function focusFirstEmptyField(fieldIds) {
+      for (let i = 0; i < fieldIds.length; i++) {
+        let $field = $('#' + fieldIds[i]);
+        if ($field.val() === '') {
+          $field.trigger('focus');
+          flagFieldRequired(fieldIds[i]);
+          return true;
+        }
+      }
+      return false;
     }
   </script>
   <script type="text/javascript" src="scrips/plus/index.js"></script>

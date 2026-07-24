@@ -5,41 +5,20 @@ var p1PlaceValueObj = {
 }
 
 function validatePlaceValueResult() {
-    let tensRaw = $('#placeValueTensNumber').val();
-    let unitsRaw = $('#placeValueUnitsNumber').val();
-
-    if (tensRaw === '' || unitsRaw === '') {
-        Swal.fire({
-            title: 'แจ้งเตือน!',
-            text: 'กรุณาใส่ตัวเลขให้ครบ',
-            icon: 'info',
-            confirmButtonText: 'ตกลง'
-        })
+    if (focusFirstEmptyField(['placeValueTensNumber', 'placeValueUnitsNumber'])) {
         return;
     }
 
-    let tens = +tensRaw;
-    let units = +unitsRaw;
+    let tens = +$('#placeValueTensNumber').val();
+    let units = +$('#placeValueUnitsNumber').val();
     let expectedTens = Math.floor(p1PlaceValueObj.currentNumber / 10);
     let expectedUnits = p1PlaceValueObj.currentNumber % 10;
     let isCorrect = tens === expectedTens && units === expectedUnits;
     let textColor = "green";
 
-    if (isCorrect) {
-        Swal.fire({
-            icon: "success",
-            title: "ถูกต้อง!",
-            showConfirmButton: false,
-            timer: 1500
-        });
-    }
-    else {
-        Swal.fire({
-            title: 'ยังไม่ถูก!',
-            text: 'ลองดูอีกครั้งนะ',
-            icon: 'error',
-            confirmButtonText: 'ตกลง'
-        })
+    showFeedback('feedbackPlaceValue', isCorrect);
+
+    if (!isCorrect) {
         textColor = "red";
     }
 

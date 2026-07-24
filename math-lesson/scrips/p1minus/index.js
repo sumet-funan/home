@@ -7,25 +7,16 @@ function validateP1MinusResult() {
     let textColor = "green"
     let symbol = "-"
 
-    let firstNumberRaw = $('#firstP1MinusNumber').val();
-    let secondNumberRaw = $('#secondP1MinusNumber').val();
-    let resultNumberRaw = $('#resultP1MinusNumber').val();
-
-    if (firstNumberRaw === '' || secondNumberRaw === '' || resultNumberRaw === '') {
-        Swal.fire({
-            title: 'แจ้งเตือน!',
-            text: 'กรุณาใส่ตัวเลขให้ครบ',
-            icon: 'info',
-            confirmButtonText: 'ตกลง'
-        })
+    if (focusFirstEmptyField(['firstP1MinusNumber', 'secondP1MinusNumber', 'resultP1MinusNumber'])) {
         return;
     }
 
-    let firstNumber = +firstNumberRaw;
-    let secondNumber = +secondNumberRaw;
-    let resultNumber = +resultNumberRaw;
+    let firstNumber = +$('#firstP1MinusNumber').val();
+    let secondNumber = +$('#secondP1MinusNumber').val();
+    let resultNumber = +$('#resultP1MinusNumber').val();
 
     let isCorrect = validateResult(firstNumber, secondNumber, resultNumber, symbol);
+    showFeedback('feedbackP1Minus', isCorrect.status);
 
     if (isCorrect.status) {
         addResultP1MinusToItemList({ "symbol": symbol, "firstNumber": firstNumber, "secondNumber": secondNumber, "resultNumber": resultNumber })

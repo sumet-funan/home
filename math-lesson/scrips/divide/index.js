@@ -7,25 +7,16 @@ function validateDivideResult() {
     let textColor = "green"
     let symbol = "/"
 
-    let firstNumberRaw = $('#firstDivideNumber').val();
-    let secondNumberRaw = $('#secondDivideNumber').val();
-    let resultNumberRaw = $('#resultDivideNumber').val();
-
-    if (firstNumberRaw === '' || secondNumberRaw === '' || resultNumberRaw === '') {
-        Swal.fire({
-            title: 'แจ้งเตือน!',
-            text: 'กรุณาใส่ตัวเลขให้ครบ',
-            icon: 'info',
-            confirmButtonText: 'ตกลง'
-        })
+    if (focusFirstEmptyField(['firstDivideNumber', 'secondDivideNumber', 'resultDivideNumber'])) {
         return;
     }
 
-    let firstNumber = +firstNumberRaw;
-    let secondNumber = +secondNumberRaw;
-    let resultNumber = +resultNumberRaw;
+    let firstNumber = +$('#firstDivideNumber').val();
+    let secondNumber = +$('#secondDivideNumber').val();
+    let resultNumber = +$('#resultDivideNumber').val();
 
     let isCorrect = validateResult(firstNumber, secondNumber, resultNumber, symbol);
+    showFeedback('feedbackDivide', isCorrect.status);
 
     if (isCorrect.status) {
         addResultDivideToItemList({ "symbol": symbol, "firstNumber": firstNumber, "secondNumber": secondNumber, "resultNumber": resultNumber })

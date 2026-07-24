@@ -14,12 +14,7 @@ $(document).on('click', '#compareSymbolPicker .symbol-btn', function () {
 
 function validateCompareResult() {
     if (!p1CompareObj.selectedSymbol) {
-        Swal.fire({
-            title: 'แจ้งเตือน!',
-            text: 'กรุณาเลือกเครื่องหมาย',
-            icon: 'info',
-            confirmButtonText: 'ตกลง'
-        })
+        flagFieldRequired('compareSymbolPicker');
         return;
     }
 
@@ -30,23 +25,13 @@ function validateCompareResult() {
     let isCorrect = p1CompareObj.selectedSymbol === actual;
     let textColor = "green";
 
+    showFeedback('feedbackCompare', isCorrect);
+
     if (isCorrect) {
-        Swal.fire({
-            icon: "success",
-            title: "ถูกต้อง!",
-            showConfirmButton: false,
-            timer: 1500
-        });
         addResultCompareToItemList({ firstNumber, secondNumber, symbol: symbolText })
         $('#contentCompareResult').show();
     }
     else {
-        Swal.fire({
-            title: 'ยังไม่ถูก!',
-            text: 'ลองดูอีกครั้งนะ',
-            icon: 'error',
-            confirmButtonText: 'ตกลง'
-        })
         textColor = "red";
     }
 

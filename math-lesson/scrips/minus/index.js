@@ -7,25 +7,16 @@ function validateMinusResult() {
     let textColor = "green"
     let symbol = "-"
 
-    let firstNumberRaw = $('#firstMinusNumber').val();
-    let secondNumberRaw = $('#secondMinusNumber').val();
-    let resultNumberRaw = $('#resultMinusNumber').val();
-
-    if (firstNumberRaw === '' || secondNumberRaw === '' || resultNumberRaw === '') {
-        Swal.fire({
-            title: 'แจ้งเตือน!',
-            text: 'กรุณาใส่ตัวเลขให้ครบ',
-            icon: 'info',
-            confirmButtonText: 'ตกลง'
-        })
+    if (focusFirstEmptyField(['firstMinusNumber', 'secondMinusNumber', 'resultMinusNumber'])) {
         return;
     }
 
-    let firstNumber = +firstNumberRaw;
-    let secondNumber = +secondNumberRaw;
-    let resultNumber = +resultNumberRaw;
+    let firstNumber = +$('#firstMinusNumber').val();
+    let secondNumber = +$('#secondMinusNumber').val();
+    let resultNumber = +$('#resultMinusNumber').val();
 
     let isCorrect = validateResult(firstNumber, secondNumber, resultNumber, symbol);
+    showFeedback('feedbackMinus', isCorrect.status);
 
     if (isCorrect.status) {
         addResultMinusToItemList({ "symbol": symbol, "firstNumber": firstNumber, "secondNumber": secondNumber, "resultNumber": resultNumber })
