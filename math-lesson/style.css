@@ -282,10 +282,10 @@ body {
 }
 
 .panel-body {
-  display: grid;
-  grid-template-columns: minmax(260px, 360px) 1fr;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 24px;
-  align-items: start;
 }
 
 /* ---------- calculator card ---------- */
@@ -299,6 +299,8 @@ body {
   flex-direction: column;
   align-items: stretch;
   gap: 4px;
+  max-width: 480px;
+  width: 100%;
 }
 
 .calc-input {
@@ -780,6 +782,8 @@ input[type=number] {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  max-width: 480px;
+  width: 100%;
 }
 
 .side-panel {
@@ -857,10 +861,6 @@ input[type=number] {
 /* ---------- responsive ---------- */
 
 @media (max-width: 900px) {
-  .panel-body {
-    grid-template-columns: 1fr;
-  }
-
   .side-panels {
     grid-template-columns: 1fr;
   }
