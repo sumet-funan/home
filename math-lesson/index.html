@@ -108,6 +108,10 @@
               aria-controls="content_p1_money" data-op="money">
               <i class="bi bi-cash-coin"></i><span>เงิน</span>
             </a>
+            <a class="nav-menu-item" id="menu_p1_wordproblem" data-bs-toggle="list" href="#content_p1_wordproblem"
+              role="tab" aria-controls="content_p1_wordproblem" data-op="wordproblem">
+              <i class="bi bi-journal-text"></i><span>โจทย์ปัญหา</span>
+            </a>
           </div>
         </div>
 
@@ -157,6 +161,10 @@
             <a class="nav-menu-item" id="menu_p5_barchart" data-bs-toggle="list" href="#content_p5_barchart"
               role="tab" aria-controls="content_p5_barchart" data-op="barchart">
               <i class="bi bi-bar-chart-fill"></i><span>แผนภูมิแท่ง</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_wordproblem" data-bs-toggle="list" href="#content_p5_wordproblem"
+              role="tab" aria-controls="content_p5_wordproblem" data-op="wordproblem">
+              <i class="bi bi-journal-text"></i><span>โจทย์ปัญหา</span>
             </a>
           </div>
         </div>
@@ -686,6 +694,36 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="content_p1_wordproblem" role="tabpanel" aria-labelledby="menu_p1_wordproblem">
+          <div class="operation-panel" data-op="wordproblem">
+            <div class="panel-header">
+              <h2><i class="bi bi-journal-text"></i> โจทย์ปัญหา (ป.1)</h2>
+              <p>ฝึกแก้โจทย์ปัญหาการบวกลบในชีวิตประจำวัน</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question" id="wordProblemP1Text">แม่มีส้ม 15 ผล ให้น้อง 6 ผล แม่เหลือส้มกี่ผล</div>
+                <input type="number" id="wordProblemP1AnswerNumber" class="calc-input calc-input-result"
+                  placeholder="?" aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateWordProblemP1Result()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackWordProblemP1"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentWordProblemP1Result" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultWordProblemP1List"></div>
+                </div>
+                <div class="side-panel" id="contentWordProblemP1History" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyWordProblemP1List"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="tab-pane fade" id="content_p5_decimal" role="tabpanel" aria-labelledby="menu_p5_decimal">
           <div class="operation-panel" data-op="decimal">
             <div class="panel-header">
@@ -1066,6 +1104,37 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="content_p5_wordproblem" role="tabpanel" aria-labelledby="menu_p5_wordproblem">
+          <div class="operation-panel" data-op="wordproblem">
+            <div class="panel-header">
+              <h2><i class="bi bi-journal-text"></i> โจทย์ปัญหา (ป.5)</h2>
+              <p>ฝึกแก้โจทย์ปัญหาที่รวมทศนิยม ร้อยละ พื้นที่ ปริมาตร และค่าเฉลี่ย</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question" id="wordProblemP5Text">สมชายซื้อกระเป๋าราคา 120.5 บาท และซื้อรองเท้าราคา
+                  350.0 บาท สมชายต้องจ่ายเงินทั้งหมดกี่บาท</div>
+                <input type="number" id="wordProblemP5AnswerNumber" class="calc-input calc-input-result"
+                  placeholder="?" aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateWordProblemP5Result()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackWordProblemP5"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentWordProblemP5Result" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultWordProblemP5List"></div>
+                </div>
+                <div class="side-panel" id="contentWordProblemP5History" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyWordProblemP5List"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -1196,6 +1265,7 @@
   <script type="text/javascript" src="scrips/p1capacity/index.js"></script>
   <script type="text/javascript" src="scrips/p1time/index.js"></script>
   <script type="text/javascript" src="scrips/p1money/index.js"></script>
+  <script type="text/javascript" src="scrips/p1wordproblem/index.js"></script>
   <script type="text/javascript" src="scrips/p5decimal/index.js"></script>
   <script type="text/javascript" src="scrips/p5percentage/index.js"></script>
   <script type="text/javascript" src="scrips/p5fraction/index.js"></script>
@@ -1206,6 +1276,7 @@
   <script type="text/javascript" src="scrips/p5angle/index.js"></script>
   <script type="text/javascript" src="scrips/p5average/index.js"></script>
   <script type="text/javascript" src="scrips/p5barchart/index.js"></script>
+  <script type="text/javascript" src="scrips/p5wordproblem/index.js"></script>
 </body>
 
 </html>

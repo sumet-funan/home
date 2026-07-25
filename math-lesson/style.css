@@ -61,6 +61,9 @@
   --time-bg: #faf5ff;
   --money: #f59e0b;
   --money-bg: #fffbeb;
+
+  --wordproblem: #059669;
+  --wordproblem-bg: #ecfdf5;
 }
 
 * {
@@ -216,6 +219,7 @@ body {
 .nav-menu-item[data-op="capacity"] { --accent: var(--capacity); --accent-bg: var(--capacity-bg); }
 .nav-menu-item[data-op="time"] { --accent: var(--time); --accent-bg: var(--time-bg); }
 .nav-menu-item[data-op="money"] { --accent: var(--money); --accent-bg: var(--money-bg); }
+.nav-menu-item[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
 
 .nav-menu-item.active {
   background: var(--accent-bg);
@@ -261,6 +265,7 @@ body {
 .operation-panel[data-op="capacity"] { --accent: var(--capacity); --accent-bg: var(--capacity-bg); }
 .operation-panel[data-op="time"] { --accent: var(--time); --accent-bg: var(--time-bg); }
 .operation-panel[data-op="money"] { --accent: var(--money); --accent-bg: var(--money-bg); }
+.operation-panel[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
 
 .panel-header {
   margin-bottom: 24px;
@@ -1042,6 +1047,7 @@ input[type=number] {
     --capacity-bg: #04202e;
     --time-bg: #220d30;
     --money-bg: #2c2007;
+    --wordproblem-bg: #052e22;
   }
 
   .answer-chip.is-incorrect {
