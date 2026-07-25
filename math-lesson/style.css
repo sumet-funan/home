@@ -378,6 +378,12 @@ body {
   padding: 6px 0;
 }
 
+.calc-number-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .calc-submit {
   margin-top: 18px;
   border: none;

@@ -319,13 +319,20 @@
               <p>ฝึกการบวกจำนวนนับไม่เกิน 100 สำหรับชั้นประถมศึกษาปีที่ 1</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="p1PlusFormatPicker">
+                <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
+                <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
+              </div>
               <div class="calc-card">
-                <input type="number" id="firstP1PlusNumber" class="calc-input" placeholder="0"
-                  aria-label="First Number">
-                <div class="calc-symbol">+</div>
-                <input type="number" id="secondP1PlusNumber" class="calc-input" placeholder="0"
-                  aria-label="Second Number">
-                <div class="calc-symbol">=</div>
+                <div class="calc-number-display" id="p1PlusNumberDisplay">
+                  <input type="number" id="firstP1PlusNumber" class="calc-input" placeholder="0"
+                    aria-label="First Number">
+                  <div class="calc-symbol">+</div>
+                  <input type="number" id="secondP1PlusNumber" class="calc-input" placeholder="0"
+                    aria-label="Second Number">
+                  <div class="calc-symbol">=</div>
+                </div>
+                <div class="word-question" id="p1PlusWordText" style="display: none;"></div>
                 <input type="number" id="resultP1PlusNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateP1PlusResult()">
@@ -354,13 +361,20 @@
               <p>ฝึกการลบจำนวนนับไม่เกิน 100 สำหรับชั้นประถมศึกษาปีที่ 1</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="p1MinusFormatPicker">
+                <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
+                <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
+              </div>
               <div class="calc-card">
-                <input type="number" id="firstP1MinusNumber" class="calc-input" placeholder="0"
-                  aria-label="First Number">
-                <div class="calc-symbol">-</div>
-                <input type="number" id="secondP1MinusNumber" class="calc-input" placeholder="0"
-                  aria-label="Second Number">
-                <div class="calc-symbol">=</div>
+                <div class="calc-number-display" id="p1MinusNumberDisplay">
+                  <input type="number" id="firstP1MinusNumber" class="calc-input" placeholder="0"
+                    aria-label="First Number">
+                  <div class="calc-symbol">-</div>
+                  <input type="number" id="secondP1MinusNumber" class="calc-input" placeholder="0"
+                    aria-label="Second Number">
+                  <div class="calc-symbol">=</div>
+                </div>
+                <div class="word-question" id="p1MinusWordText" style="display: none;"></div>
                 <input type="number" id="resultP1MinusNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateP1MinusResult()">
@@ -738,13 +752,20 @@
                 <button type="button" class="mode-btn" data-mode="*">×</button>
                 <button type="button" class="mode-btn" data-mode="/">÷</button>
               </div>
+              <div class="mode-picker" id="decimalFormatPicker">
+                <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
+                <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
+              </div>
               <div class="calc-card">
-                <input type="number" step="0.1" id="firstDecimalNumber" class="calc-input" placeholder="0"
-                  aria-label="First Number">
-                <div class="calc-symbol" id="decimalSymbol">+</div>
-                <input type="number" step="0.1" id="secondDecimalNumber" class="calc-input" placeholder="0"
-                  aria-label="Second Number">
-                <div class="calc-symbol">=</div>
+                <div class="calc-number-display" id="decimalNumberDisplay">
+                  <input type="number" step="0.1" id="firstDecimalNumber" class="calc-input" placeholder="0"
+                    aria-label="First Number">
+                  <div class="calc-symbol" id="decimalSymbol">+</div>
+                  <input type="number" step="0.1" id="secondDecimalNumber" class="calc-input" placeholder="0"
+                    aria-label="Second Number">
+                  <div class="calc-symbol">=</div>
+                </div>
+                <div class="word-question" id="decimalWordText" style="display: none;"></div>
                 <input type="number" step="0.1" id="resultDecimalNumber" class="calc-input calc-input-result"
                   placeholder="?" aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateDecimalResult()">
@@ -773,10 +794,15 @@
               <p>หาค่าร้อยละของจำนวนที่กำหนด</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="percentageFormatPicker">
+                <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
+                <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
+              </div>
               <div class="calc-card">
-                <div class="word-question">
+                <div class="word-question" id="percentageNumberDisplay">
                   ร้อยละ <span id="percentageValue">20</span> ของ <span id="percentageBase">150</span> เท่ากับเท่าไร
                 </div>
+                <div class="word-question" id="percentageWordText" style="display: none;"></div>
                 <input type="number" id="percentageAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validatePercentageResult()">
@@ -1050,8 +1076,13 @@
               <p>หาค่าเฉลี่ยของชุดข้อมูล</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="averageFormatPicker">
+                <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
+                <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
+              </div>
               <div class="calc-card">
                 <div class="word-question" id="averageNumbersDisplay">10, 20, 30, 40</div>
+                <div class="word-question" id="averageWordText" style="display: none;"></div>
                 <input type="number" id="averageAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateAverageResult()">
@@ -1216,6 +1247,22 @@
         $('#' + pickerId + ' .mode-btn').removeClass('active');
         $(this).addClass('active');
         stateObj.mode = $(this).data('mode');
+        regenerateFn();
+      });
+    }
+
+    function bindFormatPicker(pickerId, numberDisplayId, wordDisplayId, stateObj, regenerateFn) {
+      $('#' + pickerId).on('click', '.mode-btn', function () {
+        $('#' + pickerId + ' .mode-btn').removeClass('active');
+        $(this).addClass('active');
+        stateObj.format = $(this).data('format');
+        if (stateObj.format === 'word') {
+          $('#' + numberDisplayId).hide();
+          $('#' + wordDisplayId).show();
+        } else {
+          $('#' + numberDisplayId).show();
+          $('#' + wordDisplayId).hide();
+        }
         regenerateFn();
       });
     }

@@ -3,6 +3,14 @@ var p5AverageObj = {
     numRowsHistory: 1,
     numbers: [10, 20, 30, 40],
     expected: 25,
+    format: "number",
+}
+
+var wordProblemAverageNames = ['สมชาย', 'สมหญิง', 'มานี', 'มานะ', 'ครูใหญ่'];
+
+function buildAverageWordText(numbers) {
+    let name = wordProblemAverageNames[parseInt(Math.random() * wordProblemAverageNames.length)];
+    return `${name}สอบ ${numbers.length} วิชา ได้คะแนน ${numbers.join(', ')} คะแนน เฉลี่ยแล้วได้กี่คะแนน`;
 }
 
 function validateAverageResult() {
@@ -87,6 +95,12 @@ function addSuggestAverageValue() {
 
     $('#averageNumbersDisplay').text(numbers.join(', '));
     $('#averageAnswerNumber').val('');
+
+    if (p5AverageObj.format === 'word') {
+        $('#averageWordText').text(buildAverageWordText(numbers));
+    }
 }
+
+bindFormatPicker('averageFormatPicker', 'averageNumbersDisplay', 'averageWordText', p5AverageObj, addSuggestAverageValue);
 
 addSuggestAverageValue();

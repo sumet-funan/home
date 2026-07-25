@@ -3,6 +3,26 @@ var p5DecimalObj = {
     numRowsHistory: 1,
     symbol: "+",
     mode: "all",
+    format: "number",
+}
+
+var wordProblemDecimalNames = ['สมชาย', 'สมหญิง', 'มานี', 'มานะ'];
+var wordProblemDecimalItems = ['กระเป๋า', 'รองเท้า', 'เสื้อ', 'หนังสือ', 'ของเล่น', 'นาฬิกา'];
+
+function buildDecimalWordText(firstNumber, secondNumber, symbol) {
+    let name = wordProblemDecimalNames[parseInt(Math.random() * wordProblemDecimalNames.length)];
+    let item = wordProblemDecimalItems[parseInt(Math.random() * wordProblemDecimalItems.length)];
+    let item2 = wordProblemDecimalItems[parseInt(Math.random() * wordProblemDecimalItems.length)];
+
+    if (symbol === "+") {
+        return `${name}ซื้อ${item}ราคา ${firstNumber} บาท และซื้อ${item2}ราคา ${secondNumber} บาท ${name}ต้องจ่ายเงินทั้งหมดกี่บาท`;
+    } else if (symbol === "-") {
+        return `${name}มีเงิน ${firstNumber} บาท ซื้อ${item}ราคา ${secondNumber} บาท ${name}จะเหลือเงินกี่บาท`;
+    } else if (symbol === "*") {
+        return `${name}ซื้อ${item}ชิ้นละ ${firstNumber} บาท จำนวน ${secondNumber} ชิ้น ${name}ต้องจ่ายเงินทั้งหมดกี่บาท`;
+    } else {
+        return `${name}มีเงิน ${firstNumber} บาท แบ่งซื้อ${item} ${secondNumber} ชิ้นเท่าๆกัน แต่ละชิ้นราคากี่บาท`;
+    }
 }
 
 function validateDecimalResult() {
@@ -85,34 +105,46 @@ function addSuggestDecimalValue() {
     let symbol = p5DecimalObj.mode === "all" ? symbols[parseInt(Math.random() * symbols.length)] : p5DecimalObj.mode;
     p5DecimalObj.symbol = symbol;
 
+    let firstNumber, secondNumber;
+
     if (symbol === "/") {
         let divisor = parseInt(Math.random() * 8) + 2;
         let quotientTenths = parseInt(Math.random() * 490) + 10;
         let dividendTenths = quotientTenths * divisor;
-        $('#firstDecimalNumber').val((dividendTenths / 10).toFixed(1));
-        $('#secondDecimalNumber').val(divisor);
+        firstNumber = (dividendTenths / 10).toFixed(1);
+        secondNumber = divisor;
+        $('#firstDecimalNumber').val(firstNumber);
+        $('#secondDecimalNumber').val(secondNumber);
         $('#decimalSymbol').text('÷');
-        return;
+    } else {
+        let firstTenths = parseInt(Math.random() * 490) + 10;
+        firstNumber = (firstTenths / 10).toFixed(1);
+        $('#firstDecimalNumber').val(firstNumber);
+
+        if (symbol === "*") {
+            let multiplier = parseInt(Math.random() * 8) + 2;
+            secondNumber = multiplier;
+            $('#secondDecimalNumber').val(secondNumber);
+            $('#decimalSymbol').text('×');
+        } else if (symbol === "-") {
+            let secondTenths = parseInt(Math.random() * (firstTenths + 1));
+            secondNumber = (secondTenths / 10).toFixed(1);
+            $('#secondDecimalNumber').val(secondNumber);
+            $('#decimalSymbol').text('-');
+        } else {
+            let secondTenths = parseInt(Math.random() * 490) + 10;
+            secondNumber = (secondTenths / 10).toFixed(1);
+            $('#secondDecimalNumber').val(secondNumber);
+            $('#decimalSymbol').text('+');
+        }
     }
 
-    let firstTenths = parseInt(Math.random() * 490) + 10;
-    $('#firstDecimalNumber').val((firstTenths / 10).toFixed(1));
-
-    if (symbol === "*") {
-        let multiplier = parseInt(Math.random() * 8) + 2;
-        $('#secondDecimalNumber').val(multiplier);
-        $('#decimalSymbol').text('×');
-    } else if (symbol === "-") {
-        let secondTenths = parseInt(Math.random() * (firstTenths + 1));
-        $('#secondDecimalNumber').val((secondTenths / 10).toFixed(1));
-        $('#decimalSymbol').text('-');
-    } else {
-        let secondTenths = parseInt(Math.random() * 490) + 10;
-        $('#secondDecimalNumber').val((secondTenths / 10).toFixed(1));
-        $('#decimalSymbol').text('+');
+    if (p5DecimalObj.format === 'word') {
+        $('#decimalWordText').text(buildDecimalWordText(firstNumber, secondNumber, symbol));
     }
 }
 
 bindModePicker('decimalModePicker', p5DecimalObj, addSuggestDecimalValue);
+bindFormatPicker('decimalFormatPicker', 'decimalNumberDisplay', 'decimalWordText', p5DecimalObj, addSuggestDecimalValue);
 
 addSuggestDecimalValue();

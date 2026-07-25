@@ -2,6 +2,11 @@ var p5PercentageObj = {
     numRows: 1,
     numRowsHistory: 1,
     expected: 0,
+    format: "number",
+}
+
+function buildPercentageWordText(percent, base) {
+    return `ในโรงเรียนมีนักเรียน ${base} คน เป็นนักเรียนหญิงร้อยละ ${percent} มีนักเรียนหญิงกี่คน`;
 }
 
 function validatePercentageResult() {
@@ -66,6 +71,12 @@ function addSuggestPercentageValue() {
     $('#percentageValue').text(percent);
     $('#percentageBase').text(base);
     $('#percentageAnswerNumber').val('');
+
+    if (p5PercentageObj.format === 'word') {
+        $('#percentageWordText').text(buildPercentageWordText(percent, base));
+    }
 }
+
+bindFormatPicker('percentageFormatPicker', 'percentageNumberDisplay', 'percentageWordText', p5PercentageObj, addSuggestPercentageValue);
 
 addSuggestPercentageValue();
