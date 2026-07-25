@@ -23,8 +23,10 @@ function validateDecimalResult() {
         expectedTenths = firstTenths + secondTenths;
     } else if (symbol === "-") {
         expectedTenths = firstTenths - secondTenths;
-    } else {
+    } else if (symbol === "*") {
         expectedTenths = Math.round(firstTenths * secondTenths / 10);
+    } else {
+        expectedTenths = Math.round(firstTenths * 10 / secondTenths);
     }
 
     let isCorrect = resultTenths === expectedTenths;
@@ -78,9 +80,19 @@ function clearDecimalValue() {
 }
 
 function addSuggestDecimalValue() {
-    let symbols = ["+", "-", "*"];
+    let symbols = ["+", "-", "*", "/"];
     let symbol = symbols[parseInt(Math.random() * symbols.length)];
     p5DecimalObj.symbol = symbol;
+
+    if (symbol === "/") {
+        let divisor = parseInt(Math.random() * 8) + 2;
+        let quotientTenths = parseInt(Math.random() * 490) + 10;
+        let dividendTenths = quotientTenths * divisor;
+        $('#firstDecimalNumber').val((dividendTenths / 10).toFixed(1));
+        $('#secondDecimalNumber').val(divisor);
+        $('#decimalSymbol').text('÷');
+        return;
+    }
 
     let firstTenths = parseInt(Math.random() * 490) + 10;
     $('#firstDecimalNumber').val((firstTenths / 10).toFixed(1));

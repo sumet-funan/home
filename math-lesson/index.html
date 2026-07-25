@@ -97,6 +97,30 @@
               aria-controls="content_p5_gcflcm" data-op="gcflcm">
               <i class="bi bi-intersect"></i><span>ห.ร.ม. / ค.ร.น.</span>
             </a>
+            <a class="nav-menu-item" id="menu_p5_mixednumber" data-bs-toggle="list" href="#content_p5_mixednumber"
+              role="tab" aria-controls="content_p5_mixednumber" data-op="mixednumber">
+              <i class="bi bi-stack"></i><span>จำนวนคละ</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_geometry" data-bs-toggle="list" href="#content_p5_geometry"
+              role="tab" aria-controls="content_p5_geometry" data-op="geometry">
+              <i class="bi bi-rulers"></i><span>พื้นที่ / รอบรูป</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_volume" data-bs-toggle="list" href="#content_p5_volume" role="tab"
+              aria-controls="content_p5_volume" data-op="volume">
+              <i class="bi bi-box"></i><span>ปริมาตร</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_angle" data-bs-toggle="list" href="#content_p5_angle" role="tab"
+              aria-controls="content_p5_angle" data-op="angle">
+              <i class="bi bi-compass"></i><span>มุม</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_average" data-bs-toggle="list" href="#content_p5_average" role="tab"
+              aria-controls="content_p5_average" data-op="average">
+              <i class="bi bi-clipboard-data"></i><span>ค่าเฉลี่ย</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_barchart" data-bs-toggle="list" href="#content_p5_barchart"
+              role="tab" aria-controls="content_p5_barchart" data-op="barchart">
+              <i class="bi bi-bar-chart-fill"></i><span>แผนภูมิแท่ง</span>
+            </a>
           </div>
         </div>
       </div>
@@ -432,7 +456,7 @@
           <div class="operation-panel" data-op="decimal">
             <div class="panel-header">
               <h2><i class="bi bi-123"></i> ทศนิยม (ป.5)</h2>
-              <p>ฝึกการบวก ลบ คูณ ทศนิยม</p>
+              <p>ฝึกการบวก ลบ คูณ หาร ทศนิยม</p>
             </div>
             <div class="panel-body">
               <div class="calc-card">
@@ -575,6 +599,202 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="content_p5_mixednumber" role="tabpanel" aria-labelledby="menu_p5_mixednumber">
+          <div class="operation-panel" data-op="mixednumber">
+            <div class="panel-header">
+              <h2><i class="bi bi-stack"></i> จำนวนคละ (ป.5)</h2>
+              <p>เปลี่ยนเศษเกินให้เป็นจำนวนคละ</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="mixednumber-row">
+                  <div class="fraction">
+                    <span class="fraction-num" id="mixedNumeratorDisplay">11</span>
+                    <span class="fraction-bar"></span>
+                    <span class="fraction-den" id="mixedDenominatorDisplay">4</span>
+                  </div>
+                  <div class="fraction-symbol">=</div>
+                  <input type="number" id="mixedWholeNumber" class="calc-input fraction-answer-input" placeholder="?"
+                    aria-label="Whole number">
+                  <div class="fraction">
+                    <input type="number" id="mixedFractionNumerator" class="calc-input fraction-answer-input"
+                      placeholder="?" aria-label="Numerator">
+                    <span class="fraction-bar"></span>
+                    <span class="fraction-den" id="mixedFractionDenominator">4</span>
+                  </div>
+                </div>
+                <button type="button" class="calc-submit" onclick="validateMixedNumberResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackMixedNumber"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentMixedNumberResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultMixedNumberList"></div>
+                </div>
+                <div class="side-panel" id="contentMixedNumberHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyMixedNumberList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_geometry" role="tabpanel" aria-labelledby="menu_p5_geometry">
+          <div class="operation-panel" data-op="geometry">
+            <div class="panel-header">
+              <h2><i class="bi bi-rulers"></i> พื้นที่และรอบรูป (ป.5)</h2>
+              <p>หาพื้นที่หรือความยาวรอบรูปของสี่เหลี่ยมและสามเหลี่ยม</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question" id="geometryQuestion">สี่เหลี่ยมผืนผ้า กว้าง 5 หน่วย ยาว 8 หน่วย มีพื้นที่เท่ากับเท่าไร (ตารางหน่วย)</div>
+                <input type="number" id="geometryAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateGeometryResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackGeometry"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentGeometryResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultGeometryList"></div>
+                </div>
+                <div class="side-panel" id="contentGeometryHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyGeometryList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_volume" role="tabpanel" aria-labelledby="menu_p5_volume">
+          <div class="operation-panel" data-op="volume">
+            <div class="panel-header">
+              <h2><i class="bi bi-box"></i> ปริมาตร (ป.5)</h2>
+              <p>หาปริมาตรของกล่องสี่เหลี่ยมมุมฉาก</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question" id="volumeQuestion">กล่องสี่เหลี่ยมมุมฉาก กว้าง 3 ยาว 4 สูง 2 หน่วย
+                  มีปริมาตรเท่ากับเท่าไร (ลูกบาศก์หน่วย)</div>
+                <input type="number" id="volumeAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateVolumeResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackVolume"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentVolumeResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultVolumeList"></div>
+                </div>
+                <div class="side-panel" id="contentVolumeHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyVolumeList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_angle" role="tabpanel" aria-labelledby="menu_p5_angle">
+          <div class="operation-panel" data-op="angle">
+            <div class="panel-header">
+              <h2><i class="bi bi-compass"></i> มุม (ป.5)</h2>
+              <p>หามุมประกอบมุมฉากหรือมุมประกอบมุมตรง</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question" id="angleQuestion">มุม A มีขนาด 35 องศา เป็นมุมประกอบมุมฉากกับมุม B<br>มุม B
+                  มีขนาดกี่องศา</div>
+                <input type="number" id="angleAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateAngleResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackAngle"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentAngleResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultAngleList"></div>
+                </div>
+                <div class="side-panel" id="contentAngleHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyAngleList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_average" role="tabpanel" aria-labelledby="menu_p5_average">
+          <div class="operation-panel" data-op="average">
+            <div class="panel-header">
+              <h2><i class="bi bi-clipboard-data"></i> ค่าเฉลี่ย (ป.5)</h2>
+              <p>หาค่าเฉลี่ยของชุดข้อมูล</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question" id="averageNumbersDisplay">10, 20, 30, 40</div>
+                <input type="number" id="averageAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateAverageResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackAverage"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentAverageResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultAverageList"></div>
+                </div>
+                <div class="side-panel" id="contentAverageHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyAverageList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_barchart" role="tabpanel" aria-labelledby="menu_p5_barchart">
+          <div class="operation-panel" data-op="barchart">
+            <div class="panel-header">
+              <h2><i class="bi bi-bar-chart-fill"></i> แผนภูมิแท่ง (ป.5)</h2>
+              <p>อ่านข้อมูลจากแผนภูมิแท่งแสดงจำนวนนักเรียนที่ชอบผลไม้แต่ละชนิด</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="bar-chart" id="barChartContainer"></div>
+                <div class="word-question" id="barChartQuestion">นักเรียนชอบแอปเปิ้ลกี่คน</div>
+                <input type="number" id="barChartAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateBarChartResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackBarChart"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentBarChartResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultBarChartList"></div>
+                </div>
+                <div class="side-panel" id="contentBarChartHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyBarChartList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -652,6 +872,12 @@
   <script type="text/javascript" src="scrips/p5percentage/index.js"></script>
   <script type="text/javascript" src="scrips/p5fraction/index.js"></script>
   <script type="text/javascript" src="scrips/p5gcflcm/index.js"></script>
+  <script type="text/javascript" src="scrips/p5mixednumber/index.js"></script>
+  <script type="text/javascript" src="scrips/p5geometry/index.js"></script>
+  <script type="text/javascript" src="scrips/p5volume/index.js"></script>
+  <script type="text/javascript" src="scrips/p5angle/index.js"></script>
+  <script type="text/javascript" src="scrips/p5average/index.js"></script>
+  <script type="text/javascript" src="scrips/p5barchart/index.js"></script>
 </body>
 
 </html>

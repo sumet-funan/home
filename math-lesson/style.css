@@ -35,6 +35,19 @@
   --fraction-bg: #f0f9ff;
   --gcflcm: #475569;
   --gcflcm-bg: #f1f5f9;
+
+  --mixednumber: #c026d3;
+  --mixednumber-bg: #fdf4ff;
+  --geometry: #78350f;
+  --geometry-bg: #fefce8;
+  --volume: #2563eb;
+  --volume-bg: #eff6ff;
+  --angle: #6b21a8;
+  --angle-bg: #faf5ff;
+  --average: #15803d;
+  --average-bg: #f0fdf4;
+  --barchart: #c2410c;
+  --barchart-bg: #fff7ed;
 }
 
 * {
@@ -177,6 +190,12 @@ body {
 .nav-menu-item[data-op="percentage"] { --accent: var(--percentage); --accent-bg: var(--percentage-bg); }
 .nav-menu-item[data-op="fraction"] { --accent: var(--fraction); --accent-bg: var(--fraction-bg); }
 .nav-menu-item[data-op="gcflcm"] { --accent: var(--gcflcm); --accent-bg: var(--gcflcm-bg); }
+.nav-menu-item[data-op="mixednumber"] { --accent: var(--mixednumber); --accent-bg: var(--mixednumber-bg); }
+.nav-menu-item[data-op="geometry"] { --accent: var(--geometry); --accent-bg: var(--geometry-bg); }
+.nav-menu-item[data-op="volume"] { --accent: var(--volume); --accent-bg: var(--volume-bg); }
+.nav-menu-item[data-op="angle"] { --accent: var(--angle); --accent-bg: var(--angle-bg); }
+.nav-menu-item[data-op="average"] { --accent: var(--average); --accent-bg: var(--average-bg); }
+.nav-menu-item[data-op="barchart"] { --accent: var(--barchart); --accent-bg: var(--barchart-bg); }
 
 .nav-menu-item.active {
   background: var(--accent-bg);
@@ -202,6 +221,12 @@ body {
 .operation-panel[data-op="percentage"] { --accent: var(--percentage); --accent-bg: var(--percentage-bg); }
 .operation-panel[data-op="fraction"] { --accent: var(--fraction); --accent-bg: var(--fraction-bg); }
 .operation-panel[data-op="gcflcm"] { --accent: var(--gcflcm); --accent-bg: var(--gcflcm-bg); }
+.operation-panel[data-op="mixednumber"] { --accent: var(--mixednumber); --accent-bg: var(--mixednumber-bg); }
+.operation-panel[data-op="geometry"] { --accent: var(--geometry); --accent-bg: var(--geometry-bg); }
+.operation-panel[data-op="volume"] { --accent: var(--volume); --accent-bg: var(--volume-bg); }
+.operation-panel[data-op="angle"] { --accent: var(--angle); --accent-bg: var(--angle-bg); }
+.operation-panel[data-op="average"] { --accent: var(--average); --accent-bg: var(--average-bg); }
+.operation-panel[data-op="barchart"] { --accent: var(--barchart); --accent-bg: var(--barchart-bg); }
 
 .panel-header {
   margin-bottom: 24px;
@@ -519,6 +544,62 @@ input[type=number] {
   text-align: center;
 }
 
+/* ---------- mixed numbers ---------- */
+
+.mixednumber-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+/* ---------- bar chart ---------- */
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  height: 200px;
+  padding: 10px 6px 0;
+  margin-bottom: 18px;
+}
+
+.bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 52px;
+}
+
+.bar-value {
+  font-weight: 700;
+  font-size: .9rem;
+  color: var(--accent);
+}
+
+.bar-fill {
+  width: 100%;
+  background: var(--accent);
+  border-radius: 6px 6px 0 0;
+  min-height: 4px;
+  transition: height .3s ease;
+}
+
+.bar-label {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* ---------- place value ---------- */
 
 .place-value-number {
@@ -679,6 +760,12 @@ input[type=number] {
     --percentage-bg: #2c0f16;
     --fraction-bg: #0b1f2e;
     --gcflcm-bg: #1c222b;
+    --mixednumber-bg: #2b0a30;
+    --geometry-bg: #241c06;
+    --volume-bg: #0d1b30;
+    --angle-bg: #1f0f2e;
+    --average-bg: #0c2417;
+    --barchart-bg: #2b1206;
   }
 
   .answer-chip.is-incorrect {
