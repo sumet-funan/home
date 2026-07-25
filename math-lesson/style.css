@@ -83,7 +83,7 @@ body {
 
 .app-shell {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .app-sidebar {
@@ -95,6 +95,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  overflow-y: auto;
 }
 
 .app-brand {
@@ -225,6 +226,7 @@ body {
   flex: 1;
   min-width: 0;
   padding: 36px 40px;
+  overflow-y: auto;
 }
 
 /* ---------- operation panel ---------- */
