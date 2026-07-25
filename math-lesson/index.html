@@ -1071,6 +1071,18 @@
         .addClass('show');
       let timer = setTimeout(function () { $feedback.removeClass('show'); }, 1800);
       $feedback.data('hideTimer', timer);
+      focusAnswerField($feedback);
+    }
+
+    function focusAnswerField($within) {
+      let $card = $within.closest('.calc-card');
+      let $target = $card.find('.calc-input-result');
+      if ($target.length === 0) {
+        $target = $card.find('.calc-input').last();
+      }
+      if ($target.length > 0) {
+        $target.trigger('focus');
+      }
     }
 
     function flagFieldRequired(elementId) {
@@ -1113,6 +1125,13 @@
     $('#list-tab').on('click', 'a.nav-menu-item', function () {
       if (window.innerWidth <= 720) {
         closeSidebar();
+      }
+    });
+
+    $(document).on('keydown', '.calc-card input', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        $(this).closest('.calc-card').find('.calc-submit').trigger('click');
       }
     });
   </script>
