@@ -1,25 +1,33 @@
 var p5MixedNumberObj = {
     numRows: 1,
     numRowsHistory: 1,
-    numerator: 11,
-    denominator: 4,
+    firstWhole: 2,
+    firstNumerator: 1,
+    firstDenominator: 4,
+    secondWhole: 1,
+    secondNumerator: 2,
+    secondDenominator: 3,
+    symbol: "+",
+    trueNumerator: 0,
+    trueDenominator: 1,
 }
 
 function validateMixedNumberResult() {
-    if (focusFirstEmptyField(['mixedWholeNumber', 'mixedFractionNumerator'])) {
+    if (focusFirstEmptyField(['mixedAnswerWhole', 'mixedAnswerNumerator', 'mixedAnswerDenominator'])) {
         return;
     }
 
-    let whole = +$('#mixedWholeNumber').val();
-    let numerator = +$('#mixedFractionNumerator').val();
-    let expectedWhole = Math.floor(p5MixedNumberObj.numerator / p5MixedNumberObj.denominator);
-    let expectedNumerator = p5MixedNumberObj.numerator % p5MixedNumberObj.denominator;
-    let isCorrect = whole === expectedWhole && numerator === expectedNumerator;
+    let answerWhole = +$('#mixedAnswerWhole').val();
+    let answerNumerator = +$('#mixedAnswerNumerator').val();
+    let answerDenominator = +$('#mixedAnswerDenominator').val();
+    let answerImproperNumerator = answerWhole * answerDenominator + answerNumerator;
+    let isCorrect = answerDenominator > 0
+        && answerImproperNumerator * p5MixedNumberObj.trueDenominator === p5MixedNumberObj.trueNumerator * answerDenominator;
     let textColor = "green";
 
     showFeedback('feedbackMixedNumber', isCorrect);
 
-    let expr = `${p5MixedNumberObj.numerator}/${p5MixedNumberObj.denominator} = ${whole} ${numerator}/${p5MixedNumberObj.denominator}`;
+    let expr = `${p5MixedNumberObj.firstWhole} ${p5MixedNumberObj.firstNumerator}/${p5MixedNumberObj.firstDenominator} ${p5MixedNumberObj.symbol} ${p5MixedNumberObj.secondWhole} ${p5MixedNumberObj.secondNumerator}/${p5MixedNumberObj.secondDenominator} = ${answerWhole} ${answerNumerator}/${answerDenominator}`;
 
     if (isCorrect) {
         addResultMixedNumberToItemList({ expr })
@@ -60,19 +68,59 @@ function addResultMixedNumberToHistoryList(item) {
 
 function addSuggestMixedNumberValue() {
     let denominators = [2, 3, 4, 5, 6, 8, 10, 12];
-    let denominator = denominators[parseInt(Math.random() * denominators.length)];
-    let whole = parseInt(Math.random() * 6) + 1;
-    let remainder = parseInt(Math.random() * denominator);
-    let numerator = whole * denominator + remainder;
+    let symbols = ["+", "-", "×", "÷"];
+    let symbol = symbols[parseInt(Math.random() * symbols.length)];
 
-    p5MixedNumberObj.numerator = numerator;
-    p5MixedNumberObj.denominator = denominator;
+    let firstWhole, firstDenominator, firstNumerator, firstImproperNumerator;
+    let secondWhole, secondDenominator, secondNumerator, secondImproperNumerator;
+    let trueNumerator, trueDenominator;
 
-    $('#mixedNumeratorDisplay').text(numerator);
-    $('#mixedDenominatorDisplay').text(denominator);
-    $('#mixedFractionDenominator').text(denominator);
-    $('#mixedWholeNumber').val('');
-    $('#mixedFractionNumerator').val('');
+    do {
+        firstWhole = parseInt(Math.random() * 5) + 1;
+        firstDenominator = denominators[parseInt(Math.random() * denominators.length)];
+        firstNumerator = parseInt(Math.random() * (firstDenominator - 1)) + 1;
+        firstImproperNumerator = firstWhole * firstDenominator + firstNumerator;
+
+        secondWhole = parseInt(Math.random() * 5) + 1;
+        secondDenominator = denominators[parseInt(Math.random() * denominators.length)];
+        secondNumerator = parseInt(Math.random() * (secondDenominator - 1)) + 1;
+        secondImproperNumerator = secondWhole * secondDenominator + secondNumerator;
+
+        if (symbol === "+") {
+            trueNumerator = firstImproperNumerator * secondDenominator + secondImproperNumerator * firstDenominator;
+            trueDenominator = firstDenominator * secondDenominator;
+        } else if (symbol === "-") {
+            trueNumerator = firstImproperNumerator * secondDenominator - secondImproperNumerator * firstDenominator;
+            trueDenominator = firstDenominator * secondDenominator;
+        } else if (symbol === "×") {
+            trueNumerator = firstImproperNumerator * secondImproperNumerator;
+            trueDenominator = firstDenominator * secondDenominator;
+        } else {
+            trueNumerator = firstImproperNumerator * secondDenominator;
+            trueDenominator = firstDenominator * secondImproperNumerator;
+        }
+    } while (trueNumerator < 0);
+
+    p5MixedNumberObj.firstWhole = firstWhole;
+    p5MixedNumberObj.firstNumerator = firstNumerator;
+    p5MixedNumberObj.firstDenominator = firstDenominator;
+    p5MixedNumberObj.secondWhole = secondWhole;
+    p5MixedNumberObj.secondNumerator = secondNumerator;
+    p5MixedNumberObj.secondDenominator = secondDenominator;
+    p5MixedNumberObj.symbol = symbol;
+    p5MixedNumberObj.trueNumerator = trueNumerator;
+    p5MixedNumberObj.trueDenominator = trueDenominator;
+
+    $('#firstMixedWhole').text(firstWhole);
+    $('#firstMixedNumerator').text(firstNumerator);
+    $('#firstMixedDenominator').text(firstDenominator);
+    $('#secondMixedWhole').text(secondWhole);
+    $('#secondMixedNumerator').text(secondNumerator);
+    $('#secondMixedDenominator').text(secondDenominator);
+    $('#mixedSymbol').text(symbol);
+    $('#mixedAnswerWhole').val('');
+    $('#mixedAnswerNumerator').val('');
+    $('#mixedAnswerDenominator').val('');
 }
 
 addSuggestMixedNumberValue();

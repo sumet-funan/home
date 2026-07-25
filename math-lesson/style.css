@@ -591,6 +591,18 @@ input[type=number] {
   margin-bottom: 8px;
 }
 
+.mixed-number {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mixed-whole {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
 /* ---------- bar chart ---------- */
 
 .bar-chart {

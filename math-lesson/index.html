@@ -838,24 +838,39 @@
           <div class="operation-panel" data-op="mixednumber">
             <div class="panel-header">
               <h2><i class="bi bi-stack"></i> จำนวนคละ (ป.5)</h2>
-              <p>เปลี่ยนเศษเกินให้เป็นจำนวนคละ</p>
+              <p>ฝึกการบวก ลบ คูณ หาร จำนวนคละ</p>
             </div>
             <div class="panel-body">
               <div class="calc-card">
                 <div class="mixednumber-row">
-                  <div class="fraction">
-                    <span class="fraction-num" id="mixedNumeratorDisplay">11</span>
-                    <span class="fraction-bar"></span>
-                    <span class="fraction-den" id="mixedDenominatorDisplay">4</span>
+                  <div class="mixed-number">
+                    <span class="mixed-whole" id="firstMixedWhole">2</span>
+                    <div class="fraction">
+                      <span class="fraction-num" id="firstMixedNumerator">1</span>
+                      <span class="fraction-bar"></span>
+                      <span class="fraction-den" id="firstMixedDenominator">4</span>
+                    </div>
+                  </div>
+                  <div class="fraction-symbol" id="mixedSymbol">+</div>
+                  <div class="mixed-number">
+                    <span class="mixed-whole" id="secondMixedWhole">1</span>
+                    <div class="fraction">
+                      <span class="fraction-num" id="secondMixedNumerator">2</span>
+                      <span class="fraction-bar"></span>
+                      <span class="fraction-den" id="secondMixedDenominator">3</span>
+                    </div>
                   </div>
                   <div class="fraction-symbol">=</div>
-                  <input type="number" id="mixedWholeNumber" class="calc-input fraction-answer-input" placeholder="?"
-                    aria-label="Whole number">
-                  <div class="fraction">
-                    <input type="number" id="mixedFractionNumerator" class="calc-input fraction-answer-input"
-                      placeholder="?" aria-label="Numerator">
-                    <span class="fraction-bar"></span>
-                    <span class="fraction-den" id="mixedFractionDenominator">4</span>
+                  <div class="mixed-number">
+                    <input type="number" id="mixedAnswerWhole" class="calc-input fraction-answer-input"
+                      placeholder="?" aria-label="Whole number">
+                    <div class="fraction">
+                      <input type="number" id="mixedAnswerNumerator" class="calc-input fraction-answer-input"
+                        placeholder="?" aria-label="Numerator">
+                      <span class="fraction-bar"></span>
+                      <input type="number" id="mixedAnswerDenominator" class="calc-input fraction-answer-input"
+                        placeholder="?" aria-label="Denominator">
+                    </div>
                   </div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validateMixedNumberResult()">
