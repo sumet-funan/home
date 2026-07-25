@@ -1134,51 +1134,6 @@
         $(this).closest('.calc-card').find('.calc-submit').trigger('click');
       }
     });
-
-    let rtlAnswerIds = [
-      'resultNumber', 'resultMinusNumber', 'resultMultiplyNumber', 'resultDivideNumber',
-      'resultP1PlusNumber', 'resultP1MinusNumber',
-      'patternAnswerNumber', 'placeValueTensNumber', 'placeValueUnitsNumber',
-      'percentageAnswerNumber', 'fractionAnswerNumerator', 'gcflcmAnswerNumber',
-      'mixedWholeNumber', 'mixedFractionNumerator',
-      'geometryAnswerNumber', 'volumeAnswerNumber', 'angleAnswerNumber',
-      'averageAnswerNumber', 'barChartAnswerNumber', 'timeAnswerNumber', 'moneyAnswerNumber'
-    ];
-    let rtlAnswerSelector = '#' + rtlAnswerIds.join(', #');
-
-    $(document).on('keydown', rtlAnswerSelector, function (e) {
-      if (e.ctrlKey || e.metaKey || e.altKey) {
-        return;
-      }
-
-      let passthroughKeys = ['Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Shift', 'Escape'];
-      if (passthroughKeys.indexOf(e.key) !== -1) {
-        return;
-      }
-
-      let $field = $(this);
-      let current = $field.val() || '';
-
-      if (e.key >= '0' && e.key <= '9') {
-        e.preventDefault();
-        if (current.length < 6) {
-          $field.val(e.key + current);
-        }
-        return;
-      }
-
-      if (e.key === 'Backspace' || e.key === 'Delete') {
-        e.preventDefault();
-        $field.val(current.slice(1));
-        return;
-      }
-
-      e.preventDefault();
-    });
-
-    $(document).on('paste', rtlAnswerSelector, function (e) {
-      e.preventDefault();
-    });
   </script>
   <script type="text/javascript" src="scrips/plus/index.js"></script>
   <script type="text/javascript" src="scrips/minus/index.js"></script>
