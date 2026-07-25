@@ -2,26 +2,28 @@ var p5FractionObj = {
     numRows: 1,
     numRowsHistory: 1,
     firstNumerator: 1,
+    firstDenominator: 4,
     secondNumerator: 2,
-    denominator: 4,
+    secondDenominator: 3,
     symbol: "+",
+    trueNumerator: 0,
+    trueDenominator: 1,
 }
 
 function validateFractionResult() {
-    if (focusFirstEmptyField(['fractionAnswerNumerator'])) {
+    if (focusFirstEmptyField(['fractionAnswerNumerator', 'fractionAnswerDenominator'])) {
         return;
     }
 
-    let answer = +$('#fractionAnswerNumerator').val();
-    let expected = p5FractionObj.symbol === "+"
-        ? p5FractionObj.firstNumerator + p5FractionObj.secondNumerator
-        : p5FractionObj.firstNumerator - p5FractionObj.secondNumerator;
-    let isCorrect = answer === expected;
+    let answerNumerator = +$('#fractionAnswerNumerator').val();
+    let answerDenominator = +$('#fractionAnswerDenominator').val();
+    let isCorrect = answerDenominator > 0
+        && answerNumerator * p5FractionObj.trueDenominator === p5FractionObj.trueNumerator * answerDenominator;
     let textColor = "green";
 
     showFeedback('feedbackFraction', isCorrect);
 
-    let expr = `${p5FractionObj.firstNumerator}/${p5FractionObj.denominator} ${p5FractionObj.symbol} ${p5FractionObj.secondNumerator}/${p5FractionObj.denominator} = ${answer}/${p5FractionObj.denominator}`;
+    let expr = `${p5FractionObj.firstNumerator}/${p5FractionObj.firstDenominator} ${p5FractionObj.symbol} ${p5FractionObj.secondNumerator}/${p5FractionObj.secondDenominator} = ${answerNumerator}/${answerDenominator}`;
 
     if (isCorrect) {
         addResultFractionToItemList({ expr })
@@ -62,29 +64,48 @@ function addResultFractionToHistoryList(item) {
 
 function addSuggestFractionValue() {
     let denominators = [2, 3, 4, 5, 6, 8, 10, 12];
-    let denominator = denominators[parseInt(Math.random() * denominators.length)];
-    let symbol = Math.random() < 0.5 ? "+" : "-";
+    let symbols = ["+", "-", "×", "÷"];
+    let symbol = symbols[parseInt(Math.random() * symbols.length)];
 
-    let firstNumerator = parseInt(Math.random() * (denominator - 1)) + 1;
-    let secondNumerator;
-    if (symbol === "-") {
-        secondNumerator = parseInt(Math.random() * firstNumerator) + 1;
-    } else {
-        secondNumerator = parseInt(Math.random() * (denominator - 1)) + 1;
-    }
+    let firstDenominator, secondDenominator, firstNumerator, secondNumerator;
+    let trueNumerator, trueDenominator;
+
+    do {
+        firstDenominator = denominators[parseInt(Math.random() * denominators.length)];
+        secondDenominator = denominators[parseInt(Math.random() * denominators.length)];
+        firstNumerator = parseInt(Math.random() * (firstDenominator - 1)) + 1;
+        secondNumerator = parseInt(Math.random() * (secondDenominator - 1)) + 1;
+
+        if (symbol === "+") {
+            trueNumerator = firstNumerator * secondDenominator + secondNumerator * firstDenominator;
+            trueDenominator = firstDenominator * secondDenominator;
+        } else if (symbol === "-") {
+            trueNumerator = firstNumerator * secondDenominator - secondNumerator * firstDenominator;
+            trueDenominator = firstDenominator * secondDenominator;
+        } else if (symbol === "×") {
+            trueNumerator = firstNumerator * secondNumerator;
+            trueDenominator = firstDenominator * secondDenominator;
+        } else {
+            trueNumerator = firstNumerator * secondDenominator;
+            trueDenominator = firstDenominator * secondNumerator;
+        }
+    } while (trueNumerator < 0);
 
     p5FractionObj.firstNumerator = firstNumerator;
+    p5FractionObj.firstDenominator = firstDenominator;
     p5FractionObj.secondNumerator = secondNumerator;
-    p5FractionObj.denominator = denominator;
+    p5FractionObj.secondDenominator = secondDenominator;
     p5FractionObj.symbol = symbol;
+    p5FractionObj.trueNumerator = trueNumerator;
+    p5FractionObj.trueDenominator = trueDenominator;
 
     $('#firstFractionNumerator').text(firstNumerator);
-    $('#firstFractionDenominator').text(denominator);
+    $('#firstFractionDenominator').text(firstDenominator);
     $('#secondFractionNumerator').text(secondNumerator);
-    $('#secondFractionDenominator').text(denominator);
-    $('#resultFractionDenominator').text(denominator);
+    $('#secondFractionDenominator').text(secondDenominator);
     $('#fractionSymbol').text(symbol);
     $('#fractionAnswerNumerator').val('');
+    $('#fractionAnswerDenominator').val('');
 }
 
 addSuggestFractionValue();
