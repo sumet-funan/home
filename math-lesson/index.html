@@ -12,10 +12,23 @@
 
 <body>
   <div class="app-shell">
-    <aside class="app-sidebar">
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" type="button" aria-label="เปิดเมนู"
+      aria-expanded="false" aria-controls="appSidebar">
+      <i class="bi bi-list"></i>
+    </button>
+    <div class="mobile-topbar-brand">
+      <i class="bi bi-mortarboard-fill"></i>
+      <span>บทเรียนคณิตศาสตร์</span>
+    </div>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="app-sidebar" id="appSidebar">
       <div class="app-brand">
         <i class="bi bi-mortarboard-fill"></i>
         <span>บทเรียนคณิตศาสตร์</span>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" type="button" aria-label="ปิดเมนู">
+          <i class="bi bi-x-lg"></i>
+        </button>
       </div>
       <div class="nav-menu" id="list-tab" role="tablist">
         <div class="nav-group">
@@ -1079,6 +1092,29 @@
       }
       return false;
     }
+
+    function openSidebar() {
+      $('#appSidebar').addClass('open');
+      $('#sidebarBackdrop').addClass('show');
+      $('#sidebarToggleBtn').attr('aria-expanded', 'true');
+      $('body').addClass('sidebar-open');
+    }
+
+    function closeSidebar() {
+      $('#appSidebar').removeClass('open');
+      $('#sidebarBackdrop').removeClass('show');
+      $('#sidebarToggleBtn').attr('aria-expanded', 'false');
+      $('body').removeClass('sidebar-open');
+    }
+
+    $('#sidebarToggleBtn').on('click', openSidebar);
+    $('#sidebarCloseBtn').on('click', closeSidebar);
+    $('#sidebarBackdrop').on('click', closeSidebar);
+    $('#list-tab').on('click', 'a.nav-menu-item', function () {
+      if (window.innerWidth <= 720) {
+        closeSidebar();
+      }
+    });
   </script>
   <script type="text/javascript" src="scrips/plus/index.js"></script>
   <script type="text/javascript" src="scrips/minus/index.js"></script>
