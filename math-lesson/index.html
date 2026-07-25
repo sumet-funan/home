@@ -693,6 +693,13 @@
               <p>ฝึกการบวก ลบ คูณ หาร ทศนิยม</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="decimalModePicker">
+                <button type="button" class="mode-btn active" data-mode="all">ทั้งหมด</button>
+                <button type="button" class="mode-btn" data-mode="+">+</button>
+                <button type="button" class="mode-btn" data-mode="-">−</button>
+                <button type="button" class="mode-btn" data-mode="*">×</button>
+                <button type="button" class="mode-btn" data-mode="/">÷</button>
+              </div>
               <div class="calc-card">
                 <input type="number" step="0.1" id="firstDecimalNumber" class="calc-input" placeholder="0"
                   aria-label="First Number">
@@ -760,6 +767,13 @@
               <p>ฝึกการบวก ลบ คูณ หาร เศษส่วนที่มีตัวส่วนต่างกัน</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="fractionModePicker">
+                <button type="button" class="mode-btn active" data-mode="all">ทั้งหมด</button>
+                <button type="button" class="mode-btn" data-mode="+">+</button>
+                <button type="button" class="mode-btn" data-mode="-">−</button>
+                <button type="button" class="mode-btn" data-mode="×">×</button>
+                <button type="button" class="mode-btn" data-mode="÷">÷</button>
+              </div>
               <div class="calc-card">
                 <div class="fraction-row">
                   <div class="fraction">
@@ -841,6 +855,13 @@
               <p>ฝึกการบวก ลบ คูณ หาร จำนวนคละ</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="mixedNumberModePicker">
+                <button type="button" class="mode-btn active" data-mode="all">ทั้งหมด</button>
+                <button type="button" class="mode-btn" data-mode="+">+</button>
+                <button type="button" class="mode-btn" data-mode="-">−</button>
+                <button type="button" class="mode-btn" data-mode="×">×</button>
+                <button type="button" class="mode-btn" data-mode="÷">÷</button>
+              </div>
               <div class="calc-card">
                 <div class="mixednumber-row">
                   <div class="mixed-number">
@@ -1119,6 +1140,15 @@
         }
       }
       return false;
+    }
+
+    function bindModePicker(pickerId, stateObj, regenerateFn) {
+      $('#' + pickerId).on('click', '.mode-btn', function () {
+        $('#' + pickerId + ' .mode-btn').removeClass('active');
+        $(this).addClass('active');
+        stateObj.mode = $(this).data('mode');
+        regenerateFn();
+      });
     }
 
     function openSidebar() {

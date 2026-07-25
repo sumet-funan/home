@@ -10,6 +10,7 @@ var p5MixedNumberObj = {
     symbol: "+",
     trueNumerator: 0,
     trueDenominator: 1,
+    mode: "all",
 }
 
 function validateMixedNumberResult() {
@@ -69,7 +70,7 @@ function addResultMixedNumberToHistoryList(item) {
 function addSuggestMixedNumberValue() {
     let denominators = [2, 3, 4, 5, 6, 8, 10, 12];
     let symbols = ["+", "-", "×", "÷"];
-    let symbol = symbols[parseInt(Math.random() * symbols.length)];
+    let symbol = p5MixedNumberObj.mode === "all" ? symbols[parseInt(Math.random() * symbols.length)] : p5MixedNumberObj.mode;
 
     let firstWhole, firstDenominator, firstNumerator, firstImproperNumerator;
     let secondWhole, secondDenominator, secondNumerator, secondImproperNumerator;
@@ -122,5 +123,7 @@ function addSuggestMixedNumberValue() {
     $('#mixedAnswerNumerator').val('');
     $('#mixedAnswerDenominator').val('');
 }
+
+bindModePicker('mixedNumberModePicker', p5MixedNumberObj, addSuggestMixedNumberValue);
 
 addSuggestMixedNumberValue();

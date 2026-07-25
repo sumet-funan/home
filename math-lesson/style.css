@@ -288,6 +288,39 @@ body {
   gap: 24px;
 }
 
+/* ---------- mode picker ---------- */
+
+.mode-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: -8px;
+}
+
+.mode-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  font-weight: 700;
+  font-size: .85rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.mode-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.mode-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
 /* ---------- calculator card ---------- */
 
 .calc-card {

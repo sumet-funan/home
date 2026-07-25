@@ -8,6 +8,7 @@ var p5FractionObj = {
     symbol: "+",
     trueNumerator: 0,
     trueDenominator: 1,
+    mode: "all",
 }
 
 function validateFractionResult() {
@@ -65,7 +66,7 @@ function addResultFractionToHistoryList(item) {
 function addSuggestFractionValue() {
     let denominators = [2, 3, 4, 5, 6, 8, 10, 12];
     let symbols = ["+", "-", "×", "÷"];
-    let symbol = symbols[parseInt(Math.random() * symbols.length)];
+    let symbol = p5FractionObj.mode === "all" ? symbols[parseInt(Math.random() * symbols.length)] : p5FractionObj.mode;
 
     let firstDenominator, secondDenominator, firstNumerator, secondNumerator;
     let trueNumerator, trueDenominator;
@@ -107,5 +108,7 @@ function addSuggestFractionValue() {
     $('#fractionAnswerNumerator').val('');
     $('#fractionAnswerDenominator').val('');
 }
+
+bindModePicker('fractionModePicker', p5FractionObj, addSuggestFractionValue);
 
 addSuggestFractionValue();

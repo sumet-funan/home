@@ -2,6 +2,7 @@ var p5DecimalObj = {
     numRows: 1,
     numRowsHistory: 1,
     symbol: "+",
+    mode: "all",
 }
 
 function validateDecimalResult() {
@@ -81,7 +82,7 @@ function clearDecimalValue() {
 
 function addSuggestDecimalValue() {
     let symbols = ["+", "-", "*", "/"];
-    let symbol = symbols[parseInt(Math.random() * symbols.length)];
+    let symbol = p5DecimalObj.mode === "all" ? symbols[parseInt(Math.random() * symbols.length)] : p5DecimalObj.mode;
     p5DecimalObj.symbol = symbol;
 
     if (symbol === "/") {
@@ -111,5 +112,7 @@ function addSuggestDecimalValue() {
         $('#decimalSymbol').text('+');
     }
 }
+
+bindModePicker('decimalModePicker', p5DecimalObj, addSuggestDecimalValue);
 
 addSuggestDecimalValue();
