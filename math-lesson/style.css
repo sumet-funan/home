@@ -5,6 +5,7 @@
   --text: #1f2937;
   --muted: #6b7280;
   --border: #e6e9f2;
+  --result-bg: #e0f2fe;
   --radius-lg: 22px;
   --radius-md: 16px;
   --radius-sm: 10px;
@@ -876,7 +877,7 @@ input[type=number] {
   gap: 10px;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
-  background: var(--accent-bg);
+  background: var(--result-bg);
   font-weight: 600;
   font-size: .95rem;
 }
@@ -1030,6 +1031,7 @@ input[type=number] {
     --text: #e7e9ee;
     --muted: #9aa1b0;
     --border: #262b3a;
+    --result-bg: #062330;
     --plus-bg: #10281c;
     --minus-bg: #2c1a0e;
     --multiply-bg: #221a38;
