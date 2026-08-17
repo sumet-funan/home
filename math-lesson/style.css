@@ -65,6 +65,9 @@
 
   --wordproblem: #059669;
   --wordproblem-bg: #ecfdf5;
+
+  --speedquiz: #4338ca;
+  --speedquiz-bg: #eef2ff;
 }
 
 * {
@@ -221,6 +224,7 @@ body {
 .nav-menu-item[data-op="time"] { --accent: var(--time); --accent-bg: var(--time-bg); }
 .nav-menu-item[data-op="money"] { --accent: var(--money); --accent-bg: var(--money-bg); }
 .nav-menu-item[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
+.nav-menu-item[data-op="speedquiz"] { --accent: var(--speedquiz); --accent-bg: var(--speedquiz-bg); }
 
 .nav-menu-item.active {
   background: var(--accent-bg);
@@ -267,6 +271,7 @@ body {
 .operation-panel[data-op="time"] { --accent: var(--time); --accent-bg: var(--time-bg); }
 .operation-panel[data-op="money"] { --accent: var(--money); --accent-bg: var(--money-bg); }
 .operation-panel[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
+.operation-panel[data-op="speedquiz"] { --accent: var(--speedquiz); --accent-bg: var(--speedquiz-bg); }
 
 .panel-header {
   margin-bottom: 24px;
@@ -444,6 +449,121 @@ body {
 
 .calc-feedback i {
   margin-right: 6px;
+}
+
+/* ---------- speed quiz ---------- */
+
+.speed-quiz-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  max-width: 720px;
+  width: 100%;
+}
+
+.speed-quiz-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 18px;
+}
+
+.speed-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.speed-stat-label {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.speed-stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.speed-quiz-grid-wrap {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.speed-quiz-grid {
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.speed-quiz-grid th,
+.speed-quiz-grid td {
+  border: 1px solid var(--border);
+  padding: 0;
+  text-align: center;
+}
+
+.speed-quiz-grid thead th {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 1rem;
+  min-width: 42px;
+  height: 40px;
+  padding: 4px;
+}
+
+.speed-quiz-grid thead th.corner-cell {
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.speed-quiz-grid tbody th {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 1rem;
+  min-width: 42px;
+  padding: 4px;
+}
+
+.speed-quiz-grid tbody td {
+  padding: 0;
+}
+
+.speed-quiz-grid input {
+  width: 42px;
+  height: 40px;
+  border: none;
+  text-align: center;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.speed-quiz-grid input:focus {
+  outline: none;
+  background: var(--accent-bg);
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.speed-quiz-grid td.correct input {
+  background: var(--result-bg);
+  color: var(--text);
+}
+
+.speed-quiz-grid td.incorrect input {
+  background: #fdeeee;
+  color: #dc2626;
 }
 
 @keyframes required-shake {
@@ -1056,6 +1176,7 @@ input[type=number] {
     --time-bg: #220d30;
     --money-bg: #2c2007;
     --wordproblem-bg: #052e22;
+    --speedquiz-bg: #1a1740;
   }
 
   .answer-chip.is-incorrect {

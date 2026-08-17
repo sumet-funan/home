@@ -172,6 +172,20 @@
             </a>
           </div>
         </div>
+
+        <div class="nav-group">
+          <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-speed"
+            aria-expanded="false" aria-controls="group-speed">
+            <i class="bi bi-stopwatch-fill"></i><span>ฝึกคำนวณเร็ว</span>
+            <i class="bi bi-chevron-down group-caret"></i>
+          </button>
+          <div class="collapse nav-group-items" id="group-speed">
+            <a class="nav-menu-item" id="menu_speedquiz" data-bs-toggle="list" href="#content_speedquiz" role="tab"
+              aria-controls="content_speedquiz" data-op="speedquiz">
+              <i class="bi bi-grid-3x3-gap-fill"></i><span>100 ข้อ</span>
+            </a>
+          </div>
+        </div>
       </div>
     </aside>
 
@@ -1170,6 +1184,45 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="content_speedquiz" role="tabpanel" aria-labelledby="menu_speedquiz">
+          <div class="operation-panel" data-op="speedquiz">
+            <div class="panel-header">
+              <h2><i class="bi bi-stopwatch-fill"></i> แบบฝึกคำนวณเร็ว 100 ข้อ</h2>
+              <p>เลือกโจทย์บวก ลบ หรือคูณ แล้วกดเริ่ม ทำให้ครบ 100 ข้อให้เร็วที่สุด แข่งกับเวลาของตัวเอง</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="speedQuizModePicker">
+                <button type="button" class="mode-btn active" data-mode="+">+</button>
+                <button type="button" class="mode-btn" data-mode="-">−</button>
+                <button type="button" class="mode-btn" data-mode="*">×</button>
+              </div>
+
+              <div class="speed-quiz-card">
+                <div class="speed-quiz-stats">
+                  <div class="speed-stat">
+                    <span class="speed-stat-label">เวลา</span>
+                    <span class="speed-stat-value" id="speedQuizTimer">00:00</span>
+                  </div>
+                  <div class="speed-stat">
+                    <span class="speed-stat-label">สถิติที่ดีที่สุด</span>
+                    <span class="speed-stat-value" id="speedQuizBestTime">--:--</span>
+                  </div>
+                </div>
+
+                <button type="button" class="calc-submit" id="speedQuizStartBtn" onclick="startSpeedQuiz()">
+                  เริ่มทำโจทย์ <i class="bi bi-play-fill"></i>
+                </button>
+
+                <div class="calc-feedback" id="feedbackSpeedQuiz"></div>
+
+                <div class="speed-quiz-grid-wrap">
+                  <table class="speed-quiz-grid" id="speedQuizGrid"></table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -1328,6 +1381,7 @@
   <script type="text/javascript" src="scrips/p5average/index.js"></script>
   <script type="text/javascript" src="scrips/p5barchart/index.js"></script>
   <script type="text/javascript" src="scrips/p5wordproblem/index.js"></script>
+  <script type="text/javascript" src="scrips/speedquiz/index.js"></script>
 </body>
 
 </html>
