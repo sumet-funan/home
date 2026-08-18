@@ -233,4 +233,22 @@ $(document).on('focus', '.speed-quiz-input', function () {
     $(this).trigger('select');
 });
 
+const SPEED_QUIZ_LEAVE_WARNING = 'กำลังทำแบบฝึกคำนวณเร็วอยู่ ถ้าออกตอนนี้ความคืบหน้าจะหายไป ต้องการออกจากหน้านี้หรือไม่?';
+
+// switching to another lesson tab while a round is in progress
+$(document).on('show.bs.tab', '[data-bs-toggle="list"]', function (e) {
+    let leavingSpeedQuiz = e.relatedTarget && e.relatedTarget.id === 'menu_speedquiz';
+    if (leavingSpeedQuiz && speedQuizObj.running && !confirm(SPEED_QUIZ_LEAVE_WARNING)) {
+        e.preventDefault();
+    }
+});
+
+// closing the tab / refreshing / navigating away entirely
+window.addEventListener('beforeunload', function (e) {
+    if (speedQuizObj.running) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
 loadSpeedQuizBestTime();
