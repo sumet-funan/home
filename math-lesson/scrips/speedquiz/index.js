@@ -1,5 +1,6 @@
 var speedQuizObj = {
     mode: "+",
+    size: 100,
     rowHeaders: [],
     colHeaders: [],
     running: false,
@@ -20,13 +21,14 @@ function shuffleSpeedQuizArray(arr) {
 
 function generateSpeedQuizHeaders() {
     let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let numRows = speedQuizObj.size / 10;
 
     if (speedQuizObj.mode === "-") {
         let bigDigits = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
-        speedQuizObj.rowHeaders = shuffleSpeedQuizArray(bigDigits);
+        speedQuizObj.rowHeaders = shuffleSpeedQuizArray(bigDigits).slice(0, numRows);
         speedQuizObj.colHeaders = shuffleSpeedQuizArray(digits);
     } else {
-        speedQuizObj.rowHeaders = shuffleSpeedQuizArray(digits);
+        speedQuizObj.rowHeaders = shuffleSpeedQuizArray(digits).slice(0, numRows);
         speedQuizObj.colHeaders = shuffleSpeedQuizArray(digits);
     }
 }
@@ -40,7 +42,7 @@ function renderSpeedQuizGrid() {
     }
     html += '</tr></thead><tbody>';
 
-    for (let r = 0; r < 10; r++) {
+    for (let r = 0; r < speedQuizObj.rowHeaders.length; r++) {
         html += '<tr><th>' + speedQuizObj.rowHeaders[r] + '</th>';
         for (let c = 0; c < 10; c++) {
             html += '<td><input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="speed-quiz-input" data-row="' + r + '" data-col="' + c + '"></td>';
@@ -66,7 +68,7 @@ function updateSpeedQuizTimerDisplay() {
 }
 
 function getSpeedQuizStorageKey() {
-    return 'speedQuizBestTime_' + speedQuizObj.mode;
+    return 'speedQuizBestTime_' + speedQuizObj.mode + '_' + speedQuizObj.size;
 }
 
 function loadSpeedQuizBestTime() {
@@ -87,14 +89,14 @@ function saveSpeedQuizBestTime(elapsedMs) {
 
 function showSpeedQuizFeedback(correctCount, elapsedMs, isNewRecord) {
     let $feedback = $('#feedbackSpeedQuiz');
-    let isPerfect = correctCount === 100;
+    let isPerfect = correctCount === speedQuizObj.size;
 
     $feedback.removeClass('show is-correct is-incorrect');
     void $feedback[0].offsetWidth;
 
     let message = isPerfect
-        ? '<i class="bi bi-check-circle-fill"></i> ถูกทั้งหมด 100 ข้อ! เวลา ' + formatSpeedQuizTime(elapsedMs) + (isNewRecord ? ' (สถิติใหม่!)' : '')
-        : '<i class="bi bi-x-circle-fill"></i> ถูก ' + correctCount + ' จาก 100 ข้อ ลองใหม่อีกครั้งนะ';
+        ? '<i class="bi bi-check-circle-fill"></i> ถูกทั้งหมด ' + speedQuizObj.size + ' ข้อ! เวลา ' + formatSpeedQuizTime(elapsedMs) + (isNewRecord ? ' (สถิติใหม่!)' : '')
+        : '<i class="bi bi-x-circle-fill"></i> ถูก ' + correctCount + ' จาก ' + speedQuizObj.size + ' ข้อ ลองใหม่อีกครั้งนะ';
 
     $feedback
         .addClass(isPerfect ? 'is-correct' : 'is-incorrect')
@@ -136,7 +138,7 @@ function finishSpeedQuiz() {
         }
     });
 
-    let isNewRecord = correctCount === 100 && saveSpeedQuizBestTime(elapsed);
+    let isNewRecord = correctCount === speedQuizObj.size && saveSpeedQuizBestTime(elapsed);
     showSpeedQuizFeedback(correctCount, elapsed, isNewRecord);
 }
 
@@ -156,11 +158,7 @@ function startSpeedQuiz() {
     $('.speed-quiz-input[data-row="0"][data-col="0"]').trigger('focus');
 }
 
-$('#speedQuizModePicker').on('click', '.mode-btn', function () {
-    $('#speedQuizModePicker .mode-btn').removeClass('active');
-    $(this).addClass('active');
-    speedQuizObj.mode = $(this).data('mode');
-
+function resetSpeedQuizForNewSelection() {
     clearInterval(speedQuizObj.timerInterval);
     speedQuizObj.running = false;
     $('#speedQuizTimer').text('00:00');
@@ -168,6 +166,22 @@ $('#speedQuizModePicker').on('click', '.mode-btn', function () {
     $('#feedbackSpeedQuiz').removeClass('show is-correct is-incorrect').text('');
 
     loadSpeedQuizBestTime();
+}
+
+$('#speedQuizModePicker').on('click', '.mode-btn', function () {
+    $('#speedQuizModePicker .mode-btn').removeClass('active');
+    $(this).addClass('active');
+    speedQuizObj.mode = $(this).data('mode');
+
+    resetSpeedQuizForNewSelection();
+});
+
+$('#speedQuizSizePicker').on('click', '.mode-btn', function () {
+    $('#speedQuizSizePicker .mode-btn').removeClass('active');
+    $(this).addClass('active');
+    speedQuizObj.size = +$(this).data('size');
+
+    resetSpeedQuizForNewSelection();
 });
 
 function advanceSpeedQuizFocus(row, col) {
@@ -179,7 +193,7 @@ function advanceSpeedQuizFocus(row, col) {
         nextRow = row + 1;
     }
 
-    if (nextRow <= 9) {
+    if (nextRow <= speedQuizObj.rowHeaders.length - 1) {
         $('.speed-quiz-input[data-row="' + nextRow + '"][data-col="' + nextCol + '"]').trigger('focus');
     }
 }

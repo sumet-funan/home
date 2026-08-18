@@ -182,7 +182,7 @@
           <div class="collapse nav-group-items" id="group-speed">
             <a class="nav-menu-item" id="menu_speedquiz" data-bs-toggle="list" href="#content_speedquiz" role="tab"
               aria-controls="content_speedquiz" data-op="speedquiz">
-              <i class="bi bi-grid-3x3-gap-fill"></i><span>100 ข้อ</span>
+              <i class="bi bi-grid-3x3-gap-fill"></i><span>50 / 100 ข้อ</span>
             </a>
           </div>
         </div>
@@ -1187,10 +1187,15 @@
         <div class="tab-pane fade" id="content_speedquiz" role="tabpanel" aria-labelledby="menu_speedquiz">
           <div class="operation-panel" data-op="speedquiz">
             <div class="panel-header">
-              <h2><i class="bi bi-stopwatch-fill"></i> แบบฝึกคำนวณเร็ว 100 ข้อ</h2>
-              <p>เลือกโจทย์บวก ลบ หรือคูณ แล้วกดเริ่ม ทำให้ครบ 100 ข้อให้เร็วที่สุด แข่งกับเวลาของตัวเอง</p>
+              <h2><i class="bi bi-stopwatch-fill"></i> แบบฝึกคำนวณเร็ว</h2>
+              <p>เลือกจำนวนข้อและโจทย์บวก ลบ หรือคูณ แล้วกดเริ่ม ทำให้ครบให้เร็วที่สุด แข่งกับเวลาของตัวเอง</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="speedQuizSizePicker">
+                <button type="button" class="mode-btn active" data-size="100">100 ข้อ</button>
+                <button type="button" class="mode-btn" data-size="50">50 ข้อ</button>
+              </div>
+
               <div class="mode-picker" id="speedQuizModePicker">
                 <button type="button" class="mode-btn active" data-mode="+">+</button>
                 <button type="button" class="mode-btn" data-mode="-">−</button>
