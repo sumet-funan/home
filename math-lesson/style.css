@@ -496,10 +496,14 @@ body {
 .speed-quiz-grid-wrap {
   overflow-x: auto;
   margin-top: 20px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .speed-quiz-grid {
-  border-collapse: collapse;
+  /* separate (not collapse): Safari silently breaks position:sticky cells
+     inside a border-collapse table, which iPad relies on below */
+  border-collapse: separate;
+  border-spacing: 0;
   margin: 0 auto;
 }
 
@@ -515,15 +519,20 @@ body {
   color: var(--accent);
   font-weight: 800;
   font-size: 1rem;
-  min-width: 42px;
-  height: 40px;
+  min-width: 44px;
+  height: 44px;
   padding: 4px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .speed-quiz-grid thead th.corner-cell {
   background: var(--accent);
   color: #fff;
   font-size: 1.2rem;
+  left: 0;
+  z-index: 3;
 }
 
 .speed-quiz-grid tbody th {
@@ -531,8 +540,11 @@ body {
   color: var(--accent);
   font-weight: 800;
   font-size: 1rem;
-  min-width: 42px;
+  min-width: 44px;
   padding: 4px;
+  position: sticky;
+  left: 0;
+  z-index: 1;
 }
 
 .speed-quiz-grid tbody td {
@@ -540,14 +552,23 @@ body {
 }
 
 .speed-quiz-grid input {
-  width: 42px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: none;
   text-align: center;
-  font-size: .95rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text);
   background: var(--bg);
+}
+
+/* iPad/touch: bigger tap targets already set above (44px, Apple's HIG
+   minimum); these remove the tap-highlight flash and the double-tap-to-zoom
+   delay Safari adds to fast sequential taps across the grid. */
+.operation-panel[data-op="speedquiz"] button,
+.operation-panel[data-op="speedquiz"] input {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .speed-quiz-grid input:focus {

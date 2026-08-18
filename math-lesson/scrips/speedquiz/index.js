@@ -43,7 +43,7 @@ function renderSpeedQuizGrid() {
     for (let r = 0; r < 10; r++) {
         html += '<tr><th>' + speedQuizObj.rowHeaders[r] + '</th>';
         for (let c = 0; c < 10; c++) {
-            html += '<td><input type="text" inputmode="numeric" class="speed-quiz-input" data-row="' + r + '" data-col="' + c + '"></td>';
+            html += '<td><input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="speed-quiz-input" data-row="' + r + '" data-col="' + c + '"></td>';
         }
         html += '</tr>';
     }
@@ -170,9 +170,29 @@ $('#speedQuizModePicker').on('click', '.mode-btn', function () {
     loadSpeedQuizBestTime();
 });
 
+function advanceSpeedQuizFocus(row, col) {
+    let nextCol = col + 1;
+    let nextRow = row;
+
+    if (nextCol > 9) {
+        nextCol = 0;
+        nextRow = row + 1;
+    }
+
+    if (nextRow <= 9) {
+        $('.speed-quiz-input[data-row="' + nextRow + '"][data-col="' + nextCol + '"]').trigger('focus');
+    }
+}
+
 $(document).on('input', '.speed-quiz-input', function () {
     if (!speedQuizObj.running) {
         return;
+    }
+
+    // iPad's numeric keypad has no Enter key, so auto-advance once a
+    // 2-digit answer is complete (every possible answer is at most 2 digits).
+    if ($(this).val().length >= 2) {
+        advanceSpeedQuizFocus(+$(this).data('row'), +$(this).data('col'));
     }
 
     let allFilled = true;
@@ -192,20 +212,11 @@ $(document).on('keydown', '.speed-quiz-input', function (e) {
         return;
     }
     e.preventDefault();
+    advanceSpeedQuizFocus(+$(this).data('row'), +$(this).data('col'));
+});
 
-    let row = +$(this).data('row');
-    let col = +$(this).data('col');
-    let nextCol = col + 1;
-    let nextRow = row;
-
-    if (nextCol > 9) {
-        nextCol = 0;
-        nextRow = row + 1;
-    }
-
-    if (nextRow <= 9) {
-        $('.speed-quiz-input[data-row="' + nextRow + '"][data-col="' + nextCol + '"]').trigger('focus');
-    }
+$(document).on('focus', '.speed-quiz-input', function () {
+    $(this).trigger('select');
 });
 
 loadSpeedQuizBestTime();
