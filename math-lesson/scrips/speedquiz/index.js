@@ -8,6 +8,8 @@ var speedQuizObj = {
     timerInterval: null,
 }
 
+const SPEED_QUIZ_LEAVE_WARNING = 'กำลังทำแบบฝึกคำนวณเร็วอยู่ ถ้าออกตอนนี้ความคืบหน้าจะหายไป ต้องการออกจากหน้านี้หรือไม่?';
+
 function shuffleSpeedQuizArray(arr) {
     let a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -143,6 +145,10 @@ function finishSpeedQuiz() {
 }
 
 function startSpeedQuiz() {
+    if (speedQuizObj.running && !confirm(SPEED_QUIZ_LEAVE_WARNING)) {
+        return;
+    }
+
     clearInterval(speedQuizObj.timerInterval);
 
     generateSpeedQuizHeaders();
@@ -169,6 +175,10 @@ function resetSpeedQuizForNewSelection() {
 }
 
 $('#speedQuizModePicker').on('click', '.mode-btn', function () {
+    if (speedQuizObj.running && !confirm(SPEED_QUIZ_LEAVE_WARNING)) {
+        return;
+    }
+
     $('#speedQuizModePicker .mode-btn').removeClass('active');
     $(this).addClass('active');
     speedQuizObj.mode = $(this).data('mode');
@@ -177,6 +187,10 @@ $('#speedQuizModePicker').on('click', '.mode-btn', function () {
 });
 
 $('#speedQuizSizePicker').on('click', '.mode-btn', function () {
+    if (speedQuizObj.running && !confirm(SPEED_QUIZ_LEAVE_WARNING)) {
+        return;
+    }
+
     $('#speedQuizSizePicker .mode-btn').removeClass('active');
     $(this).addClass('active');
     speedQuizObj.size = +$(this).data('size');
@@ -232,8 +246,6 @@ $(document).on('keydown', '.speed-quiz-input', function (e) {
 $(document).on('focus', '.speed-quiz-input', function () {
     $(this).trigger('select');
 });
-
-const SPEED_QUIZ_LEAVE_WARNING = 'กำลังทำแบบฝึกคำนวณเร็วอยู่ ถ้าออกตอนนี้ความคืบหน้าจะหายไป ต้องการออกจากหน้านี้หรือไม่?';
 
 // switching to another lesson tab while a round is in progress
 $(document).on('show.bs.tab', '[data-bs-toggle="list"]', function (e) {
