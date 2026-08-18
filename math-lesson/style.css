@@ -86,6 +86,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.material-symbols-rounded {
+  vertical-align: middle;
+}
+
+/* Material Symbols has no ÷ glyph, so หาร (divide) uses a plain character
+   styled to match the surrounding icons' size/weight instead */
+.divide-symbol {
+  font-weight: 700;
+  vertical-align: middle;
+}
+
 /* ---------- layout shell ---------- */
 
 .app-shell {

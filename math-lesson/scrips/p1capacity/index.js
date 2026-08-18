@@ -56,7 +56,7 @@ function addResultCapacityToItemList(item) {
 function addResultCapacityToHistoryList(item) {
     let isCorrect = item.color == "green";
     elementItem = `<div class="answer-chip ${isCorrect ? 'is-correct' : 'is-incorrect'}">
-            <i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
+            <i class="material-symbols-rounded">${isCorrect ? 'check_circle' : 'cancel'}</i>
             <span class="answer-index">${p1CapacityObj.numRowsHistory}</span>
             <span class="answer-expr">${item.firstValue} ลิตร ${item.symbol} ${item.secondValue} ลิตร</span>
         </div>`

@@ -56,7 +56,7 @@ function addResultWeightToItemList(item) {
 function addResultWeightToHistoryList(item) {
     let isCorrect = item.color == "green";
     elementItem = `<div class="answer-chip ${isCorrect ? 'is-correct' : 'is-incorrect'}">
-            <i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
+            <i class="material-symbols-rounded">${isCorrect ? 'check_circle' : 'cancel'}</i>
             <span class="answer-index">${p1WeightObj.numRowsHistory}</span>
             <span class="answer-expr">${item.firstValue} กก. ${item.symbol} ${item.secondValue} กก.</span>
         </div>`

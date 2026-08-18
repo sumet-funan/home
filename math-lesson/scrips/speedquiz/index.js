@@ -93,8 +93,8 @@ function showSpeedQuizFeedback(correctCount, elapsedMs, isNewRecord) {
     void $feedback[0].offsetWidth;
 
     let message = isPerfect
-        ? '<i class="bi bi-check-circle-fill"></i> ถูกทั้งหมด 100 ข้อ! เวลา ' + formatSpeedQuizTime(elapsedMs) + (isNewRecord ? ' (สถิติใหม่!)' : '')
-        : '<i class="bi bi-x-circle-fill"></i> ถูก ' + correctCount + ' จาก 100 ข้อ ลองใหม่อีกครั้งนะ';
+        ? '<i class="material-symbols-rounded">check_circle</i> ถูกทั้งหมด 100 ข้อ! เวลา ' + formatSpeedQuizTime(elapsedMs) + (isNewRecord ? ' (สถิติใหม่!)' : '')
+        : '<i class="material-symbols-rounded">cancel</i> ถูก ' + correctCount + ' จาก 100 ข้อ ลองใหม่อีกครั้งนะ';
 
     $feedback
         .addClass(isPerfect ? 'is-correct' : 'is-incorrect')
