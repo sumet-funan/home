@@ -597,6 +597,69 @@ body {
   color: #dc2626;
 }
 
+#speedQuizLeaveModal .modal-content {
+  background: var(--card-bg);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.speed-quiz-leave-modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 32px 28px 8px;
+  text-align: center;
+}
+
+.speed-quiz-leave-modal-body i {
+  font-size: 2.4rem;
+  color: #ea580c;
+}
+
+.speed-quiz-leave-modal-body p {
+  margin: 0;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+#speedQuizLeaveModal .modal-footer {
+  border-top: none;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 28px 28px;
+}
+
+.speedquiz-modal-btn {
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: .95rem;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: filter .15s ease, transform .05s ease;
+}
+
+.speedquiz-modal-btn:hover {
+  filter: brightness(1.08);
+}
+
+.speedquiz-modal-btn:active {
+  transform: translateY(1px);
+}
+
+.speedquiz-modal-btn-cancel {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.speedquiz-modal-btn-confirm {
+  background: #dc2626;
+  color: #fff;
+}
+
 @keyframes required-shake {
   0%, 100% { transform: translateX(0); }
   20%, 60% { transform: translateX(-4px); }

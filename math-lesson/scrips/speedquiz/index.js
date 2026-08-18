@@ -8,7 +8,24 @@ var speedQuizObj = {
     timerInterval: null,
 }
 
-const SPEED_QUIZ_LEAVE_WARNING = 'กำลังทำแบบฝึกคำนวณเร็วอยู่ ถ้าออกตอนนี้ความคืบหน้าจะหายไป ต้องการออกจากหน้านี้หรือไม่?';
+// Shows the "leave running quiz?" modal only if a round is in progress;
+// otherwise runs the action immediately. On confirm, hides the modal then
+// runs the action.
+function confirmSpeedQuizLeave(onConfirm) {
+    if (!speedQuizObj.running) {
+        onConfirm();
+        return;
+    }
+
+    let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('speedQuizLeaveModal'));
+
+    $('#speedQuizLeaveConfirmBtn').off('click.speedQuizLeave').on('click.speedQuizLeave', function () {
+        modal.hide();
+        onConfirm();
+    });
+
+    modal.show();
+}
 
 function shuffleSpeedQuizArray(arr) {
     let a = arr.slice();
@@ -145,10 +162,10 @@ function finishSpeedQuiz() {
 }
 
 function startSpeedQuiz() {
-    if (speedQuizObj.running && !confirm(SPEED_QUIZ_LEAVE_WARNING)) {
-        return;
-    }
+    confirmSpeedQuizLeave(beginSpeedQuizRound);
+}
 
+function beginSpeedQuizRound() {
     clearInterval(speedQuizObj.timerInterval);
 
     generateSpeedQuizHeaders();
@@ -175,27 +192,25 @@ function resetSpeedQuizForNewSelection() {
 }
 
 $('#speedQuizModePicker').on('click', '.mode-btn', function () {
-    if (speedQuizObj.running && !confirm(SPEED_QUIZ_LEAVE_WARNING)) {
-        return;
-    }
+    let $btn = $(this);
+    confirmSpeedQuizLeave(function () {
+        $('#speedQuizModePicker .mode-btn').removeClass('active');
+        $btn.addClass('active');
+        speedQuizObj.mode = $btn.data('mode');
 
-    $('#speedQuizModePicker .mode-btn').removeClass('active');
-    $(this).addClass('active');
-    speedQuizObj.mode = $(this).data('mode');
-
-    resetSpeedQuizForNewSelection();
+        resetSpeedQuizForNewSelection();
+    });
 });
 
 $('#speedQuizSizePicker').on('click', '.mode-btn', function () {
-    if (speedQuizObj.running && !confirm(SPEED_QUIZ_LEAVE_WARNING)) {
-        return;
-    }
+    let $btn = $(this);
+    confirmSpeedQuizLeave(function () {
+        $('#speedQuizSizePicker .mode-btn').removeClass('active');
+        $btn.addClass('active');
+        speedQuizObj.size = +$btn.data('size');
 
-    $('#speedQuizSizePicker .mode-btn').removeClass('active');
-    $(this).addClass('active');
-    speedQuizObj.size = +$(this).data('size');
-
-    resetSpeedQuizForNewSelection();
+        resetSpeedQuizForNewSelection();
+    });
 });
 
 function advanceSpeedQuizFocus(row, col) {
@@ -250,9 +265,18 @@ $(document).on('focus', '.speed-quiz-input', function () {
 // switching to another lesson tab while a round is in progress
 $(document).on('show.bs.tab', '[data-bs-toggle="list"]', function (e) {
     let leavingSpeedQuiz = e.relatedTarget && e.relatedTarget.id === 'menu_speedquiz';
-    if (leavingSpeedQuiz && speedQuizObj.running && !confirm(SPEED_QUIZ_LEAVE_WARNING)) {
-        e.preventDefault();
+    if (!leavingSpeedQuiz || !speedQuizObj.running) {
+        return;
     }
+
+    e.preventDefault();
+    let targetTab = e.target;
+
+    confirmSpeedQuizLeave(function () {
+        speedQuizObj.running = false;
+        clearInterval(speedQuizObj.timerInterval);
+        bootstrap.Tab.getOrCreateInstance(targetTab).show();
+    });
 });
 
 // closing the tab / refreshing / navigating away entirely
