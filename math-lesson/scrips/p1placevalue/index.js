@@ -47,7 +47,7 @@ function addResultPlaceValueToItemList(item) {
 function addResultPlaceValueToHistoryList(item) {
     let isCorrect = item.color == "green";
     elementItem = `<div class="answer-chip ${isCorrect ? 'is-correct' : 'is-incorrect'}">
-            <i class="material-symbols-rounded">${isCorrect ? 'check_circle' : 'cancel'}</i>
+            <i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
             <span class="answer-index">${p1PlaceValueObj.numRowsHistory}</span>
             <span class="answer-expr">${item.expr}</span>
         </div>`

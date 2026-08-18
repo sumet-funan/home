@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -18,45 +18,45 @@
   <div class="app-shell">
     <button class="sidebar-toggle-btn" id="sidebarToggleBtn" type="button" aria-label="เปิดเมนู"
       aria-expanded="false" aria-controls="appSidebar">
-      <i class="material-symbols-rounded">menu</i>
+      <i class="bi bi-list"></i>
     </button>
     <div class="mobile-topbar-brand">
-      <i class="material-symbols-rounded">school</i>
+      <i class="bi bi-mortarboard-fill"></i>
       <span>บทเรียนคณิตศาสตร์</span>
     </div>
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
     <aside class="app-sidebar" id="appSidebar">
       <div class="app-brand">
-        <i class="material-symbols-rounded">school</i>
+        <i class="bi bi-mortarboard-fill"></i>
         <span>บทเรียนคณิตศาสตร์</span>
         <button class="sidebar-close-btn" id="sidebarCloseBtn" type="button" aria-label="ปิดเมนู">
-          <i class="material-symbols-rounded">close</i>
+          <i class="bi bi-x-lg"></i>
         </button>
       </div>
       <div class="nav-menu" id="list-tab" role="tablist">
         <div class="nav-group">
           <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-general"
             aria-expanded="true" aria-controls="group-general">
-            <i class="material-symbols-rounded">category</i><span>ทั่วไป</span>
-            <i class="material-symbols-rounded group-caret">expand_more</i>
+            <i class="bi bi-collection-fill"></i><span>ทั่วไป</span>
+            <i class="bi bi-chevron-down group-caret"></i>
           </button>
           <div class="collapse show nav-group-items" id="group-general">
             <a class="nav-menu-item active" id="menu_plus" data-bs-toggle="list" href="#content_plus" role="tab"
               aria-controls="content_plus" data-op="plus">
-              <i class="material-symbols-rounded">add_circle</i><span>บวก</span>
+              <i class="bi bi-plus-circle-fill"></i><span>บวก</span>
             </a>
             <a class="nav-menu-item" id="menu_minus" data-bs-toggle="list" href="#content_minus" role="tab"
               aria-controls="content_minus" data-op="minus">
-              <i class="material-symbols-rounded">do_not_disturb_on</i><span>ลบ</span>
+              <i class="bi bi-dash-circle-fill"></i><span>ลบ</span>
             </a>
             <a class="nav-menu-item" id="menu_multiply" data-bs-toggle="list" href="#content_multiply" role="tab"
               aria-controls="content_multiply" data-op="multiply">
-              <i class="material-symbols-rounded">cancel</i><span>คูณ</span>
+              <i class="bi bi-x-circle-fill"></i><span>คูณ</span>
             </a>
             <a class="nav-menu-item" id="menu_divide" data-bs-toggle="list" href="#content_divide" role="tab"
               aria-controls="content_divide" data-op="divide">
-              <i class="divide-symbol">÷</i><span>หาร</span>
+              <i class="bi bi-slash-circle-fill"></i><span>หาร</span>
             </a>
           </div>
         </div>
@@ -64,57 +64,57 @@
         <div class="nav-group">
           <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-p1"
             aria-expanded="false" aria-controls="group-p1">
-            <i class="material-symbols-rounded">school</i><span>ป.1</span>
-            <i class="material-symbols-rounded group-caret">expand_more</i>
+            <i class="bi bi-mortarboard-fill"></i><span>ป.1</span>
+            <i class="bi bi-chevron-down group-caret"></i>
           </button>
           <div class="collapse nav-group-items" id="group-p1">
             <a class="nav-menu-item" id="menu_p1_plus" data-bs-toggle="list" href="#content_p1_plus" role="tab"
               aria-controls="content_p1_plus" data-op="plus">
-              <i class="material-symbols-rounded">add_circle</i><span>บวก (ไม่เกิน 100)</span>
+              <i class="bi bi-plus-circle-fill"></i><span>บวก (ไม่เกิน 100)</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_minus" data-bs-toggle="list" href="#content_p1_minus" role="tab"
               aria-controls="content_p1_minus" data-op="minus">
-              <i class="material-symbols-rounded">do_not_disturb_on</i><span>ลบ (ไม่เกิน 100)</span>
+              <i class="bi bi-dash-circle-fill"></i><span>ลบ (ไม่เกิน 100)</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_compare" data-bs-toggle="list" href="#content_p1_compare" role="tab"
               aria-controls="content_p1_compare" data-op="compare">
-              <i class="material-symbols-rounded">compare_arrows</i><span>เปรียบเทียบจำนวน</span>
+              <i class="bi bi-arrow-left-right"></i><span>เปรียบเทียบจำนวน</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_pattern" data-bs-toggle="list" href="#content_p1_pattern" role="tab"
               aria-controls="content_p1_pattern" data-op="pattern">
-              <i class="material-symbols-rounded">format_list_numbered</i><span>แบบรูป</span>
+              <i class="bi bi-list-ol"></i><span>แบบรูป</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_placevalue" data-bs-toggle="list" href="#content_p1_placevalue"
               role="tab" aria-controls="content_p1_placevalue" data-op="placevalue">
-              <i class="material-symbols-rounded">view_column</i><span>หลักหน่วย/หลักสิบ</span>
+              <i class="bi bi-columns-gap"></i><span>หลักหน่วย/หลักสิบ</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_shape" data-bs-toggle="list" href="#content_p1_shape" role="tab"
               aria-controls="content_p1_shape" data-op="shape">
-              <i class="material-symbols-rounded">interests</i><span>รูปเรขาคณิต</span>
+              <i class="bi bi-circle-square"></i><span>รูปเรขาคณิต</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_length" data-bs-toggle="list" href="#content_p1_length" role="tab"
               aria-controls="content_p1_length" data-op="length">
-              <i class="material-symbols-rounded">straighten</i><span>ความยาว</span>
+              <i class="bi bi-arrows-angle-expand"></i><span>ความยาว</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_weight" data-bs-toggle="list" href="#content_p1_weight" role="tab"
               aria-controls="content_p1_weight" data-op="weight">
-              <i class="material-symbols-rounded">shopping_basket</i><span>น้ำหนัก</span>
+              <i class="bi bi-basket-fill"></i><span>น้ำหนัก</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_capacity" data-bs-toggle="list" href="#content_p1_capacity"
               role="tab" aria-controls="content_p1_capacity" data-op="capacity">
-              <i class="material-symbols-rounded">water_drop</i><span>ความจุ</span>
+              <i class="bi bi-droplet-fill"></i><span>ความจุ</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_time" data-bs-toggle="list" href="#content_p1_time" role="tab"
               aria-controls="content_p1_time" data-op="time">
-              <i class="material-symbols-rounded">schedule</i><span>เวลา</span>
+              <i class="bi bi-clock-fill"></i><span>เวลา</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_money" data-bs-toggle="list" href="#content_p1_money" role="tab"
               aria-controls="content_p1_money" data-op="money">
-              <i class="material-symbols-rounded">payments</i><span>เงิน</span>
+              <i class="bi bi-cash-coin"></i><span>เงิน</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_wordproblem" data-bs-toggle="list" href="#content_p1_wordproblem"
               role="tab" aria-controls="content_p1_wordproblem" data-op="wordproblem">
-              <i class="material-symbols-rounded">menu_book</i><span>โจทย์ปัญหา</span>
+              <i class="bi bi-journal-text"></i><span>โจทย์ปัญหา</span>
             </a>
           </div>
         </div>
@@ -122,53 +122,53 @@
         <div class="nav-group">
           <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-p5"
             aria-expanded="false" aria-controls="group-p5">
-            <i class="material-symbols-rounded">school</i><span>ป.5</span>
-            <i class="material-symbols-rounded group-caret">expand_more</i>
+            <i class="bi bi-mortarboard-fill"></i><span>ป.5</span>
+            <i class="bi bi-chevron-down group-caret"></i>
           </button>
           <div class="collapse nav-group-items" id="group-p5">
             <a class="nav-menu-item" id="menu_p5_decimal" data-bs-toggle="list" href="#content_p5_decimal" role="tab"
               aria-controls="content_p5_decimal" data-op="decimal">
-              <i class="material-symbols-rounded">123</i><span>ทศนิยม</span>
+              <i class="bi bi-123"></i><span>ทศนิยม</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_percentage" data-bs-toggle="list" href="#content_p5_percentage"
               role="tab" aria-controls="content_p5_percentage" data-op="percentage">
-              <i class="material-symbols-rounded">percent</i><span>ร้อยละ</span>
+              <i class="bi bi-percent"></i><span>ร้อยละ</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_fraction" data-bs-toggle="list" href="#content_p5_fraction"
               role="tab" aria-controls="content_p5_fraction" data-op="fraction">
-              <i class="material-symbols-rounded">functions</i><span>เศษส่วน</span>
+              <i class="bi bi-slash-square"></i><span>เศษส่วน</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_gcflcm" data-bs-toggle="list" href="#content_p5_gcflcm" role="tab"
               aria-controls="content_p5_gcflcm" data-op="gcflcm">
-              <i class="material-symbols-rounded">join_inner</i><span>ห.ร.ม. / ค.ร.น.</span>
+              <i class="bi bi-intersect"></i><span>ห.ร.ม. / ค.ร.น.</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_mixednumber" data-bs-toggle="list" href="#content_p5_mixednumber"
               role="tab" aria-controls="content_p5_mixednumber" data-op="mixednumber">
-              <i class="material-symbols-rounded">layers</i><span>จำนวนคละ</span>
+              <i class="bi bi-stack"></i><span>จำนวนคละ</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_geometry" data-bs-toggle="list" href="#content_p5_geometry"
               role="tab" aria-controls="content_p5_geometry" data-op="geometry">
-              <i class="material-symbols-rounded">square_foot</i><span>พื้นที่ / รอบรูป</span>
+              <i class="bi bi-rulers"></i><span>พื้นที่ / รอบรูป</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_volume" data-bs-toggle="list" href="#content_p5_volume" role="tab"
               aria-controls="content_p5_volume" data-op="volume">
-              <i class="material-symbols-rounded">inventory_2</i><span>ปริมาตร</span>
+              <i class="bi bi-box"></i><span>ปริมาตร</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_angle" data-bs-toggle="list" href="#content_p5_angle" role="tab"
               aria-controls="content_p5_angle" data-op="angle">
-              <i class="material-symbols-rounded">explore</i><span>มุม</span>
+              <i class="bi bi-compass"></i><span>มุม</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_average" data-bs-toggle="list" href="#content_p5_average" role="tab"
               aria-controls="content_p5_average" data-op="average">
-              <i class="material-symbols-rounded">query_stats</i><span>ค่าเฉลี่ย</span>
+              <i class="bi bi-clipboard-data"></i><span>ค่าเฉลี่ย</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_barchart" data-bs-toggle="list" href="#content_p5_barchart"
               role="tab" aria-controls="content_p5_barchart" data-op="barchart">
-              <i class="material-symbols-rounded">bar_chart</i><span>แผนภูมิแท่ง</span>
+              <i class="bi bi-bar-chart-fill"></i><span>แผนภูมิแท่ง</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_wordproblem" data-bs-toggle="list" href="#content_p5_wordproblem"
               role="tab" aria-controls="content_p5_wordproblem" data-op="wordproblem">
-              <i class="material-symbols-rounded">menu_book</i><span>โจทย์ปัญหา</span>
+              <i class="bi bi-journal-text"></i><span>โจทย์ปัญหา</span>
             </a>
           </div>
         </div>
@@ -176,13 +176,13 @@
         <div class="nav-group">
           <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-speed"
             aria-expanded="false" aria-controls="group-speed">
-            <i class="material-symbols-rounded">timer</i><span>ฝึกคำนวณเร็ว</span>
-            <i class="material-symbols-rounded group-caret">expand_more</i>
+            <i class="bi bi-stopwatch-fill"></i><span>ฝึกคำนวณเร็ว</span>
+            <i class="bi bi-chevron-down group-caret"></i>
           </button>
           <div class="collapse nav-group-items" id="group-speed">
             <a class="nav-menu-item" id="menu_speedquiz" data-bs-toggle="list" href="#content_speedquiz" role="tab"
               aria-controls="content_speedquiz" data-op="speedquiz">
-              <i class="material-symbols-rounded">grid_on</i><span>100 ข้อ</span>
+              <i class="bi bi-grid-3x3-gap-fill"></i><span>100 ข้อ</span>
             </a>
           </div>
         </div>
@@ -195,7 +195,7 @@
         <div class="tab-pane fade show active" id="content_plus" role="tabpanel" aria-labelledby="menu_plus">
           <div class="operation-panel" data-op="plus">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">add_circle</i> บวก (Plus)</h2>
+              <h2><i class="bi bi-plus-circle-fill"></i> บวก (Plus)</h2>
               <p>ฝึกการบวกเลขให้แม่นยำ</p>
             </div>
             <div class="panel-body">
@@ -207,17 +207,17 @@
                 <input type="number" id="resultNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validatePlusResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackPlus"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultList"></div>
                 </div>
                 <div class="side-panel" id="contentHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyList"></div>
                 </div>
               </div>
@@ -228,7 +228,7 @@
         <div class="tab-pane fade" id="content_minus" role="tabpanel" aria-labelledby="menu_minus">
           <div class="operation-panel" data-op="minus">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">do_not_disturb_on</i> ลบ (Minus)</h2>
+              <h2><i class="bi bi-dash-circle-fill"></i> ลบ (Minus)</h2>
               <p>ฝึกการลบเลขให้แม่นยำ</p>
             </div>
             <div class="panel-body">
@@ -242,17 +242,17 @@
                 <input type="number" id="resultMinusNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateMinusResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackMinus"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentMinusResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultMinusList"></div>
                 </div>
                 <div class="side-panel" id="contentMinusHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyMinusList"></div>
                 </div>
               </div>
@@ -263,7 +263,7 @@
         <div class="tab-pane fade" id="content_multiply" role="tabpanel" aria-labelledby="menu_multiply">
           <div class="operation-panel" data-op="multiply">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">cancel</i> คูณ (Multiply)</h2>
+              <h2><i class="bi bi-x-circle-fill"></i> คูณ (Multiply)</h2>
               <p>ฝึกการคูณเลขให้แม่นยำ</p>
             </div>
             <div class="panel-body">
@@ -277,17 +277,17 @@
                 <input type="number" id="resultMultiplyNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateMultiplyResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackMultiply"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentMultiplyResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultMultiplyList"></div>
                 </div>
                 <div class="side-panel" id="contentMultiplyHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyMultiplyList"></div>
                 </div>
               </div>
@@ -298,7 +298,7 @@
         <div class="tab-pane fade" id="content_divide" role="tabpanel" aria-labelledby="menu_divide">
           <div class="operation-panel" data-op="divide">
             <div class="panel-header">
-              <h2><i class="divide-symbol">÷</i> หาร (Divide)</h2>
+              <h2><i class="bi bi-slash-circle-fill"></i> หาร (Divide)</h2>
               <p>ฝึกการหารเลขให้แม่นยำ</p>
             </div>
             <div class="panel-body">
@@ -312,17 +312,17 @@
                 <input type="number" id="resultDivideNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateDivideResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackDivide"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentDivideResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultDivideList"></div>
                 </div>
                 <div class="side-panel" id="contentDivideHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyDivideList"></div>
                 </div>
               </div>
@@ -333,7 +333,7 @@
         <div class="tab-pane fade" id="content_p1_plus" role="tabpanel" aria-labelledby="menu_p1_plus">
           <div class="operation-panel" data-op="plus">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">add_circle</i> บวก (ป.1)</h2>
+              <h2><i class="bi bi-plus-circle-fill"></i> บวก (ป.1)</h2>
               <p>ฝึกการบวกจำนวนนับไม่เกิน 100 สำหรับชั้นประถมศึกษาปีที่ 1</p>
             </div>
             <div class="panel-body">
@@ -354,17 +354,17 @@
                 <input type="number" id="resultP1PlusNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateP1PlusResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackP1Plus"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentP1PlusResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultP1PlusList"></div>
                 </div>
                 <div class="side-panel" id="contentP1PlusHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyP1PlusList"></div>
                 </div>
               </div>
@@ -375,7 +375,7 @@
         <div class="tab-pane fade" id="content_p1_minus" role="tabpanel" aria-labelledby="menu_p1_minus">
           <div class="operation-panel" data-op="minus">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">do_not_disturb_on</i> ลบ (ป.1)</h2>
+              <h2><i class="bi bi-dash-circle-fill"></i> ลบ (ป.1)</h2>
               <p>ฝึกการลบจำนวนนับไม่เกิน 100 สำหรับชั้นประถมศึกษาปีที่ 1</p>
             </div>
             <div class="panel-body">
@@ -396,17 +396,17 @@
                 <input type="number" id="resultP1MinusNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateP1MinusResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackP1Minus"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentP1MinusResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultP1MinusList"></div>
                 </div>
                 <div class="side-panel" id="contentP1MinusHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyP1MinusList"></div>
                 </div>
               </div>
@@ -417,7 +417,7 @@
         <div class="tab-pane fade" id="content_p1_compare" role="tabpanel" aria-labelledby="menu_p1_compare">
           <div class="operation-panel" data-op="compare">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">compare_arrows</i> เปรียบเทียบจำนวน (ป.1)</h2>
+              <h2><i class="bi bi-arrow-left-right"></i> เปรียบเทียบจำนวน (ป.1)</h2>
               <p>เลือกเครื่องหมายมากกว่า น้อยกว่า หรือเท่ากับ ให้ถูกต้อง</p>
             </div>
             <div class="panel-body">
@@ -432,17 +432,17 @@
                   <div class="compare-number" id="secondCompareNumber">0</div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validateCompareResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackCompare"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentCompareResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultCompareList"></div>
                 </div>
                 <div class="side-panel" id="contentCompareHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyCompareList"></div>
                 </div>
               </div>
@@ -453,7 +453,7 @@
         <div class="tab-pane fade" id="content_p1_pattern" role="tabpanel" aria-labelledby="menu_p1_pattern">
           <div class="operation-panel" data-op="pattern">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">format_list_numbered</i> แบบรูปตัวเลข (ป.1)</h2>
+              <h2><i class="bi bi-list-ol"></i> แบบรูปตัวเลข (ป.1)</h2>
               <p>หาตัวเลขที่หายไปให้ถูกต้องตามแบบรูป</p>
             </div>
             <div class="panel-body">
@@ -471,17 +471,17 @@
                     placeholder="?" aria-label="Answer">
                 </div>
                 <button type="button" class="calc-submit" onclick="validatePatternResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackPattern"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentPatternResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultPatternList"></div>
                 </div>
                 <div class="side-panel" id="contentPatternHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyPatternList"></div>
                 </div>
               </div>
@@ -492,7 +492,7 @@
         <div class="tab-pane fade" id="content_p1_placevalue" role="tabpanel" aria-labelledby="menu_p1_placevalue">
           <div class="operation-panel" data-op="placevalue">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">view_column</i> หลักหน่วย หลักสิบ (ป.1)</h2>
+              <h2><i class="bi bi-columns-gap"></i> หลักหน่วย หลักสิบ (ป.1)</h2>
               <p>บอกเลขหลักสิบและหลักหน่วยของจำนวนที่กำหนด</p>
             </div>
             <div class="panel-body">
@@ -511,17 +511,17 @@
                   </div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validatePlaceValueResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackPlaceValue"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentPlaceValueResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultPlaceValueList"></div>
                 </div>
                 <div class="side-panel" id="contentPlaceValueHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyPlaceValueList"></div>
                 </div>
               </div>
@@ -532,7 +532,7 @@
         <div class="tab-pane fade" id="content_p1_shape" role="tabpanel" aria-labelledby="menu_p1_shape">
           <div class="operation-panel" data-op="shape">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">interests</i> รูปเรขาคณิต (ป.1)</h2>
+              <h2><i class="bi bi-circle-square"></i> รูปเรขาคณิต (ป.1)</h2>
               <p>เลือกชื่อรูปทรงให้ตรงกับรูปที่เห็น</p>
             </div>
             <div class="panel-body">
@@ -540,17 +540,17 @@
                 <div class="shape-display" id="shapeDisplay"></div>
                 <div class="shape-options" id="shapeOptionsPicker"></div>
                 <button type="button" class="calc-submit" onclick="validateShapeResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackShape"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentShapeResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultShapeList"></div>
                 </div>
                 <div class="side-panel" id="contentShapeHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyShapeList"></div>
                 </div>
               </div>
@@ -561,7 +561,7 @@
         <div class="tab-pane fade" id="content_p1_length" role="tabpanel" aria-labelledby="menu_p1_length">
           <div class="operation-panel" data-op="length">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">straighten</i> ความยาว (ป.1)</h2>
+              <h2><i class="bi bi-arrows-angle-expand"></i> ความยาว (ป.1)</h2>
               <p>เปรียบเทียบความยาวของเชือกสองเส้น</p>
             </div>
             <div class="panel-body">
@@ -576,17 +576,17 @@
                   <div class="compare-number" id="secondLengthNumber">0 ซม.</div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validateLengthResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackLength"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentLengthResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultLengthList"></div>
                 </div>
                 <div class="side-panel" id="contentLengthHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyLengthList"></div>
                 </div>
               </div>
@@ -597,7 +597,7 @@
         <div class="tab-pane fade" id="content_p1_weight" role="tabpanel" aria-labelledby="menu_p1_weight">
           <div class="operation-panel" data-op="weight">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">shopping_basket</i> น้ำหนัก (ป.1)</h2>
+              <h2><i class="bi bi-basket-fill"></i> น้ำหนัก (ป.1)</h2>
               <p>เปรียบเทียบน้ำหนักของถุงสองถุง</p>
             </div>
             <div class="panel-body">
@@ -612,17 +612,17 @@
                   <div class="compare-number" id="secondWeightNumber">0 กก.</div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validateWeightResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackWeight"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentWeightResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultWeightList"></div>
                 </div>
                 <div class="side-panel" id="contentWeightHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyWeightList"></div>
                 </div>
               </div>
@@ -633,7 +633,7 @@
         <div class="tab-pane fade" id="content_p1_capacity" role="tabpanel" aria-labelledby="menu_p1_capacity">
           <div class="operation-panel" data-op="capacity">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">water_drop</i> ความจุ (ป.1)</h2>
+              <h2><i class="bi bi-droplet-fill"></i> ความจุ (ป.1)</h2>
               <p>เปรียบเทียบความจุของขวดสองขวด</p>
             </div>
             <div class="panel-body">
@@ -648,17 +648,17 @@
                   <div class="compare-number" id="secondCapacityNumber">0 ลิตร</div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validateCapacityResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackCapacity"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentCapacityResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultCapacityList"></div>
                 </div>
                 <div class="side-panel" id="contentCapacityHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyCapacityList"></div>
                 </div>
               </div>
@@ -669,7 +669,7 @@
         <div class="tab-pane fade" id="content_p1_time" role="tabpanel" aria-labelledby="menu_p1_time">
           <div class="operation-panel" data-op="time">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">schedule</i> เวลา (ป.1)</h2>
+              <h2><i class="bi bi-clock-fill"></i> เวลา (ป.1)</h2>
               <p>ดูนาฬิกาแล้วบอกว่าเป็นเวลากี่นาฬิกา</p>
             </div>
             <div class="panel-body">
@@ -678,17 +678,17 @@
                 <input type="number" id="timeAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateTimeResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackTime"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentTimeResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultTimeList"></div>
                 </div>
                 <div class="side-panel" id="contentTimeHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyTimeList"></div>
                 </div>
               </div>
@@ -699,7 +699,7 @@
         <div class="tab-pane fade" id="content_p1_money" role="tabpanel" aria-labelledby="menu_p1_money">
           <div class="operation-panel" data-op="money">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">payments</i> เงิน (ป.1)</h2>
+              <h2><i class="bi bi-cash-coin"></i> เงิน (ป.1)</h2>
               <p>รวมเงินเหรียญและธนบัตรทั้งหมดว่าได้กี่บาท</p>
             </div>
             <div class="panel-body">
@@ -708,17 +708,17 @@
                 <input type="number" id="moneyAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateMoneyResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackMoney"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentMoneyResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultMoneyList"></div>
                 </div>
                 <div class="side-panel" id="contentMoneyHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyMoneyList"></div>
                 </div>
               </div>
@@ -729,7 +729,7 @@
         <div class="tab-pane fade" id="content_p1_wordproblem" role="tabpanel" aria-labelledby="menu_p1_wordproblem">
           <div class="operation-panel" data-op="wordproblem">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">menu_book</i> โจทย์ปัญหา (ป.1)</h2>
+              <h2><i class="bi bi-journal-text"></i> โจทย์ปัญหา (ป.1)</h2>
               <p>ฝึกแก้โจทย์ปัญหาการบวกลบในชีวิตประจำวัน</p>
             </div>
             <div class="panel-body">
@@ -738,17 +738,17 @@
                 <input type="number" id="wordProblemP1AnswerNumber" class="calc-input calc-input-result"
                   placeholder="?" aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateWordProblemP1Result()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackWordProblemP1"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentWordProblemP1Result" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultWordProblemP1List"></div>
                 </div>
                 <div class="side-panel" id="contentWordProblemP1History" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyWordProblemP1List"></div>
                 </div>
               </div>
@@ -759,7 +759,7 @@
         <div class="tab-pane fade" id="content_p5_decimal" role="tabpanel" aria-labelledby="menu_p5_decimal">
           <div class="operation-panel" data-op="decimal">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">123</i> ทศนิยม (ป.5)</h2>
+              <h2><i class="bi bi-123"></i> ทศนิยม (ป.5)</h2>
               <p>ฝึกการบวก ลบ คูณ หาร ทศนิยม</p>
             </div>
             <div class="panel-body">
@@ -787,17 +787,17 @@
                 <input type="number" step="0.1" id="resultDecimalNumber" class="calc-input calc-input-result"
                   placeholder="?" aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateDecimalResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackDecimal"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentDecimalResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultDecimalList"></div>
                 </div>
                 <div class="side-panel" id="contentDecimalHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyDecimalList"></div>
                 </div>
               </div>
@@ -808,7 +808,7 @@
         <div class="tab-pane fade" id="content_p5_percentage" role="tabpanel" aria-labelledby="menu_p5_percentage">
           <div class="operation-panel" data-op="percentage">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">percent</i> ร้อยละ (ป.5)</h2>
+              <h2><i class="bi bi-percent"></i> ร้อยละ (ป.5)</h2>
               <p>หาค่าร้อยละของจำนวนที่กำหนด</p>
             </div>
             <div class="panel-body">
@@ -824,17 +824,17 @@
                 <input type="number" id="percentageAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validatePercentageResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackPercentage"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentPercentageResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultPercentageList"></div>
                 </div>
                 <div class="side-panel" id="contentPercentageHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyPercentageList"></div>
                 </div>
               </div>
@@ -845,7 +845,7 @@
         <div class="tab-pane fade" id="content_p5_fraction" role="tabpanel" aria-labelledby="menu_p5_fraction">
           <div class="operation-panel" data-op="fraction">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">functions</i> เศษส่วน (ป.5)</h2>
+              <h2><i class="bi bi-slash-square"></i> เศษส่วน (ป.5)</h2>
               <p>ฝึกการบวก ลบ คูณ หาร เศษส่วนที่มีตัวส่วนต่างกัน</p>
             </div>
             <div class="panel-body">
@@ -879,17 +879,17 @@
                   </div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validateFractionResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackFraction"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentFractionResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultFractionList"></div>
                 </div>
                 <div class="side-panel" id="contentFractionHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyFractionList"></div>
                 </div>
               </div>
@@ -900,7 +900,7 @@
         <div class="tab-pane fade" id="content_p5_gcflcm" role="tabpanel" aria-labelledby="menu_p5_gcflcm">
           <div class="operation-panel" data-op="gcflcm">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">join_inner</i> ห.ร.ม. และ ค.ร.น. (ป.5)</h2>
+              <h2><i class="bi bi-intersect"></i> ห.ร.ม. และ ค.ร.น. (ป.5)</h2>
               <p>หาตัวหารร่วมมาก (ห.ร.ม.) หรือตัวคูณร่วมน้อย (ค.ร.น.) ของสองจำนวน</p>
             </div>
             <div class="panel-body">
@@ -912,17 +912,17 @@
                 <input type="number" id="gcflcmAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateGcflcmResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackGcflcm"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentGcflcmResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultGcflcmList"></div>
                 </div>
                 <div class="side-panel" id="contentGcflcmHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyGcflcmList"></div>
                 </div>
               </div>
@@ -933,7 +933,7 @@
         <div class="tab-pane fade" id="content_p5_mixednumber" role="tabpanel" aria-labelledby="menu_p5_mixednumber">
           <div class="operation-panel" data-op="mixednumber">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">layers</i> จำนวนคละ (ป.5)</h2>
+              <h2><i class="bi bi-stack"></i> จำนวนคละ (ป.5)</h2>
               <p>ฝึกการบวก ลบ คูณ หาร จำนวนคละ</p>
             </div>
             <div class="panel-body">
@@ -977,17 +977,17 @@
                   </div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validateMixedNumberResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackMixedNumber"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentMixedNumberResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultMixedNumberList"></div>
                 </div>
                 <div class="side-panel" id="contentMixedNumberHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyMixedNumberList"></div>
                 </div>
               </div>
@@ -998,7 +998,7 @@
         <div class="tab-pane fade" id="content_p5_geometry" role="tabpanel" aria-labelledby="menu_p5_geometry">
           <div class="operation-panel" data-op="geometry">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">square_foot</i> พื้นที่และรอบรูป (ป.5)</h2>
+              <h2><i class="bi bi-rulers"></i> พื้นที่และรอบรูป (ป.5)</h2>
               <p>หาพื้นที่หรือความยาวรอบรูปของสี่เหลี่ยมและสามเหลี่ยม</p>
             </div>
             <div class="panel-body">
@@ -1007,17 +1007,17 @@
                 <input type="number" id="geometryAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateGeometryResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackGeometry"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentGeometryResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultGeometryList"></div>
                 </div>
                 <div class="side-panel" id="contentGeometryHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyGeometryList"></div>
                 </div>
               </div>
@@ -1028,7 +1028,7 @@
         <div class="tab-pane fade" id="content_p5_volume" role="tabpanel" aria-labelledby="menu_p5_volume">
           <div class="operation-panel" data-op="volume">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">inventory_2</i> ปริมาตร (ป.5)</h2>
+              <h2><i class="bi bi-box"></i> ปริมาตร (ป.5)</h2>
               <p>หาปริมาตรของกล่องสี่เหลี่ยมมุมฉาก</p>
             </div>
             <div class="panel-body">
@@ -1038,17 +1038,17 @@
                 <input type="number" id="volumeAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateVolumeResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackVolume"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentVolumeResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultVolumeList"></div>
                 </div>
                 <div class="side-panel" id="contentVolumeHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyVolumeList"></div>
                 </div>
               </div>
@@ -1059,7 +1059,7 @@
         <div class="tab-pane fade" id="content_p5_angle" role="tabpanel" aria-labelledby="menu_p5_angle">
           <div class="operation-panel" data-op="angle">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">explore</i> มุม (ป.5)</h2>
+              <h2><i class="bi bi-compass"></i> มุม (ป.5)</h2>
               <p>หามุมประกอบมุมฉากหรือมุมประกอบมุมตรง</p>
             </div>
             <div class="panel-body">
@@ -1069,17 +1069,17 @@
                 <input type="number" id="angleAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateAngleResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackAngle"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentAngleResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultAngleList"></div>
                 </div>
                 <div class="side-panel" id="contentAngleHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyAngleList"></div>
                 </div>
               </div>
@@ -1090,7 +1090,7 @@
         <div class="tab-pane fade" id="content_p5_average" role="tabpanel" aria-labelledby="menu_p5_average">
           <div class="operation-panel" data-op="average">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">query_stats</i> ค่าเฉลี่ย (ป.5)</h2>
+              <h2><i class="bi bi-clipboard-data"></i> ค่าเฉลี่ย (ป.5)</h2>
               <p>หาค่าเฉลี่ยของชุดข้อมูล</p>
             </div>
             <div class="panel-body">
@@ -1104,17 +1104,17 @@
                 <input type="number" id="averageAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateAverageResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackAverage"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentAverageResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultAverageList"></div>
                 </div>
                 <div class="side-panel" id="contentAverageHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyAverageList"></div>
                 </div>
               </div>
@@ -1125,7 +1125,7 @@
         <div class="tab-pane fade" id="content_p5_barchart" role="tabpanel" aria-labelledby="menu_p5_barchart">
           <div class="operation-panel" data-op="barchart">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">bar_chart</i> แผนภูมิแท่ง (ป.5)</h2>
+              <h2><i class="bi bi-bar-chart-fill"></i> แผนภูมิแท่ง (ป.5)</h2>
               <p>อ่านข้อมูลจากแผนภูมิแท่งแสดงจำนวนนักเรียนที่ชอบผลไม้แต่ละชนิด</p>
             </div>
             <div class="panel-body">
@@ -1135,17 +1135,17 @@
                 <input type="number" id="barChartAnswerNumber" class="calc-input calc-input-result" placeholder="?"
                   aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateBarChartResult()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackBarChart"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentBarChartResult" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultBarChartList"></div>
                 </div>
                 <div class="side-panel" id="contentBarChartHistory" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyBarChartList"></div>
                 </div>
               </div>
@@ -1156,7 +1156,7 @@
         <div class="tab-pane fade" id="content_p5_wordproblem" role="tabpanel" aria-labelledby="menu_p5_wordproblem">
           <div class="operation-panel" data-op="wordproblem">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">menu_book</i> โจทย์ปัญหา (ป.5)</h2>
+              <h2><i class="bi bi-journal-text"></i> โจทย์ปัญหา (ป.5)</h2>
               <p>ฝึกแก้โจทย์ปัญหาที่รวมทศนิยม ร้อยละ พื้นที่ ปริมาตร และค่าเฉลี่ย</p>
             </div>
             <div class="panel-body">
@@ -1166,17 +1166,17 @@
                 <input type="number" id="wordProblemP5AnswerNumber" class="calc-input calc-input-result"
                   placeholder="?" aria-label="Answer">
                 <button type="button" class="calc-submit" onclick="validateWordProblemP5Result()">
-                  ตรวจคำตอบ <i class="material-symbols-rounded">task_alt</i>
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
                 <div class="calc-feedback" id="feedbackWordProblemP5"></div>
               </div>
               <div class="side-panels">
                 <div class="side-panel" id="contentWordProblemP5Result" style="display: none;">
-                  <h3><i class="material-symbols-rounded">checklist</i> คำตอบที่ถูก</h3>
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
                   <div class="answer-list" id="resultWordProblemP5List"></div>
                 </div>
                 <div class="side-panel" id="contentWordProblemP5History" style="display: none;">
-                  <h3><i class="material-symbols-rounded">history</i> ประวัติ</h3>
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyWordProblemP5List"></div>
                 </div>
               </div>
@@ -1187,7 +1187,7 @@
         <div class="tab-pane fade" id="content_speedquiz" role="tabpanel" aria-labelledby="menu_speedquiz">
           <div class="operation-panel" data-op="speedquiz">
             <div class="panel-header">
-              <h2><i class="material-symbols-rounded">timer</i> แบบฝึกคำนวณเร็ว 100 ข้อ</h2>
+              <h2><i class="bi bi-stopwatch-fill"></i> แบบฝึกคำนวณเร็ว 100 ข้อ</h2>
               <p>เลือกโจทย์บวก ลบ หรือคูณ แล้วกดเริ่ม ทำให้ครบ 100 ข้อให้เร็วที่สุด แข่งกับเวลาของตัวเอง</p>
             </div>
             <div class="panel-body">
@@ -1210,7 +1210,7 @@
                 </div>
 
                 <button type="button" class="calc-submit" id="speedQuizStartBtn" onclick="startSpeedQuiz()">
-                  เริ่มทำโจทย์ <i class="material-symbols-rounded">play_arrow</i>
+                  เริ่มทำโจทย์ <i class="bi bi-play-fill"></i>
                 </button>
 
                 <div class="calc-feedback" id="feedbackSpeedQuiz"></div>
@@ -1260,8 +1260,8 @@
       $feedback
         .addClass(isCorrect ? 'is-correct' : 'is-incorrect')
         .html(isCorrect
-          ? '<i class="material-symbols-rounded">check_circle</i> ถูกต้อง เก่งมาก!'
-          : '<i class="material-symbols-rounded">cancel</i> ยังไม่ถูก ลองอีกครั้งนะ')
+          ? '<i class="bi bi-check-circle-fill"></i> ถูกต้อง เก่งมาก!'
+          : '<i class="bi bi-x-circle-fill"></i> ยังไม่ถูก ลองอีกครั้งนะ')
         .addClass('show');
       let timer = setTimeout(function () { $feedback.removeClass('show'); }, 1800);
       $feedback.data('hideTimer', timer);
