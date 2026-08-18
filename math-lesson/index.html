@@ -34,6 +34,11 @@
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
+      <div class="app-account" id="appAccount">
+        <button type="button" class="app-account-btn" id="appAccountSignInBtn">
+          <i class="bi bi-person-circle"></i> เข้าสู่ระบบ
+        </button>
+      </div>
       <div class="nav-menu" id="list-tab" role="tablist">
         <div class="nav-group">
           <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-general"
@@ -187,7 +192,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v1.1.0</div>
+      <div class="app-sidebar-footer">v1.2.0</div>
     </aside>
 
     <main class="app-main">
@@ -1248,8 +1253,40 @@
     </div>
   </div>
 
+  <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="auth-modal-body">
+          <div class="mode-picker" id="authTabPicker">
+            <button type="button" class="mode-btn active" data-auth-tab="signin">เข้าสู่ระบบ</button>
+            <button type="button" class="mode-btn" data-auth-tab="register">สมัครสมาชิก</button>
+          </div>
+
+          <div class="auth-tab-panel active" id="authPanelSignin">
+            <input type="email" class="auth-input" id="signinEmail" placeholder="อีเมล" autocomplete="email">
+            <input type="password" class="auth-input" id="signinPassword" placeholder="รหัสผ่าน" autocomplete="current-password">
+            <div class="auth-error" id="signinError"></div>
+            <button type="button" class="auth-submit-btn" id="signinSubmitBtn">เข้าสู่ระบบ</button>
+          </div>
+
+          <div class="auth-tab-panel" id="authPanelRegister">
+            <input type="email" class="auth-input" id="registerEmail" placeholder="อีเมล" autocomplete="email">
+            <input type="password" class="auth-input" id="registerPassword" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)" autocomplete="new-password">
+            <input type="password" class="auth-input" id="registerPasswordConfirm" placeholder="ยืนยันรหัสผ่าน" autocomplete="new-password">
+            <div class="auth-error" id="registerError"></div>
+            <button type="button" class="auth-submit-btn" id="registerSubmitBtn">สมัครสมาชิก</button>
+          </div>
+
+          <button type="button" class="auth-guest-btn" data-bs-dismiss="modal">เข้าใช้แบบผู้เยี่ยมชม (Guest)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="text/javascript" src="bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="jquery-3.7.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script type="text/javascript" src="scrips/auth/index.js"></script>
   <script>
     function validateResult(firstNumber, secondNumber, resultNumber, symbol) {
       let isCorrect;
