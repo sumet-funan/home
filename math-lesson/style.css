@@ -651,6 +651,16 @@ body {
   background: var(--bg);
 }
 
+/* Sticks to the bottom of the viewport while the child works down the grid,
+   so it is reachable on row 10 without scrolling back to find it. */
+.speed-quiz-next-btn {
+  position: sticky;
+  bottom: 12px;
+  margin-top: 16px;
+  z-index: 5;
+  box-shadow: var(--shadow);
+}
+
 /* iPad/touch: bigger tap targets already set above (44px, Apple's HIG
    minimum); these remove the tap-highlight flash and the double-tap-to-zoom
    delay Safari adds to fast sequential taps across the grid. */

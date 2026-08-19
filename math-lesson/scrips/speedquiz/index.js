@@ -150,6 +150,7 @@ function finishSpeedQuiz() {
     speedQuizObj.running = false;
     clearInterval(speedQuizObj.timerInterval);
     updateSpeedQuizTimerDisplay();
+    $('#speedQuizNextBtn').hide();
 
     let elapsed = Date.now() - speedQuizObj.startTime;
     let correctCount = 0;
@@ -205,12 +206,14 @@ function beginSpeedQuizRound() {
     speedQuizObj.startTime = Date.now();
     speedQuizObj.timerInterval = setInterval(updateSpeedQuizTimerDisplay, 250);
 
+    $('#speedQuizNextBtn').show();
     $('.speed-quiz-input[data-row="0"][data-col="0"]').trigger('focus');
 }
 
 function resetSpeedQuizForNewSelection() {
     clearInterval(speedQuizObj.timerInterval);
     speedQuizObj.running = false;
+    $('#speedQuizNextBtn').hide();
     $('#speedQuizTimer').text('00:00');
     $('#speedQuizGrid').empty();
     $('#feedbackSpeedQuiz').removeClass('show is-correct is-incorrect').text('');
@@ -259,12 +262,6 @@ $(document).on('input', '.speed-quiz-input', function () {
         return;
     }
 
-    // iPad's numeric keypad has no Enter key, so auto-advance once a
-    // 2-digit answer is complete (every possible answer is at most 2 digits).
-    if ($(this).val().length >= 2) {
-        advanceSpeedQuizFocus(+$(this).data('row'), +$(this).data('col'));
-    }
-
     let allFilled = true;
     $('.speed-quiz-input').each(function () {
         if ($(this).val() === '') {
@@ -283,6 +280,33 @@ $(document).on('keydown', '.speed-quiz-input', function (e) {
     }
     e.preventDefault();
     advanceSpeedQuizFocus(+$(this).data('row'), +$(this).data('col'));
+});
+
+// iPad's numeric keypad has no Enter key, so moving on is a button. Tapping it
+// must not steal focus from the cell, or the keyboard closes between answers.
+$('#speedQuizNextBtn').on('mousedown touchstart', function (e) {
+    e.preventDefault();
+});
+
+$('#speedQuizNextBtn').on('click', function () {
+    if (!speedQuizObj.running) {
+        return;
+    }
+
+    // document.activeElement rather than jQuery's :focus — that selector also
+    // requires document.hasFocus(), so it matches nothing when the window is
+    // in the background and the button would jump to the wrong cell.
+    let active = document.activeElement;
+    let $active = active && $(active).hasClass('speed-quiz-input') ? $(active) : $();
+
+    if (!$active.length) {
+        // nothing focused (e.g. the child tapped away): resume at the first gap
+        let $firstEmpty = $('.speed-quiz-input').filter(function () { return $(this).val() === ''; }).first();
+        ($firstEmpty.length ? $firstEmpty : $('.speed-quiz-input').first()).trigger('focus');
+        return;
+    }
+
+    advanceSpeedQuizFocus(+$active.data('row'), +$active.data('col'));
 });
 
 $(document).on('focus', '.speed-quiz-input', function () {
