@@ -653,7 +653,7 @@ body {
 
 /* Sticks to the bottom of the viewport while the child works down the grid,
    so it is reachable on row 10 without scrolling back to find it. */
-.speed-quiz-next-btn {
+.speed-quiz-submit-btn {
   position: sticky;
   bottom: 12px;
   margin-top: 16px;

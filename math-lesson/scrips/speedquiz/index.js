@@ -150,7 +150,7 @@ function finishSpeedQuiz() {
     speedQuizObj.running = false;
     clearInterval(speedQuizObj.timerInterval);
     updateSpeedQuizTimerDisplay();
-    $('#speedQuizNextBtn').hide();
+    $('#speedQuizSubmitBtn').hide();
 
     let elapsed = Date.now() - speedQuizObj.startTime;
     let correctCount = 0;
@@ -212,14 +212,14 @@ function beginSpeedQuizRound() {
     speedQuizObj.startTime = Date.now();
     speedQuizObj.timerInterval = setInterval(updateSpeedQuizTimerDisplay, 250);
 
-    $('#speedQuizNextBtn').show();
+    $('#speedQuizSubmitBtn').show();
     $('.speed-quiz-input[data-row="0"][data-col="0"]').trigger('focus');
 }
 
 function resetSpeedQuizForNewSelection() {
     clearInterval(speedQuizObj.timerInterval);
     speedQuizObj.running = false;
-    $('#speedQuizNextBtn').hide();
+    $('#speedQuizSubmitBtn').hide();
     $('#speedQuizTimer').text('00:00');
     $('#speedQuizGrid').empty();
     $('#feedbackSpeedQuiz').removeClass('show is-correct is-incorrect').text('');
@@ -263,23 +263,6 @@ function advanceSpeedQuizFocus(row, col) {
     }
 }
 
-$(document).on('input', '.speed-quiz-input', function () {
-    if (!speedQuizObj.running) {
-        return;
-    }
-
-    let allFilled = true;
-    $('.speed-quiz-input').each(function () {
-        if ($(this).val() === '') {
-            allFilled = false;
-        }
-    });
-
-    if (allFilled) {
-        finishSpeedQuiz();
-    }
-});
-
 $(document).on('keydown', '.speed-quiz-input', function (e) {
     if (e.key !== 'Enter') {
         return;
@@ -288,31 +271,41 @@ $(document).on('keydown', '.speed-quiz-input', function (e) {
     advanceSpeedQuizFocus(+$(this).data('row'), +$(this).data('col'));
 });
 
-// iPad's numeric keypad has no Enter key, so moving on is a button. Tapping it
-// must not steal focus from the cell, or the keyboard closes between answers.
-$('#speedQuizNextBtn').on('mousedown touchstart', function (e) {
-    e.preventDefault();
-});
+function countEmptySpeedQuizCells() {
+    return $('.speed-quiz-input').filter(function () { return $(this).val().trim() === ''; }).length;
+}
 
-$('#speedQuizNextBtn').on('click', function () {
+// The grid is graded only when the child says they are done, so they get a
+// chance to look back over their answers first. Submitting with blanks asks
+// first, since those count as wrong and the round cannot be reopened.
+$('#speedQuizSubmitBtn').on('click', function () {
     if (!speedQuizObj.running) {
         return;
     }
 
-    // document.activeElement rather than jQuery's :focus — that selector also
-    // requires document.hasFocus(), so it matches nothing when the window is
-    // in the background and the button would jump to the wrong cell.
-    let active = document.activeElement;
-    let $active = active && $(active).hasClass('speed-quiz-input') ? $(active) : $();
-
-    if (!$active.length) {
-        // nothing focused (e.g. the child tapped away): resume at the first gap
-        let $firstEmpty = $('.speed-quiz-input').filter(function () { return $(this).val() === ''; }).first();
-        ($firstEmpty.length ? $firstEmpty : $('.speed-quiz-input').first()).trigger('focus');
+    let empty = countEmptySpeedQuizCells();
+    if (!empty) {
+        finishSpeedQuiz();
         return;
     }
 
-    advanceSpeedQuizFocus(+$active.data('row'), +$active.data('col'));
+    $('#speedQuizSubmitEmptyCount').text(empty);
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('speedQuizSubmitModal')).show();
+});
+
+// Grade only once the modal has fully closed. Doing it inline with hide()
+// leaves the dialog stuck open: finishSpeedQuiz hides the submit button, which
+// is the element Bootstrap returns focus to, and that interrupts its close.
+$('#speedQuizSubmitConfirmBtn').on('click', function () {
+    let el = document.getElementById('speedQuizSubmitModal');
+
+    $(el).one('hidden.bs.modal', function () {
+        if (speedQuizObj.running) {
+            finishSpeedQuiz();
+        }
+    });
+
+    bootstrap.Modal.getInstance(el).hide();
 });
 
 $(document).on('focus', '.speed-quiz-input', function () {

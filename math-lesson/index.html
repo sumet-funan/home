@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v1.7.1</div>
+      <div class="app-sidebar-footer">v1.8.0</div>
     </aside>
 
     <main class="app-main">
@@ -1240,8 +1240,8 @@
                   <table class="speed-quiz-grid" id="speedQuizGrid"></table>
                 </div>
 
-                <button type="button" class="calc-submit speed-quiz-next-btn" id="speedQuizNextBtn" style="display: none;">
-                  ข้อถัดไป <i class="bi bi-arrow-right"></i>
+                <button type="button" class="calc-submit speed-quiz-submit-btn" id="speedQuizSubmitBtn" style="display: none;">
+                  ส่งคำตอบ <i class="bi bi-check2-circle"></i>
                 </button>
               </div>
             </div>
@@ -1334,6 +1334,21 @@
         <div class="modal-footer">
           <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" data-bs-dismiss="modal">ทำต่อ</button>
           <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" id="speedQuizLeaveConfirmBtn">ออกจากหน้านี้</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade confirm-modal" id="speedQuizSubmitModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="confirm-modal-body">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <p>ยังตอบไม่ครบอีก <strong id="speedQuizSubmitEmptyCount">0</strong> ข้อ<br>ข้อที่ยังไม่ตอบจะถือว่าตอบผิด ต้องการส่งคำตอบหรือไม่?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" data-bs-dismiss="modal">ทำต่อ</button>
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" id="speedQuizSubmitConfirmBtn">ส่งคำตอบ</button>
         </div>
       </div>
     </div>
