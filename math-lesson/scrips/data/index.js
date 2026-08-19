@@ -157,6 +157,22 @@ function fetchRecentMistakes(limit) {
         });
 }
 
+function fetchLessonAttempts(lessonId, limit) {
+    if (!currentUserId) {
+        return Promise.resolve([]);
+    }
+
+    return supabaseClient
+        .from('attempts')
+        .select('is_correct, expression, created_at')
+        .eq('lesson_id', lessonId)
+        .order('created_at', { ascending: false })
+        .limit(limit || 50)
+        .then(function (result) {
+            return result.error ? [] : result.data;
+        });
+}
+
 function fetchQuizBests() {
     if (!currentUserId) {
         return Promise.resolve([]);

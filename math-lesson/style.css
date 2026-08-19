@@ -918,6 +918,72 @@ body {
   color: var(--muted);
 }
 
+.progress-row.is-expandable {
+  cursor: pointer;
+}
+
+.progress-row-caret {
+  font-size: .7rem;
+  color: var(--muted);
+  transition: transform .2s ease;
+  display: inline-block;
+}
+
+.progress-row.is-open .progress-row-caret {
+  transform: rotate(90deg);
+}
+
+.progress-attempts {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.progress-attempt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 4px;
+  font-size: .85rem;
+}
+
+.progress-attempt i {
+  flex-shrink: 0;
+  font-size: .95rem;
+}
+
+.progress-attempt.is-correct i {
+  color: var(--plus);
+}
+
+.progress-attempt.is-incorrect i {
+  color: #dc2626;
+}
+
+.progress-attempt-expr {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progress-attempt-noexpr {
+  color: var(--muted);
+  font-weight: 500;
+  font-style: italic;
+}
+
+.progress-attempt-date {
+  flex-shrink: 0;
+  font-size: .75rem;
+  color: var(--muted);
+}
+
 .progress-mistake-expr {
   font-weight: 700;
   font-size: .92rem;

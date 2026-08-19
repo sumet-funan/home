@@ -83,20 +83,65 @@ function renderProgressLessons(stats) {
 
     let html = known.map(function (row) {
         let pct = +row.accuracy_pct;
-        return '<div class="progress-row">' +
+        return '<div class="progress-row is-expandable" data-lesson-id="' + row.lesson_id + '">' +
             '<div class="progress-row-head">' +
-                '<span class="progress-row-name">' + LESSON_LABELS[row.lesson_id] + '</span>' +
+                '<span class="progress-row-name">' +
+                    '<i class="bi bi-chevron-right progress-row-caret"></i> ' +
+                    LESSON_LABELS[row.lesson_id] +
+                '</span>' +
                 '<span class="progress-row-score">' + row.correct + '/' + row.total + ' (' + pct + '%)</span>' +
             '</div>' +
             '<div class="progress-bar-track">' +
                 '<div class="progress-bar-fill ' + accuracyClass(pct) + '" style="width: ' + pct + '%;"></div>' +
             '</div>' +
             '<div class="progress-row-meta">ฝึกล่าสุด ' + formatProgressDate(row.last_practiced_at) + '</div>' +
+            '<div class="progress-attempts" style="display: none;"></div>' +
         '</div>';
     }).join('');
 
     $('#progressLessonList').html(html);
 }
+
+function renderLessonAttempts($container, rows) {
+    if (!rows.length) {
+        $container.html('<p class="progress-empty">ยังไม่มีประวัติ</p>');
+        return;
+    }
+
+    let html = rows.map(function (row) {
+        let expression = row.expression
+            ? $('<div>').text(row.expression).html()
+            : '<span class="progress-attempt-noexpr">(ไม่ได้บันทึกรายละเอียด)</span>';
+        return '<div class="progress-attempt ' + (row.is_correct ? 'is-correct' : 'is-incorrect') + '">' +
+            '<i class="bi ' + (row.is_correct ? 'bi-check-circle-fill' : 'bi-x-circle-fill') + '"></i>' +
+            '<span class="progress-attempt-expr">' + expression + '</span>' +
+            '<span class="progress-attempt-date">' + formatProgressDate(row.created_at) + '</span>' +
+        '</div>';
+    }).join('');
+
+    $container.html(html);
+}
+
+// Attempts are fetched the first time a lesson is opened, then kept, so
+// reopening is instant and the page never loads history nobody looked at.
+$(document).on('click', '.progress-row.is-expandable', function () {
+    let $row = $(this);
+    let $panel = $row.find('.progress-attempts');
+    let isOpen = $row.hasClass('is-open');
+
+    $row.toggleClass('is-open', !isOpen);
+    $panel.toggle(!isOpen);
+
+    if (isOpen || $row.data('loaded')) {
+        return;
+    }
+
+    $row.data('loaded', true);
+    $panel.html('<p class="progress-empty">กำลังโหลด...</p>');
+    fetchLessonAttempts($row.data('lesson-id'), 50).then(function (rows) {
+        renderLessonAttempts($panel, rows);
+    });
+});
 
 function renderProgressQuiz(results) {
     // best (lowest) time per mode+size, counting perfect runs only
