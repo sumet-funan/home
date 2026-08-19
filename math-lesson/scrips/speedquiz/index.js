@@ -90,9 +90,32 @@ function getSpeedQuizStorageKey() {
     return 'speedQuizBestTime_' + speedQuizObj.mode + '_' + speedQuizObj.size;
 }
 
-function loadSpeedQuizBestTime() {
+function getLocalSpeedQuizBestTime() {
     let stored = localStorage.getItem(getSpeedQuizStorageKey());
-    $('#speedQuizBestTime').text(stored ? formatSpeedQuizTime(+stored) : '--:--');
+    return stored ? +stored : null;
+}
+
+// Signed in: the account's best time follows the child across devices.
+// Guest: the local best time still works exactly as before.
+function loadSpeedQuizBestTime() {
+    let mode = speedQuizObj.mode;
+    let size = speedQuizObj.size;
+    let localBest = getLocalSpeedQuizBestTime();
+
+    $('#speedQuizBestTime').text(localBest ? formatSpeedQuizTime(localBest) : '--:--');
+
+    if (typeof fetchBestQuizTime !== 'function') {
+        return;
+    }
+
+    fetchBestQuizTime(mode, size).then(function (remoteBest) {
+        // the mode/size may have changed while the request was in flight
+        if (speedQuizObj.mode !== mode || speedQuizObj.size !== size) {
+            return;
+        }
+        let best = remoteBest === null ? localBest : (localBest === null ? remoteBest : Math.min(remoteBest, localBest));
+        $('#speedQuizBestTime').text(best ? formatSpeedQuizTime(best) : '--:--');
+    });
 }
 
 function saveSpeedQuizBestTime(elapsedMs) {
@@ -156,6 +179,10 @@ function finishSpeedQuiz() {
             $cell.removeClass('correct').addClass('incorrect');
         }
     });
+
+    if (typeof recordQuizResult === 'function') {
+        recordQuizResult(speedQuizObj.mode, speedQuizObj.size, correctCount, elapsed);
+    }
 
     let isNewRecord = correctCount === speedQuizObj.size && saveSpeedQuizBestTime(elapsed);
     showSpeedQuizFeedback(correctCount, elapsed, isNewRecord);
@@ -285,6 +312,11 @@ window.addEventListener('beforeunload', function (e) {
         e.preventDefault();
         e.returnValue = '';
     }
+});
+
+// signing in or out changes whose best time applies
+supabaseClient.auth.onAuthStateChange(function () {
+    loadSpeedQuizBestTime();
 });
 
 loadSpeedQuizBestTime();

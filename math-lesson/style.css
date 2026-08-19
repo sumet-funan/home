@@ -70,6 +70,8 @@
   --speedquiz-bg: #eef2ff;
   --profile: #0891b2;
   --profile-bg: #ecfeff;
+  --progress: #7c3aed;
+  --progress-bg: #f4efff;
 }
 
 * {
@@ -299,6 +301,7 @@ body {
 .nav-menu-item[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
 .nav-menu-item[data-op="speedquiz"] { --accent: var(--speedquiz); --accent-bg: var(--speedquiz-bg); }
 .nav-menu-item[data-op="profile"] { --accent: var(--profile); --accent-bg: var(--profile-bg); }
+.nav-menu-item[data-op="progress"] { --accent: var(--progress); --accent-bg: var(--progress-bg); }
 
 .nav-menu-item.active {
   background: var(--accent-bg);
@@ -357,6 +360,7 @@ body {
 .operation-panel[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
 .operation-panel[data-op="speedquiz"] { --accent: var(--speedquiz); --accent-bg: var(--speedquiz-bg); }
 .operation-panel[data-op="profile"] { --accent: var(--profile); --accent-bg: var(--profile-bg); }
+.operation-panel[data-op="progress"] { --accent: var(--progress); --accent-bg: var(--progress-bg); }
 
 .panel-header {
   margin-bottom: 24px;
@@ -819,6 +823,107 @@ body {
 .auth-submit-btn:disabled {
   opacity: .7;
   cursor: default;
+}
+
+.progress-summary {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  max-width: 720px;
+  width: 100%;
+}
+
+.progress-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.progress-stat-label {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.progress-stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-card {
+  max-width: 720px;
+}
+
+.progress-row {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.progress-row:last-child {
+  border-bottom: none;
+}
+
+.progress-row-compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progress-row-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.progress-row-name {
+  font-weight: 600;
+  font-size: .92rem;
+  color: var(--text);
+}
+
+.progress-row-score {
+  font-weight: 700;
+  font-size: .85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.progress-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width .3s ease;
+}
+
+.progress-bar-fill.is-high { background: #16a34a; }
+.progress-bar-fill.is-mid  { background: #f59e0b; }
+.progress-bar-fill.is-low  { background: #dc2626; }
+
+.progress-row-meta {
+  margin-top: 6px;
+  font-size: .78rem;
+  color: var(--muted);
+}
+
+.progress-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: .88rem;
+  text-align: center;
+  line-height: 1.6;
 }
 
 .profile-section-title {
@@ -1491,6 +1596,7 @@ input[type=number] {
     --wordproblem-bg: #052e22;
     --speedquiz-bg: #1a1740;
     --profile-bg: #062c33;
+    --progress-bg: #241a45;
   }
 
   .answer-chip.is-incorrect {

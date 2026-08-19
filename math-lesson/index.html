@@ -41,6 +41,10 @@
       </div>
       <div class="nav-menu" id="list-tab" role="tablist">
         <div class="nav-group" id="navGroupProfile" style="display: none;">
+          <a class="nav-menu-item" id="menu_progress" data-bs-toggle="list" href="#content_progress" role="tab"
+            aria-controls="content_progress" data-op="progress">
+            <i class="bi bi-graph-up-arrow"></i><span>ความก้าวหน้า</span>
+          </a>
           <a class="nav-menu-item" id="menu_profile" data-bs-toggle="list" href="#content_profile" role="tab"
             aria-controls="content_profile" data-op="profile">
             <i class="bi bi-person-gear"></i><span>โปรไฟล์</span>
@@ -198,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v1.3.1</div>
+      <div class="app-sidebar-footer">v1.4.0</div>
     </aside>
 
     <main class="app-main">
@@ -1240,6 +1244,28 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="content_progress" role="tabpanel" aria-labelledby="menu_progress">
+          <div class="operation-panel" data-op="progress">
+            <div class="panel-header">
+              <h2><i class="bi bi-graph-up-arrow"></i> ความก้าวหน้า</h2>
+              <p>สรุปผลการฝึกของคุณในแต่ละบทเรียน</p>
+            </div>
+            <div class="panel-body">
+              <div class="progress-summary" id="progressSummary"></div>
+
+              <div class="calc-card progress-card">
+                <h3 class="profile-section-title"><i class="bi bi-list-check"></i> รายบทเรียน</h3>
+                <div id="progressLessonList"></div>
+              </div>
+
+              <div class="calc-card progress-card">
+                <h3 class="profile-section-title"><i class="bi bi-stopwatch-fill"></i> สถิติคำนวณเร็ว</h3>
+                <div id="progressQuizList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="tab-pane fade" id="content_profile" role="tabpanel" aria-labelledby="menu_profile">
           <div class="operation-panel" data-op="profile">
             <div class="panel-header">
@@ -1353,6 +1379,7 @@
   <script type="text/javascript" src="jquery-3.7.1.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script type="text/javascript" src="scrips/auth/index.js"></script>
+  <script type="text/javascript" src="scrips/data/index.js"></script>
   <script>
     function validateResult(firstNumber, secondNumber, resultNumber, symbol) {
       let isCorrect;
@@ -1376,7 +1403,43 @@
       return { status: isCorrect, message: "" };
     }
 
+    // Every lesson reports its result through showFeedback, so recording
+    // attempts here covers all of them without touching the lesson modules.
+    const LESSON_BY_FEEDBACK_ID = {
+      feedbackPlus: 'plus',
+      feedbackMinus: 'minus',
+      feedbackMultiply: 'multiply',
+      feedbackDivide: 'divide',
+      feedbackP1Plus: 'p1plus',
+      feedbackP1Minus: 'p1minus',
+      feedbackCompare: 'p1compare',
+      feedbackPattern: 'p1pattern',
+      feedbackPlaceValue: 'p1placevalue',
+      feedbackShape: 'p1shape',
+      feedbackLength: 'p1length',
+      feedbackWeight: 'p1weight',
+      feedbackCapacity: 'p1capacity',
+      feedbackTime: 'p1time',
+      feedbackMoney: 'p1money',
+      feedbackWordProblemP1: 'p1wordproblem',
+      feedbackDecimal: 'p5decimal',
+      feedbackPercentage: 'p5percentage',
+      feedbackFraction: 'p5fraction',
+      feedbackGcflcm: 'p5gcflcm',
+      feedbackMixedNumber: 'p5mixednumber',
+      feedbackGeometry: 'p5geometry',
+      feedbackVolume: 'p5volume',
+      feedbackAngle: 'p5angle',
+      feedbackAverage: 'p5average',
+      feedbackBarChart: 'p5barchart',
+      feedbackWordProblemP5: 'p5wordproblem',
+    };
+
     function showFeedback(feedbackId, isCorrect) {
+      if (typeof recordAttempt === 'function') {
+        recordAttempt(LESSON_BY_FEEDBACK_ID[feedbackId], isCorrect);
+      }
+
       let $feedback = $('#' + feedbackId);
       clearTimeout($feedback.data('hideTimer'));
       $feedback.removeClass('show is-correct is-incorrect');
@@ -1507,6 +1570,7 @@
   <script type="text/javascript" src="scrips/p5wordproblem/index.js"></script>
   <script type="text/javascript" src="scrips/speedquiz/index.js"></script>
   <script type="text/javascript" src="scrips/profile/index.js"></script>
+  <script type="text/javascript" src="scrips/progress/index.js"></script>
 </body>
 
 </html>
