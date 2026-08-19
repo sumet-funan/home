@@ -40,6 +40,12 @@
         </button>
       </div>
       <div class="nav-menu" id="list-tab" role="tablist">
+        <div class="nav-group" id="navGroupProfile" style="display: none;">
+          <a class="nav-menu-item" id="menu_profile" data-bs-toggle="list" href="#content_profile" role="tab"
+            aria-controls="content_profile" data-op="profile">
+            <i class="bi bi-person-gear"></i><span>โปรไฟล์</span>
+          </a>
+        </div>
         <div class="nav-group">
           <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-general"
             aria-expanded="true" aria-controls="group-general">
@@ -192,7 +198,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v1.2.0</div>
+      <div class="app-sidebar-footer">v1.3.0</div>
     </aside>
 
     <main class="app-main">
@@ -1234,6 +1240,51 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="content_profile" role="tabpanel" aria-labelledby="menu_profile">
+          <div class="operation-panel" data-op="profile">
+            <div class="panel-header">
+              <h2><i class="bi bi-person-gear"></i> โปรไฟล์</h2>
+              <p>จัดการข้อมูลบัญชีของคุณ</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <h3 class="profile-section-title"><i class="bi bi-person-badge"></i> ข้อมูลผู้ใช้</h3>
+
+                <label class="profile-label" for="profileEmail">อีเมล</label>
+                <input type="text" class="auth-input profile-readonly" id="profileEmail" readonly>
+
+                <label class="profile-label" for="profileDisplayName">ชื่อที่แสดง</label>
+                <input type="text" class="auth-input" id="profileDisplayName" placeholder="เช่น น้องมานี" maxlength="30">
+
+                <label class="profile-label">ระดับชั้น</label>
+                <div class="mode-picker profile-grade-picker" id="profileGradePicker">
+                  <button type="button" class="mode-btn active" data-grade="">ไม่ระบุ</button>
+                  <button type="button" class="mode-btn" data-grade="p1">ป.1</button>
+                  <button type="button" class="mode-btn" data-grade="p5">ป.5</button>
+                </div>
+
+                <button type="button" class="auth-submit-btn profile-save-btn" id="profileSaveBtn">บันทึกข้อมูล</button>
+                <div class="calc-feedback" id="feedbackProfile"></div>
+              </div>
+
+              <div class="calc-card">
+                <h3 class="profile-section-title"><i class="bi bi-key-fill"></i> เปลี่ยนรหัสผ่าน</h3>
+
+                <label class="profile-label" for="profileNewPassword">รหัสผ่านใหม่</label>
+                <input type="password" class="auth-input" id="profileNewPassword"
+                  placeholder="อย่างน้อย 6 ตัวอักษร" autocomplete="new-password">
+
+                <label class="profile-label" for="profileNewPasswordConfirm">ยืนยันรหัสผ่านใหม่</label>
+                <input type="password" class="auth-input" id="profileNewPasswordConfirm"
+                  placeholder="พิมพ์รหัสผ่านใหม่อีกครั้ง" autocomplete="new-password">
+
+                <button type="button" class="auth-submit-btn profile-save-btn" id="profilePasswordBtn">เปลี่ยนรหัสผ่าน</button>
+                <div class="calc-feedback" id="feedbackProfilePassword"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -1440,6 +1491,7 @@
   <script type="text/javascript" src="scrips/p5barchart/index.js"></script>
   <script type="text/javascript" src="scrips/p5wordproblem/index.js"></script>
   <script type="text/javascript" src="scrips/speedquiz/index.js"></script>
+  <script type="text/javascript" src="scrips/profile/index.js"></script>
 </body>
 
 </html>

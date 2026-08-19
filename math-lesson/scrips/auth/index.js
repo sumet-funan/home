@@ -22,6 +22,11 @@ function mapAuthErrorToThai(message) {
     return 'เกิดข้อผิดพลาด กรุณาลองอีกครั้ง';
 }
 
+function getAccountDisplayName(user) {
+    let metadata = user.user_metadata || {};
+    return metadata.display_name ? metadata.display_name : user.email;
+}
+
 function renderAccountUI(user) {
     let $account = $('#appAccount');
 
@@ -29,12 +34,14 @@ function renderAccountUI(user) {
         $account.html(
             '<div class="app-account-info">' +
                 '<i class="bi bi-person-check-fill"></i>' +
-                '<span class="app-account-email">' + user.email + '</span>' +
+                '<span class="app-account-email"></span>' +
             '</div>' +
             '<button type="button" class="app-account-signout-btn" id="appAccountSignOutBtn" title="ออกจากระบบ">' +
                 '<i class="bi bi-box-arrow-right"></i>' +
             '</button>'
         );
+        // .text() so a display name containing markup renders as literal text
+        $account.find('.app-account-email').text(getAccountDisplayName(user));
     } else {
         $account.html(
             '<button type="button" class="app-account-btn" id="appAccountSignInBtn">' +

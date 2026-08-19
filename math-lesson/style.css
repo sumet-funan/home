@@ -68,6 +68,8 @@
 
   --speedquiz: #4338ca;
   --speedquiz-bg: #eef2ff;
+  --profile: #0891b2;
+  --profile-bg: #ecfeff;
 }
 
 * {
@@ -296,6 +298,7 @@ body {
 .nav-menu-item[data-op="money"] { --accent: var(--money); --accent-bg: var(--money-bg); }
 .nav-menu-item[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
 .nav-menu-item[data-op="speedquiz"] { --accent: var(--speedquiz); --accent-bg: var(--speedquiz-bg); }
+.nav-menu-item[data-op="profile"] { --accent: var(--profile); --accent-bg: var(--profile-bg); }
 
 .nav-menu-item.active {
   background: var(--accent-bg);
@@ -353,6 +356,7 @@ body {
 .operation-panel[data-op="money"] { --accent: var(--money); --accent-bg: var(--money-bg); }
 .operation-panel[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
 .operation-panel[data-op="speedquiz"] { --accent: var(--speedquiz); --accent-bg: var(--speedquiz-bg); }
+.operation-panel[data-op="profile"] { --accent: var(--profile); --accent-bg: var(--profile-bg); }
 
 .panel-header {
   margin-bottom: 24px;
@@ -814,6 +818,48 @@ body {
 .auth-submit-btn:disabled {
   opacity: .7;
   cursor: default;
+}
+
+.profile-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profile-section-title i {
+  color: var(--accent);
+}
+
+.profile-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.profile-label + .auth-input,
+.profile-label + .mode-picker {
+  margin-bottom: 16px;
+}
+
+.profile-readonly {
+  background: var(--bg);
+  color: var(--muted);
+  cursor: default;
+}
+
+.profile-grade-picker {
+  justify-content: flex-start;
+  margin-top: 0;
+}
+
+.profile-save-btn {
+  margin-top: 4px;
 }
 
 .auth-guest-btn {
@@ -1443,6 +1489,7 @@ input[type=number] {
     --money-bg: #2c2007;
     --wordproblem-bg: #052e22;
     --speedquiz-bg: #1a1740;
+    --profile-bg: #062c33;
   }
 
   .answer-chip.is-incorrect {
