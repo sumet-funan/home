@@ -49,6 +49,23 @@ function accuracyClass(pct) {
     return pct >= 50 ? 'is-mid' : 'is-low';
 }
 
+const PROGRESS_RANGE_LABELS = {
+    day: 'วันนี้',
+    week: 'สัปดาห์นี้',
+    month: 'เดือนนี้',
+    year: 'ปีนี้',
+};
+
+// "no data" means something different per range: nothing ever recorded, versus
+// nothing recorded in the chosen period. Saying "try a question" for the latter
+// would be wrong when the child has plenty of history.
+function progressEmptyText(whatIsMissing) {
+    let label = PROGRESS_RANGE_LABELS[progressRange];
+    return label
+        ? 'ไม่มี' + whatIsMissing + PROGRESS_RANGE_LABELS[progressRange]
+        : null;
+}
+
 function renderProgressSummary(stats) {
     let total = 0;
     let correct = 0;
@@ -75,7 +92,8 @@ function renderProgressLessons(stats) {
     let known = stats.filter(function (row) { return LESSON_LABELS[row.lesson_id]; });
 
     if (!known.length) {
-        $('#progressLessonList').html('<p class="progress-empty">ยังไม่มีข้อมูล ลองฝึกทำโจทย์สักข้อแล้วกลับมาดูใหม่นะ</p>');
+        $('#progressLessonList').html('<p class="progress-empty">' +
+            (progressEmptyText('การฝึก') || 'ยังไม่มีข้อมูล ลองฝึกทำโจทย์สักข้อแล้วกลับมาดูใหม่นะ') + '</p>');
         return;
     }
 
@@ -158,7 +176,8 @@ function renderProgressQuiz(results) {
 
     let keys = Object.keys(bests);
     if (!keys.length) {
-        $('#progressQuizList').html('<p class="progress-empty">ยังไม่มีสถิติ ลองทำแบบฝึกคำนวณเร็วให้ครบทุกข้อนะ</p>');
+        $('#progressQuizList').html('<p class="progress-empty">' +
+            (progressEmptyText('สถิติคำนวณเร็ว') || 'ยังไม่มีสถิติ ลองทำแบบฝึกคำนวณเร็วให้ครบทุกข้อนะ') + '</p>');
         return;
     }
 
@@ -176,7 +195,8 @@ function renderProgressQuiz(results) {
 
 function renderProgressMistakes(rows) {
     if (!rows.length) {
-        $('#progressMistakeList').html('<p class="progress-empty">ยังไม่มีข้อที่ตอบผิด เก่งมาก!</p>');
+        $('#progressMistakeList').html('<p class="progress-empty">' +
+            (progressEmptyText('ข้อที่ตอบผิด') || 'ยังไม่มีข้อที่ตอบผิด เก่งมาก!') + '</p>');
         return;
     }
 
@@ -191,19 +211,45 @@ function renderProgressMistakes(rows) {
     $('#progressMistakeList').html(html);
 }
 
+var progressRange = 'all';
+
 function refreshProgressPage() {
     if (typeof fetchLessonStats !== 'function') {
         return;
     }
 
-    fetchLessonStats().then(function (stats) {
+    let range = progressRange;
+
+    fetchLessonStats(range).then(function (stats) {
+        // a slower earlier request must not overwrite a newer range's results
+        if (progressRange !== range) {
+            return;
+        }
         renderProgressSummary(stats);
         renderProgressLessons(stats);
     });
 
-    fetchQuizBests().then(renderProgressQuiz);
-    fetchRecentMistakes(10).then(renderProgressMistakes);
+    fetchQuizBests(range).then(function (rows) {
+        if (progressRange !== range) {
+            return;
+        }
+        renderProgressQuiz(rows);
+    });
+
+    fetchRecentMistakes(10, range).then(function (rows) {
+        if (progressRange !== range) {
+            return;
+        }
+        renderProgressMistakes(rows);
+    });
 }
+
+$('#progressRangePicker').on('click', '.mode-btn', function () {
+    $('#progressRangePicker .mode-btn').removeClass('active');
+    $(this).addClass('active');
+    progressRange = $(this).data('range');
+    refreshProgressPage();
+});
 
 // Recompute when the page is opened so it always reflects the latest answers.
 $(document).on('shown.bs.tab', '#menu_progress', refreshProgressPage);

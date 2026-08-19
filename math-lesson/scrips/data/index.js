@@ -127,29 +127,60 @@ function fetchBestQuizTime(mode, size) {
         });
 }
 
-function fetchLessonStats() {
+// Start of the calendar period, in the child's own timezone, or null for "all".
+function rangeStartISO(range) {
+    if (!range || range === 'all') {
+        return null;
+    }
+
+    let now = new Date();
+    let start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    if (range === 'week') {
+        // week starts Monday; getDay() is 0 for Sunday
+        let weekday = (start.getDay() + 6) % 7;
+        start.setDate(start.getDate() - weekday);
+    } else if (range === 'month') {
+        start.setDate(1);
+    } else if (range === 'year') {
+        start.setMonth(0, 1);
+    }
+
+    return start.toISOString();
+}
+
+// Aggregated in Postgres rather than client-side: PostgREST caps rows at 1000
+// by default, so summing attempts in the browser would quietly under-report
+// once a child passes that many.
+function fetchLessonStats(range) {
     if (!currentUserId) {
         return Promise.resolve([]);
     }
 
     return supabaseClient
-        .from('lesson_stats')
-        .select('*')
+        .rpc('lesson_stats_since', { since: rangeStartISO(range) })
         .then(function (result) {
             return result.error ? [] : result.data;
         });
 }
 
-function fetchRecentMistakes(limit) {
+function fetchRecentMistakes(limit, range) {
     if (!currentUserId) {
         return Promise.resolve([]);
     }
 
-    return supabaseClient
+    let since = rangeStartISO(range);
+    let query = supabaseClient
         .from('attempts')
         .select('lesson_id, expression, created_at')
         .eq('is_correct', false)
-        .not('expression', 'is', null)
+        .not('expression', 'is', null);
+
+    if (since) {
+        query = query.gte('created_at', since);
+    }
+
+    return query
         .order('created_at', { ascending: false })
         .limit(limit || 10)
         .then(function (result) {
@@ -173,14 +204,21 @@ function fetchLessonAttempts(lessonId, limit) {
         });
 }
 
-function fetchQuizBests() {
+function fetchQuizBests(range) {
     if (!currentUserId) {
         return Promise.resolve([]);
     }
 
-    return supabaseClient
+    let since = rangeStartISO(range);
+    let query = supabaseClient
         .from('quiz_results')
-        .select('mode, size, duration_ms, correct_count')
+        .select('mode, size, duration_ms, correct_count');
+
+    if (since) {
+        query = query.gte('created_at', since);
+    }
+
+    return query
         .order('duration_ms', { ascending: true })
         .then(function (result) {
             return result.error ? [] : result.data;

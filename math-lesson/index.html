@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v1.8.0</div>
+      <div class="app-sidebar-footer">v1.9.0</div>
     </aside>
 
     <main class="app-main">
@@ -1255,6 +1255,14 @@
               <p>สรุปผลการฝึกของคุณในแต่ละบทเรียน</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="progressRangePicker">
+                <button type="button" class="mode-btn" data-range="day">วันนี้</button>
+                <button type="button" class="mode-btn" data-range="week">สัปดาห์นี้</button>
+                <button type="button" class="mode-btn" data-range="month">เดือนนี้</button>
+                <button type="button" class="mode-btn" data-range="year">ปีนี้</button>
+                <button type="button" class="mode-btn active" data-range="all">ทั้งหมด</button>
+              </div>
+
               <div class="progress-summary" id="progressSummary"></div>
 
               <div class="calc-card progress-card">
