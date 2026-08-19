@@ -192,7 +192,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v1.2.0</div>
+      <div class="app-sidebar-footer">v1.3.0</div>
     </aside>
 
     <main class="app-main">
@@ -1263,18 +1263,21 @@
           </div>
 
           <div class="auth-tab-panel active" id="authPanelSignin">
-            <input type="email" class="auth-input" id="signinEmail" placeholder="อีเมล" autocomplete="email">
+            <input type="text" class="auth-input" id="signinUsername" placeholder="ชื่อผู้ใช้" autocomplete="username"
+              autocorrect="off" autocapitalize="off" spellcheck="false">
             <input type="password" class="auth-input" id="signinPassword" placeholder="รหัสผ่าน" autocomplete="current-password">
             <div class="auth-error" id="signinError"></div>
             <button type="button" class="auth-submit-btn" id="signinSubmitBtn">เข้าสู่ระบบ</button>
           </div>
 
           <div class="auth-tab-panel" id="authPanelRegister">
-            <input type="email" class="auth-input" id="registerEmail" placeholder="อีเมล" autocomplete="email">
+            <input type="text" class="auth-input" id="registerUsername" placeholder="ชื่อผู้ใช้ (a-z, 0-9, _)"
+              autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false">
             <input type="password" class="auth-input" id="registerPassword" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)" autocomplete="new-password">
             <input type="password" class="auth-input" id="registerPasswordConfirm" placeholder="ยืนยันรหัสผ่าน" autocomplete="new-password">
             <div class="auth-error" id="registerError"></div>
             <button type="button" class="auth-submit-btn" id="registerSubmitBtn">สมัครสมาชิก</button>
+            <p class="auth-note">จำรหัสผ่านให้ดีนะ ถ้าลืมจะกู้คืนเองไม่ได้ (ต้องให้ผู้ดูแลรีเซ็ตให้)</p>
           </div>
 
           <button type="button" class="auth-guest-btn" data-bs-dismiss="modal">เข้าใช้แบบผู้เยี่ยมชม (Guest)</button>
