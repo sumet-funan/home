@@ -54,6 +54,8 @@ function addResultPercentageToHistoryList(item) {
         </div>`
     $('#historyPercentageList').append(elementItem)
 
+    recordHistoryAttempt('p5percentage', isCorrect, 'historyPercentageList');
+
     if (isCorrect) {
         p5PercentageObj.numRowsHistory++;
     }

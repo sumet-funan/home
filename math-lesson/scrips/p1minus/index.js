@@ -74,6 +74,8 @@ function addResultP1MinusToHistoryList(item) {
         </div>`
     $('#historyP1MinusList').append(elementItem)
 
+    recordHistoryAttempt('p1minus', isCorrect, 'historyP1MinusList');
+
     if (item.color == "green") {
         p1MinusObj.numRowsHistory++;
     }

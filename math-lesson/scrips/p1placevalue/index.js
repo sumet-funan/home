@@ -53,6 +53,8 @@ function addResultPlaceValueToHistoryList(item) {
         </div>`
     $('#historyPlaceValueList').append(elementItem)
 
+    recordHistoryAttempt('p1placevalue', isCorrect, 'historyPlaceValueList');
+
     if (isCorrect) {
         p1PlaceValueObj.numRowsHistory++;
     }

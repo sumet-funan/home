@@ -62,6 +62,8 @@ function addResultLengthToHistoryList(item) {
         </div>`
     $('#historyLengthList').append(elementItem)
 
+    recordHistoryAttempt('p1length', isCorrect, 'historyLengthList');
+
     if (isCorrect) {
         p1LengthObj.numRowsHistory++;
     }

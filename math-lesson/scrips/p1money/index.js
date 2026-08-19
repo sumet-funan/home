@@ -65,6 +65,8 @@ function addResultMoneyToHistoryList(item) {
         </div>`
     $('#historyMoneyList').append(elementItem)
 
+    recordHistoryAttempt('p1money', isCorrect, 'historyMoneyList');
+
     if (isCorrect) {
         p1MoneyObj.numRowsHistory++;
     }

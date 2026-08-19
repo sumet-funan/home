@@ -61,6 +61,8 @@ function addResultGcflcmToHistoryList(item) {
         </div>`
     $('#historyGcflcmList').append(elementItem)
 
+    recordHistoryAttempt('p5gcflcm', isCorrect, 'historyGcflcmList');
+
     if (isCorrect) {
         p5GcflcmObj.numRowsHistory++;
     }

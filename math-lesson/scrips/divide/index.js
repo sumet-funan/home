@@ -52,6 +52,8 @@ function addResultDivideToHistoryList(item) {
         </div>`
     $('#historyDivideList').append(elementItem)
 
+    recordHistoryAttempt('divide', isCorrect, 'historyDivideList');
+
     if (item.color == "green") {
         divideObj.numRowsHistory++;
     }

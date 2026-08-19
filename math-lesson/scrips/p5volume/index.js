@@ -52,6 +52,8 @@ function addResultVolumeToHistoryList(item) {
         </div>`
     $('#historyVolumeList').append(elementItem)
 
+    recordHistoryAttempt('p5volume', isCorrect, 'historyVolumeList');
+
     if (isCorrect) {
         p5VolumeObj.numRowsHistory++;
     }

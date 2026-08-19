@@ -75,6 +75,8 @@ function addResultShapeToHistoryList(item) {
         </div>`
     $('#historyShapeList').append(elementItem)
 
+    recordHistoryAttempt('p1shape', isCorrect, 'historyShapeList');
+
     if (isCorrect) {
         p1ShapeObj.numRowsHistory++;
     }

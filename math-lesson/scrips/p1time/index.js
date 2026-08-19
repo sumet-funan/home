@@ -71,6 +71,8 @@ function addResultTimeToHistoryList(item) {
         </div>`
     $('#historyTimeList').append(elementItem)
 
+    recordHistoryAttempt('p1time', isCorrect, 'historyTimeList');
+
     if (isCorrect) {
         p1TimeObj.numRowsHistory++;
     }

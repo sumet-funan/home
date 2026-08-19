@@ -62,6 +62,8 @@ function addResultWeightToHistoryList(item) {
         </div>`
     $('#historyWeightList').append(elementItem)
 
+    recordHistoryAttempt('p1weight', isCorrect, 'historyWeightList');
+
     if (isCorrect) {
         p1WeightObj.numRowsHistory++;
     }

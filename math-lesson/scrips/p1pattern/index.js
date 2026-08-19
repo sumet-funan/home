@@ -52,6 +52,8 @@ function addResultPatternToHistoryList(item) {
         </div>`
     $('#historyPatternList').append(elementItem)
 
+    recordHistoryAttempt('p1pattern', isCorrect, 'historyPatternList');
+
     if (isCorrect) {
         p1PatternObj.numRowsHistory++;
     }

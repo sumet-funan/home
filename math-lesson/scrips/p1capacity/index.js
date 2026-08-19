@@ -62,6 +62,8 @@ function addResultCapacityToHistoryList(item) {
         </div>`
     $('#historyCapacityList').append(elementItem)
 
+    recordHistoryAttempt('p1capacity', isCorrect, 'historyCapacityList');
+
     if (isCorrect) {
         p1CapacityObj.numRowsHistory++;
     }

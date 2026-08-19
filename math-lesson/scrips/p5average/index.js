@@ -58,6 +58,8 @@ function addResultAverageToHistoryList(item) {
         </div>`
     $('#historyAverageList').append(elementItem)
 
+    recordHistoryAttempt('p5average', isCorrect, 'historyAverageList');
+
     if (isCorrect) {
         p5AverageObj.numRowsHistory++;
     }

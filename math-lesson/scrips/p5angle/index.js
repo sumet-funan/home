@@ -51,6 +51,8 @@ function addResultAngleToHistoryList(item) {
         </div>`
     $('#historyAngleList').append(elementItem)
 
+    recordHistoryAttempt('p5angle', isCorrect, 'historyAngleList');
+
     if (isCorrect) {
         p5AngleObj.numRowsHistory++;
     }

@@ -89,6 +89,8 @@ function addResultDecimalToHistoryList(item) {
         </div>`
     $('#historyDecimalList').append(elementItem)
 
+    recordHistoryAttempt('p5decimal', isCorrect, 'historyDecimalList');
+
     if (isCorrect) {
         p5DecimalObj.numRowsHistory++;
     }

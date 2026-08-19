@@ -62,12 +62,17 @@ function flushOutbox() {
     });
 }
 
-function recordAttempt(lessonId, isCorrect) {
+function recordAttempt(lessonId, isCorrect, expression) {
     if (!currentUserId || !lessonId) {
         return;
     }
 
-    let row = { user_id: currentUserId, lesson_id: lessonId, is_correct: !!isCorrect };
+    let row = {
+        user_id: currentUserId,
+        lesson_id: lessonId,
+        is_correct: !!isCorrect,
+        expression: expression || null
+    };
 
     supabaseClient.from('attempts').insert(row).then(function (result) {
         if (result.error) {
@@ -130,6 +135,23 @@ function fetchLessonStats() {
     return supabaseClient
         .from('lesson_stats')
         .select('*')
+        .then(function (result) {
+            return result.error ? [] : result.data;
+        });
+}
+
+function fetchRecentMistakes(limit) {
+    if (!currentUserId) {
+        return Promise.resolve([]);
+    }
+
+    return supabaseClient
+        .from('attempts')
+        .select('lesson_id, expression, created_at')
+        .eq('is_correct', false)
+        .not('expression', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(limit || 10)
         .then(function (result) {
             return result.error ? [] : result.data;
         });

@@ -52,6 +52,8 @@ function addResultGeometryToHistoryList(item) {
         </div>`
     $('#historyGeometryList').append(elementItem)
 
+    recordHistoryAttempt('p5geometry', isCorrect, 'historyGeometryList');
+
     if (isCorrect) {
         p5GeometryObj.numRowsHistory++;
     }

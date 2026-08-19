@@ -153,6 +153,8 @@ function addResultWordProblemP5ToHistoryList(item) {
         </div>`
     $('#historyWordProblemP5List').append(elementItem)
 
+    recordHistoryAttempt('p5wordproblem', isCorrect, 'historyWordProblemP5List');
+
     if (isCorrect) {
         p5WordProblemObj.numRowsHistory++;
     }

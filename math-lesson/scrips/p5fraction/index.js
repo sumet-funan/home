@@ -58,6 +58,8 @@ function addResultFractionToHistoryList(item) {
         </div>`
     $('#historyFractionList').append(elementItem)
 
+    recordHistoryAttempt('p5fraction', isCorrect, 'historyFractionList');
+
     if (isCorrect) {
         p5FractionObj.numRowsHistory++;
     }

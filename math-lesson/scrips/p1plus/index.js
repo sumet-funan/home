@@ -74,6 +74,8 @@ function addResultP1PlusToHistoryList(item) {
         </div>`
     $('#historyP1PlusList').append(elementItem)
 
+    recordHistoryAttempt('p1plus', isCorrect, 'historyP1PlusList');
+
     if (item.color == "green") {
         p1PlusObj.numRowsHistory++;
     }

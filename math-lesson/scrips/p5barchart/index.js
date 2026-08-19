@@ -54,6 +54,8 @@ function addResultBarChartToHistoryList(item) {
         </div>`
     $('#historyBarChartList').append(elementItem)
 
+    recordHistoryAttempt('p5barchart', isCorrect, 'historyBarChartList');
+
     if (isCorrect) {
         p5BarChartObj.numRowsHistory++;
     }

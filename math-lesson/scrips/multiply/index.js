@@ -52,6 +52,8 @@ function addResultMultiplyToHistoryList(item) {
         </div>`
     $('#historyMultiplyList').append(elementItem)
 
+    recordHistoryAttempt('multiply', isCorrect, 'historyMultiplyList');
+
     if (item.color == "green") {
         multiplyObj.numRowsHistory++;
     }

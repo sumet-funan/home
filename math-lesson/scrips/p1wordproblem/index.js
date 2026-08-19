@@ -61,6 +61,8 @@ function addResultWordProblemP1ToHistoryList(item) {
         </div>`
     $('#historyWordProblemP1List').append(elementItem)
 
+    recordHistoryAttempt('p1wordproblem', isCorrect, 'historyWordProblemP1List');
+
     if (isCorrect) {
         p1WordProblemObj.numRowsHistory++;
     }

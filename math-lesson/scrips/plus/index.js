@@ -52,6 +52,8 @@ function addResultToHistoryList(item) {
         </div>`
     $('#historyList').append(elementItem)
 
+    recordHistoryAttempt('plus', isCorrect, 'historyList');
+
     if (item.color == "green") {
         plusObj.numRowsHistory++;
     }

@@ -129,6 +129,23 @@ function renderProgressQuiz(results) {
     $('#progressQuizList').html(html);
 }
 
+function renderProgressMistakes(rows) {
+    if (!rows.length) {
+        $('#progressMistakeList').html('<p class="progress-empty">ยังไม่มีข้อที่ตอบผิด เก่งมาก!</p>');
+        return;
+    }
+
+    let html = rows.map(function (row) {
+        let label = LESSON_LABELS[row.lesson_id] || row.lesson_id;
+        return '<div class="progress-row progress-row-compact">' +
+            '<span class="progress-mistake-expr">' + $('<div>').text(row.expression).html() + '</span>' +
+            '<span class="progress-mistake-lesson">' + label + '</span>' +
+        '</div>';
+    }).join('');
+
+    $('#progressMistakeList').html(html);
+}
+
 function refreshProgressPage() {
     if (typeof fetchLessonStats !== 'function') {
         return;
@@ -140,6 +157,7 @@ function refreshProgressPage() {
     });
 
     fetchQuizBests().then(renderProgressQuiz);
+    fetchRecentMistakes(10).then(renderProgressMistakes);
 }
 
 // Recompute when the page is opened so it always reflects the latest answers.

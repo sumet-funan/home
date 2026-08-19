@@ -52,6 +52,8 @@ function addResultMinusToHistoryList(item) {
         </div>`
     $('#historyMinusList').append(elementItem)
 
+    recordHistoryAttempt('minus', isCorrect, 'historyMinusList');
+
     if (item.color == "green") {
         minusObj.numRowsHistory++;
     }

@@ -62,6 +62,8 @@ function addResultMixedNumberToHistoryList(item) {
         </div>`
     $('#historyMixedNumberList').append(elementItem)
 
+    recordHistoryAttempt('p5mixednumber', isCorrect, 'historyMixedNumberList');
+
     if (isCorrect) {
         p5MixedNumberObj.numRowsHistory++;
     }

@@ -918,6 +918,20 @@ body {
   color: var(--muted);
 }
 
+.progress-mistake-expr {
+  font-weight: 700;
+  font-size: .92rem;
+  color: #dc2626;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-mistake-lesson {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: right;
+}
+
 .progress-empty {
   margin: 0;
   color: var(--muted);

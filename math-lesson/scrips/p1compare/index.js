@@ -62,6 +62,8 @@ function addResultCompareToHistoryList(item) {
         </div>`
     $('#historyCompareList').append(elementItem)
 
+    recordHistoryAttempt('p1compare', isCorrect, 'historyCompareList');
+
     if (isCorrect) {
         p1CompareObj.numRowsHistory++;
     }
