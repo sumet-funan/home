@@ -66,6 +66,11 @@ $(document).on('click', '#appAccountSignInBtn', function () {
 });
 
 $(document).on('click', '#appAccountSignOutBtn', function () {
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('signOutModal')).show();
+});
+
+$('#signOutConfirmBtn').on('click', function () {
+    bootstrap.Modal.getInstance(document.getElementById('signOutModal')).hide();
     supabaseClient.auth.signOut();
 });
 

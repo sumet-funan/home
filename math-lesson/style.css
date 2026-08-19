@@ -672,14 +672,15 @@ body {
   color: #dc2626;
 }
 
-#speedQuizLeaveModal .modal-content {
+/* shared styling for yes/no confirmation dialogs (leave quiz, sign out, ...) */
+.confirm-modal .modal-content {
   background: var(--card-bg);
   border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
 }
 
-.speed-quiz-leave-modal-body {
+.confirm-modal-body {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -688,26 +689,26 @@ body {
   text-align: center;
 }
 
-.speed-quiz-leave-modal-body i {
+.confirm-modal-body i {
   font-size: 2.4rem;
   color: #ea580c;
 }
 
-.speed-quiz-leave-modal-body p {
+.confirm-modal-body p {
   margin: 0;
   color: var(--text);
   font-weight: 600;
   line-height: 1.6;
 }
 
-#speedQuizLeaveModal .modal-footer {
+.confirm-modal .modal-footer {
   border-top: none;
   justify-content: center;
   gap: 10px;
   padding: 8px 28px 28px;
 }
 
-.speedquiz-modal-btn {
+.confirm-modal-btn {
   border: none;
   border-radius: var(--radius-md);
   font-weight: 700;
@@ -717,20 +718,20 @@ body {
   transition: filter .15s ease, transform .05s ease;
 }
 
-.speedquiz-modal-btn:hover {
+.confirm-modal-btn:hover {
   filter: brightness(1.08);
 }
 
-.speedquiz-modal-btn:active {
+.confirm-modal-btn:active {
   transform: translateY(1px);
 }
 
-.speedquiz-modal-btn-cancel {
+.confirm-modal-btn-cancel {
   background: var(--bg);
   color: var(--text);
 }
 
-.speedquiz-modal-btn-confirm {
+.confirm-modal-btn-confirm {
   background: #dc2626;
   color: #fff;
 }

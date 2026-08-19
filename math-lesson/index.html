@@ -198,7 +198,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v1.3.0</div>
+      <div class="app-sidebar-footer">v1.3.1</div>
     </aside>
 
     <main class="app-main">
@@ -1289,16 +1289,31 @@
     </main>
   </div>
 
-  <div class="modal fade" id="speedQuizLeaveModal" tabindex="-1" aria-hidden="true">
+  <div class="modal fade confirm-modal" id="speedQuizLeaveModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="speed-quiz-leave-modal-body">
+        <div class="confirm-modal-body">
           <i class="bi bi-exclamation-triangle-fill"></i>
           <p>กำลังทำแบบฝึกคำนวณเร็วอยู่ ถ้าออกตอนนี้ความคืบหน้าจะหายไป ต้องการออกจากหน้านี้หรือไม่?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="speedquiz-modal-btn speedquiz-modal-btn-cancel" data-bs-dismiss="modal">ทำต่อ</button>
-          <button type="button" class="speedquiz-modal-btn speedquiz-modal-btn-confirm" id="speedQuizLeaveConfirmBtn">ออกจากหน้านี้</button>
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" data-bs-dismiss="modal">ทำต่อ</button>
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" id="speedQuizLeaveConfirmBtn">ออกจากหน้านี้</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade confirm-modal" id="signOutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="confirm-modal-body">
+          <i class="bi bi-box-arrow-right"></i>
+          <p>ต้องการออกจากระบบหรือไม่?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" data-bs-dismiss="modal">ยกเลิก</button>
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" id="signOutConfirmBtn">ออกจากระบบ</button>
         </div>
       </div>
     </div>
