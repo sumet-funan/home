@@ -185,6 +185,12 @@ function finishSpeedQuiz() {
         recordQuizResult(speedQuizObj.mode, speedQuizObj.size, correctCount, elapsed);
     }
 
+    // Lock the grid once it is marked: editing a graded cell would change the
+    // number while its correct/incorrect colour stayed from grading, so a cell
+    // could show the right answer while still marked wrong. readonly (not
+    // disabled) keeps the answers readable and selectable for reviewing.
+    $('.speed-quiz-input').prop('readonly', true);
+
     let isNewRecord = correctCount === speedQuizObj.size && saveSpeedQuizBestTime(elapsed);
     showSpeedQuizFeedback(correctCount, elapsed, isNewRecord);
 }
