@@ -3,15 +3,45 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function mapAuthErrorToThai(message) {
+// A username is stored as an address under a reserved TLD (RFC 2606 guarantees
+// .invalid never resolves, so no mail can reach a real domain). That puts
+// usernames in the same auth.users.email column Postgres already keeps a unique
+// index on, so duplicates are rejected by the database rather than by a check
+// the app could race or forget. It also means signing in needs no lookup of
+// another account's row, which would otherwise expose real email addresses.
+const AUTH_USERNAME_DOMAIN = '@mathlesson.invalid';
+const AUTH_USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
+
+// Accepts either form in one field: anything with an "@" is an email, anything
+// else is a username. Usernames cannot contain "@", so the two never collide.
+function resolveAuthIdentifier(input) {
+    let value = (input || '').trim();
+
+    if (!value) {
+        return { error: 'กรุณากรอกชื่อผู้ใช้หรืออีเมล' };
+    }
+
+    if (value.indexOf('@') !== -1) {
+        return { email: value, username: null };
+    }
+
+    let username = value.toLowerCase();
+    if (!AUTH_USERNAME_PATTERN.test(username)) {
+        return { error: 'ชื่อผู้ใช้ต้องเป็น a-z, 0-9 หรือ _ ความยาว 3-20 ตัวอักษร' };
+    }
+
+    return { email: username + AUTH_USERNAME_DOMAIN, username: username };
+}
+
+function mapAuthErrorToThai(message, usedUsername) {
     if (!message) {
         return 'เกิดข้อผิดพลาด กรุณาลองอีกครั้ง';
     }
     if (message.indexOf('already registered') !== -1) {
-        return 'อีเมลนี้ถูกใช้สมัครแล้ว';
+        return usedUsername ? 'ชื่อผู้ใช้นี้ถูกใช้แล้ว' : 'อีเมลนี้ถูกใช้สมัครแล้ว';
     }
     if (message.indexOf('Invalid login credentials') !== -1) {
-        return 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+        return usedUsername ? 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' : 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
     }
     if (message.indexOf('Password should be at least') !== -1) {
         return 'รหัสผ่านสั้นเกินไป (อย่างน้อย 6 ตัวอักษร)';
@@ -22,9 +52,21 @@ function mapAuthErrorToThai(message) {
     return 'เกิดข้อผิดพลาด กรุณาลองอีกครั้ง';
 }
 
+// Username accounts must never show their internal .invalid address.
+function getAccountIdentityLabel(user) {
+    let metadata = user.user_metadata || {};
+    if (metadata.username) {
+        return metadata.username;
+    }
+    let email = user.email || '';
+    return email.indexOf(AUTH_USERNAME_DOMAIN) !== -1
+        ? email.slice(0, email.indexOf(AUTH_USERNAME_DOMAIN))
+        : email;
+}
+
 function getAccountDisplayName(user) {
     let metadata = user.user_metadata || {};
-    return metadata.display_name ? metadata.display_name : user.email;
+    return metadata.display_name ? metadata.display_name : getAccountIdentityLabel(user);
 }
 
 function renderAccountUI(user) {
@@ -53,7 +95,7 @@ function renderAccountUI(user) {
 
 function resetAuthModal() {
     $('.auth-error').text('');
-    $('#signinEmail, #signinPassword, #registerEmail, #registerPassword, #registerPasswordConfirm').val('');
+    $('#signinIdentifier, #signinPassword, #registerIdentifier, #registerPassword, #registerPasswordConfirm').val('');
     $('#authTabPicker .mode-btn').removeClass('active');
     $('#authTabPicker .mode-btn[data-auth-tab="signin"]').addClass('active');
     $('.auth-tab-panel').removeClass('active');
@@ -85,25 +127,29 @@ $('#authTabPicker').on('click', '.mode-btn', function () {
 });
 
 $('#signinSubmitBtn').on('click', function () {
-    let email = $('#signinEmail').val().trim();
     let password = $('#signinPassword').val();
     let $error = $('#signinError');
     let $btn = $(this);
 
     $error.text('');
 
-    if (!email || !password) {
-        $error.text('กรุณากรอกอีเมลและรหัสผ่าน');
+    let identity = resolveAuthIdentifier($('#signinIdentifier').val());
+    if (identity.error) {
+        $error.text(identity.error);
+        return;
+    }
+    if (!password) {
+        $error.text('กรุณากรอกรหัสผ่าน');
         return;
     }
 
     $btn.prop('disabled', true).text('กำลังเข้าสู่ระบบ...');
 
-    supabaseClient.auth.signInWithPassword({ email: email, password: password }).then(function (result) {
+    supabaseClient.auth.signInWithPassword({ email: identity.email, password: password }).then(function (result) {
         $btn.prop('disabled', false).text('เข้าสู่ระบบ');
 
         if (result.error) {
-            $error.text(mapAuthErrorToThai(result.error.message));
+            $error.text(mapAuthErrorToThai(result.error.message, !!identity.username));
             return;
         }
 
@@ -112,7 +158,6 @@ $('#signinSubmitBtn').on('click', function () {
 });
 
 $('#registerSubmitBtn').on('click', function () {
-    let email = $('#registerEmail').val().trim();
     let password = $('#registerPassword').val();
     let passwordConfirm = $('#registerPasswordConfirm').val();
     let $error = $('#registerError');
@@ -120,8 +165,13 @@ $('#registerSubmitBtn').on('click', function () {
 
     $error.text('');
 
-    if (!email || !password) {
-        $error.text('กรุณากรอกอีเมลและรหัสผ่าน');
+    let identity = resolveAuthIdentifier($('#registerIdentifier').val());
+    if (identity.error) {
+        $error.text(identity.error);
+        return;
+    }
+    if (!password) {
+        $error.text('กรุณากรอกรหัสผ่าน');
         return;
     }
     if (password.length < 6) {
@@ -135,17 +185,25 @@ $('#registerSubmitBtn').on('click', function () {
 
     $btn.prop('disabled', true).text('กำลังสมัครสมาชิก...');
 
-    supabaseClient.auth.signUp({ email: email, password: password }).then(function (result) {
+    supabaseClient.auth.signUp({
+        email: identity.email,
+        password: password,
+        options: identity.username ? { data: { username: identity.username } } : undefined
+    }).then(function (result) {
         $btn.prop('disabled', false).text('สมัครสมาชิก');
 
         if (result.error) {
-            $error.text(mapAuthErrorToThai(result.error.message));
+            $error.text(mapAuthErrorToThai(result.error.message, !!identity.username));
             return;
         }
 
+        // Supabase can obscure a duplicate signup by returning a user with no
+        // identities instead of an error, so treat that as taken too.
         let user = result.data.user;
         if (user && user.identities && user.identities.length === 0) {
-            $error.text('อีเมลนี้ถูกใช้สมัครแล้ว กรุณาเข้าสู่ระบบแทน');
+            $error.text(identity.username
+                ? 'ชื่อผู้ใช้นี้ถูกใช้แล้ว กรุณาเข้าสู่ระบบแทน'
+                : 'อีเมลนี้ถูกใช้สมัครแล้ว กรุณาเข้าสู่ระบบแทน');
             return;
         }
 

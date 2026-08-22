@@ -17,7 +17,10 @@ function showProfileFeedback(feedbackId, isSuccess, message) {
 function loadProfileIntoForm(user) {
     let metadata = user.user_metadata || {};
 
-    $('#profileEmail').val(user.email || '');
+    // username accounts must never be shown their internal .invalid address
+    let isUsernameAccount = !!(user.user_metadata && user.user_metadata.username);
+    $('#profileIdentityLabel').text(isUsernameAccount ? 'ชื่อผู้ใช้' : 'อีเมล');
+    $('#profileEmail').val(getAccountIdentityLabel(user));
     $('#profileDisplayName').val(metadata.display_name || '');
 
     let grade = metadata.grade || '';
