@@ -1,7 +1,10 @@
 var speedQuizObj = {
     mode: "+",
     size: 100,
+    layout: "sheet",   // "sheet" = one question per card, "grid" = shared headers
     questions: [],
+    rowHeaders: [],
+    colHeaders: [],
     running: false,
     startTime: 0,
     timerInterval: null,
@@ -41,11 +44,32 @@ function shuffleSpeedQuizArray(arr) {
 // drawing random pairs. That keeps the point of the drill: across a full round
 // each combination appears exactly once, so no fact is practised twice while
 // another is missed.
+function expectedSpeedQuizAnswer(a, b) {
+    return speedQuizObj.mode === '+' ? a + b
+        : speedQuizObj.mode === '-' ? a - b
+        : a * b;
+}
+
 function generateSpeedQuizQuestions() {
     let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let firsts = speedQuizObj.mode === '-'
         ? [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]   // keeps every answer >= 0
         : digits;
+
+    // Both layouts end up with the same list of questions, so marking and
+    // keyboard navigation stay identical; only the drawing differs.
+    if (speedQuizObj.layout === 'grid') {
+        speedQuizObj.rowHeaders = shuffleSpeedQuizArray(firsts).slice(0, speedQuizObj.size / 10);
+        speedQuizObj.colHeaders = shuffleSpeedQuizArray(digits);
+
+        speedQuizObj.questions = [];
+        speedQuizObj.rowHeaders.forEach(function (a) {
+            speedQuizObj.colHeaders.forEach(function (b) {
+                speedQuizObj.questions.push({ a: a, b: b, expected: expectedSpeedQuizAnswer(a, b) });
+            });
+        });
+        return;
+    }
 
     let pairs = [];
     firsts.forEach(function (a) {
@@ -57,28 +81,62 @@ function generateSpeedQuizQuestions() {
     speedQuizObj.questions = shuffleSpeedQuizArray(pairs)
         .slice(0, speedQuizObj.size)
         .map(function (p) {
-            let expected = speedQuizObj.mode === '+' ? p.a + p.b
-                : speedQuizObj.mode === '-' ? p.a - p.b
-                : p.a * p.b;
-            return { a: p.a, b: p.b, expected: expected };
+            return { a: p.a, b: p.b, expected: expectedSpeedQuizAnswer(p.a, p.b) };
         });
 }
 
-function renderSpeedQuizGrid() {
-    let symbol = speedQuizObj.mode === '*' ? '×' : speedQuizObj.mode;
+function speedQuizSymbol() {
+    return speedQuizObj.mode === '*' ? '×' : speedQuizObj.mode;
+}
+
+function speedQuizInputHtml(index) {
+    return '<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" ' +
+        'autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ' +
+        'class="speed-quiz-input" data-index="' + index + '">';
+}
+
+function renderSpeedQuizSheet() {
+    let symbol = speedQuizSymbol();
 
     let html = speedQuizObj.questions.map(function (q, i) {
         return '<div class="speed-quiz-item">' +
             '<span class="sq-index">' + (i + 1) + '</span>' +
             '<span class="sq-first">' + q.a + '</span>' +
             '<span class="sq-second"><span class="sq-op">' + symbol + '</span>' + q.b + '</span>' +
-            '<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" ' +
-                'autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ' +
-                'class="speed-quiz-input" data-index="' + i + '">' +
+            speedQuizInputHtml(i) +
         '</div>';
     }).join('');
 
-    $('#speedQuizGrid').html(html);
+    $('#speedQuizGrid').addClass('speed-quiz-sheet').html(html);
+}
+
+function renderSpeedQuizTable() {
+    let html = '<table class="speed-quiz-table"><thead><tr><th class="corner-cell">' +
+        speedQuizSymbol() + '</th>';
+
+    speedQuizObj.colHeaders.forEach(function (b) {
+        html += '<th>' + b + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+
+    speedQuizObj.rowHeaders.forEach(function (a, r) {
+        html += '<tr><th>' + a + '</th>';
+        for (let c = 0; c < speedQuizObj.colHeaders.length; c++) {
+            html += '<td>' + speedQuizInputHtml(r * 10 + c) + '</td>';
+        }
+        html += '</tr>';
+    });
+    html += '</tbody></table>';
+
+    $('#speedQuizGrid').removeClass('speed-quiz-sheet').html(html);
+}
+
+function renderSpeedQuizGrid() {
+    if (speedQuizObj.layout === 'grid') {
+        renderSpeedQuizTable();
+        return;
+    }
+    renderSpeedQuizSheet();
 }
 
 function formatSpeedQuizTime(ms) {
@@ -166,7 +224,8 @@ function finishSpeedQuiz() {
     $('.speed-quiz-input').each(function () {
         let question = speedQuizObj.questions[+$(this).data('index')];
         let raw = $(this).val().trim();
-        let $item = $(this).closest('.speed-quiz-item');
+        // the answer sits in a card in sheet layout and a cell in grid layout
+        let $item = $(this).closest('.speed-quiz-item, td');
 
         // blank counts as wrong, but must not be read as 0
         if (raw !== '' && +raw === question.expected) {
@@ -240,6 +299,17 @@ $('#speedQuizSizePicker').on('click', '.mode-btn', function () {
         $('#speedQuizSizePicker .mode-btn').removeClass('active');
         $btn.addClass('active');
         speedQuizObj.size = +$btn.data('size');
+
+        resetSpeedQuizForNewSelection();
+    });
+});
+
+$('#speedQuizLayoutPicker').on('click', '.mode-btn', function () {
+    let $btn = $(this);
+    confirmSpeedQuizLeave(function () {
+        $('#speedQuizLayoutPicker .mode-btn').removeClass('active');
+        $btn.addClass('active');
+        speedQuizObj.layout = $btn.data('layout');
 
         resetSpeedQuizForNewSelection();
     });

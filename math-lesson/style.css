@@ -584,16 +584,88 @@ body {
 
 .speed-quiz-grid-wrap {
   margin-top: 20px;
+  overflow-x: auto;            /* only the table layout ever needs this */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Each question is its own small column: first number, operator with the
-   second number, then the answer box under a rule -- the way it is written on
-   paper. auto-fill wraps them into as many across as the screen allows, so
-   nothing scrolls sideways. */
-.speed-quiz-grid {
+/* Sheet layout: each question is its own small card -- first number, operator
+   with the second number, then the answer box under a rule, the way it is
+   written on paper. auto-fill wraps them to fit, so nothing scrolls sideways. */
+.speed-quiz-sheet {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
   gap: 12px;
+}
+
+/* Table layout: the original shared-headers grid. separate (not collapse)
+   because Safari silently breaks position:sticky inside a collapsed table,
+   which the pinned headers rely on. */
+.speed-quiz-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0 auto;
+}
+
+.speed-quiz-table th,
+.speed-quiz-table td {
+  border: 1px solid var(--border);
+  padding: 0;
+  text-align: center;
+}
+
+.speed-quiz-table thead th {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 1rem;
+  min-width: 44px;
+  height: 44px;
+  padding: 4px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.speed-quiz-table thead th.corner-cell {
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.2rem;
+  left: 0;
+  z-index: 3;
+}
+
+.speed-quiz-table tbody th {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 1rem;
+  min-width: 44px;
+  padding: 4px;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.speed-quiz-table input {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 0;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.speed-quiz-table td.correct input {
+  background: var(--result-bg);
+  color: var(--text);
+}
+
+.speed-quiz-table td.incorrect input {
+  background: #fdeeee;
+  color: #dc2626;
 }
 
 .speed-quiz-item {
@@ -642,7 +714,7 @@ body {
   font-weight: 800;
 }
 
-.speed-quiz-grid input {
+.speed-quiz-sheet input {
   width: 100%;
   height: 40px;
   border: none;
@@ -673,7 +745,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.speed-quiz-grid input:focus {
+.speed-quiz-input:focus {
   outline: none;
   background: var(--accent-bg);
   box-shadow: inset 0 0 0 2px var(--accent);
