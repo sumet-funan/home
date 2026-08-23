@@ -78,13 +78,19 @@ function renderProgressSummary(stats) {
 
     let accuracy = total ? Math.round(1000 * correct / total) / 10 : 0;
 
+    // The combo is tracked on the device rather than in the database, so it is
+    // shown as-is regardless of the selected range.
+    let bestStreak = typeof getBestStreak === 'function' ? getBestStreak() : 0;
+
     $('#progressSummary').html(
         '<div class="progress-stat"><span class="progress-stat-label">ทำทั้งหมด</span>' +
         '<span class="progress-stat-value">' + total + '</span></div>' +
         '<div class="progress-stat"><span class="progress-stat-label">ตอบถูก</span>' +
         '<span class="progress-stat-value">' + correct + '</span></div>' +
         '<div class="progress-stat"><span class="progress-stat-label">ความแม่นยำ</span>' +
-        '<span class="progress-stat-value">' + accuracy + '%</span></div>'
+        '<span class="progress-stat-value">' + accuracy + '%</span></div>' +
+        '<div class="progress-stat"><span class="progress-stat-label">คอมโบสูงสุด</span>' +
+        '<span class="progress-stat-value">x' + bestStreak + '</span></div>'
     );
 }
 

@@ -770,6 +770,92 @@ body {
   color: #dc2626;
 }
 
+/* ---------- answer combo ---------- */
+
+/* Fixed rather than in the panel: it has to stay visible while the child works
+   down a long lesson, and every lesson shares this one badge. */
+.combo-badge {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #f97316;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(-8px) scale(.9);
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease, background .3s ease;
+}
+
+.combo-badge.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.combo-badge i {
+  font-size: 1.1rem;
+}
+
+.combo-count {
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.combo-milestone {
+  display: none;
+  font-size: .8rem;
+  font-weight: 700;
+  opacity: .9;
+}
+
+.combo-badge.tier-warm { background: #f97316; }
+.combo-badge.tier-hot  { background: #dc2626; }
+.combo-badge.tier-gold {
+  background: linear-gradient(135deg, #b45309, #f59e0b);
+}
+
+/* a short pop each time the combo goes up */
+.combo-badge.is-pop {
+  animation: combo-pop .32s ease;
+}
+
+@keyframes combo-pop {
+  0%   { transform: translateY(0) scale(1); }
+  45%  { transform: translateY(0) scale(1.18); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* a brief red shake when a run ends, so losing it registers */
+.combo-badge.is-broken {
+  opacity: 1;
+  background: var(--muted);
+  transform: translateY(0) scale(1);
+  animation: combo-break .55s ease forwards;
+}
+
+@keyframes combo-break {
+  0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  25%  { transform: translateY(0) scale(1) rotate(-6deg); }
+  55%  { transform: translateY(0) scale(1) rotate(6deg); }
+  100% { opacity: 0; transform: translateY(10px) scale(.85) rotate(0deg); }
+}
+
+@media (max-width: 720px) {
+  /* clear of the mobile menu button and brand */
+  .combo-badge {
+    top: auto;
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
 /* shared styling for yes/no confirmation dialogs (leave quiz, sign out, ...) */
 .confirm-modal .modal-content {
   background: var(--card-bg);

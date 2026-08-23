@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v2.2.0</div>
+      <div class="app-sidebar-footer">v2.3.0</div>
     </aside>
 
     <main class="app-main">
@@ -1362,6 +1362,12 @@
     </div>
   </div>
 
+  <div class="combo-badge" id="comboBadge" aria-live="polite">
+    <i class="bi bi-fire"></i>
+    <span class="combo-count" id="comboCount">x2</span>
+    <span class="combo-milestone" id="comboMilestone">เก่งมาก!</span>
+  </div>
+
   <div class="modal fade confirm-modal" id="speedQuizSubmitModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -1468,6 +1474,12 @@
 
 
     function showFeedback(feedbackId, isCorrect) {
+      // every lesson reports its result here, so the combo needs no per-lesson
+      // wiring; the speed quiz marks in bulk and deliberately does not call this
+      if (typeof registerStreakAnswer === 'function') {
+        registerStreakAnswer(isCorrect);
+      }
+
       let $feedback = $('#' + feedbackId);
       clearTimeout($feedback.data('hideTimer'));
       $feedback.removeClass('show is-correct is-incorrect');
@@ -1598,6 +1610,7 @@
   <script type="text/javascript" src="scrips/p5wordproblem/index.js"></script>
   <script type="text/javascript" src="scrips/speedquiz/index.js"></script>
   <script type="text/javascript" src="scrips/profile/index.js"></script>
+  <script type="text/javascript" src="scrips/streak/index.js"></script>
   <script type="text/javascript" src="scrips/progress/index.js"></script>
 </body>
 
