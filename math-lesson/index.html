@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v2.3.0</div>
+      <div class="app-sidebar-footer">v2.3.1</div>
     </aside>
 
     <main class="app-main">
@@ -1204,28 +1204,43 @@
           <div class="operation-panel" data-op="speedquiz">
             <div class="panel-header">
               <h2><i class="bi bi-stopwatch-fill"></i> แบบฝึกคำนวณเร็ว</h2>
-              <p>เลือกจำนวนข้อและโจทย์บวก ลบ หรือคูณ แล้วกดเริ่ม ทำให้ครบให้เร็วที่สุด แข่งกับเวลาของตัวเอง</p>
+              <p>เลือกแบบฝึกที่ต้องการ แล้วกดเริ่ม<br>
+                <strong>ทำให้ครบ</strong> คือทำให้ครบทุกข้อให้เร็วที่สุด · <strong>จับเวลา 1 นาที</strong> คือทำให้ได้มากที่สุดใน 1 นาที</p>
             </div>
             <div class="panel-body">
-              <div class="mode-picker" id="speedQuizKindPicker">
-                <button type="button" class="mode-btn active" data-kind="count">ทำให้ครบ</button>
-                <button type="button" class="mode-btn" data-kind="timed">จับเวลา 1 นาที</button>
-              </div>
+              <div class="sq-options">
+                <div class="sq-option">
+                  <span class="sq-option-label">โจทย์</span>
+                  <div class="mode-picker" id="speedQuizModePicker">
+                    <button type="button" class="mode-btn active" data-mode="+">+</button>
+                    <button type="button" class="mode-btn" data-mode="-">−</button>
+                    <button type="button" class="mode-btn" data-mode="*">×</button>
+                  </div>
+                </div>
 
-              <div class="mode-picker" id="speedQuizSizePicker">
-                <button type="button" class="mode-btn active" data-size="100">100 ข้อ</button>
-                <button type="button" class="mode-btn" data-size="50">50 ข้อ</button>
-              </div>
+                <div class="sq-option">
+                  <span class="sq-option-label">โหมด</span>
+                  <div class="mode-picker" id="speedQuizKindPicker">
+                    <button type="button" class="mode-btn active" data-kind="count">ทำให้ครบ</button>
+                    <button type="button" class="mode-btn" data-kind="timed">จับเวลา 1 นาที</button>
+                  </div>
+                </div>
 
-              <div class="mode-picker" id="speedQuizLayoutPicker">
-                <button type="button" class="mode-btn active" data-layout="sheet">แบบเรียงข้อ</button>
-                <button type="button" class="mode-btn" data-layout="grid">แบบตาราง</button>
-              </div>
+                <div class="sq-option" id="speedQuizSizeOption">
+                  <span class="sq-option-label">จำนวนข้อ</span>
+                  <div class="mode-picker" id="speedQuizSizePicker">
+                    <button type="button" class="mode-btn active" data-size="100">100</button>
+                    <button type="button" class="mode-btn" data-size="50">50</button>
+                  </div>
+                </div>
 
-              <div class="mode-picker" id="speedQuizModePicker">
-                <button type="button" class="mode-btn active" data-mode="+">+</button>
-                <button type="button" class="mode-btn" data-mode="-">−</button>
-                <button type="button" class="mode-btn" data-mode="*">×</button>
+                <div class="sq-option">
+                  <span class="sq-option-label">รูปแบบ</span>
+                  <div class="mode-picker" id="speedQuizLayoutPicker">
+                    <button type="button" class="mode-btn active" data-layout="sheet">เรียงข้อ</button>
+                    <button type="button" class="mode-btn" data-layout="grid">ตาราง</button>
+                  </div>
+                </div>
               </div>
 
               <div class="speed-quiz-card">

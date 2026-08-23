@@ -542,6 +542,54 @@ body {
 
 /* ---------- speed quiz ---------- */
 
+/* One card holding every choice, each row labelled. Previously these were four
+   unlabelled rows of pills stacked on top of each other, which gave no clue
+   which row controlled what and pushed the quiz itself down the page. */
+.sq-options {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.sq-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sq-option-label {
+  flex: 0 0 68px;
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* the pickers were built with a negative top margin to sit under a heading;
+   inside a labelled row they need to sit on the line instead */
+.sq-option .mode-picker {
+  margin-top: 0;
+  justify-content: flex-start;
+  flex: 1;
+}
+
+@media (max-width: 520px) {
+  .sq-option {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .sq-option-label {
+    flex: none;
+  }
+}
+
 .speed-quiz-card {
   background: var(--card-bg);
   border-radius: var(--radius-lg);

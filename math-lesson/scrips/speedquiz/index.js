@@ -407,7 +407,8 @@ $('#speedQuizSizePicker').on('click', '.mode-btn', function () {
 // choice the child makes; hiding it avoids offering a control that does nothing.
 function applySpeedQuizKindUI() {
     let timed = speedQuizObj.kind === 'timed';
-    $('#speedQuizSizePicker').toggle(!timed);
+    // hide the whole row, otherwise its label sits there labelling nothing
+    $('#speedQuizSizeOption').toggle(!timed);
     $('#speedQuizTimerLabel').text(timed ? 'เวลาที่เหลือ' : 'เวลา');
     $('#speedQuizBestLabel').text(timed ? 'ทำได้มากที่สุด' : 'สถิติที่ดีที่สุด');
 }
