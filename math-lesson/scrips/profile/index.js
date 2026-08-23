@@ -23,12 +23,18 @@ function loadProfileIntoForm(user) {
     // would hand that address to anyone guessing names.
     let signsInByUsername = isInternalAuthAddress(user.email);
 
+    // An email account has no username yet but can claim one, which converts it
+    // server-side; from then on it behaves like any username account.
     $('#profileUsername')
         .val((user.user_metadata && user.user_metadata.username) || '')
-        .prop('readonly', !signsInByUsername)
-        .toggleClass('profile-readonly', !signsInByUsername)
-        .attr('placeholder', signsInByUsername ? 'ชื่อผู้ใช้' : 'บัญชีนี้เข้าสู่ระบบด้วยอีเมล');
-    $('#profileUsernameNote').toggle(signsInByUsername);
+        .prop('readonly', false)
+        .removeClass('profile-readonly')
+        .attr('placeholder', signsInByUsername ? 'ชื่อผู้ใช้' : 'ตั้งชื่อผู้ใช้เพื่อเข้าสู่ระบบให้ง่ายขึ้น');
+    $('#profileUsernameNote')
+        .toggle(true)
+        .text(signsInByUsername
+            ? 'เปลี่ยนชื่อผู้ใช้ได้ แต่ชื่อเดิมจะใช้ไม่ได้อีกตลอดไป และต้องใช้ชื่อใหม่ในการเข้าสู่ระบบ'
+            : 'ตั้งชื่อผู้ใช้แล้วจะเข้าสู่ระบบด้วยชื่อผู้ใช้หรืออีเมลเดิมก็ได้');
 
     // For username accounts the email is optional contact info only, and is
     // stored in profiles rather than being the credential. For email accounts
@@ -92,16 +98,67 @@ $('#profileGradePicker').on('click', '.mode-btn', function () {
     $(this).addClass('active');
 });
 
+// Converting an email account has to happen server-side (it rewrites the auth
+// address), so this calls the claim-username Edge Function rather than writing
+// to profiles directly.
+function claimUsernameForEmailAccount(username, $btn) {
+    $btn.prop('disabled', true).text('กำลังตั้งชื่อผู้ใช้...');
+
+    supabaseClient.functions.invoke('claim-username', { body: { username: username } })
+        .then(function (res) {
+            $btn.prop('disabled', false).text('บันทึกข้อมูล');
+
+            let err = res.error ? 'invoke_failed' : (res.data && res.data.error);
+            if (err) {
+                let message = err === 'username_taken'
+                    ? 'ชื่อผู้ใช้นี้ถูกใช้แล้ว กรุณาเลือกชื่ออื่น'
+                    : err === 'invalid_username'
+                        ? 'ชื่อผู้ใช้ต้องเป็น a-z, 0-9 หรือ _ ความยาว 3-20 ตัวอักษร'
+                        : 'ตั้งชื่อผู้ใช้ไม่สำเร็จ กรุณาลองอีกครั้ง';
+                $('#profileUsername').val('');
+                showProfileFeedback('feedbackProfile', false, message);
+                return;
+            }
+
+            // The account's address changed underneath this session, so refresh
+            // it rather than leaving stale details on screen.
+            return supabaseClient.auth.refreshSession().then(function () {
+                return supabaseClient.auth.getUser().then(function (r) {
+                    if (r.data && r.data.user) {
+                        profileLoadedUser = r.data.user;
+                        profileContactEmail = res.data.contact_email || null;
+                        loadProfileIntoForm(r.data.user);
+                        renderAccountUI(r.data.user);
+                    }
+                    showProfileFeedback('feedbackProfile', true,
+                        'ตั้งชื่อผู้ใช้เรียบร้อยแล้ว ครั้งต่อไปเข้าสู่ระบบด้วยชื่อผู้ใช้หรืออีเมลก็ได้');
+                });
+            });
+        });
+}
+
 $('#profileSaveBtn').on('click', function () {
     let grade = $('#profileGradePicker .mode-btn.active').data('grade') || '';
     let $btn = $(this);
-    let editable = !$('#profileUsername').prop('readonly');
     let typedName = $('#profileUsername').val().trim().toLowerCase();
     let currentName = (profileLoadedUser && profileLoadedUser.user_metadata.username) || '';
+    let signsInByUsername = profileLoadedUser && isInternalAuthAddress(profileLoadedUser.email);
+    let claiming = !signsInByUsername && typedName !== '';
+    let editable = !!signsInByUsername;
     let renaming = editable && typedName !== currentName;
 
     let typedEmail = $('#profileEmail').val().trim();
     let emailChanged = editable && typedEmail !== (profileContactEmail || '');
+
+    if (claiming) {
+        if (!AUTH_USERNAME_PATTERN.test(typedName)) {
+            $('#profileUsername').val('');
+            showProfileFeedback('feedbackProfile', false, 'ชื่อผู้ใช้ต้องเป็น a-z, 0-9 หรือ _ ความยาว 3-20 ตัวอักษร');
+            return;
+        }
+        claimUsernameForEmailAccount(typedName, $(this));
+        return;
+    }
 
     if (renaming && !AUTH_USERNAME_PATTERN.test(typedName)) {
         // put the real name back: leaving invalid text in the field would block

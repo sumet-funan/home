@@ -54,6 +54,16 @@ function lookupAuthEmailForUsername(username) {
         });
 }
 
+// A converted account's auth address is internal, so signing in with the real
+// email needs the same kind of lookup. Also returns only .invalid addresses.
+function lookupAuthEmailForContact(email) {
+    return supabaseClient
+        .rpc('auth_email_for_contact', { p_email: email })
+        .then(function (result) {
+            return result.error ? null : result.data;
+        });
+}
+
 function mapAuthErrorToThai(message, usedUsername) {
     if (!message) {
         return 'เกิดข้อผิดพลาด กรุณาลองอีกครั้ง';
@@ -172,6 +182,9 @@ $('#signinSubmitBtn').on('click', function () {
 
     $btn.prop('disabled', true).text('กำลังเข้าสู่ระบบ...');
 
+    // An email may be the account's own credential (never converted) or the
+    // contact address of a converted one, so try it directly and fall back to
+    // the contact lookup.
     let emailPromise = identity.email
         ? Promise.resolve(identity.email)
         : lookupAuthEmailForUsername(identity.username);
@@ -186,14 +199,36 @@ $('#signinSubmitBtn').on('click', function () {
         }
 
         return supabaseClient.auth.signInWithPassword({ email: email, password: password }).then(function (result) {
-            $btn.prop('disabled', false).text('เข้าสู่ระบบ');
-
-            if (result.error) {
-                $error.text(mapAuthErrorToThai(result.error.message, !!identity.username));
+            if (!result.error) {
+                $btn.prop('disabled', false).text('เข้าสู่ระบบ');
+                bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
                 return;
             }
 
-            bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+            // The address may belong to a converted account, where it is now
+            // contact info rather than the credential.
+            if (!identity.email) {
+                $btn.prop('disabled', false).text('เข้าสู่ระบบ');
+                $error.text(mapAuthErrorToThai(result.error.message, true));
+                return;
+            }
+
+            return lookupAuthEmailForContact(identity.email).then(function (internal) {
+                if (!internal) {
+                    $btn.prop('disabled', false).text('เข้าสู่ระบบ');
+                    $error.text(mapAuthErrorToThai(result.error.message, false));
+                    return;
+                }
+                return supabaseClient.auth.signInWithPassword({ email: internal, password: password })
+                    .then(function (retry) {
+                        $btn.prop('disabled', false).text('เข้าสู่ระบบ');
+                        if (retry.error) {
+                            $error.text(mapAuthErrorToThai(retry.error.message, false));
+                            return;
+                        }
+                        bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+                    });
+            });
         });
     });
 });
