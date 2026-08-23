@@ -1,8 +1,7 @@
 var speedQuizObj = {
     mode: "+",
     size: 100,
-    rowHeaders: [],
-    colHeaders: [],
+    questions: [],
     running: false,
     startTime: 0,
     timerInterval: null,
@@ -38,37 +37,46 @@ function shuffleSpeedQuizArray(arr) {
     return a;
 }
 
-function generateSpeedQuizHeaders() {
+// Every pairing of the two digit sets is built and then shuffled, rather than
+// drawing random pairs. That keeps the point of the drill: across a full round
+// each combination appears exactly once, so no fact is practised twice while
+// another is missed.
+function generateSpeedQuizQuestions() {
     let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    let numRows = speedQuizObj.size / 10;
+    let firsts = speedQuizObj.mode === '-'
+        ? [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]   // keeps every answer >= 0
+        : digits;
 
-    if (speedQuizObj.mode === "-") {
-        let bigDigits = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
-        speedQuizObj.rowHeaders = shuffleSpeedQuizArray(bigDigits).slice(0, numRows);
-        speedQuizObj.colHeaders = shuffleSpeedQuizArray(digits);
-    } else {
-        speedQuizObj.rowHeaders = shuffleSpeedQuizArray(digits).slice(0, numRows);
-        speedQuizObj.colHeaders = shuffleSpeedQuizArray(digits);
-    }
+    let pairs = [];
+    firsts.forEach(function (a) {
+        digits.forEach(function (b) {
+            pairs.push({ a: a, b: b });
+        });
+    });
+
+    speedQuizObj.questions = shuffleSpeedQuizArray(pairs)
+        .slice(0, speedQuizObj.size)
+        .map(function (p) {
+            let expected = speedQuizObj.mode === '+' ? p.a + p.b
+                : speedQuizObj.mode === '-' ? p.a - p.b
+                : p.a * p.b;
+            return { a: p.a, b: p.b, expected: expected };
+        });
 }
 
 function renderSpeedQuizGrid() {
-    let symbolDisplay = speedQuizObj.mode === '*' ? '×' : speedQuizObj.mode;
-    let html = '<thead><tr><th class="corner-cell">' + symbolDisplay + '</th>';
+    let symbol = speedQuizObj.mode === '*' ? '×' : speedQuizObj.mode;
 
-    for (let c = 0; c < 10; c++) {
-        html += '<th>' + speedQuizObj.colHeaders[c] + '</th>';
-    }
-    html += '</tr></thead><tbody>';
-
-    for (let r = 0; r < speedQuizObj.rowHeaders.length; r++) {
-        html += '<tr><th>' + speedQuizObj.rowHeaders[r] + '</th>';
-        for (let c = 0; c < 10; c++) {
-            html += '<td><input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="speed-quiz-input" data-row="' + r + '" data-col="' + c + '"></td>';
-        }
-        html += '</tr>';
-    }
-    html += '</tbody>';
+    let html = speedQuizObj.questions.map(function (q, i) {
+        return '<div class="speed-quiz-item">' +
+            '<span class="sq-index">' + (i + 1) + '</span>' +
+            '<span class="sq-first">' + q.a + '</span>' +
+            '<span class="sq-second"><span class="sq-op">' + symbol + '</span>' + q.b + '</span>' +
+            '<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" ' +
+                'autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ' +
+                'class="speed-quiz-input" data-index="' + i + '">' +
+        '</div>';
+    }).join('');
 
     $('#speedQuizGrid').html(html);
 }
@@ -156,28 +164,16 @@ function finishSpeedQuiz() {
     let correctCount = 0;
 
     $('.speed-quiz-input').each(function () {
-        let row = +$(this).data('row');
-        let col = +$(this).data('col');
-        let rowVal = speedQuizObj.rowHeaders[row];
-        let colVal = speedQuizObj.colHeaders[col];
-        let expected;
+        let question = speedQuizObj.questions[+$(this).data('index')];
+        let raw = $(this).val().trim();
+        let $item = $(this).closest('.speed-quiz-item');
 
-        if (speedQuizObj.mode === '+') {
-            expected = rowVal + colVal;
-        } else if (speedQuizObj.mode === '-') {
-            expected = rowVal - colVal;
-        } else {
-            expected = rowVal * colVal;
-        }
-
-        let answer = +$(this).val();
-        let $cell = $(this).closest('td');
-
-        if (answer === expected) {
-            $cell.removeClass('incorrect').addClass('correct');
+        // blank counts as wrong, but must not be read as 0
+        if (raw !== '' && +raw === question.expected) {
+            $item.removeClass('incorrect').addClass('correct');
             correctCount++;
         } else {
-            $cell.removeClass('correct').addClass('incorrect');
+            $item.removeClass('correct').addClass('incorrect');
         }
     });
 
@@ -202,7 +198,7 @@ function startSpeedQuiz() {
 function beginSpeedQuizRound() {
     clearInterval(speedQuizObj.timerInterval);
 
-    generateSpeedQuizHeaders();
+    generateSpeedQuizQuestions();
     renderSpeedQuizGrid();
 
     $('#feedbackSpeedQuiz').removeClass('show is-correct is-incorrect').text('');
@@ -213,7 +209,7 @@ function beginSpeedQuizRound() {
     speedQuizObj.timerInterval = setInterval(updateSpeedQuizTimerDisplay, 250);
 
     $('#speedQuizSubmitBtn').show();
-    $('.speed-quiz-input[data-row="0"][data-col="0"]').trigger('focus');
+    $('.speed-quiz-input[data-index="0"]').trigger('focus');
 }
 
 function resetSpeedQuizForNewSelection() {
@@ -249,18 +245,8 @@ $('#speedQuizSizePicker').on('click', '.mode-btn', function () {
     });
 });
 
-function advanceSpeedQuizFocus(row, col) {
-    let nextCol = col + 1;
-    let nextRow = row;
-
-    if (nextCol > 9) {
-        nextCol = 0;
-        nextRow = row + 1;
-    }
-
-    if (nextRow <= speedQuizObj.rowHeaders.length - 1) {
-        $('.speed-quiz-input[data-row="' + nextRow + '"][data-col="' + nextCol + '"]').trigger('focus');
-    }
+function advanceSpeedQuizFocus(index) {
+    $('.speed-quiz-input[data-index="' + (index + 1) + '"]').trigger('focus');
 }
 
 $(document).on('keydown', '.speed-quiz-input', function (e) {
@@ -268,7 +254,7 @@ $(document).on('keydown', '.speed-quiz-input', function (e) {
         return;
     }
     e.preventDefault();
-    advanceSpeedQuizFocus(+$(this).data('row'), +$(this).data('col'));
+    advanceSpeedQuizFocus(+$(this).data('index'));
 });
 
 function countEmptySpeedQuizCells() {

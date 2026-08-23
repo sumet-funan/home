@@ -583,72 +583,75 @@ body {
 }
 
 .speed-quiz-grid-wrap {
-  overflow-x: auto;
   margin-top: 20px;
-  -webkit-overflow-scrolling: touch;
 }
 
+/* Each question is its own small column: first number, operator with the
+   second number, then the answer box under a rule -- the way it is written on
+   paper. auto-fill wraps them into as many across as the screen allows, so
+   nothing scrolls sideways. */
 .speed-quiz-grid {
-  /* separate (not collapse): Safari silently breaks position:sticky cells
-     inside a border-collapse table, which iPad relies on below */
-  border-collapse: separate;
-  border-spacing: 0;
-  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: 12px;
 }
 
-.speed-quiz-grid th,
-.speed-quiz-grid td {
+.speed-quiz-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 8px 10px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
   border: 1px solid var(--border);
-  padding: 0;
-  text-align: center;
 }
 
-.speed-quiz-grid thead th {
-  background: var(--accent-bg);
+.sq-index {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--muted);
+  opacity: .75;
+}
+
+.sq-first,
+.sq-second {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+}
+
+.sq-second {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  justify-content: space-between;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--accent);
+  margin-bottom: 6px;
+}
+
+.sq-op {
   color: var(--accent);
   font-weight: 800;
-  font-size: 1rem;
-  min-width: 44px;
-  height: 44px;
-  padding: 4px;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-
-.speed-quiz-grid thead th.corner-cell {
-  background: var(--accent);
-  color: #fff;
-  font-size: 1.2rem;
-  left: 0;
-  z-index: 3;
-}
-
-.speed-quiz-grid tbody th {
-  background: var(--accent-bg);
-  color: var(--accent);
-  font-weight: 800;
-  font-size: 1rem;
-  min-width: 44px;
-  padding: 4px;
-  position: sticky;
-  left: 0;
-  z-index: 1;
-}
-
-.speed-quiz-grid tbody td {
-  padding: 0;
 }
 
 .speed-quiz-grid input {
-  width: 44px;
-  height: 44px;
+  width: 100%;
+  height: 40px;
   border: none;
+  border-radius: var(--radius-sm);
   text-align: center;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text);
-  background: var(--bg);
+  background: var(--card-bg);
 }
 
 /* Sticks to the bottom of the viewport while the child works down the grid,
@@ -676,13 +679,17 @@ body {
   box-shadow: inset 0 0 0 2px var(--accent);
 }
 
-.speed-quiz-grid td.correct input {
+.speed-quiz-item.correct {
+  border-color: var(--plus);
   background: var(--result-bg);
-  color: var(--text);
 }
 
-.speed-quiz-grid td.incorrect input {
+.speed-quiz-item.incorrect {
+  border-color: #dc2626;
   background: #fdeeee;
+}
+
+.speed-quiz-item.incorrect input {
   color: #dc2626;
 }
 
