@@ -818,6 +818,95 @@ body {
   color: #dc2626;
 }
 
+/* ---------- daily goal ---------- */
+
+#dailyGoalBar {
+  background: var(--accent);
+}
+
+#dailyGoalBar.is-reached {
+  background: var(--plus);
+}
+
+.daily-goal-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.daily-goal-count {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.daily-goal-done {
+  display: none;
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--plus);
+}
+
+.daily-streak-row {
+  display: flex;
+  gap: 28px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+}
+
+.daily-streak-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.daily-streak-label {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.daily-streak-value {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+/* Confirms the goal was reached without interrupting; it never blocks input
+   and disappears on its own. */
+.daily-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 1060;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--plus);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translate(-50%, 16px);
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.daily-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.daily-toast i {
+  font-size: 1.15rem;
+}
+
 /* ---------- answer combo ---------- */
 
 /* Fixed rather than in the panel: it has to stay visible while the child works

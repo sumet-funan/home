@@ -52,6 +52,10 @@ function loadProfileIntoForm(user) {
     $('#profileGradePicker .mode-btn').removeClass('active');
     $('#profileGradePicker .mode-btn[data-grade="' + grade + '"]').addClass('active');
 
+    if (typeof getDailyGoal === 'function') {
+        $('#profileDailyGoal').val(getDailyGoal());
+    }
+
     $('#profileNewPassword, #profileNewPasswordConfirm').val('');
     $('#feedbackProfile, #feedbackProfilePassword').removeClass('show is-correct is-incorrect').text('');
 }
@@ -172,6 +176,17 @@ $('#profileSaveBtn').on('click', function () {
         $('#profileEmail').val(profileContactEmail || '');
         showProfileFeedback('feedbackProfile', false, 'รูปแบบอีเมลไม่ถูกต้อง');
         return;
+    }
+
+    // The daily goal is a local preference, saved whether or not the account
+    // save below succeeds, and it applies to guests too.
+    if (typeof setDailyGoal === 'function') {
+        let typedGoal = parseInt($('#profileDailyGoal').val(), 10);
+        if (!isNaN(typedGoal) && typedGoal >= 1 && typedGoal <= 500) {
+            setDailyGoal(typedGoal);
+        } else {
+            $('#profileDailyGoal').val(getDailyGoal());
+        }
     }
 
     $btn.prop('disabled', true).text('กำลังบันทึก...');

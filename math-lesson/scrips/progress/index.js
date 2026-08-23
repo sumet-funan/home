@@ -236,7 +236,34 @@ function renderProgressMistakes(rows) {
 
 var progressRange = 'all';
 
+// Deliberately independent of the range picker: "today" and "days in a row"
+// mean the same thing whichever period the rest of the page is showing.
+function renderDailyGoal() {
+    if (typeof getDailyGoal !== 'function') {
+        return;
+    }
+
+    let goal = getDailyGoal();
+    let done = getDailyCount();
+    let pct = goal > 0 ? Math.min(100, Math.round(100 * done / goal)) : 0;
+    let reached = done >= goal;
+
+    $('#dailyGoalCount').text(done + ' / ' + goal + ' ข้อ');
+    $('#dailyGoalDone').toggle(reached);
+    // No red for "not there yet": a partly filled goal is progress, not a
+    // failing score, and colouring it like one would discourage exactly the
+    // child who most needs encouraging.
+    $('#dailyGoalBar')
+        .css('width', pct + '%')
+        .toggleClass('is-reached', reached);
+
+    $('#dayStreakValue').text(getDayStreak() + ' วัน');
+    $('#dayStreakBest').text(getBestDayStreak() + ' วัน');
+}
+
 function refreshProgressPage() {
+    renderDailyGoal();
+
     if (typeof fetchLessonStats !== 'function') {
         return;
     }

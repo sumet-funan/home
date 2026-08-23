@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v2.3.2</div>
+      <div class="app-sidebar-footer">v2.4.0</div>
     </aside>
 
     <main class="app-main">
@@ -1288,6 +1288,27 @@
                 <button type="button" class="mode-btn active" data-range="all">ทั้งหมด</button>
               </div>
 
+              <div class="calc-card progress-card" id="dailyGoalCard">
+                <h3 class="profile-section-title"><i class="bi bi-bullseye"></i> เป้าหมายวันนี้</h3>
+                <div class="daily-goal-head">
+                  <span class="daily-goal-count" id="dailyGoalCount">0 / 20 ข้อ</span>
+                  <span class="daily-goal-done" id="dailyGoalDone">สำเร็จแล้ว!</span>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" id="dailyGoalBar" style="width: 0%;"></div>
+                </div>
+                <div class="daily-streak-row">
+                  <div class="daily-streak-stat">
+                    <span class="daily-streak-label">ฝึกต่อเนื่อง</span>
+                    <span class="daily-streak-value" id="dayStreakValue">0 วัน</span>
+                  </div>
+                  <div class="daily-streak-stat">
+                    <span class="daily-streak-label">สถิติสูงสุด</span>
+                    <span class="daily-streak-value" id="dayStreakBest">0 วัน</span>
+                  </div>
+                </div>
+              </div>
+
               <div class="progress-summary" id="progressSummary"></div>
 
               <div class="calc-card progress-card">
@@ -1328,6 +1349,10 @@
                 <label class="profile-label" for="profileEmail">อีเมล</label>
                 <input type="email" class="auth-input" id="profileEmail" placeholder="ไม่บังคับ" autocomplete="email">
                 <p class="auth-note" id="profileEmailNote"></p>
+
+                <label class="profile-label" for="profileDailyGoal">เป้าหมายต่อวัน (ข้อ)</label>
+                <input type="number" class="auth-input" id="profileDailyGoal" min="1" max="500" step="1">
+                <p class="auth-note">ไว้ให้ตั้งใจทำให้ถึง ไม่ได้จำกัดการเล่น ทำเกินได้เสมอ</p>
 
                 <label class="profile-label">ระดับชั้น</label>
                 <div class="mode-picker profile-grade-picker" id="profileGradePicker">
@@ -1375,6 +1400,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="daily-toast" id="dailyGoalToast" aria-live="polite">
+    <i class="bi bi-trophy-fill"></i>
+    <span class="daily-toast-text"></span>
   </div>
 
   <div class="combo-badge" id="comboBadge" aria-live="polite">
@@ -1493,6 +1523,11 @@
       // wiring; the speed quiz marks in bulk and deliberately does not call this
       if (typeof registerStreakAnswer === 'function') {
         registerStreakAnswer(isCorrect);
+      }
+      // the daily goal counts questions attempted, right or wrong, so a child
+      // having a hard day still sees the day count
+      if (typeof registerDailyActivity === 'function') {
+        registerDailyActivity();
       }
 
       let $feedback = $('#' + feedbackId);
@@ -1626,6 +1661,7 @@
   <script type="text/javascript" src="scrips/speedquiz/index.js"></script>
   <script type="text/javascript" src="scrips/profile/index.js"></script>
   <script type="text/javascript" src="scrips/streak/index.js"></script>
+  <script type="text/javascript" src="scrips/daily/index.js"></script>
   <script type="text/javascript" src="scrips/progress/index.js"></script>
 </body>
 
