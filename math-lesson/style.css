@@ -575,6 +575,11 @@ body {
   color: var(--muted);
 }
 
+/* last ten seconds of a timed round */
+.speed-stat-value.is-running-out {
+  color: #dc2626;
+}
+
 .speed-stat-value {
   font-size: 1.5rem;
   font-weight: 800;

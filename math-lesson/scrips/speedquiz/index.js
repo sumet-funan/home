@@ -1,6 +1,7 @@
 var speedQuizObj = {
     mode: "+",
     size: 100,
+    kind: "count",     // "count" = finish a fixed set, "timed" = as many as possible
     layout: "sheet",   // "sheet" = one question per card, "grid" = shared headers
     questions: [],
     rowHeaders: [],
@@ -8,6 +9,15 @@ var speedQuizObj = {
     running: false,
     startTime: 0,
     timerInterval: null,
+}
+
+const SPEED_QUIZ_TIMED_SECONDS = 60;
+// Deliberately more than anyone can finish in the time, so the clock is always
+// what stops the round rather than running out of questions.
+const SPEED_QUIZ_TIMED_QUESTIONS = 200;
+
+function speedQuizQuestionCount() {
+    return speedQuizObj.kind === 'timed' ? SPEED_QUIZ_TIMED_QUESTIONS : speedQuizObj.size;
 }
 
 // Shows the "leave running quiz?" modal only if a round is in progress;
@@ -58,8 +68,15 @@ function generateSpeedQuizQuestions() {
 
     // Both layouts end up with the same list of questions, so marking and
     // keyboard navigation stay identical; only the drawing differs.
+    let wanted = speedQuizQuestionCount();
+
     if (speedQuizObj.layout === 'grid') {
-        speedQuizObj.rowHeaders = shuffleSpeedQuizArray(firsts).slice(0, speedQuizObj.size / 10);
+        // rows repeat once the digit set runs out, which timed rounds need
+        speedQuizObj.rowHeaders = [];
+        while (speedQuizObj.rowHeaders.length < wanted / 10) {
+            speedQuizObj.rowHeaders = speedQuizObj.rowHeaders.concat(shuffleSpeedQuizArray(firsts));
+        }
+        speedQuizObj.rowHeaders = speedQuizObj.rowHeaders.slice(0, wanted / 10);
         speedQuizObj.colHeaders = shuffleSpeedQuizArray(digits);
 
         speedQuizObj.questions = [];
@@ -78,8 +95,15 @@ function generateSpeedQuizQuestions() {
         });
     });
 
-    speedQuizObj.questions = shuffleSpeedQuizArray(pairs)
-        .slice(0, speedQuizObj.size)
+    // Each pass is a fresh shuffle of every combination, so a timed round only
+    // starts repeating facts once it has been through them all.
+    let picked = [];
+    while (picked.length < wanted) {
+        picked = picked.concat(shuffleSpeedQuizArray(pairs));
+    }
+
+    speedQuizObj.questions = picked
+        .slice(0, wanted)
         .map(function (p) {
             return { a: p.a, b: p.b, expected: expectedSpeedQuizAnswer(p.a, p.b) };
         });
@@ -149,16 +173,47 @@ function formatSpeedQuizTime(ms) {
 
 function updateSpeedQuizTimerDisplay() {
     let elapsed = Date.now() - speedQuizObj.startTime;
-    $('#speedQuizTimer').text(formatSpeedQuizTime(elapsed));
+
+    if (speedQuizObj.kind !== 'timed') {
+        $('#speedQuizTimer').text(formatSpeedQuizTime(elapsed));
+        return;
+    }
+
+    let remaining = Math.max(0, SPEED_QUIZ_TIMED_SECONDS * 1000 - elapsed);
+    $('#speedQuizTimer')
+        .text(formatSpeedQuizTime(remaining))
+        .toggleClass('is-running-out', remaining <= 10000 && remaining > 0);
+
+    if (remaining === 0 && speedQuizObj.running) {
+        finishSpeedQuiz(true);
+    }
 }
 
 function getSpeedQuizStorageKey() {
-    return 'speedQuizBestTime_' + speedQuizObj.mode + '_' + speedQuizObj.size;
+    return speedQuizObj.kind === 'timed'
+        ? 'speedQuizBestScore_' + speedQuizObj.mode
+        : 'speedQuizBestTime_' + speedQuizObj.mode + '_' + speedQuizObj.size;
 }
 
 function getLocalSpeedQuizBestTime() {
     let stored = localStorage.getItem(getSpeedQuizStorageKey());
     return stored ? +stored : null;
+}
+
+// A fixed-count round is better when it is faster; a timed one when more
+// questions were answered correctly. Same slot on screen, opposite comparison.
+function isBetterSpeedQuizResult(candidate, current) {
+    if (current === null) {
+        return true;
+    }
+    return speedQuizObj.kind === 'timed' ? candidate > current : candidate < current;
+}
+
+function formatSpeedQuizBest(value) {
+    if (value === null) {
+        return speedQuizObj.kind === 'timed' ? '- ข้อ' : '--:--';
+    }
+    return speedQuizObj.kind === 'timed' ? value + ' ข้อ' : formatSpeedQuizTime(value);
 }
 
 // Signed in: the account's best time follows the child across devices.
@@ -168,51 +223,67 @@ function loadSpeedQuizBestTime() {
     let size = speedQuizObj.size;
     let localBest = getLocalSpeedQuizBestTime();
 
-    $('#speedQuizBestTime').text(localBest ? formatSpeedQuizTime(localBest) : '--:--');
+    let kind = speedQuizObj.kind;
+    $('#speedQuizBestTime').text(formatSpeedQuizBest(localBest));
 
-    if (typeof fetchBestQuizTime !== 'function') {
+    if (typeof fetchBestQuizResult !== 'function') {
         return;
     }
 
-    fetchBestQuizTime(mode, size).then(function (remoteBest) {
-        // the mode/size may have changed while the request was in flight
-        if (speedQuizObj.mode !== mode || speedQuizObj.size !== size) {
-            return;
-        }
-        let best = remoteBest === null ? localBest : (localBest === null ? remoteBest : Math.min(remoteBest, localBest));
-        $('#speedQuizBestTime').text(best ? formatSpeedQuizTime(best) : '--:--');
-    });
+    fetchBestQuizResult(mode, kind === 'timed' ? SPEED_QUIZ_TIMED_SECONDS : size, kind)
+        .then(function (remoteBest) {
+            // the selection may have changed while the request was in flight
+            if (speedQuizObj.mode !== mode || speedQuizObj.size !== size || speedQuizObj.kind !== kind) {
+                return;
+            }
+            let best = localBest;
+            if (remoteBest !== null && isBetterSpeedQuizResult(remoteBest, best)) {
+                best = remoteBest;
+            }
+            $('#speedQuizBestTime').text(formatSpeedQuizBest(best));
+        });
 }
 
-function saveSpeedQuizBestTime(elapsedMs) {
+function saveSpeedQuizBestTime(value) {
     let key = getSpeedQuizStorageKey();
     let stored = localStorage.getItem(key);
-    let isNewRecord = !stored || elapsedMs < +stored;
+    let isNewRecord = isBetterSpeedQuizResult(value, stored === null ? null : +stored);
     if (isNewRecord) {
-        localStorage.setItem(key, String(elapsedMs));
+        localStorage.setItem(key, String(value));
         loadSpeedQuizBestTime();
     }
     return isNewRecord;
 }
 
-function showSpeedQuizFeedback(correctCount, elapsedMs, isNewRecord) {
+function showSpeedQuizFeedback(correctCount, elapsedMs, isNewRecord, answeredCount, endedByTimeout) {
     let $feedback = $('#feedbackSpeedQuiz');
-    let isPerfect = correctCount === speedQuizObj.size;
 
     $feedback.removeClass('show is-correct is-incorrect');
     void $feedback[0].offsetWidth;
 
-    let message = isPerfect
-        ? '<i class="bi bi-check-circle-fill"></i> ถูกทั้งหมด ' + speedQuizObj.size + ' ข้อ! เวลา ' + formatSpeedQuizTime(elapsedMs) + (isNewRecord ? ' (สถิติใหม่!)' : '')
-        : '<i class="bi bi-x-circle-fill"></i> ถูก ' + correctCount + ' จาก ' + speedQuizObj.size + ' ข้อ ลองใหม่อีกครั้งนะ';
+    let message;
+    let good;
+
+    if (speedQuizObj.kind === 'timed') {
+        good = correctCount > 0;
+        message = '<i class="bi bi-stopwatch-fill"></i> ' +
+            (endedByTimeout ? 'หมดเวลา! ' : 'จบรอบ! ') +
+            'ทำถูก ' + correctCount + ' ข้อ จากที่ตอบ ' + answeredCount + ' ข้อ' +
+            (isNewRecord ? ' (สถิติใหม่!)' : '');
+    } else {
+        good = correctCount === speedQuizObj.size;
+        message = good
+            ? '<i class="bi bi-check-circle-fill"></i> ถูกทั้งหมด ' + speedQuizObj.size + ' ข้อ! เวลา ' + formatSpeedQuizTime(elapsedMs) + (isNewRecord ? ' (สถิติใหม่!)' : '')
+            : '<i class="bi bi-x-circle-fill"></i> ถูก ' + correctCount + ' จาก ' + speedQuizObj.size + ' ข้อ ลองใหม่อีกครั้งนะ';
+    }
 
     $feedback
-        .addClass(isPerfect ? 'is-correct' : 'is-incorrect')
+        .addClass(good ? 'is-correct' : 'is-incorrect')
         .html(message)
         .addClass('show');
 }
 
-function finishSpeedQuiz() {
+function finishSpeedQuiz(endedByTimeout) {
     speedQuizObj.running = false;
     clearInterval(speedQuizObj.timerInterval);
     updateSpeedQuizTimerDisplay();
@@ -221,11 +292,22 @@ function finishSpeedQuiz() {
     let elapsed = Date.now() - speedQuizObj.startTime;
     let correctCount = 0;
 
+    let answeredCount = 0;
+
     $('.speed-quiz-input').each(function () {
         let question = speedQuizObj.questions[+$(this).data('index')];
         let raw = $(this).val().trim();
         // the answer sits in a card in sheet layout and a cell in grid layout
         let $item = $(this).closest('.speed-quiz-item, td');
+
+        // A timed round always ends with far more questions untouched than
+        // attempted; marking those red would bury the ones actually answered.
+        if (raw === '' && speedQuizObj.kind === 'timed') {
+            $item.removeClass('correct incorrect');
+            return;
+        }
+
+        answeredCount++;
 
         // blank counts as wrong, but must not be read as 0
         if (raw !== '' && +raw === question.expected) {
@@ -236,8 +318,16 @@ function finishSpeedQuiz() {
         }
     });
 
+    let isTimed = speedQuizObj.kind === 'timed';
+
     if (typeof recordQuizResult === 'function') {
-        recordQuizResult(speedQuizObj.mode, speedQuizObj.size, correctCount, elapsed);
+        recordQuizResult(
+            speedQuizObj.mode,
+            isTimed ? SPEED_QUIZ_TIMED_SECONDS : speedQuizObj.size,
+            correctCount,
+            isTimed ? SPEED_QUIZ_TIMED_SECONDS * 1000 : elapsed,
+            speedQuizObj.kind
+        );
     }
 
     // Lock the grid once it is marked: editing a graded cell would change the
@@ -246,8 +336,13 @@ function finishSpeedQuiz() {
     // disabled) keeps the answers readable and selectable for reviewing.
     $('.speed-quiz-input').prop('readonly', true);
 
-    let isNewRecord = correctCount === speedQuizObj.size && saveSpeedQuizBestTime(elapsed);
-    showSpeedQuizFeedback(correctCount, elapsed, isNewRecord);
+    // A timed round always records a score; a fixed-count one only counts as a
+    // time worth keeping when every question was right.
+    let isNewRecord = isTimed
+        ? saveSpeedQuizBestTime(correctCount)
+        : (correctCount === speedQuizObj.size && saveSpeedQuizBestTime(elapsed));
+
+    showSpeedQuizFeedback(correctCount, elapsed, isNewRecord, answeredCount, !!endedByTimeout);
 }
 
 function startSpeedQuiz() {
@@ -261,7 +356,9 @@ function beginSpeedQuizRound() {
     renderSpeedQuizGrid();
 
     $('#feedbackSpeedQuiz').removeClass('show is-correct is-incorrect').text('');
-    $('#speedQuizTimer').text('00:00');
+    $('#speedQuizTimer')
+        .removeClass('is-running-out')
+        .text(speedQuizObj.kind === 'timed' ? formatSpeedQuizTime(SPEED_QUIZ_TIMED_SECONDS * 1000) : '00:00');
 
     speedQuizObj.running = true;
     speedQuizObj.startTime = Date.now();
@@ -275,7 +372,9 @@ function resetSpeedQuizForNewSelection() {
     clearInterval(speedQuizObj.timerInterval);
     speedQuizObj.running = false;
     $('#speedQuizSubmitBtn').hide();
-    $('#speedQuizTimer').text('00:00');
+    $('#speedQuizTimer')
+        .removeClass('is-running-out')
+        .text(speedQuizObj.kind === 'timed' ? formatSpeedQuizTime(SPEED_QUIZ_TIMED_SECONDS * 1000) : '00:00');
     $('#speedQuizGrid').empty();
     $('#feedbackSpeedQuiz').removeClass('show is-correct is-incorrect').text('');
 
@@ -300,6 +399,27 @@ $('#speedQuizSizePicker').on('click', '.mode-btn', function () {
         $btn.addClass('active');
         speedQuizObj.size = +$btn.data('size');
 
+        resetSpeedQuizForNewSelection();
+    });
+});
+
+// A timed round runs until the clock stops it, so the question count is not a
+// choice the child makes; hiding it avoids offering a control that does nothing.
+function applySpeedQuizKindUI() {
+    let timed = speedQuizObj.kind === 'timed';
+    $('#speedQuizSizePicker').toggle(!timed);
+    $('#speedQuizTimerLabel').text(timed ? 'เวลาที่เหลือ' : 'เวลา');
+    $('#speedQuizBestLabel').text(timed ? 'ทำได้มากที่สุด' : 'สถิติที่ดีที่สุด');
+}
+
+$('#speedQuizKindPicker').on('click', '.mode-btn', function () {
+    let $btn = $(this);
+    confirmSpeedQuizLeave(function () {
+        $('#speedQuizKindPicker .mode-btn').removeClass('active');
+        $btn.addClass('active');
+        speedQuizObj.kind = $btn.data('kind');
+
+        applySpeedQuizKindUI();
         resetSpeedQuizForNewSelection();
     });
 });
@@ -339,7 +459,9 @@ $('#speedQuizSubmitBtn').on('click', function () {
         return;
     }
 
-    let empty = countEmptySpeedQuizCells();
+    // In a timed round nearly every question is expected to be left blank, so
+    // warning about them would fire on every single submit.
+    let empty = speedQuizObj.kind === 'timed' ? 0 : countEmptySpeedQuizCells();
     if (!empty) {
         finishSpeedQuiz();
         return;

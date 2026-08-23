@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v2.1.0</div>
+      <div class="app-sidebar-footer">v2.2.0</div>
     </aside>
 
     <main class="app-main">
@@ -1207,6 +1207,11 @@
               <p>เลือกจำนวนข้อและโจทย์บวก ลบ หรือคูณ แล้วกดเริ่ม ทำให้ครบให้เร็วที่สุด แข่งกับเวลาของตัวเอง</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="speedQuizKindPicker">
+                <button type="button" class="mode-btn active" data-kind="count">ทำให้ครบ</button>
+                <button type="button" class="mode-btn" data-kind="timed">จับเวลา 1 นาที</button>
+              </div>
+
               <div class="mode-picker" id="speedQuizSizePicker">
                 <button type="button" class="mode-btn active" data-size="100">100 ข้อ</button>
                 <button type="button" class="mode-btn" data-size="50">50 ข้อ</button>
@@ -1226,11 +1231,11 @@
               <div class="speed-quiz-card">
                 <div class="speed-quiz-stats">
                   <div class="speed-stat">
-                    <span class="speed-stat-label">เวลา</span>
+                    <span class="speed-stat-label" id="speedQuizTimerLabel">เวลา</span>
                     <span class="speed-stat-value" id="speedQuizTimer">00:00</span>
                   </div>
                   <div class="speed-stat">
-                    <span class="speed-stat-label">สถิติที่ดีที่สุด</span>
+                    <span class="speed-stat-label" id="speedQuizBestLabel">สถิติที่ดีที่สุด</span>
                     <span class="speed-stat-value" id="speedQuizBestTime">--:--</span>
                   </div>
                 </div>

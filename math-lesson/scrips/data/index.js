@@ -83,7 +83,7 @@ function recordAttempt(lessonId, isCorrect, expression) {
     });
 }
 
-function recordQuizResult(mode, size, correctCount, durationMs) {
+function recordQuizResult(mode, size, correctCount, durationMs, kind) {
     if (!currentUserId) {
         return;
     }
@@ -93,7 +93,8 @@ function recordQuizResult(mode, size, correctCount, durationMs) {
         mode: mode,
         size: size,
         correct_count: correctCount,
-        duration_ms: durationMs
+        duration_ms: durationMs,
+        kind: kind || 'count'
     };
 
     supabaseClient.from('quiz_results').insert(row).then(function (result) {
@@ -105,25 +106,33 @@ function recordQuizResult(mode, size, correctCount, durationMs) {
     });
 }
 
-// Best time counts only perfect runs, matching how the quiz has always scored it.
-function fetchBestQuizTime(mode, size) {
+// Two different notions of "best": a fixed-count round is the fastest perfect
+// run, a timed one is the highest score. Returns whichever this kind means.
+function fetchBestQuizResult(mode, size, kind) {
     if (!currentUserId) {
         return Promise.resolve(null);
     }
 
-    return supabaseClient
+    let timed = kind === 'timed';
+    let query = supabaseClient
         .from('quiz_results')
-        .select('duration_ms')
+        .select(timed ? 'correct_count' : 'duration_ms')
         .eq('mode', mode)
         .eq('size', size)
-        .eq('correct_count', size)
-        .order('duration_ms', { ascending: true })
+        .eq('kind', kind || 'count');
+
+    if (!timed) {
+        query = query.eq('correct_count', size);   // only perfect runs count
+    }
+
+    return query
+        .order(timed ? 'correct_count' : 'duration_ms', { ascending: !timed })
         .limit(1)
         .then(function (result) {
             if (result.error || !result.data.length) {
                 return null;
             }
-            return result.data[0].duration_ms;
+            return timed ? result.data[0].correct_count : result.data[0].duration_ms;
         });
 }
 
