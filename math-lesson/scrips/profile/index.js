@@ -17,10 +17,16 @@ function showProfileFeedback(feedbackId, isSuccess, message) {
 function loadProfileIntoForm(user) {
     let metadata = user.user_metadata || {};
 
-    // username accounts must never be shown their internal .invalid address
+    // Username accounts must never be shown their internal .invalid address,
+    // and only they can be renamed: resolving a real-email account by username
+    // would mean handing out its email to anyone guessing names.
     let isUsernameAccount = !!(user.user_metadata && user.user_metadata.username);
     $('#profileIdentityLabel').text(isUsernameAccount ? 'ชื่อผู้ใช้' : 'อีเมล');
-    $('#profileEmail').val(getAccountIdentityLabel(user));
+    $('#profileEmail')
+        .val(getAccountIdentityLabel(user))
+        .prop('readonly', !isUsernameAccount)
+        .toggleClass('profile-readonly', !isUsernameAccount);
+    $('#profileUsernameNote').toggle(isUsernameAccount);
 
     let grade = metadata.grade || '';
     $('#profileGradePicker .mode-btn').removeClass('active');
@@ -34,10 +40,14 @@ function loadProfileIntoForm(user) {
 // fires USER_UPDATED *and* SIGNED_IN, and refilling on those would wipe the
 // success message the user just triggered.
 var profileLoadedUserId = null;
+var profileLoadedUser = null;
 
 function applyProfileAuthState(user) {
     if (user) {
         $('#navGroupProfile').show();
+        // kept current even on USER_UPDATED, so a rename compares against the
+        // name that is actually stored rather than a stale one
+        profileLoadedUser = user;
         if (profileLoadedUserId !== user.id) {
             profileLoadedUserId = user.id;
             loadProfileIntoForm(user);
@@ -46,6 +56,7 @@ function applyProfileAuthState(user) {
     }
 
     profileLoadedUserId = null;
+    profileLoadedUser = null;
 
     $('#navGroupProfile').hide();
 
@@ -63,20 +74,56 @@ $('#profileGradePicker').on('click', '.mode-btn', function () {
 $('#profileSaveBtn').on('click', function () {
     let grade = $('#profileGradePicker .mode-btn.active').data('grade') || '';
     let $btn = $(this);
+    let isUsernameAccount = !$('#profileEmail').prop('readonly');
+    let typedName = $('#profileEmail').val().trim().toLowerCase();
+    let currentName = (profileLoadedUser && profileLoadedUser.user_metadata.username) || '';
+    let renaming = isUsernameAccount && typedName !== currentName;
+
+    if (renaming && !AUTH_USERNAME_PATTERN.test(typedName)) {
+        // put the real name back: leaving invalid text in the field would block
+        // every later save, including ones that only change the grade
+        $('#profileEmail').val(currentName);
+        showProfileFeedback('feedbackProfile', false, 'ชื่อผู้ใช้ต้องเป็น a-z, 0-9 หรือ _ ความยาว 3-20 ตัวอักษร');
+        return;
+    }
 
     $btn.prop('disabled', true).text('กำลังบันทึก...');
 
-    supabaseClient.auth.updateUser({
-        data: { grade: grade }
-    }).then(function (result) {
+    let finish = function (ok, message) {
         $btn.prop('disabled', false).text('บันทึกข้อมูล');
+        showProfileFeedback('feedbackProfile', ok, message);
+    };
 
+    supabaseClient.auth.updateUser({ data: { grade: grade } }).then(function (result) {
         if (result.error) {
-            showProfileFeedback('feedbackProfile', false, 'บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง');
+            finish(false, 'บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง');
             return;
         }
 
-        showProfileFeedback('feedbackProfile', true, 'บันทึกข้อมูลเรียบร้อยแล้ว');
+        if (!renaming) {
+            finish(true, 'บันทึกข้อมูลเรียบร้อยแล้ว');
+            return;
+        }
+
+        // profiles is the source of truth for the name and enforces both
+        // uniqueness and the retired-name rule; metadata is only a display copy
+        return supabaseClient.from('profiles')
+            .update({ username: typedName })
+            .eq('id', profileLoadedUser.id)
+            .then(function (upd) {
+                if (upd.error) {
+                    let taken = (upd.error.message || '').indexOf('username_retired') !== -1
+                        ? 'ชื่อนี้เคยถูกใช้แล้ว ไม่สามารถนำกลับมาใช้ได้'
+                        : 'ชื่อผู้ใช้นี้ถูกใช้แล้ว กรุณาเลือกชื่ออื่น';
+                    $('#profileEmail').val(currentName);
+                    finish(false, taken);
+                    return;
+                }
+
+                return supabaseClient.auth.updateUser({ data: { username: typedName } }).then(function () {
+                    finish(true, 'เปลี่ยนชื่อผู้ใช้แล้ว ครั้งต่อไปให้เข้าสู่ระบบด้วยชื่อใหม่');
+                });
+            });
     });
 });
 

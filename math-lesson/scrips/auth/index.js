@@ -30,7 +30,28 @@ function resolveAuthIdentifier(input) {
         return { error: 'ชื่อผู้ใช้ต้องเป็น a-z, 0-9 หรือ _ ความยาว 3-20 ตัวอักษร' };
     }
 
-    return { email: username + AUTH_USERNAME_DOMAIN, username: username };
+    return { email: null, username: username };
+}
+
+// The account's address is random and permanent, so renaming never has to
+// change it — which matters because email changes are rejected on this project,
+// and a .invalid address could never confirm one anyway. It also means a freed
+// username is never blocked by a leftover address.
+function generateInternalAuthEmail() {
+    let id = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID().replace(/-/g, '')
+        : String(Date.now()) + Math.random().toString(36).slice(2, 12);
+    return 'u' + id + AUTH_USERNAME_DOMAIN;
+}
+
+// Usernames live in profiles now, so signing in needs a lookup. The function
+// only ever returns .invalid addresses, so this cannot expose a real email.
+function lookupAuthEmailForUsername(username) {
+    return supabaseClient
+        .rpc('auth_email_for_username', { p_username: username })
+        .then(function (result) {
+            return result.error ? null : result.data;
+        });
 }
 
 function mapAuthErrorToThai(message, usedUsername) {
@@ -147,15 +168,29 @@ $('#signinSubmitBtn').on('click', function () {
 
     $btn.prop('disabled', true).text('กำลังเข้าสู่ระบบ...');
 
-    supabaseClient.auth.signInWithPassword({ email: identity.email, password: password }).then(function (result) {
-        $btn.prop('disabled', false).text('เข้าสู่ระบบ');
+    let emailPromise = identity.email
+        ? Promise.resolve(identity.email)
+        : lookupAuthEmailForUsername(identity.username);
 
-        if (result.error) {
-            $error.text(mapAuthErrorToThai(result.error.message, !!identity.username));
+    emailPromise.then(function (email) {
+        if (!email) {
+            // unknown username: same wording as a bad password, so this cannot
+            // be used to discover which usernames exist
+            $btn.prop('disabled', false).text('เข้าสู่ระบบ');
+            $error.text('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
             return;
         }
 
-        bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+        return supabaseClient.auth.signInWithPassword({ email: email, password: password }).then(function (result) {
+            $btn.prop('disabled', false).text('เข้าสู่ระบบ');
+
+            if (result.error) {
+                $error.text(mapAuthErrorToThai(result.error.message, !!identity.username));
+                return;
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+        });
     });
 });
 
@@ -187,29 +222,73 @@ $('#registerSubmitBtn').on('click', function () {
 
     $btn.prop('disabled', true).text('กำลังสมัครสมาชิก...');
 
-    supabaseClient.auth.signUp({
-        email: identity.email,
-        password: password,
-        options: identity.username ? { data: { username: identity.username } } : undefined
-    }).then(function (result) {
+    let done = function (message) {
         $btn.prop('disabled', false).text('สมัครสมาชิก');
-
-        if (result.error) {
-            $error.text(mapAuthErrorToThai(result.error.message, !!identity.username));
+        if (message) {
+            $error.text(message);
             return;
         }
-
-        // Supabase can obscure a duplicate signup by returning a user with no
-        // identities instead of an error, so treat that as taken too.
-        let user = result.data.user;
-        if (user && user.identities && user.identities.length === 0) {
-            $error.text(identity.username
-                ? 'ชื่อผู้ใช้นี้ถูกใช้แล้ว กรุณาเข้าสู่ระบบแทน'
-                : 'อีเมลนี้ถูกใช้สมัครแล้ว กรุณาเข้าสู่ระบบแทน');
-            return;
-        }
-
         bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+    };
+
+    if (!identity.username) {
+        supabaseClient.auth.signUp({ email: identity.email, password: password }).then(function (result) {
+            if (result.error) {
+                done(mapAuthErrorToThai(result.error.message, false));
+                return;
+            }
+            let user = result.data.user;
+            // Supabase can obscure a duplicate by returning a user with no
+            // identities instead of an error, so treat that as taken too.
+            if (user && user.identities && user.identities.length === 0) {
+                done('อีเมลนี้ถูกใช้สมัครแล้ว กรุณาเข้าสู่ระบบแทน');
+                return;
+            }
+            done(null);
+        });
+        return;
+    }
+
+    // Checked up front so the common case fails before an account is created.
+    // The database still has the final say, since two people could pass this
+    // check at the same instant.
+    supabaseClient.rpc('username_available', { p_username: identity.username }).then(function (avail) {
+        if (!avail.error && avail.data === false) {
+            done('ชื่อผู้ใช้นี้ถูกใช้แล้ว');
+            return;
+        }
+
+        return supabaseClient.auth.signUp({
+            email: generateInternalAuthEmail(),
+            password: password,
+            options: { data: { username: identity.username } }
+        }).then(function (result) {
+            if (result.error) {
+                done(mapAuthErrorToThai(result.error.message, true));
+                return;
+            }
+
+            let user = result.data.user;
+            if (!user) {
+                done('เกิดข้อผิดพลาด กรุณาลองอีกครั้ง');
+                return;
+            }
+
+            return supabaseClient.from('profiles')
+                .insert({ id: user.id, username: identity.username })
+                .then(function (ins) {
+                    if (!ins.error) {
+                        done(null);
+                        return;
+                    }
+                    // The name was taken in the gap since the check. Sign back
+                    // out so the half-made account cannot be used under a name
+                    // it does not own.
+                    return supabaseClient.auth.signOut().then(function () {
+                        done('ชื่อผู้ใช้นี้ถูกใช้แล้ว กรุณาเลือกชื่ออื่น');
+                    });
+                });
+        });
     });
 });
 
