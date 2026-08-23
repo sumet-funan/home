@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="app-sidebar-footer">v1.12.0</div>
+      <div class="app-sidebar-footer">v1.13.0</div>
     </aside>
 
     <main class="app-main">
@@ -1293,11 +1293,16 @@
               <div class="calc-card">
                 <h3 class="profile-section-title"><i class="bi bi-person-badge"></i> ข้อมูลผู้ใช้</h3>
 
-                <label class="profile-label" for="profileEmail" id="profileIdentityLabel">อีเมล</label>
-                <input type="text" class="auth-input profile-readonly" id="profileEmail" readonly>
+                <label class="profile-label" for="profileUsername">ชื่อผู้ใช้ (ใช้เข้าสู่ระบบ)</label>
+                <input type="text" class="auth-input" id="profileUsername" placeholder="ยังไม่มีชื่อผู้ใช้"
+                  autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="20">
                 <p class="auth-note profile-username-note" id="profileUsernameNote" style="display: none;">
                   เปลี่ยนชื่อผู้ใช้ได้ แต่ชื่อเดิมจะใช้ไม่ได้อีกตลอดไป และต้องใช้ชื่อใหม่ในการเข้าสู่ระบบ
                 </p>
+
+                <label class="profile-label" for="profileEmail">อีเมล</label>
+                <input type="email" class="auth-input" id="profileEmail" placeholder="ไม่บังคับ" autocomplete="email">
+                <p class="auth-note" id="profileEmailNote"></p>
 
                 <label class="profile-label">ระดับชั้น</label>
                 <div class="mode-picker profile-grade-picker" id="profileGradePicker">
@@ -1395,13 +1400,14 @@
           </div>
 
           <div class="auth-tab-panel" id="authPanelRegister">
-            <input type="text" class="auth-input" id="registerIdentifier" placeholder="ชื่อผู้ใช้ หรือ อีเมล"
-              autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <input type="text" class="auth-input" id="registerIdentifier" placeholder="ชื่อผู้ใช้ (a-z, 0-9, _)"
+              autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="20">
+            <input type="email" class="auth-input" id="registerEmail" placeholder="อีเมล (ไม่บังคับ)" autocomplete="email">
             <input type="password" class="auth-input" id="registerPassword" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)" autocomplete="new-password">
             <input type="password" class="auth-input" id="registerPasswordConfirm" placeholder="ยืนยันรหัสผ่าน" autocomplete="new-password">
             <div class="auth-error" id="registerError"></div>
             <button type="button" class="auth-submit-btn" id="registerSubmitBtn">สมัครสมาชิก</button>
-            <p class="auth-note">ใช้ชื่อผู้ใช้ (a-z, 0-9, _) หรืออีเมลก็ได้<br>ถ้าใช้ชื่อผู้ใช้ จะกู้รหัสผ่านเองไม่ได้ ต้องให้ผู้ดูแลรีเซ็ตให้</p>
+            <p class="auth-note">เข้าสู่ระบบด้วยชื่อผู้ใช้ อีเมลเก็บไว้ติดต่อเท่านั้น<br>จำรหัสผ่านให้ดีนะ ถ้าลืมต้องให้ผู้ดูแลรีเซ็ตให้</p>
           </div>
 
           <button type="button" class="auth-guest-btn" data-bs-dismiss="modal">เข้าใช้แบบผู้เยี่ยมชม (Guest)</button>

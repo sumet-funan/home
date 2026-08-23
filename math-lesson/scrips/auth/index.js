@@ -73,6 +73,10 @@ function mapAuthErrorToThai(message, usedUsername) {
     return 'เกิดข้อผิดพลาด กรุณาลองอีกครั้ง';
 }
 
+function isInternalAuthAddress(email) {
+    return !!email && email.indexOf(AUTH_USERNAME_DOMAIN) !== -1;
+}
+
 // Username accounts must never show their internal .invalid address.
 function getAccountIdentityLabel(user) {
     let metadata = user.user_metadata || {};
@@ -118,7 +122,7 @@ function renderAccountUI(user) {
 
 function resetAuthModal() {
     $('.auth-error').text('');
-    $('#signinIdentifier, #signinPassword, #registerIdentifier, #registerPassword, #registerPasswordConfirm').val('');
+    $('#signinIdentifier, #signinPassword, #registerIdentifier, #registerEmail, #registerPassword, #registerPasswordConfirm').val('');
     $('#authTabPicker .mode-btn').removeClass('active');
     $('#authTabPicker .mode-btn[data-auth-tab="signin"]').addClass('active');
     $('.auth-tab-panel').removeClass('active');
@@ -207,6 +211,18 @@ $('#registerSubmitBtn').on('click', function () {
         $error.text(identity.error);
         return;
     }
+
+    // New accounts always sign in by username; the email is contact info only.
+    if (!identity.username) {
+        $error.text('ชื่อผู้ใช้ต้องเป็น a-z, 0-9 หรือ _ (กรอกอีเมลในช่องถัดไป)');
+        return;
+    }
+
+    let contactEmail = $('#registerEmail').val().trim();
+    if (contactEmail && contactEmail.indexOf('@') === -1) {
+        $error.text('รูปแบบอีเมลไม่ถูกต้อง');
+        return;
+    }
     if (!password) {
         $error.text('กรุณากรอกรหัสผ่าน');
         return;
@@ -275,7 +291,7 @@ $('#registerSubmitBtn').on('click', function () {
             }
 
             return supabaseClient.from('profiles')
-                .insert({ id: user.id, username: identity.username })
+                .insert({ id: user.id, username: identity.username, email: contactEmail || null })
                 .then(function (ins) {
                     if (!ins.error) {
                         done(null);

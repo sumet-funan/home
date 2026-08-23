@@ -17,16 +17,30 @@ function showProfileFeedback(feedbackId, isSuccess, message) {
 function loadProfileIntoForm(user) {
     let metadata = user.user_metadata || {};
 
-    // Username accounts must never be shown their internal .invalid address,
-    // and only they can be renamed: resolving a real-email account by username
-    // would mean handing out its email to anyone guessing names.
-    let isUsernameAccount = !!(user.user_metadata && user.user_metadata.username);
-    $('#profileIdentityLabel').text(isUsernameAccount ? 'ชื่อผู้ใช้' : 'อีเมล');
+    // An account signs in either by username (its auth address is an internal
+    // .invalid one, never shown) or by a real email set at registration. Only
+    // the former can use a username, because resolving a name to a real email
+    // would hand that address to anyone guessing names.
+    let signsInByUsername = isInternalAuthAddress(user.email);
+
+    $('#profileUsername')
+        .val((user.user_metadata && user.user_metadata.username) || '')
+        .prop('readonly', !signsInByUsername)
+        .toggleClass('profile-readonly', !signsInByUsername)
+        .attr('placeholder', signsInByUsername ? 'ชื่อผู้ใช้' : 'บัญชีนี้เข้าสู่ระบบด้วยอีเมล');
+    $('#profileUsernameNote').toggle(signsInByUsername);
+
+    // For username accounts the email is optional contact info only, and is
+    // stored in profiles rather than being the credential. For email accounts
+    // it *is* the credential, so it cannot be edited here (and email changes
+    // are rejected by this project anyway).
     $('#profileEmail')
-        .val(getAccountIdentityLabel(user))
-        .prop('readonly', !isUsernameAccount)
-        .toggleClass('profile-readonly', !isUsernameAccount);
-    $('#profileUsernameNote').toggle(isUsernameAccount);
+        .val(signsInByUsername ? (profileContactEmail || '') : user.email)
+        .prop('readonly', !signsInByUsername)
+        .toggleClass('profile-readonly', !signsInByUsername);
+    $('#profileEmailNote').text(signsInByUsername
+        ? 'ไม่บังคับ ใช้สำหรับติดต่อเท่านั้น ไม่ได้ใช้เข้าสู่ระบบ'
+        : 'บัญชีนี้ใช้อีเมลนี้เข้าสู่ระบบ จึงเปลี่ยนที่นี่ไม่ได้');
 
     let grade = metadata.grade || '';
     $('#profileGradePicker .mode-btn').removeClass('active');
@@ -41,6 +55,7 @@ function loadProfileIntoForm(user) {
 // success message the user just triggered.
 var profileLoadedUserId = null;
 var profileLoadedUser = null;
+var profileContactEmail = null;
 
 function applyProfileAuthState(user) {
     if (user) {
@@ -50,13 +65,19 @@ function applyProfileAuthState(user) {
         profileLoadedUser = user;
         if (profileLoadedUserId !== user.id) {
             profileLoadedUserId = user.id;
-            loadProfileIntoForm(user);
+            // contact email lives in profiles, so fetch it before filling the form
+            supabaseClient.from('profiles').select('email').eq('id', user.id).maybeSingle()
+                .then(function (result) {
+                    profileContactEmail = (!result.error && result.data) ? result.data.email : null;
+                    loadProfileIntoForm(user);
+                });
         }
         return;
     }
 
     profileLoadedUserId = null;
     profileLoadedUser = null;
+    profileContactEmail = null;
 
     $('#navGroupProfile').hide();
 
@@ -74,16 +95,25 @@ $('#profileGradePicker').on('click', '.mode-btn', function () {
 $('#profileSaveBtn').on('click', function () {
     let grade = $('#profileGradePicker .mode-btn.active').data('grade') || '';
     let $btn = $(this);
-    let isUsernameAccount = !$('#profileEmail').prop('readonly');
-    let typedName = $('#profileEmail').val().trim().toLowerCase();
+    let editable = !$('#profileUsername').prop('readonly');
+    let typedName = $('#profileUsername').val().trim().toLowerCase();
     let currentName = (profileLoadedUser && profileLoadedUser.user_metadata.username) || '';
-    let renaming = isUsernameAccount && typedName !== currentName;
+    let renaming = editable && typedName !== currentName;
+
+    let typedEmail = $('#profileEmail').val().trim();
+    let emailChanged = editable && typedEmail !== (profileContactEmail || '');
 
     if (renaming && !AUTH_USERNAME_PATTERN.test(typedName)) {
         // put the real name back: leaving invalid text in the field would block
         // every later save, including ones that only change the grade
-        $('#profileEmail').val(currentName);
+        $('#profileUsername').val(currentName);
         showProfileFeedback('feedbackProfile', false, 'ชื่อผู้ใช้ต้องเป็น a-z, 0-9 หรือ _ ความยาว 3-20 ตัวอักษร');
+        return;
+    }
+
+    if (emailChanged && typedEmail && typedEmail.indexOf('@') === -1) {
+        $('#profileEmail').val(profileContactEmail || '');
+        showProfileFeedback('feedbackProfile', false, 'รูปแบบอีเมลไม่ถูกต้อง');
         return;
     }
 
@@ -100,26 +130,41 @@ $('#profileSaveBtn').on('click', function () {
             return;
         }
 
-        if (!renaming) {
+        if (!renaming && !emailChanged) {
             finish(true, 'บันทึกข้อมูลเรียบร้อยแล้ว');
             return;
+        }
+
+        if (!renaming) {
+            return supabaseClient.from('profiles')
+                .update({ email: typedEmail || null })
+                .eq('id', profileLoadedUser.id)
+                .then(function (upd) {
+                    if (upd.error) {
+                        finish(false, 'บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง');
+                        return;
+                    }
+                    profileContactEmail = typedEmail || null;
+                    finish(true, 'บันทึกข้อมูลเรียบร้อยแล้ว');
+                });
         }
 
         // profiles is the source of truth for the name and enforces both
         // uniqueness and the retired-name rule; metadata is only a display copy
         return supabaseClient.from('profiles')
-            .update({ username: typedName })
+            .update({ username: typedName, email: typedEmail || null })
             .eq('id', profileLoadedUser.id)
             .then(function (upd) {
                 if (upd.error) {
                     let taken = (upd.error.message || '').indexOf('username_retired') !== -1
                         ? 'ชื่อนี้เคยถูกใช้แล้ว ไม่สามารถนำกลับมาใช้ได้'
                         : 'ชื่อผู้ใช้นี้ถูกใช้แล้ว กรุณาเลือกชื่ออื่น';
-                    $('#profileEmail').val(currentName);
+                    $('#profileUsername').val(currentName);
                     finish(false, taken);
                     return;
                 }
 
+                profileContactEmail = typedEmail || null;
                 return supabaseClient.auth.updateUser({ data: { username: typedName } }).then(function () {
                     finish(true, 'เปลี่ยนชื่อผู้ใช้แล้ว ครั้งต่อไปให้เข้าสู่ระบบด้วยชื่อใหม่');
                 });
