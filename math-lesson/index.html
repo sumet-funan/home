@@ -51,29 +51,10 @@
           </a>
         </div>
         <div class="nav-group">
-          <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-general"
-            aria-expanded="true" aria-controls="group-general">
-            <i class="bi bi-collection-fill"></i><span>ทั่วไป</span>
-            <i class="bi bi-chevron-down group-caret"></i>
-          </button>
-          <div class="collapse show nav-group-items" id="group-general">
-            <a class="nav-menu-item active" id="menu_plus" data-bs-toggle="list" href="#content_plus" role="tab"
-              aria-controls="content_plus" data-op="plus">
-              <i class="bi bi-plus-circle-fill"></i><span>บวก</span>
-            </a>
-            <a class="nav-menu-item" id="menu_minus" data-bs-toggle="list" href="#content_minus" role="tab"
-              aria-controls="content_minus" data-op="minus">
-              <i class="bi bi-dash-circle-fill"></i><span>ลบ</span>
-            </a>
-            <a class="nav-menu-item" id="menu_multiply" data-bs-toggle="list" href="#content_multiply" role="tab"
-              aria-controls="content_multiply" data-op="multiply">
-              <i class="bi bi-x-circle-fill"></i><span>คูณ</span>
-            </a>
-            <a class="nav-menu-item" id="menu_divide" data-bs-toggle="list" href="#content_divide" role="tab"
-              aria-controls="content_divide" data-op="divide">
-              <i class="bi bi-slash-circle-fill"></i><span>หาร</span>
-            </a>
-          </div>
+          <a class="nav-menu-item active" id="menu_speedquiz" data-bs-toggle="list" href="#content_speedquiz" role="tab"
+            aria-controls="content_speedquiz" data-op="speedquiz">
+            <i class="bi bi-stopwatch-fill"></i><span>ฝึกคำนวณเร็ว</span>
+          </a>
         </div>
 
         <div class="nav-group">
@@ -188,163 +169,12 @@
           </div>
         </div>
 
-        <div class="nav-group">
-          <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-speed"
-            aria-expanded="false" aria-controls="group-speed">
-            <i class="bi bi-stopwatch-fill"></i><span>ฝึกคำนวณเร็ว</span>
-            <i class="bi bi-chevron-down group-caret"></i>
-          </button>
-          <div class="collapse nav-group-items" id="group-speed">
-            <a class="nav-menu-item" id="menu_speedquiz" data-bs-toggle="list" href="#content_speedquiz" role="tab"
-              aria-controls="content_speedquiz" data-op="speedquiz">
-              <i class="bi bi-grid-3x3-gap-fill"></i><span>50 / 100 ข้อ</span>
-            </a>
-          </div>
-        </div>
       </div>
-      <div class="app-sidebar-footer">v2.4.0</div>
+      <div class="app-sidebar-footer">v3.0.0</div>
     </aside>
 
     <main class="app-main">
       <div class="tab-content">
-
-        <div class="tab-pane fade show active" id="content_plus" role="tabpanel" aria-labelledby="menu_plus">
-          <div class="operation-panel" data-op="plus">
-            <div class="panel-header">
-              <h2><i class="bi bi-plus-circle-fill"></i> บวก (Plus)</h2>
-              <p>ฝึกการบวกเลขให้แม่นยำ</p>
-            </div>
-            <div class="panel-body">
-              <div class="calc-card">
-                <input type="number" id="firstNumber" class="calc-input" placeholder="0" aria-label="First Number">
-                <div class="calc-symbol">+</div>
-                <input type="number" id="secondNumber" class="calc-input" placeholder="0" aria-label="Second Number">
-                <div class="calc-symbol">=</div>
-                <input type="number" id="resultNumber" class="calc-input calc-input-result" placeholder="?"
-                  aria-label="Result">
-                <button type="button" class="calc-submit" onclick="validatePlusResult()">
-                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
-                </button>
-                <div class="calc-feedback" id="feedbackPlus"></div>
-              </div>
-              <div class="side-panels">
-                <div class="side-panel" id="contentResult" style="display: none;">
-                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
-                  <div class="answer-list" id="resultList"></div>
-                </div>
-                <div class="side-panel" id="contentHistory" style="display: none;">
-                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
-                  <div class="answer-list" id="historyList"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tab-pane fade" id="content_minus" role="tabpanel" aria-labelledby="menu_minus">
-          <div class="operation-panel" data-op="minus">
-            <div class="panel-header">
-              <h2><i class="bi bi-dash-circle-fill"></i> ลบ (Minus)</h2>
-              <p>ฝึกการลบเลขให้แม่นยำ</p>
-            </div>
-            <div class="panel-body">
-              <div class="calc-card">
-                <input type="number" id="firstMinusNumber" class="calc-input" placeholder="0"
-                  aria-label="First Number">
-                <div class="calc-symbol">-</div>
-                <input type="number" id="secondMinusNumber" class="calc-input" placeholder="0"
-                  aria-label="Second Number">
-                <div class="calc-symbol">=</div>
-                <input type="number" id="resultMinusNumber" class="calc-input calc-input-result" placeholder="?"
-                  aria-label="Result">
-                <button type="button" class="calc-submit" onclick="validateMinusResult()">
-                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
-                </button>
-                <div class="calc-feedback" id="feedbackMinus"></div>
-              </div>
-              <div class="side-panels">
-                <div class="side-panel" id="contentMinusResult" style="display: none;">
-                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
-                  <div class="answer-list" id="resultMinusList"></div>
-                </div>
-                <div class="side-panel" id="contentMinusHistory" style="display: none;">
-                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
-                  <div class="answer-list" id="historyMinusList"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tab-pane fade" id="content_multiply" role="tabpanel" aria-labelledby="menu_multiply">
-          <div class="operation-panel" data-op="multiply">
-            <div class="panel-header">
-              <h2><i class="bi bi-x-circle-fill"></i> คูณ (Multiply)</h2>
-              <p>ฝึกการคูณเลขให้แม่นยำ</p>
-            </div>
-            <div class="panel-body">
-              <div class="calc-card">
-                <input type="number" id="firstMultiplyNumber" class="calc-input" placeholder="0"
-                  aria-label="First Number">
-                <div class="calc-symbol">&times;</div>
-                <input type="number" id="secondMultiplyNumber" class="calc-input" placeholder="0"
-                  aria-label="Second Number">
-                <div class="calc-symbol">=</div>
-                <input type="number" id="resultMultiplyNumber" class="calc-input calc-input-result" placeholder="?"
-                  aria-label="Result">
-                <button type="button" class="calc-submit" onclick="validateMultiplyResult()">
-                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
-                </button>
-                <div class="calc-feedback" id="feedbackMultiply"></div>
-              </div>
-              <div class="side-panels">
-                <div class="side-panel" id="contentMultiplyResult" style="display: none;">
-                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
-                  <div class="answer-list" id="resultMultiplyList"></div>
-                </div>
-                <div class="side-panel" id="contentMultiplyHistory" style="display: none;">
-                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
-                  <div class="answer-list" id="historyMultiplyList"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tab-pane fade" id="content_divide" role="tabpanel" aria-labelledby="menu_divide">
-          <div class="operation-panel" data-op="divide">
-            <div class="panel-header">
-              <h2><i class="bi bi-slash-circle-fill"></i> หาร (Divide)</h2>
-              <p>ฝึกการหารเลขให้แม่นยำ</p>
-            </div>
-            <div class="panel-body">
-              <div class="calc-card">
-                <input type="number" id="firstDivideNumber" class="calc-input" placeholder="0"
-                  aria-label="First Number">
-                <div class="calc-symbol">&divide;</div>
-                <input type="number" id="secondDivideNumber" class="calc-input" placeholder="0"
-                  aria-label="Second Number">
-                <div class="calc-symbol">=</div>
-                <input type="number" id="resultDivideNumber" class="calc-input calc-input-result" placeholder="?"
-                  aria-label="Result">
-                <button type="button" class="calc-submit" onclick="validateDivideResult()">
-                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
-                </button>
-                <div class="calc-feedback" id="feedbackDivide"></div>
-              </div>
-              <div class="side-panels">
-                <div class="side-panel" id="contentDivideResult" style="display: none;">
-                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
-                  <div class="answer-list" id="resultDivideList"></div>
-                </div>
-                <div class="side-panel" id="contentDivideHistory" style="display: none;">
-                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
-                  <div class="answer-list" id="historyDivideList"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <div class="tab-pane fade" id="content_p1_plus" role="tabpanel" aria-labelledby="menu_p1_plus">
           <div class="operation-panel" data-op="plus">
@@ -1200,7 +1030,7 @@
           </div>
         </div>
 
-        <div class="tab-pane fade" id="content_speedquiz" role="tabpanel" aria-labelledby="menu_speedquiz">
+        <div class="tab-pane fade show active" id="content_speedquiz" role="tabpanel" aria-labelledby="menu_speedquiz">
           <div class="operation-panel" data-op="speedquiz">
             <div class="panel-header">
               <h2><i class="bi bi-stopwatch-fill"></i> แบบฝึกคำนวณเร็ว</h2>
@@ -1631,10 +1461,6 @@
       }
     });
   </script>
-  <script type="text/javascript" src="scrips/plus/index.js"></script>
-  <script type="text/javascript" src="scrips/minus/index.js"></script>
-  <script type="text/javascript" src="scrips/multiply/index.js"></script>
-  <script type="text/javascript" src="scrips/divide/index.js"></script>
   <script type="text/javascript" src="scrips/p1plus/index.js"></script>
   <script type="text/javascript" src="scrips/p1minus/index.js"></script>
   <script type="text/javascript" src="scrips/p1compare/index.js"></script>

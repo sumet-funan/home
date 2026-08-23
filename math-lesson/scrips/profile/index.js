@@ -93,7 +93,7 @@ function applyProfileAuthState(user) {
 
     // signed out while sitting on the profile tab: fall back to the first lesson
     if ($('#content_profile').hasClass('active')) {
-        bootstrap.Tab.getOrCreateInstance(document.getElementById('menu_plus')).show();
+        bootstrap.Tab.getOrCreateInstance(document.getElementById('menu_speedquiz')).show();
     }
 }
 
