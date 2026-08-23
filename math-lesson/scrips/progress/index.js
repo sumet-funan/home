@@ -168,13 +168,26 @@ $(document).on('click', '.progress-row.is-expandable', function () {
 });
 
 function renderProgressQuiz(results) {
-    // best (lowest) time per mode+size, counting perfect runs only
+    // The two kinds mean opposite things: a fixed-count round is best when it
+    // is fastest, a timed one when the most answers were right. Mixing them
+    // would report a timed round as a 60-question run finished in exactly a
+    // minute, since its size is the duration and its time is always 60s.
     let bests = {};
+
     results.forEach(function (row) {
-        if (row.correct_count !== row.size) {
+        let timed = row.kind === 'timed';
+        let key = (timed ? 'timed_' : 'count_') + row.mode + '_' + row.size;
+
+        if (timed) {
+            if (!bests[key] || row.correct_count > bests[key].correct_count) {
+                bests[key] = row;
+            }
             return;
         }
-        let key = row.mode + '_' + row.size;
+
+        if (row.correct_count !== row.size) {
+            return;                       // only a perfect run is a real time
+        }
         if (!bests[key] || row.duration_ms < bests[key].duration_ms) {
             bests[key] = row;
         }
@@ -190,9 +203,13 @@ function renderProgressQuiz(results) {
     let symbols = { '+': '+', '-': '−', '*': '×' };
     let html = keys.sort().map(function (key) {
         let row = bests[key];
+        let timed = row.kind === 'timed';
         return '<div class="progress-row progress-row-compact">' +
-            '<span class="progress-row-name">' + symbols[row.mode] + ' &nbsp;' + row.size + ' ข้อ</span>' +
-            '<span class="progress-row-score">' + formatProgressDuration(row.duration_ms) + '</span>' +
+            '<span class="progress-row-name">' + symbols[row.mode] + ' &nbsp;' +
+                (timed ? '1 นาที' : row.size + ' ข้อ') + '</span>' +
+            '<span class="progress-row-score">' +
+                (timed ? row.correct_count + ' ข้อ' : formatProgressDuration(row.duration_ms)) +
+            '</span>' +
         '</div>';
     }).join('');
 

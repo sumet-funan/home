@@ -221,7 +221,7 @@ function fetchQuizBests(range) {
     let since = rangeStartISO(range);
     let query = supabaseClient
         .from('quiz_results')
-        .select('mode, size, duration_ms, correct_count');
+        .select('kind, mode, size, duration_ms, correct_count');
 
     if (since) {
         query = query.gte('created_at', since);
