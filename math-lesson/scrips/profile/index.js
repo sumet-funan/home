@@ -21,7 +21,6 @@ function loadProfileIntoForm(user) {
     let isUsernameAccount = !!(user.user_metadata && user.user_metadata.username);
     $('#profileIdentityLabel').text(isUsernameAccount ? 'ชื่อผู้ใช้' : 'อีเมล');
     $('#profileEmail').val(getAccountIdentityLabel(user));
-    $('#profileDisplayName').val(metadata.display_name || '');
 
     let grade = metadata.grade || '';
     $('#profileGradePicker .mode-btn').removeClass('active');
@@ -62,14 +61,13 @@ $('#profileGradePicker').on('click', '.mode-btn', function () {
 });
 
 $('#profileSaveBtn').on('click', function () {
-    let displayName = $('#profileDisplayName').val().trim();
     let grade = $('#profileGradePicker .mode-btn.active').data('grade') || '';
     let $btn = $(this);
 
     $btn.prop('disabled', true).text('กำลังบันทึก...');
 
     supabaseClient.auth.updateUser({
-        data: { display_name: displayName, grade: grade }
+        data: { grade: grade }
     }).then(function (result) {
         $btn.prop('disabled', false).text('บันทึกข้อมูล');
 

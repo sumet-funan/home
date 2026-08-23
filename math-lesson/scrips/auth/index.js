@@ -64,9 +64,11 @@ function getAccountIdentityLabel(user) {
         : email;
 }
 
+// The sign-in identity is the only name shown anywhere. A separate editable
+// display name meant a child could see one name in the sidebar while signing
+// in with another, and had no reliable way to find the name they log in with.
 function getAccountDisplayName(user) {
-    let metadata = user.user_metadata || {};
-    return metadata.display_name ? metadata.display_name : getAccountIdentityLabel(user);
+    return getAccountIdentityLabel(user);
 }
 
 function renderAccountUI(user) {
