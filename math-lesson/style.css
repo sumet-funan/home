@@ -1339,6 +1339,34 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   color: var(--muted);
 }
 
+.progress-review-name {
+  font-weight: 700;
+  font-size: .9rem;
+  color: var(--text);
+}
+
+.progress-review-reason {
+  margin-left: auto;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* sits on the sidebar item so a child sees there is something waiting without
+   having to open the page */
+.nav-review-badge {
+  margin-left: auto;
+  min-width: 20px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #f97316;
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 800;
+  text-align: center;
+}
+
 .progress-fix-btn {
   flex-shrink: 0;
   margin-left: 10px;

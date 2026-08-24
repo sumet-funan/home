@@ -232,6 +232,73 @@ $(document).on('click', '.progress-fix-btn', function (e) {
     }
 });
 
+// What needs revisiting is worked out from data already recorded -- how long
+// since a lesson was practised, and how accurate it was -- rather than kept as
+// scheduling state. Nothing is stored, so there is nothing to drift.
+const REVIEW_STALE_DAYS = 3;
+const REVIEW_WEAK_ACCURACY = 70;
+const REVIEW_MAX_SHOWN = 5;
+
+function daysSince(iso) {
+    if (!iso) {
+        return Infinity;
+    }
+    return Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+}
+
+function buildReviewList(stats) {
+    return stats
+        .filter(function (row) { return LESSON_LABELS[row.lesson_id]; })
+        .map(function (row) {
+            let days = daysSince(row.last_practiced_at);
+            let accuracy = +row.accuracy_pct;
+            let reasons = [];
+
+            if (days >= REVIEW_STALE_DAYS) {
+                reasons.push('ไม่ได้ฝึก ' + days + ' วัน');
+            }
+            if (accuracy < REVIEW_WEAK_ACCURACY) {
+                reasons.push('ความแม่นยำ ' + accuracy + '%');
+            }
+
+            // days carry most of the weight; low accuracy adds up to 10 more,
+            // so a weak lesson surfaces sooner but a long gap still wins
+            return {
+                lessonId: row.lesson_id,
+                reasons: reasons,
+                score: days + (100 - accuracy) / 10
+            };
+        })
+        .filter(function (row) { return row.reasons.length; })
+        .sort(function (a, b) { return b.score - a.score; })
+        .slice(0, REVIEW_MAX_SHOWN);
+}
+
+function renderProgressReview(stats) {
+    let rows = buildReviewList(stats);
+
+    // Capped and hidden when empty: a wall of overdue topics is what makes
+    // people abandon review lists, and "nothing to review" needs no card.
+    $('#progressReviewCard').toggle(rows.length > 0);
+    $('#menu_progress .nav-review-badge').remove();
+    if (!rows.length) {
+        return;
+    }
+
+    $('#menu_progress').append('<span class="nav-review-badge">' + rows.length + '</span>');
+
+    $('#progressReviewList').html(rows.map(function (row) {
+        let menuId = lessonMenuId(row.lessonId);
+        return '<div class="progress-row progress-row-compact">' +
+            '<span class="progress-review-name">' + LESSON_LABELS[row.lessonId] + '</span>' +
+            '<span class="progress-review-reason">' + row.reasons.join(' · ') + '</span>' +
+            (menuId
+                ? '<button type="button" class="progress-fix-btn" data-menu-id="' + menuId + '">ทบทวน</button>'
+                : '') +
+        '</div>';
+    }).join(''));
+}
+
 function renderProgressMistakes(rows) {
     if (!rows.length) {
         $('#progressMistakeList').html('<p class="progress-empty">' +
@@ -300,6 +367,10 @@ function refreshProgressPage() {
         renderProgressLessons(stats);
     });
 
+    // Always all-time, whatever range is selected: "not practised for 5 days"
+    // is meaningless inside a "today" filter, which would list every lesson.
+    fetchLessonStats('all').then(renderProgressReview);
+
     fetchQuizBests(range).then(function (rows) {
         if (progressRange !== range) {
             return;
@@ -331,3 +402,16 @@ $('#progressRangePicker').on('click', '.mode-btn', function () {
 
 // Recompute when the page is opened so it always reflects the latest answers.
 $(document).on('shown.bs.tab', '#menu_progress', refreshProgressPage);
+
+// The badge has to be there before the page is opened, or it could never do its
+// job of telling a child there is something to come back to.
+supabaseClient.auth.onAuthStateChange(function (event, session) {
+    if (!session) {
+        $('#menu_progress .nav-review-badge').remove();
+        $('#progressReviewCard').hide();
+        return;
+    }
+    if (typeof fetchLessonStats === 'function') {
+        fetchLessonStats('all').then(renderProgressReview);
+    }
+});
