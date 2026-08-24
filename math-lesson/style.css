@@ -1333,6 +1333,20 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   font-style: italic;
 }
 
+.progress-attempt-time {
+  flex-shrink: 0;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* well above this child's usual pace for this lesson: the fact is being worked
+   out rather than recalled, which accuracy alone never shows */
+.progress-attempt-time.is-slow {
+  color: #b45309;
+}
+
 .progress-attempt-date {
   flex-shrink: 0;
   font-size: .75rem;

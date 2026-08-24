@@ -118,12 +118,33 @@ function renderProgressLessons(stats) {
             '<div class="progress-bar-track">' +
                 '<div class="progress-bar-fill ' + accuracyClass(pct) + '" style="width: ' + pct + '%;"></div>' +
             '</div>' +
-            '<div class="progress-row-meta">ฝึกล่าสุด ' + formatProgressDate(row.last_practiced_at) + '</div>' +
+            '<div class="progress-row-meta">ฝึกล่าสุด ' + formatProgressDate(row.last_practiced_at) +
+                (row.avg_response_ms ? ' · เฉลี่ย ' + formatResponseTime(row.avg_response_ms) + '/ข้อ' : '') +
+            '</div>' +
             '<div class="progress-attempts" style="display: none;"></div>' +
         '</div>';
     }).join('');
 
     $('#progressLessonList').html(html);
+}
+
+function formatResponseTime(ms) {
+    let seconds = ms / 1000;
+    return (seconds >= 10 ? Math.round(seconds) : Math.round(seconds * 10) / 10) + ' วิ';
+}
+
+// Slow relative to how this child usually answers this lesson, not a fixed
+// number of seconds: thirty seconds on a word problem is fine, on 7x8 it is not.
+function slowResponseThreshold(rows) {
+    let times = rows
+        .filter(function (r) { return r.is_correct && r.response_ms; })
+        .map(function (r) { return r.response_ms; })
+        .sort(function (a, b) { return a - b; });
+
+    if (times.length < 5) {
+        return Infinity;      // too little to say what normal looks like yet
+    }
+    return times[Math.floor(times.length / 2)] * 2;
 }
 
 function renderLessonAttempts($container, rows) {
@@ -132,13 +153,20 @@ function renderLessonAttempts($container, rows) {
         return;
     }
 
+    let slowFrom = slowResponseThreshold(rows);
+
     let html = rows.map(function (row) {
         let expression = row.expression
             ? $('<div>').text(row.expression).html()
             : '<span class="progress-attempt-noexpr">(ไม่ได้บันทึกรายละเอียด)</span>';
+        let slow = row.is_correct && row.response_ms && row.response_ms >= slowFrom;
         return '<div class="progress-attempt ' + (row.is_correct ? 'is-correct' : 'is-incorrect') + '">' +
             '<i class="bi ' + (row.is_correct ? 'bi-check-circle-fill' : 'bi-x-circle-fill') + '"></i>' +
             '<span class="progress-attempt-expr">' + expression + '</span>' +
+            (row.response_ms
+                ? '<span class="progress-attempt-time' + (slow ? ' is-slow' : '') + '">' +
+                      formatResponseTime(row.response_ms) + '</span>'
+                : '') +
             '<span class="progress-attempt-date">' + formatProgressDate(row.created_at) + '</span>' +
         '</div>';
     }).join('');

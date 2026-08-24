@@ -113,7 +113,7 @@ function fetchFixedMistakeCount(range) {
     });
 }
 
-function recordAttempt(lessonId, isCorrect, expression) {
+function recordAttempt(lessonId, isCorrect, expression, responseMs) {
     if (!currentUserId || !lessonId) {
         return;
     }
@@ -122,7 +122,8 @@ function recordAttempt(lessonId, isCorrect, expression) {
         user_id: currentUserId,
         lesson_id: lessonId,
         is_correct: !!isCorrect,
-        expression: expression || null
+        expression: expression || null,
+        response_ms: typeof responseMs === 'number' ? responseMs : null
     };
 
     supabaseClient.from('attempts').insert(row).then(function (result) {
@@ -260,7 +261,7 @@ function fetchLessonAttempts(lessonId, limit) {
 
     return supabaseClient
         .from('attempts')
-        .select('is_correct, expression, created_at')
+        .select('is_correct, expression, created_at, response_ms')
         .eq('lesson_id', lessonId)
         .order('created_at', { ascending: false })
         .limit(limit || 50)

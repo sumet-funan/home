@@ -170,7 +170,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v3.4.0</div>
+      <div class="app-sidebar-footer">v3.5.0</div>
     </aside>
 
     <main class="app-main">
@@ -1351,12 +1351,35 @@
     // The expression is read back from that chip rather than passed in: each
     // lesson builds it differently (some from an `expr` field, some inline from
     // separate numbers), and the rendered chip is the one place they all agree.
+    // How long a question took, measured from when the child arrived at it: the
+    // clock restarts when a lesson is opened and after every answer, since a new
+    // question is put up straight away. No lesson module needs to take part.
+    let questionShownAt = Date.now();
+
+    function resetQuestionTimer() {
+      questionShownAt = Date.now();
+    }
+
+    // Beyond a minute they went and did something else, so the number would
+    // measure the interruption rather than the thinking. Recording nothing is
+    // better than recording something untrue.
+    const MAX_TRACKED_RESPONSE_MS = 60000;
+
+    function takeResponseMs() {
+      let elapsed = Date.now() - questionShownAt;
+      resetQuestionTimer();
+      return elapsed > MAX_TRACKED_RESPONSE_MS ? null : elapsed;
+    }
+
+    $(document).on('shown.bs.tab', '[data-bs-toggle="list"]', resetQuestionTimer);
+
     function recordHistoryAttempt(lessonId, isCorrect, historyListId) {
+      let responseMs = takeResponseMs();
       if (typeof recordAttempt !== 'function') {
         return;
       }
       let expression = $('#' + historyListId).children().last().find('.answer-expr').text().trim();
-      recordAttempt(lessonId, isCorrect, expression);
+      recordAttempt(lessonId, isCorrect, expression, responseMs);
     }
 
 
