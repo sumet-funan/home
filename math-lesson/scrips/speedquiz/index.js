@@ -23,13 +23,17 @@ function speedQuizQuestionCount() {
 // Shows the "leave running quiz?" modal only if a round is in progress;
 // otherwise runs the action immediately. On confirm, hides the modal then
 // runs the action.
-function confirmSpeedQuizLeave(onConfirm) {
+function confirmSpeedQuizLeave(onConfirm, message, confirmLabel) {
     if (!speedQuizObj.running) {
         onConfirm();
         return;
     }
 
     let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('speedQuizLeaveModal'));
+
+    $('#speedQuizLeaveMessage').text(message ||
+        'กำลังทำแบบฝึกคำนวณเร็วอยู่ ถ้าออกตอนนี้ความคืบหน้าจะหายไป ต้องการออกจากหน้านี้หรือไม่?');
+    $('#speedQuizLeaveConfirmBtn').text(confirmLabel || 'ออกจากหน้านี้');
 
     $('#speedQuizLeaveConfirmBtn').off('click.speedQuizLeave').on('click.speedQuizLeave', function () {
         modal.hide();
@@ -302,6 +306,7 @@ function finishSpeedQuiz(endedByTimeout) {
     clearInterval(speedQuizObj.timerInterval);
     updateSpeedQuizTimerDisplay();
     $('#speedQuizSubmitBtn').hide();
+    applySpeedQuizStartButton();
     $('body').removeClass('sq-running');
 
     let elapsed = Date.now() - speedQuizObj.startTime;
@@ -360,8 +365,35 @@ function finishSpeedQuiz(endedByTimeout) {
     showSpeedQuizFeedback(correctCount, elapsed, isNewRecord, answeredCount, !!endedByTimeout);
 }
 
+// One button, two jobs: start a round, or abandon the one in progress. It used
+// to restart silently while running, which is a surprising thing for the button
+// you just pressed to begin to do.
+function applySpeedQuizStartButton() {
+    let running = speedQuizObj.running;
+    $('#speedQuizStartBtn')
+        .toggleClass('is-stop', running)
+        .html(running
+            ? 'หยุดทำโจทย์ <i class="bi bi-stop-fill"></i>'
+            : 'เริ่มทำโจทย์ <i class="bi bi-play-fill"></i>');
+}
+
+function stopSpeedQuizRound() {
+    // abandons without marking: stopping is not the same as submitting, and
+    // scoring a round the child chose to bin would record a result they never
+    // meant to set
+    resetSpeedQuizForNewSelection();
+}
+
 function startSpeedQuiz() {
-    confirmSpeedQuizLeave(beginSpeedQuizRound);
+    if (speedQuizObj.running) {
+        confirmSpeedQuizLeave(
+            stopSpeedQuizRound,
+            'ถ้าหยุดตอนนี้ ข้อที่ทำไว้จะหายไปและจะไม่ถูกตรวจ ต้องการหยุดหรือไม่?',
+            'หยุดทำโจทย์'
+        );
+        return;
+    }
+    beginSpeedQuizRound();
 }
 
 function beginSpeedQuizRound() {
@@ -380,6 +412,7 @@ function beginSpeedQuizRound() {
     speedQuizObj.timerInterval = setInterval(updateSpeedQuizTimerDisplay, 250);
 
     $('#speedQuizSubmitBtn').show();
+    applySpeedQuizStartButton();
     $('body').addClass('sq-running');
     $('.speed-quiz-input[data-index="0"]').trigger('focus');
 }
@@ -388,6 +421,7 @@ function resetSpeedQuizForNewSelection() {
     clearInterval(speedQuizObj.timerInterval);
     speedQuizObj.running = false;
     $('#speedQuizSubmitBtn').hide();
+    applySpeedQuizStartButton();
     $('body').removeClass('sq-running');
     $('#speedQuizTimer')
         .removeClass('is-running-out')

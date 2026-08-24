@@ -786,6 +786,14 @@ body {
   background: var(--card-bg);
 }
 
+/* Same button, opposite meaning while a round is running, so it must not keep
+   looking like the accent-coloured "go" button. */
+#speedQuizStartBtn.is-stop {
+  background: var(--bg);
+  color: #dc2626;
+  box-shadow: inset 0 0 0 2px #dc2626;
+}
+
 /* Pinned to the bottom of the screen so it is reachable from any row without
    scrolling to find it. Inset from the left by the sidebar so it spans the
    content area rather than sitting under the menu. */
