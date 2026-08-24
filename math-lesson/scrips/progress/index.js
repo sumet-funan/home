@@ -8,6 +8,7 @@ const LESSON_LABELS = {
     p1plus: 'บวก (ป.1)',
     p1minus: 'ลบ (ป.1)',
     p1compare: 'เปรียบเทียบจำนวน (ป.1)',
+    p1numberbond: 'คู่จำนวน (ป.1)',
     p1pattern: 'แบบรูป (ป.1)',
     p1placevalue: 'หลักหน่วย/หลักสิบ (ป.1)',
     p1shape: 'รูปเรขาคณิต (ป.1)',

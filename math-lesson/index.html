@@ -76,6 +76,10 @@
               aria-controls="content_p1_compare" data-op="compare">
               <i class="bi bi-arrow-left-right"></i><span>เปรียบเทียบจำนวน</span>
             </a>
+            <a class="nav-menu-item" id="menu_p1_numberbond" data-bs-toggle="list" href="#content_p1_numberbond"
+              role="tab" aria-controls="content_p1_numberbond" data-op="numberbond">
+              <i class="bi bi-puzzle-fill"></i><span>คู่จำนวน</span>
+            </a>
             <a class="nav-menu-item" id="menu_p1_pattern" data-bs-toggle="list" href="#content_p1_pattern" role="tab"
               aria-controls="content_p1_pattern" data-op="pattern">
               <i class="bi bi-list-ol"></i><span>แบบรูป</span>
@@ -170,7 +174,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v3.5.0</div>
+      <div class="app-sidebar-footer">v3.6.0</div>
     </aside>
 
     <main class="app-main">
@@ -290,6 +294,53 @@
                 <div class="side-panel" id="contentCompareHistory" style="display: none;">
                   <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyCompareList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p1_numberbond" role="tabpanel" aria-labelledby="menu_p1_numberbond">
+          <div class="operation-panel" data-op="numberbond">
+            <div class="panel-header">
+              <h2><i class="bi bi-puzzle-fill"></i> คู่จำนวน (ป.1)</h2>
+              <p>เติมตัวเลขที่หายไปให้สองจำนวนรวมกันได้ตามที่กำหนด</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="numberBondModePicker">
+                <button type="button" class="mode-btn" data-mode="5">รวมได้ 5</button>
+                <button type="button" class="mode-btn active" data-mode="10">รวมได้ 10</button>
+                <button type="button" class="mode-btn" data-mode="20">รวมได้ 20</button>
+              </div>
+
+              <div class="calc-card">
+                <div class="bond-hint" id="numberBondTotalHint">รวมกันได้ 10</div>
+                <div class="bond-equation">
+                  <span class="bond-slot" id="numberBondSlotFirst">
+                    <span class="bond-num" id="numberBondKnownFirst">7</span>
+                  </span>
+                  <span class="bond-op">+</span>
+                  <span class="bond-slot" id="numberBondSlotSecond">
+                    <input type="number" id="numberBondAnswerNumber" class="calc-input bond-answer-input"
+                      placeholder="?" aria-label="Answer">
+                    <span class="bond-num" id="numberBondKnownSecond" style="display: none;"></span>
+                  </span>
+                  <span class="bond-op">=</span>
+                  <span class="bond-num bond-target" id="numberBondTarget">10</span>
+                </div>
+                <button type="button" class="calc-submit" onclick="validateNumberBondResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackNumberBond"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentNumberBondResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultNumberBondList"></div>
+                </div>
+                <div class="side-panel" id="contentNumberBondHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyNumberBondList"></div>
                 </div>
               </div>
             </div>
@@ -1499,6 +1550,7 @@
   <script type="text/javascript" src="scrips/p1plus/index.js"></script>
   <script type="text/javascript" src="scrips/p1minus/index.js"></script>
   <script type="text/javascript" src="scrips/p1compare/index.js"></script>
+  <script type="text/javascript" src="scrips/p1numberbond/index.js"></script>
   <script type="text/javascript" src="scrips/p1pattern/index.js"></script>
   <script type="text/javascript" src="scrips/p1placevalue/index.js"></script>
   <script type="text/javascript" src="scrips/p1shape/index.js"></script>

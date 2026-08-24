@@ -68,6 +68,8 @@
 
   --speedquiz: #4338ca;
   --speedquiz-bg: #eef2ff;
+  --numberbond: #7c3aed;
+  --numberbond-bg: #f3edff;
   --profile: #0891b2;
   --profile-bg: #ecfeff;
   --progress: #7c3aed;
@@ -300,6 +302,7 @@ body {
 .nav-menu-item[data-op="money"] { --accent: var(--money); --accent-bg: var(--money-bg); }
 .nav-menu-item[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
 .nav-menu-item[data-op="speedquiz"] { --accent: var(--speedquiz); --accent-bg: var(--speedquiz-bg); }
+.nav-menu-item[data-op="numberbond"] { --accent: var(--numberbond); --accent-bg: var(--numberbond-bg); }
 .nav-menu-item[data-op="profile"] { --accent: var(--profile); --accent-bg: var(--profile-bg); }
 .nav-menu-item[data-op="progress"] { --accent: var(--progress); --accent-bg: var(--progress-bg); }
 
@@ -359,6 +362,7 @@ body {
 .operation-panel[data-op="money"] { --accent: var(--money); --accent-bg: var(--money-bg); }
 .operation-panel[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
 .operation-panel[data-op="speedquiz"] { --accent: var(--speedquiz); --accent-bg: var(--speedquiz-bg); }
+.operation-panel[data-op="numberbond"] { --accent: var(--numberbond); --accent-bg: var(--numberbond-bg); }
 .operation-panel[data-op="profile"] { --accent: var(--profile); --accent-bg: var(--profile-bg); }
 .operation-panel[data-op="progress"] { --accent: var(--progress); --accent-bg: var(--progress-bg); }
 
@@ -1613,6 +1617,92 @@ input[type=number] {
   padding: 0 6px;
 }
 
+/* ---------- number bonds (p1) ---------- */
+
+.bond-hint {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.bond-equation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.bond-slot {
+  display: flex;
+  align-items: center;
+}
+
+.bond-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  height: 64px;
+  padding: 0 10px;
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  border: 2px solid var(--border);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.bond-num.bond-target {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.bond-op {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.calc-input.bond-answer-input {
+  width: 100px;
+  min-width: 100px;
+  flex: 0 0 auto;
+  height: 64px;
+  padding: 0 6px;
+}
+
+
+/* keep "? + 8 = 20" on one line on phones -- wrapping drops the total onto its
+   own row and leaves the "=" dangling, which reads as a different question */
+@media (max-width: 480px) {
+  .bond-equation {
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .bond-num {
+    min-width: 52px;
+    height: 58px;
+    padding: 0 6px;
+    font-size: 1.4rem;
+  }
+
+  .bond-op {
+    font-size: 1.3rem;
+  }
+
+  .calc-input.bond-answer-input {
+    width: 72px;
+    min-width: 72px;
+    height: 58px;
+  }
+}
+
 /* ---------- word question (percentage / gcf-lcm) ---------- */
 
 .word-question {
@@ -2109,6 +2199,7 @@ input[type=number] {
     --money-bg: #2c2007;
     --wordproblem-bg: #052e22;
     --speedquiz-bg: #1a1740;
+    --numberbond-bg: #241a3d;
     --profile-bg: #062c33;
     --progress-bg: #241a45;
   }
