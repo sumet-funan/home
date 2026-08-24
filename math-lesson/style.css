@@ -1469,7 +1469,8 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   cursor: default;
 }
 
-.profile-grade-picker {
+.profile-grade-picker,
+.profile-picker {
   justify-content: flex-start;
   margin-top: 0;
 }

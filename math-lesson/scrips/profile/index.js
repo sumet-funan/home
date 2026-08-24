@@ -56,6 +56,12 @@ function loadProfileIntoForm(user) {
         $('#profileDailyGoal').val(getDailyGoal());
     }
 
+    if (typeof isReviewEnabled === 'function') {
+        let review = isReviewEnabled() ? 'on' : 'off';
+        $('#profileReviewPicker .mode-btn').removeClass('active');
+        $('#profileReviewPicker .mode-btn[data-review="' + review + '"]').addClass('active');
+    }
+
     $('#profileNewPassword, #profileNewPasswordConfirm').val('');
     $('#feedbackProfile, #feedbackProfilePassword').removeClass('show is-correct is-incorrect').text('');
 }
@@ -99,6 +105,11 @@ function applyProfileAuthState(user) {
 
 $('#profileGradePicker').on('click', '.mode-btn', function () {
     $('#profileGradePicker .mode-btn').removeClass('active');
+    $(this).addClass('active');
+});
+
+$('#profileReviewPicker').on('click', '.mode-btn', function () {
+    $('#profileReviewPicker .mode-btn').removeClass('active');
     $(this).addClass('active');
 });
 
@@ -178,8 +189,13 @@ $('#profileSaveBtn').on('click', function () {
         return;
     }
 
-    // The daily goal is a local preference, saved whether or not the account
-    // save below succeeds, and it applies to guests too.
+    // Both of these are local preferences, saved whether or not the account
+    // save below succeeds, and they apply to guests too.
+    if (typeof setReviewEnabled === 'function') {
+        setReviewEnabled($('#profileReviewPicker .mode-btn.active').data('review') !== 'off');
+        applyReviewVisibility();
+    }
+
     if (typeof setDailyGoal === 'function') {
         let typedGoal = parseInt($('#profileDailyGoal').val(), 10);
         if (!isNaN(typedGoal) && typedGoal >= 1 && typedGoal <= 500) {

@@ -268,6 +268,41 @@ const REVIEW_STALE_DAYS = 3;
 const REVIEW_WEAK_ACCURACY = 70;
 const REVIEW_MAX_SHOWN = 5;
 
+// Whether the card is shown at all. Kept in localStorage like the daily goal,
+// so it needs no migration and works signed out; absent means shown, so nobody
+// loses the card by not having an opinion about it.
+const REVIEW_ENABLED_KEY = 'mathLessonReviewEnabled';
+
+function isReviewEnabled() {
+    return localStorage.getItem(REVIEW_ENABLED_KEY) !== 'off';
+}
+
+function setReviewEnabled(enabled) {
+    try {
+        localStorage.setItem(REVIEW_ENABLED_KEY, enabled ? 'on' : 'off');
+    } catch (e) {
+        // storage unavailable: showing the card is the safe default
+    }
+}
+
+function hideProgressReview() {
+    $('#progressReviewCard').hide();
+    $('#menu_progress .nav-review-badge').remove();
+}
+
+// Applied the moment the setting is saved rather than at the next page open:
+// the nav badge sits outside the progress page, so leaving it up would point a
+// child at a card that is no longer there.
+function applyReviewVisibility() {
+    if (!isReviewEnabled()) {
+        hideProgressReview();
+        return;
+    }
+    if (typeof fetchLessonStats === 'function') {
+        fetchLessonStats('all').then(renderProgressReview);
+    }
+}
+
 function daysSince(iso) {
     if (!iso) {
         return Infinity;
@@ -304,6 +339,11 @@ function buildReviewList(stats) {
 }
 
 function renderProgressReview(stats) {
+    if (!isReviewEnabled()) {
+        hideProgressReview();
+        return;
+    }
+
     let rows = buildReviewList(stats);
 
     // Capped and hidden when empty: a wall of overdue topics is what makes
@@ -436,8 +476,7 @@ $(document).on('shown.bs.tab', '#menu_progress', refreshProgressPage);
 // job of telling a child there is something to come back to.
 supabaseClient.auth.onAuthStateChange(function (event, session) {
     if (!session) {
-        $('#menu_progress .nav-review-badge').remove();
-        $('#progressReviewCard').hide();
+        hideProgressReview();
         return;
     }
     if (typeof fetchLessonStats === 'function') {

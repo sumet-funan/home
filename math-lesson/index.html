@@ -174,7 +174,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v3.6.0</div>
+      <div class="app-sidebar-footer">v3.7.0</div>
     </aside>
 
     <main class="app-main">
@@ -1246,6 +1246,13 @@
                 <label class="profile-label" for="profileDailyGoal">เป้าหมายต่อวัน (ข้อ)</label>
                 <input type="number" class="auth-input" id="profileDailyGoal" min="1" max="500" step="1">
                 <p class="auth-note">ไว้ให้ตั้งใจทำให้ถึง ไม่ได้จำกัดการเล่น ทำเกินได้เสมอ</p>
+
+                <label class="profile-label">การ์ด "ควรทบทวน" ในหน้าความก้าวหน้า</label>
+                <div class="mode-picker profile-picker" id="profileReviewPicker">
+                  <button type="button" class="mode-btn active" data-review="on">แสดง</button>
+                  <button type="button" class="mode-btn" data-review="off">ซ่อน</button>
+                </div>
+                <p class="auth-note">ถ้าเลือกซ่อน จะไม่แสดงการ์ดควรทบทวนและตัวเลขแจ้งเตือนที่เมนูความก้าวหน้า</p>
 
                 <label class="profile-label">ระดับชั้น</label>
                 <div class="mode-picker profile-grade-picker" id="profileGradePicker">
