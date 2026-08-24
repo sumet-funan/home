@@ -641,13 +641,38 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Sheet layout: each question is its own small card -- first number, operator
-   with the second number, then the answer box under a rule, the way it is
-   written on paper. auto-fill wraps them to fit, so nothing scrolls sideways. */
+/* Sheet layout: each question is its own small card -- the two numbers stacked,
+   then the answer box under a rule, the way it is written on paper. The sign is
+   not repeated per card, so they pack tighter and more fit per row. */
 .speed-quiz-sheet {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+  gap: 8px;
+}
+
+/* Stays in view while scrolling: the cards no longer carry the sign, so this is
+   the only way to check the operation partway down a long sheet. */
+.sq-operator-hint {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-bottom: 10px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: .85rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.sq-hint-symbol {
+  font-size: 1.15rem;
+  font-weight: 800;
 }
 
 /* Table layout: the original shared-headers grid. separate (not collapse)
@@ -722,58 +747,40 @@ body {
 }
 
 .speed-quiz-item {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 8px 10px 10px;
+  padding: 6px 8px 8px;
   border-radius: var(--radius-sm);
   background: var(--bg);
   border: 1px solid var(--border);
 }
 
-.sq-index {
-  position: absolute;
-  top: 4px;
-  left: 6px;
-  font-size: .62rem;
-  font-weight: 700;
-  color: var(--muted);
-  opacity: .75;
-}
-
 .sq-first,
 .sq-second {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text);
-  line-height: 1.35;
+  line-height: 1.3;
   font-variant-numeric: tabular-nums;
 }
 
 .sq-second {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
   width: 100%;
-  justify-content: space-between;
-  padding-bottom: 4px;
+  text-align: right;
+  padding-bottom: 3px;
   border-bottom: 2px solid var(--accent);
-  margin-bottom: 6px;
-}
-
-.sq-op {
-  color: var(--accent);
-  font-weight: 800;
+  margin-bottom: 5px;
 }
 
 .speed-quiz-sheet input {
   width: 100%;
-  height: 40px;
+  height: 36px;
+  padding: 0 2px;
   border: none;
   border-radius: var(--radius-sm);
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text);
   background: var(--card-bg);

@@ -119,19 +119,31 @@ function speedQuizInputHtml(index) {
         'class="speed-quiz-input" data-index="' + index + '">';
 }
 
-function renderSpeedQuizSheet() {
-    let symbol = speedQuizSymbol();
+const SPEED_QUIZ_MODE_NAMES = { '+': 'บวก', '-': 'ลบ', '*': 'คูณ' };
 
-    let html = speedQuizObj.questions.map(function (q, i) {
+function renderSpeedQuizSheet() {
+    // The sign is not repeated on every card -- the whole round uses one
+    // operation -- so it is shown once in a chip that stays in view while
+    // scrolling, or a child partway down has no way to check which it is.
+    // It lives outside the grid wrapper: that wrapper scrolls horizontally for
+    // the table layout, and a sticky child sticks to its scroll container
+    // rather than the page, so inside it the chip just scrolled away.
+    $('#speedQuizOperatorHint')
+        .html('<span class="sq-hint-symbol">' + speedQuizSymbol() + '</span>' +
+              (SPEED_QUIZ_MODE_NAMES[speedQuizObj.mode] || ''))
+        .show();
+
+    let cards = speedQuizObj.questions.map(function (q, i) {
         return '<div class="speed-quiz-item">' +
-            '<span class="sq-index">' + (i + 1) + '</span>' +
             '<span class="sq-first">' + q.a + '</span>' +
-            '<span class="sq-second"><span class="sq-op">' + symbol + '</span>' + q.b + '</span>' +
+            '<span class="sq-second">' + q.b + '</span>' +
             speedQuizInputHtml(i) +
         '</div>';
     }).join('');
 
-    $('#speedQuizGrid').addClass('speed-quiz-sheet').html(html);
+    $('#speedQuizGrid')
+        .removeClass('speed-quiz-sheet')
+        .html('<div class="speed-quiz-sheet">' + cards + '</div>');
 }
 
 function renderSpeedQuizTable() {
@@ -152,6 +164,8 @@ function renderSpeedQuizTable() {
     });
     html += '</tbody></table>';
 
+    // the table shows the operator in its own corner cell already
+    $('#speedQuizOperatorHint').hide();
     $('#speedQuizGrid').removeClass('speed-quiz-sheet').html(html);
 }
 
