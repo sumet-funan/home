@@ -779,14 +779,37 @@ body {
   background: var(--card-bg);
 }
 
-/* Sticks to the bottom of the viewport while the child works down the grid,
-   so it is reachable on row 10 without scrolling back to find it. */
+/* Pinned to the bottom of the screen so it is reachable from any row without
+   scrolling to find it. Inset from the left by the sidebar so it spans the
+   content area rather than sitting under the menu. */
 .speed-quiz-submit-btn {
-  position: sticky;
-  bottom: 12px;
-  margin-top: 16px;
-  z-index: 5;
+  position: fixed;
+  bottom: 16px;
+  left: 240px;
+  right: 20px;
+  width: auto;
+  max-width: 720px;
+  margin: 0 auto;
+  z-index: 1040;
   box-shadow: var(--shadow);
+}
+
+/* Out of flow, so the panel has to reserve the space itself or the last row of
+   questions would sit permanently underneath the button. */
+body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
+  padding-bottom: 84px;
+}
+
+@media (max-width: 720px) {
+  .speed-quiz-submit-btn {
+    left: 16px;
+    right: 16px;
+  }
+
+  /* the combo badge lives in this corner on small screens */
+  body.sq-running .combo-badge {
+    bottom: 80px;
+  }
 }
 
 /* iPad/touch: bigger tap targets already set above (44px, Apple's HIG

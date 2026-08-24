@@ -288,6 +288,7 @@ function finishSpeedQuiz(endedByTimeout) {
     clearInterval(speedQuizObj.timerInterval);
     updateSpeedQuizTimerDisplay();
     $('#speedQuizSubmitBtn').hide();
+    $('body').removeClass('sq-running');
 
     let elapsed = Date.now() - speedQuizObj.startTime;
     let correctCount = 0;
@@ -365,6 +366,7 @@ function beginSpeedQuizRound() {
     speedQuizObj.timerInterval = setInterval(updateSpeedQuizTimerDisplay, 250);
 
     $('#speedQuizSubmitBtn').show();
+    $('body').addClass('sq-running');
     $('.speed-quiz-input[data-index="0"]').trigger('focus');
 }
 
@@ -372,6 +374,7 @@ function resetSpeedQuizForNewSelection() {
     clearInterval(speedQuizObj.timerInterval);
     speedQuizObj.running = false;
     $('#speedQuizSubmitBtn').hide();
+    $('body').removeClass('sq-running');
     $('#speedQuizTimer')
         .removeClass('is-running-out')
         .text(speedQuizObj.kind === 'timed' ? formatSpeedQuizTime(SPEED_QUIZ_TIMED_SECONDS * 1000) : '00:00');
