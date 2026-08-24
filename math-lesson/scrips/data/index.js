@@ -62,6 +62,57 @@ function flushOutbox() {
     });
 }
 
+// Clearing the oldest outstanding mistake in the lesson just practised, so the
+// dashboard shrinks as a child works rather than only ever growing.
+//
+// It clears a mistake from that topic, not the exact question that was missed:
+// the correct answer is never stored, so an exact re-ask is not possible after
+// the fact. Nothing claims otherwise in the wording.
+function clearOldestMistake(lessonId) {
+    if (!currentUserId || !lessonId) {
+        return;
+    }
+
+    supabaseClient
+        .from('attempts')
+        .select('id')
+        .eq('lesson_id', lessonId)
+        .eq('is_correct', false)
+        .is('fixed_at', null)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .then(function (result) {
+            if (result.error || !result.data.length) {
+                return;
+            }
+            return supabaseClient
+                .from('attempts')
+                .update({ fixed_at: new Date().toISOString() })
+                .eq('id', result.data[0].id);
+        });
+}
+
+function fetchFixedMistakeCount(range) {
+    if (!currentUserId) {
+        return Promise.resolve(0);
+    }
+
+    let since = rangeStartISO(range);
+    let query = supabaseClient
+        .from('attempts')
+        .select('id', { count: 'exact', head: true })
+        .eq('is_correct', false)
+        .not('fixed_at', 'is', null);
+
+    if (since) {
+        query = query.gte('created_at', since);
+    }
+
+    return query.then(function (result) {
+        return result.error ? 0 : result.count;
+    });
+}
+
 function recordAttempt(lessonId, isCorrect, expression) {
     if (!currentUserId || !lessonId) {
         return;
@@ -81,6 +132,10 @@ function recordAttempt(lessonId, isCorrect, expression) {
         }
         flushOutbox();
     });
+
+    if (isCorrect) {
+        clearOldestMistake(lessonId);
+    }
 }
 
 function recordQuizResult(mode, size, correctCount, durationMs, kind) {
@@ -183,6 +238,7 @@ function fetchRecentMistakes(limit, range) {
         .from('attempts')
         .select('lesson_id, expression, created_at')
         .eq('is_correct', false)
+        .is('fixed_at', null)
         .not('expression', 'is', null);
 
     if (since) {

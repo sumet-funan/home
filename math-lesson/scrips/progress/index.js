@@ -216,6 +216,22 @@ function renderProgressQuiz(results) {
     $('#progressQuizList').html(html);
 }
 
+// Lesson ids map onto menu ids by grade prefix (p5decimal -> menu_p5_decimal).
+// Returns null when no such menu exists, which is the case for the four
+// general lessons that were removed but whose history is still shown.
+function lessonMenuId(lessonId) {
+    let menuId = lessonId.replace(/^(p1|p5)/, 'menu_$1_');
+    return document.getElementById(menuId) ? menuId : null;
+}
+
+$(document).on('click', '.progress-fix-btn', function (e) {
+    e.stopPropagation();
+    let el = document.getElementById($(this).data('menu-id'));
+    if (el) {
+        bootstrap.Tab.getOrCreateInstance(el).show();
+    }
+});
+
 function renderProgressMistakes(rows) {
     if (!rows.length) {
         $('#progressMistakeList').html('<p class="progress-empty">' +
@@ -225,9 +241,14 @@ function renderProgressMistakes(rows) {
 
     let html = rows.map(function (row) {
         let label = LESSON_LABELS[row.lesson_id] || row.lesson_id;
+        // the four removed general lessons have no menu to send anyone to
+        let menuId = lessonMenuId(row.lesson_id);
         return '<div class="progress-row progress-row-compact">' +
             '<span class="progress-mistake-expr">' + $('<div>').text(row.expression).html() + '</span>' +
             '<span class="progress-mistake-lesson">' + label + '</span>' +
+            (menuId
+                ? '<button type="button" class="progress-fix-btn" data-menu-id="' + menuId + '">ฝึกแก้</button>'
+                : '') +
         '</div>';
     }).join('');
 
@@ -291,6 +312,13 @@ function refreshProgressPage() {
             return;
         }
         renderProgressMistakes(rows);
+    });
+
+    fetchFixedMistakeCount(range).then(function (count) {
+        if (progressRange !== range) {
+            return;
+        }
+        $('#progressFixedCount').text(count).parent().toggle(count > 0);
     });
 }
 
