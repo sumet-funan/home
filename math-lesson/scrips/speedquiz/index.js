@@ -427,6 +427,9 @@ function resetSpeedQuizForNewSelection() {
         .removeClass('is-running-out')
         .text(speedQuizObj.kind === 'timed' ? formatSpeedQuizTime(SPEED_QUIZ_TIMED_SECONDS * 1000) : '00:00');
     $('#speedQuizGrid').empty();
+    // the chip labels the questions, so it goes when they do -- otherwise it
+    // hangs there on its own after stopping or changing an option
+    $('#speedQuizOperatorHint').hide();
     $('#feedbackSpeedQuiz').removeClass('show is-correct is-incorrect').text('');
 
     loadSpeedQuizBestTime();
