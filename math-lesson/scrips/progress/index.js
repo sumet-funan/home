@@ -268,20 +268,25 @@ const REVIEW_STALE_DAYS = 3;
 const REVIEW_WEAK_ACCURACY = 70;
 const REVIEW_MAX_SHOWN = 5;
 
-// Whether the card is shown at all. Kept in localStorage like the daily goal,
-// so it needs no migration and works signed out; absent means shown, so nobody
-// loses the card by not having an opinion about it.
-const REVIEW_ENABLED_KEY = 'mathLessonReviewEnabled';
+// Whether the card is shown at all. Kept on the account (user_metadata, like the
+// grade) so hiding it on the tablet hides it on the laptop too. Absent means
+// shown, so nobody loses the card by not having an opinion about it.
+var reviewEnabled = true;
 
 function isReviewEnabled() {
-    return localStorage.getItem(REVIEW_ENABLED_KEY) !== 'off';
+    return reviewEnabled;
 }
 
-function setReviewEnabled(enabled) {
-    try {
-        localStorage.setItem(REVIEW_ENABLED_KEY, enabled ? 'on' : 'off');
-    } catch (e) {
-        // storage unavailable: showing the card is the safe default
+// The profile picker only follows a real change, so a pill the child has clicked
+// but not saved yet survives the auth events that fire on tab refocus.
+function setReviewPreference(user) {
+    let enabled = !(user.user_metadata && user.user_metadata.review_enabled === false);
+    if (enabled === reviewEnabled) {
+        return;
+    }
+    reviewEnabled = enabled;
+    if (typeof syncProfileReviewPicker === 'function') {
+        syncProfileReviewPicker();
     }
 }
 
@@ -290,17 +295,23 @@ function hideProgressReview() {
     $('#menu_progress .nav-review-badge').remove();
 }
 
-// Applied the moment the setting is saved rather than at the next page open:
-// the nav badge sits outside the progress page, so leaving it up would point a
-// child at a card that is no longer there.
+// session.user is this device's cached copy and can lag a change made elsewhere
+// by up to an hour, so ask the server before drawing anything. Otherwise the
+// badge would flash up for a card that was hidden on another device. If the
+// request fails the cached value stands.
 function applyReviewVisibility() {
-    if (!isReviewEnabled()) {
-        hideProgressReview();
-        return;
-    }
-    if (typeof fetchLessonStats === 'function') {
-        fetchLessonStats('all').then(renderProgressReview);
-    }
+    return supabaseClient.auth.getUser().then(function (result) {
+        if (result.data && result.data.user) {
+            setReviewPreference(result.data.user);
+        }
+        if (!isReviewEnabled()) {
+            hideProgressReview();
+            return;
+        }
+        if (typeof fetchLessonStats === 'function') {
+            return fetchLessonStats('all').then(renderProgressReview);
+        }
+    });
 }
 
 function daysSince(iso) {
@@ -438,7 +449,7 @@ function refreshProgressPage() {
 
     // Always all-time, whatever range is selected: "not practised for 5 days"
     // is meaningless inside a "today" filter, which would list every lesson.
-    fetchLessonStats('all').then(renderProgressReview);
+    applyReviewVisibility();
 
     fetchQuizBests(range).then(function (rows) {
         if (progressRange !== range) {
@@ -474,12 +485,13 @@ $(document).on('shown.bs.tab', '#menu_progress', refreshProgressPage);
 
 // The badge has to be there before the page is opened, or it could never do its
 // job of telling a child there is something to come back to.
+// Saving the setting lands here too (USER_UPDATED), so it takes effect at once.
 supabaseClient.auth.onAuthStateChange(function (event, session) {
     if (!session) {
+        reviewEnabled = true;   // the next account starts from its own setting
         hideProgressReview();
         return;
     }
-    if (typeof fetchLessonStats === 'function') {
-        fetchLessonStats('all').then(renderProgressReview);
-    }
+    setReviewPreference(session.user);
+    applyReviewVisibility();
 });
