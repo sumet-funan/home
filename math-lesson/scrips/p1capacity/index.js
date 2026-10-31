@@ -36,7 +36,7 @@ function validateCapacityResult() {
     }
 
     $('#contentCapacityHistory').show();
-    addResultCapacityToHistoryList({ firstValue, secondValue, symbol: symbolText, color: textColor })
+    addResultCapacityToHistoryList({ firstValue, secondValue, symbol: { gt: '>', lt: '<', eq: '=' }[p1CapacityObj.selectedSymbol], color: textColor })
 
     if (isCorrect) {
         addSuggestCapacityValue();

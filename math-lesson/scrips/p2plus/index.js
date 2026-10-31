@@ -5,13 +5,13 @@ var p2PlusObj = {
 }
 
 function buildP2PlusWordText(firstNumber, secondNumber) {
-    let name = p2Pick(p2WordNames);
-    let itemObj = p2Pick(p2WordItems);
+    let name = pickOne(wordNames);
+    let itemObj = pickOne(wordItems);
     let templates = [
         `${name}มี${itemObj.item} ${firstNumber} ${itemObj.classifier} ซื้อเพิ่มอีก ${secondNumber} ${itemObj.classifier} ${name}มี${itemObj.item}ทั้งหมดกี่${itemObj.classifier}`,
         `${name}เก็บ${itemObj.item}ได้ ${firstNumber} ${itemObj.classifier} เพื่อนให้อีก ${secondNumber} ${itemObj.classifier} ${name}มี${itemObj.item}รวมกี่${itemObj.classifier}`,
     ];
-    return p2Pick(templates);
+    return pickOne(templates);
 }
 
 function validateP2PlusResult() {
@@ -64,8 +64,8 @@ function addResultP2PlusToHistoryList(item) {
 }
 
 function addSuggestP2PlusValue() {
-    let firstNumber = p2RandomInt(100, 900);
-    let secondNumber = p2RandomInt(10, 1000 - firstNumber);
+    let firstNumber = randomInt(100, 900);
+    let secondNumber = randomInt(10, 1000 - firstNumber);
 
     $('#firstP2PlusNumber').val(firstNumber);
     $('#secondP2PlusNumber').val(secondNumber);

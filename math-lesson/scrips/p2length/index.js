@@ -12,7 +12,7 @@ var p2LengthObj = {
     expectedCentimetres: 0,
 }
 
-p2BindSymbolPicker('p2LengthSymbolPicker', p2LengthObj);
+bindSymbolPicker('p2LengthSymbolPicker', p2LengthObj);
 
 function p2CompoundLength(centimetres) {
     let rest = centimetres % 100;
@@ -28,8 +28,8 @@ function validateP2LengthResult() {
             return;
         }
 
-        isCorrect = p2LengthObj.selectedSymbol === p2CompareSymbol(p2LengthObj.firstValue, p2LengthObj.secondValue);
-        expr = `${p2LengthObj.firstText} ${p2SymbolText[p2LengthObj.selectedSymbol]} ${p2LengthObj.secondText}`;
+        isCorrect = p2LengthObj.selectedSymbol === compareSymbolOf(p2LengthObj.firstValue, p2LengthObj.secondValue);
+        expr = `${p2LengthObj.firstText} ${compareSymbolText[p2LengthObj.selectedSymbol]} ${p2LengthObj.secondText}`;
     } else {
         if (focusFirstEmptyField(['p2LengthMetresNumber', 'p2LengthCentimetresNumber'])) {
             return;
@@ -84,10 +84,10 @@ function addResultP2LengthToHistoryList(item) {
 // The centimetres never carry into metres, so the two parts are worked separately.
 function suggestP2LengthWord() {
     let isAddition = Math.random() < 0.5;
-    let firstMetres = isAddition ? p2RandomInt(1, 5) : p2RandomInt(3, 9);
-    let secondMetres = isAddition ? p2RandomInt(1, 4) : p2RandomInt(1, firstMetres - 1);
-    let firstCentimetres = isAddition ? p2RandomInt(10, 60) : p2RandomInt(20, 95);
-    let secondCentimetres = isAddition ? p2RandomInt(5, 99 - firstCentimetres) : p2RandomInt(5, firstCentimetres);
+    let firstMetres = isAddition ? randomInt(1, 5) : randomInt(3, 9);
+    let secondMetres = isAddition ? randomInt(1, 4) : randomInt(1, firstMetres - 1);
+    let firstCentimetres = isAddition ? randomInt(10, 60) : randomInt(20, 95);
+    let secondCentimetres = isAddition ? randomInt(5, 99 - firstCentimetres) : randomInt(5, firstCentimetres);
     let first = `${firstMetres} เมตร ${firstCentimetres} เซนติเมตร`;
     let second = `${secondMetres} เมตร ${secondCentimetres} เซนติเมตร`;
     let templates = isAddition
@@ -100,7 +100,7 @@ function suggestP2LengthWord() {
             `ไม้ท่อนแรกยาว ${first} ไม้ท่อนที่สองยาว ${second} ไม้ท่อนแรกยาวกว่าเท่าไร`,
         ];
 
-    p2LengthObj.text = p2Pick(templates);
+    p2LengthObj.text = pickOne(templates);
     p2LengthObj.expectedMetres = isAddition ? firstMetres + secondMetres : firstMetres - secondMetres;
     p2LengthObj.expectedCentimetres = isAddition ? firstCentimetres + secondCentimetres : firstCentimetres - secondCentimetres;
 
@@ -110,8 +110,8 @@ function suggestP2LengthWord() {
 }
 
 function suggestP2LengthCompare() {
-    let firstValue = p2RandomInt(135, 895);
-    let secondValue = Math.random() < 0.2 ? firstValue : firstValue + p2RandomInt(-30, 30);
+    let firstValue = randomInt(135, 895);
+    let secondValue = Math.random() < 0.2 ? firstValue : firstValue + randomInt(-30, 30);
     let compoundFirst = Math.random() < 0.5;
 
     p2LengthObj.firstValue = firstValue;

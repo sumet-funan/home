@@ -11,53 +11,53 @@ var p2MixedObj = {
 var p2MixedBuilders = {
     addsub: [
         function () {
-            let a = p2RandomInt(100, 500), b = p2RandomInt(10, 400), c = p2RandomInt(10, a + b);
+            let a = randomInt(100, 500), b = randomInt(10, 400), c = randomInt(10, a + b);
             return { text: `${a} + ${b} − ${c}`, expected: a + b - c };
         },
         function () {
-            let a = p2RandomInt(100, 900), b = p2RandomInt(10, a), c = p2RandomInt(10, 1000 - a + b);
+            let a = randomInt(100, 900), b = randomInt(10, a), c = randomInt(10, 1000 - a + b);
             return { text: `${a} − ${b} + ${c}`, expected: a - b + c };
         },
         function () {
-            let a = p2RandomInt(200, 1000), b = p2RandomInt(10, parseInt(a / 2)), c = p2RandomInt(10, parseInt(a / 2));
+            let a = randomInt(200, 1000), b = randomInt(10, parseInt(a / 2)), c = randomInt(10, parseInt(a / 2));
             return { text: `${a} − (${b} + ${c})`, expected: a - (b + c) };
         },
         function () {
-            let a = p2RandomInt(100, 500), b = p2RandomInt(100, 500), c = p2RandomInt(10, b);
+            let a = randomInt(100, 500), b = randomInt(100, 500), c = randomInt(10, b);
             return { text: `${a} + (${b} − ${c})`, expected: a + (b - c) };
         },
     ],
     all: [
         function () {
-            let a = p2RandomInt(2, 9), b = p2RandomInt(2, 12), c = p2RandomInt(10, 200);
+            let a = randomInt(2, 9), b = randomInt(2, 12), c = randomInt(10, 200);
             return { text: `${a} × ${b} + ${c}`, expected: a * b + c };
         },
         function () {
-            let a = p2RandomInt(2, 9), b = p2RandomInt(2, 12), c = p2RandomInt(10, 200);
+            let a = randomInt(2, 9), b = randomInt(2, 12), c = randomInt(10, 200);
             return { text: `${c} + ${a} × ${b}`, expected: c + a * b };
         },
         function () {
-            let a = p2RandomInt(2, 9), b = p2RandomInt(2, 12), c = p2RandomInt(1, a * b);
+            let a = randomInt(2, 9), b = randomInt(2, 12), c = randomInt(1, a * b);
             return { text: `${a} × ${b} − ${c}`, expected: a * b - c };
         },
         function () {
-            let a = p2RandomInt(2, 9), b = p2RandomInt(2, 12), c = p2RandomInt(a * b, 300);
+            let a = randomInt(2, 9), b = randomInt(2, 12), c = randomInt(a * b, 300);
             return { text: `${c} − ${a} × ${b}`, expected: c - a * b };
         },
         function () {
-            let divisor = p2RandomInt(2, 9), quotient = p2RandomInt(2, 9), c = p2RandomInt(10, 200);
+            let divisor = randomInt(2, 9), quotient = randomInt(2, 9), c = randomInt(10, 200);
             return { text: `${divisor * quotient} ÷ ${divisor} + ${c}`, expected: quotient + c };
         },
         function () {
-            let divisor = p2RandomInt(2, 9), quotient = p2RandomInt(2, 9), c = p2RandomInt(quotient, 100);
+            let divisor = randomInt(2, 9), quotient = randomInt(2, 9), c = randomInt(quotient, 100);
             return { text: `${c} − ${divisor * quotient} ÷ ${divisor}`, expected: c - quotient };
         },
         function () {
-            let a = p2RandomInt(2, 20), b = p2RandomInt(2, 20), c = p2RandomInt(2, 9);
+            let a = randomInt(2, 20), b = randomInt(2, 20), c = randomInt(2, 9);
             return { text: `(${a} + ${b}) × ${c}`, expected: (a + b) * c };
         },
         function () {
-            let c = p2RandomInt(2, 9), quotient = p2RandomInt(2, 9), total = c * quotient, a = p2RandomInt(1, total - 1);
+            let c = randomInt(2, 9), quotient = randomInt(2, 9), total = c * quotient, a = randomInt(1, total - 1);
             return { text: `(${a} + ${total - a}) ÷ ${c}`, expected: quotient };
         },
     ],
@@ -111,7 +111,7 @@ function addResultP2MixedToHistoryList(item) {
 }
 
 function addSuggestP2MixedValue() {
-    let question = p2Pick(p2MixedBuilders[p2MixedObj.mode])();
+    let question = pickOne(p2MixedBuilders[p2MixedObj.mode])();
 
     p2MixedObj.text = question.text;
     p2MixedObj.expected = question.expected;

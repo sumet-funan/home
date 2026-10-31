@@ -9,13 +9,13 @@ var p2MissingObj = {
 var p2MissingBuilders = {
     addsub: [
         function () {
-            let a = p2RandomInt(10, 900), b = p2RandomInt(10, 1000 - a);
+            let a = randomInt(10, 900), b = randomInt(10, 1000 - a);
             return Math.random() < 0.5
                 ? { text: `□ + ${b} = ${a + b}`, expected: a }
                 : { text: `${a} + □ = ${a + b}`, expected: b };
         },
         function () {
-            let a = p2RandomInt(100, 1000), b = p2RandomInt(10, a);
+            let a = randomInt(100, 1000), b = randomInt(10, a);
             return Math.random() < 0.5
                 ? { text: `□ − ${b} = ${a - b}`, expected: a }
                 : { text: `${a} − □ = ${a - b}`, expected: b };
@@ -23,13 +23,13 @@ var p2MissingBuilders = {
     ],
     muldiv: [
         function () {
-            let a = p2RandomInt(2, 9), b = p2RandomInt(2, 12);
+            let a = randomInt(2, 9), b = randomInt(2, 12);
             return Math.random() < 0.5
                 ? { text: `□ × ${a} = ${a * b}`, expected: b }
                 : { text: `${a} × □ = ${a * b}`, expected: b };
         },
         function () {
-            let divisor = p2RandomInt(2, 9), quotient = p2RandomInt(2, 9);
+            let divisor = randomInt(2, 9), quotient = randomInt(2, 9);
             return Math.random() < 0.5
                 ? { text: `□ ÷ ${divisor} = ${quotient}`, expected: divisor * quotient }
                 : { text: `${divisor * quotient} ÷ □ = ${quotient}`, expected: divisor };
@@ -85,7 +85,7 @@ function addResultP2MissingToHistoryList(item) {
 }
 
 function addSuggestP2MissingValue() {
-    let question = p2Pick(p2MissingBuilders[p2MissingObj.mode])();
+    let question = pickOne(p2MissingBuilders[p2MissingObj.mode])();
 
     p2MissingObj.text = question.text;
     p2MissingObj.expected = question.expected;

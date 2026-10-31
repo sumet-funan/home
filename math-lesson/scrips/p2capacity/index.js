@@ -9,7 +9,7 @@ var p2CapacityObj = {
     expected: 0,
 }
 
-p2BindSymbolPicker('p2CapacitySymbolPicker', p2CapacityObj);
+bindSymbolPicker('p2CapacitySymbolPicker', p2CapacityObj);
 
 function validateP2CapacityResult() {
     let isCorrect, expr;
@@ -20,8 +20,8 @@ function validateP2CapacityResult() {
             return;
         }
 
-        isCorrect = p2CapacityObj.selectedSymbol === p2CompareSymbol(p2CapacityObj.firstValue, p2CapacityObj.secondValue);
-        expr = `${p2CapacityObj.firstValue} ลิตร ${p2SymbolText[p2CapacityObj.selectedSymbol]} ${p2CapacityObj.secondValue} ลิตร`;
+        isCorrect = p2CapacityObj.selectedSymbol === compareSymbolOf(p2CapacityObj.firstValue, p2CapacityObj.secondValue);
+        expr = `${p2CapacityObj.firstValue} ลิตร ${compareSymbolText[p2CapacityObj.selectedSymbol]} ${p2CapacityObj.secondValue} ลิตร`;
     } else {
         if (focusFirstEmptyField(['p2CapacityAnswerNumber'])) {
             return;
@@ -72,17 +72,17 @@ function addResultP2CapacityToHistoryList(item) {
 }
 
 function suggestP2CapacityWord() {
-    let bigger = p2RandomInt(20, 100);
-    let smaller = p2RandomInt(5, bigger - 5);
-    let bottles = p2RandomInt(2, 9);
-    let perBottle = p2RandomInt(2, 12);
+    let bigger = randomInt(20, 100);
+    let smaller = randomInt(5, bigger - 5);
+    let bottles = randomInt(2, 9);
+    let perBottle = randomInt(2, 12);
     let questions = [
         { text: `ถังใบแรกจุน้ำ ${bigger} ลิตร ถังใบที่สองจุน้ำ ${smaller} ลิตร ถังใบแรกจุมากกว่ากี่ลิตร`, expected: bigger - smaller },
         { text: `ในถังมีน้ำ ${bigger} ลิตร ใช้ไป ${smaller} ลิตร เหลือน้ำกี่ลิตร`, expected: bigger - smaller },
         { text: `เติมน้ำลงในโอ่ง ${bigger} ลิตร แล้วเติมอีก ${smaller} ลิตร โอ่งมีน้ำทั้งหมดกี่ลิตร`, expected: bigger + smaller },
         { text: `มีขวดน้ำ ${bottles} ขวด ขวดละ ${perBottle} ลิตร มีน้ำทั้งหมดกี่ลิตร`, expected: bottles * perBottle },
     ];
-    let question = p2Pick(questions);
+    let question = pickOne(questions);
 
     p2CapacityObj.text = question.text;
     p2CapacityObj.expected = question.expected;
@@ -92,8 +92,8 @@ function suggestP2CapacityWord() {
 }
 
 function suggestP2CapacityCompare() {
-    let firstValue = p2RandomInt(1, 100);
-    let secondValue = Math.random() < 0.2 ? firstValue : p2RandomInt(1, 100);
+    let firstValue = randomInt(1, 100);
+    let secondValue = Math.random() < 0.2 ? firstValue : randomInt(1, 100);
 
     p2CapacityObj.firstValue = firstValue;
     p2CapacityObj.secondValue = secondValue;

@@ -37,7 +37,7 @@ function validateTimeResult() {
 
     showFeedback('feedbackTime', isCorrect);
 
-    let expr = `${p1TimeObj.hour} นาฬิกา`;
+    let expr = `${answer} นาฬิกา`;
 
     if (isCorrect) {
         addResultTimeToItemList({ expr })

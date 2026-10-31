@@ -74,14 +74,19 @@ function addResultMoneyToHistoryList(item) {
 
 function addSuggestMoneyValue() {
     let n = 2 + parseInt(Math.random() * 3);
-    let items = [];
-    let sum = 0;
+    let items, sum;
 
-    for (let i = 0; i < n; i++) {
-        let value = moneyDenominations[parseInt(Math.random() * moneyDenominations.length)];
-        items.push(value);
-        sum += value;
-    }
+    // ป.1 counts to 100, so a set of notes that adds up past it is drawn again
+    do {
+        items = [];
+        sum = 0;
+
+        for (let i = 0; i < n; i++) {
+            let value = moneyDenominations[parseInt(Math.random() * moneyDenominations.length)];
+            items.push(value);
+            sum += value;
+        }
+    } while (sum > 100);
 
     p1MoneyObj.items = items;
     p1MoneyObj.expected = sum;

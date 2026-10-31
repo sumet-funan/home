@@ -2743,6 +2743,172 @@ input[type=number] {
   color: var(--accent);
 }
 
+/* ---------- shapes with depth, and repeating patterns ---------- */
+
+.shape-soft {
+  fill: var(--accent);
+  opacity: .65;
+}
+
+.shape-dim {
+  fill: var(--accent);
+  opacity: .4;
+}
+
+.shape-line {
+  fill: none;
+  stroke: var(--on-accent);
+  stroke-width: 2;
+  opacity: .7;
+}
+
+.prism-edge {
+  stroke: var(--text);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.prism-edge.is-hidden {
+  stroke-dasharray: 4 5;
+  opacity: .55;
+}
+
+.pattern-shapes {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.pattern-shape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 1 44px;
+  aspect-ratio: 1;
+  min-width: 0;
+  border-radius: var(--radius-sm);
+  background: var(--fill);
+}
+
+.pattern-shape svg {
+  width: 78%;
+  height: auto;
+}
+
+.pattern-shape.is-missing {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.number-blocks {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+/* ---------- line graph ---------- */
+
+.line-graph {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.line-graph svg,
+.learn-show svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.line-graph-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.line-graph-text {
+  fill: var(--muted);
+  font-size: 13px;
+}
+
+.line-graph-title {
+  fill: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.line-graph-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.line-graph-dot {
+  fill: var(--accent);
+}
+
+/* ---------- writing a bar chart ---------- */
+
+.barwrite-data {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.barwrite-datum {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 2px;
+  border-radius: var(--radius-sm);
+  background: var(--fill);
+  font-size: .85rem;
+  color: var(--muted);
+}
+
+.barwrite-datum strong {
+  font-size: 1.2rem;
+  color: var(--text);
+}
+
+.barwrite-grid {
+  display: grid;
+  grid-template-columns: 30px repeat(4, 1fr);
+  gap: 2px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.barwrite-scale {
+  padding-right: 4px;
+  text-align: right;
+  font-size: .78rem;
+  color: var(--muted);
+}
+
+.barwrite-cell {
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: var(--fill);
+  cursor: pointer;
+}
+
+.barwrite-cell.is-filled {
+  background: var(--accent);
+}
+
+.barwrite-label {
+  padding-top: 4px;
+  text-align: center;
+  font-size: .8rem;
+  color: var(--text);
+}
+
 /* ---------- side panels (answers / history) ---------- */
 
 /* a Section: the heading sits on the page background above a card of rows */

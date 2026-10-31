@@ -55,8 +55,8 @@ function addResultP2MultiplyToHistoryList(item) {
 
 // one number has a single digit and the other up to two, in either order
 function addSuggestP2MultiplyValue() {
-    let digit = p2RandomInt(2, 9);
-    let other = p2MultiplyObj.mode === 'table' ? p2RandomInt(1, 12) : p2RandomInt(10, 99);
+    let digit = randomInt(2, 9);
+    let other = p2MultiplyObj.mode === 'table' ? randomInt(1, 12) : randomInt(10, 99);
     let digitFirst = Math.random() < 0.5;
 
     $('#firstP2MultiplyNumber').val(digitFirst ? digit : other);

@@ -29,7 +29,7 @@ function renderP2ShapeSVG(type) {
     if (type === 'circle') {
         return '<svg viewBox="0 0 120 120" width="120" height="120"><circle class="shape-fill" cx="60" cy="60" r="50"/></svg>';
     }
-    return `<svg viewBox="0 0 120 120" width="120" height="120"><polygon class="shape-fill" points="${p2Pick(p2ShapeOutlines[type])}"/></svg>`;
+    return `<svg viewBox="0 0 120 120" width="120" height="120"><polygon class="shape-fill" points="${pickOne(p2ShapeOutlines[type])}"/></svg>`;
 }
 
 $(document).on('click', '#p2ShapeOptionsPicker .shape-option-btn', function () {
@@ -101,12 +101,12 @@ function addResultP2ShapeToHistoryList(item) {
 function addSuggestP2ShapeValue() {
     let isName = p2ShapeObj.mode === 'name';
     let types = isName ? ['3', '4', '5', '6', 'circle'] : ['3', '4', '5', '6'];
-    let correctType = p2Pick(types);
+    let correctType = pickOne(types);
 
     p2ShapeObj.correctType = correctType;
     p2ShapeObj.selectedType = null;
     p2ShapeObj.sides = +correctType;
-    p2ShapeObj.asked = p2Pick(['ด้าน', 'มุม']);
+    p2ShapeObj.asked = pickOne(['ด้าน', 'มุม']);
 
     $('#p2ShapeDisplay').html(renderP2ShapeSVG(correctType));
     $('#p2ShapeOptionsPicker').toggle(isName);
@@ -115,7 +115,7 @@ function addSuggestP2ShapeValue() {
     $('#p2ShapeAnswerNumber').val('');
 
     let html = '';
-    let shuffled = p2Shuffle(types);
+    let shuffled = shuffleList(types);
     for (let i = 0; i < shuffled.length; i++) {
         html += `<button type="button" class="shape-option-btn" data-type="${shuffled[i]}">${p2ShapeLabels[shuffled[i]]}</button>`;
     }

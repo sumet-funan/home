@@ -19,7 +19,7 @@ var p2WeightUnits = [
     { name: 'ขีด', perKilogram: 10, step: 1 },
 ];
 
-p2BindSymbolPicker('p2WeightSymbolPicker', p2WeightObj);
+bindSymbolPicker('p2WeightSymbolPicker', p2WeightObj);
 
 function p2CompoundWeight(amount, unit) {
     let rest = amount % unit.perKilogram;
@@ -35,8 +35,8 @@ function validateP2WeightResult() {
             return;
         }
 
-        isCorrect = p2WeightObj.selectedSymbol === p2CompareSymbol(p2WeightObj.firstValue, p2WeightObj.secondValue);
-        expr = `${p2WeightObj.firstText} ${p2SymbolText[p2WeightObj.selectedSymbol]} ${p2WeightObj.secondText}`;
+        isCorrect = p2WeightObj.selectedSymbol === compareSymbolOf(p2WeightObj.firstValue, p2WeightObj.secondValue);
+        expr = `${p2WeightObj.firstText} ${compareSymbolText[p2WeightObj.selectedSymbol]} ${p2WeightObj.secondText}`;
     } else {
         if (focusFirstEmptyField(['p2WeightKilogramsNumber', 'p2WeightSmallNumber'])) {
             return;
@@ -90,13 +90,13 @@ function addResultP2WeightToHistoryList(item) {
 
 // The smaller unit never carries into kilograms, as with length.
 function suggestP2WeightWord() {
-    let unit = p2Pick(p2WeightUnits);
+    let unit = pickOne(p2WeightUnits);
     let steps = unit.perKilogram / unit.step;
     let isAddition = Math.random() < 0.5;
-    let firstKilograms = isAddition ? p2RandomInt(1, 5) : p2RandomInt(3, 9);
-    let secondKilograms = isAddition ? p2RandomInt(1, 4) : p2RandomInt(1, firstKilograms - 1);
-    let firstSmall = isAddition ? p2RandomInt(1, steps - 2) : p2RandomInt(2, steps - 1);
-    let secondSmall = isAddition ? p2RandomInt(1, steps - 1 - firstSmall) : p2RandomInt(1, firstSmall);
+    let firstKilograms = isAddition ? randomInt(1, 5) : randomInt(3, 9);
+    let secondKilograms = isAddition ? randomInt(1, 4) : randomInt(1, firstKilograms - 1);
+    let firstSmall = isAddition ? randomInt(1, steps - 2) : randomInt(2, steps - 1);
+    let secondSmall = isAddition ? randomInt(1, steps - 1 - firstSmall) : randomInt(1, firstSmall);
     let first = `${firstKilograms} กิโลกรัม ${firstSmall * unit.step} ${unit.name}`;
     let second = `${secondKilograms} กิโลกรัม ${secondSmall * unit.step} ${unit.name}`;
     let templates = isAddition
@@ -110,7 +110,7 @@ function suggestP2WeightWord() {
         ];
 
     p2WeightObj.unit = unit;
-    p2WeightObj.text = p2Pick(templates);
+    p2WeightObj.text = pickOne(templates);
     p2WeightObj.expectedKilograms = isAddition ? firstKilograms + secondKilograms : firstKilograms - secondKilograms;
     p2WeightObj.expectedSmall = (isAddition ? firstSmall + secondSmall : firstSmall - secondSmall) * unit.step;
 
@@ -121,10 +121,10 @@ function suggestP2WeightWord() {
 }
 
 function suggestP2WeightCompare() {
-    let unit = p2Pick(p2WeightUnits);
+    let unit = pickOne(p2WeightUnits);
     let steps = unit.perKilogram / unit.step;
-    let firstSteps = p2RandomInt(steps + 6, steps * 6 - 1);
-    let secondSteps = Math.random() < 0.2 ? firstSteps : firstSteps + p2RandomInt(-5, 5);
+    let firstSteps = randomInt(steps + 6, steps * 6 - 1);
+    let secondSteps = Math.random() < 0.2 ? firstSteps : firstSteps + randomInt(-5, 5);
     let firstValue = firstSteps * unit.step;
     let secondValue = secondSteps * unit.step;
     let compoundFirst = Math.random() < 0.5;

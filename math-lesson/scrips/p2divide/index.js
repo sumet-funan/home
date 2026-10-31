@@ -62,9 +62,9 @@ function addResultP2DivideToHistoryList(item) {
 
 function addSuggestP2DivideValue() {
     let hasRemainder = p2DivideObj.mode === 'remainder';
-    let divisor = p2RandomInt(2, 9);
-    let quotient = p2RandomInt(1, 9);
-    let remainder = hasRemainder ? p2RandomInt(1, divisor - 1) : 0;
+    let divisor = randomInt(2, 9);
+    let quotient = randomInt(1, 9);
+    let remainder = hasRemainder ? randomInt(1, divisor - 1) : 0;
 
     p2DivideObj.divisor = divisor;
     p2DivideObj.quotient = quotient;

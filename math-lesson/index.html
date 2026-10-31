@@ -67,6 +67,10 @@
               aria-controls="content_p1_minus" data-op="minus">
               <i class="bi bi-dash-circle-fill"></i><span>ลบ (ไม่เกิน 100)</span>
             </a>
+            <a class="nav-menu-item" id="menu_p1_number" data-bs-toggle="list" href="#content_p1_number" role="tab"
+              aria-controls="content_p1_number" data-op="placevalue">
+              <i class="bi bi-123"></i><span>จำนวนและตัวเลข</span>
+            </a>
             <a class="nav-menu-item" id="menu_p1_compare" data-bs-toggle="list" href="#content_p1_compare" role="tab"
               aria-controls="content_p1_compare" data-op="compare">
               <i class="bi bi-arrow-left-right"></i><span>เปรียบเทียบจำนวน</span>
@@ -74,6 +78,10 @@
             <a class="nav-menu-item" id="menu_p1_numberbond" data-bs-toggle="list" href="#content_p1_numberbond"
               role="tab" aria-controls="content_p1_numberbond" data-op="numberbond">
               <i class="bi bi-puzzle-fill"></i><span>คู่จำนวน</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p1_missing" data-bs-toggle="list" href="#content_p1_missing" role="tab"
+              aria-controls="content_p1_missing" data-op="numberbond">
+              <i class="bi bi-question-square-fill"></i><span>หาตัวไม่ทราบค่า</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_pattern" data-bs-toggle="list" href="#content_p1_pattern" role="tab"
               aria-controls="content_p1_pattern" data-op="pattern">
@@ -95,17 +103,9 @@
               aria-controls="content_p1_weight" data-op="weight">
               <i class="bi bi-basket-fill"></i><span>น้ำหนัก</span>
             </a>
-            <a class="nav-menu-item" id="menu_p1_capacity" data-bs-toggle="list" href="#content_p1_capacity"
-              role="tab" aria-controls="content_p1_capacity" data-op="capacity">
-              <i class="bi bi-droplet-fill"></i><span>ความจุ</span>
-            </a>
-            <a class="nav-menu-item" id="menu_p1_time" data-bs-toggle="list" href="#content_p1_time" role="tab"
-              aria-controls="content_p1_time" data-op="time">
-              <i class="bi bi-clock-fill"></i><span>เวลา</span>
-            </a>
-            <a class="nav-menu-item" id="menu_p1_money" data-bs-toggle="list" href="#content_p1_money" role="tab"
-              aria-controls="content_p1_money" data-op="money">
-              <i class="bi bi-cash-coin"></i><span>เงิน</span>
+            <a class="nav-menu-item" id="menu_p1_pictograph" data-bs-toggle="list" href="#content_p1_pictograph" role="tab"
+              aria-controls="content_p1_pictograph" data-op="barchart">
+              <i class="bi bi-image-fill"></i><span>แผนภูมิรูปภาพ</span>
             </a>
             <a class="nav-menu-item" id="menu_p1_wordproblem" data-bs-toggle="list" href="#content_p1_wordproblem"
               role="tab" aria-controls="content_p1_wordproblem" data-op="wordproblem">
@@ -195,29 +195,87 @@
               aria-controls="content_p5_decimal" data-op="decimal">
               <i class="bi bi-123"></i><span>ทศนิยม</span>
             </a>
-            <a class="nav-menu-item" id="menu_p5_percentage" data-bs-toggle="list" href="#content_p5_percentage"
-              role="tab" aria-controls="content_p5_percentage" data-op="percentage">
-              <i class="bi bi-percent"></i><span>ร้อยละ</span>
+            <a class="nav-menu-item" id="menu_p5_fractiondecimal" data-bs-toggle="list" href="#content_p5_fractiondecimal" role="tab"
+              aria-controls="content_p5_fractiondecimal" data-op="decimal">
+              <i class="bi bi-slash-square"></i><span>เศษส่วนเป็นทศนิยม</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_fraction" data-bs-toggle="list" href="#content_p5_fraction"
               role="tab" aria-controls="content_p5_fraction" data-op="fraction">
               <i class="bi bi-slash-square"></i><span>เศษส่วน</span>
             </a>
-            <a class="nav-menu-item" id="menu_p5_gcflcm" data-bs-toggle="list" href="#content_p5_gcflcm" role="tab"
-              aria-controls="content_p5_gcflcm" data-op="gcflcm">
-              <i class="bi bi-intersect"></i><span>ห.ร.ม. / ค.ร.น.</span>
-            </a>
             <a class="nav-menu-item" id="menu_p5_mixednumber" data-bs-toggle="list" href="#content_p5_mixednumber"
               role="tab" aria-controls="content_p5_mixednumber" data-op="mixednumber">
               <i class="bi bi-stack"></i><span>จำนวนคละ</span>
             </a>
-            <a class="nav-menu-item" id="menu_p5_geometry" data-bs-toggle="list" href="#content_p5_geometry"
-              role="tab" aria-controls="content_p5_geometry" data-op="geometry">
-              <i class="bi bi-rulers"></i><span>พื้นที่ / รอบรูป</span>
+            <a class="nav-menu-item" id="menu_p5_percentage" data-bs-toggle="list" href="#content_p5_percentage"
+              role="tab" aria-controls="content_p5_percentage" data-op="percentage">
+              <i class="bi bi-percent"></i><span>ร้อยละ</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_proportion" data-bs-toggle="list" href="#content_p5_proportion" role="tab"
+              aria-controls="content_p5_proportion" data-op="percentage">
+              <i class="bi bi-calculator-fill"></i><span>บัญญัติไตรยางศ์</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_measure" data-bs-toggle="list" href="#content_p5_measure" role="tab"
+              aria-controls="content_p5_measure" data-op="length">
+              <i class="bi bi-rulers"></i><span>ความยาวและน้ำหนัก</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_volume" data-bs-toggle="list" href="#content_p5_volume" role="tab"
               aria-controls="content_p5_volume" data-op="volume">
               <i class="bi bi-box"></i><span>ปริมาตร</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_quadrilateral" data-bs-toggle="list" href="#content_p5_quadrilateral" role="tab"
+              aria-controls="content_p5_quadrilateral" data-op="shape">
+              <i class="bi bi-bounding-box"></i><span>จำแนกรูปสี่เหลี่ยม</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_quadarea" data-bs-toggle="list" href="#content_p5_quadarea" role="tab"
+              aria-controls="content_p5_quadarea" data-op="geometry">
+              <i class="bi bi-aspect-ratio"></i><span>รอบรูปและพื้นที่สี่เหลี่ยม</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_prism" data-bs-toggle="list" href="#content_p5_prism" role="tab"
+              aria-controls="content_p5_prism" data-op="volume">
+              <i class="bi bi-box-fill"></i><span>ปริซึม</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_linegraph" data-bs-toggle="list" href="#content_p5_linegraph" role="tab"
+              aria-controls="content_p5_linegraph" data-op="barchart">
+              <i class="bi bi-graph-up"></i><span>กราฟเส้น</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_barwrite" data-bs-toggle="list" href="#content_p5_barwrite" role="tab"
+              aria-controls="content_p5_barwrite" data-op="barchart">
+              <i class="bi bi-bar-chart-line-fill"></i><span>เขียนแผนภูมิแท่ง</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_wordproblem" data-bs-toggle="list" href="#content_p5_wordproblem"
+              role="tab" aria-controls="content_p5_wordproblem" data-op="wordproblem">
+              <i class="bi bi-journal-text"></i><span>โจทย์ปัญหา</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-extra"
+            aria-expanded="false" aria-controls="group-extra">
+            <span>เสริม</span>
+            <i class="bi bi-chevron-right group-caret"></i>
+          </button>
+          <div class="collapse nav-group-items" id="group-extra">
+            <a class="nav-menu-item" id="menu_p1_capacity" data-bs-toggle="list" href="#content_p1_capacity"
+              role="tab" aria-controls="content_p1_capacity" data-op="capacity">
+              <i class="bi bi-droplet-fill"></i><span>ความจุ</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p1_time" data-bs-toggle="list" href="#content_p1_time" role="tab"
+              aria-controls="content_p1_time" data-op="time">
+              <i class="bi bi-clock-fill"></i><span>เวลา</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p1_money" data-bs-toggle="list" href="#content_p1_money" role="tab"
+              aria-controls="content_p1_money" data-op="money">
+              <i class="bi bi-cash-coin"></i><span>เงิน</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_gcflcm" data-bs-toggle="list" href="#content_p5_gcflcm" role="tab"
+              aria-controls="content_p5_gcflcm" data-op="gcflcm">
+              <i class="bi bi-intersect"></i><span>ห.ร.ม. / ค.ร.น.</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p5_geometry" data-bs-toggle="list" href="#content_p5_geometry"
+              role="tab" aria-controls="content_p5_geometry" data-op="geometry">
+              <i class="bi bi-rulers"></i><span>พื้นที่ / รอบรูป</span>
             </a>
             <a class="nav-menu-item" id="menu_p5_angle" data-bs-toggle="list" href="#content_p5_angle" role="tab"
               aria-controls="content_p5_angle" data-op="angle">
@@ -229,17 +287,13 @@
             </a>
             <a class="nav-menu-item" id="menu_p5_barchart" data-bs-toggle="list" href="#content_p5_barchart"
               role="tab" aria-controls="content_p5_barchart" data-op="barchart">
-              <i class="bi bi-bar-chart-fill"></i><span>แผนภูมิแท่ง</span>
-            </a>
-            <a class="nav-menu-item" id="menu_p5_wordproblem" data-bs-toggle="list" href="#content_p5_wordproblem"
-              role="tab" aria-controls="content_p5_wordproblem" data-op="wordproblem">
-              <i class="bi bi-journal-text"></i><span>โจทย์ปัญหา</span>
+              <i class="bi bi-bar-chart-fill"></i><span>อ่านแผนภูมิแท่ง</span>
             </a>
           </div>
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.2.0</div>
+      <div class="app-sidebar-footer">v4.3.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -342,18 +396,31 @@
           <div class="operation-panel" data-op="compare">
             <div class="panel-header">
               <h2><i class="bi bi-arrow-left-right"></i> เปรียบเทียบจำนวน (ป.1)</h2>
-              <p>เลือกเครื่องหมายมากกว่า น้อยกว่า หรือเท่ากับ ให้ถูกต้อง</p>
+              <p>เปรียบเทียบจำนวนไม่เกิน 100 และเรียงลำดับ 3 ถึง 5 จำนวน</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="compareModePicker">
+                <button type="button" class="mode-btn active" data-mode="compare">มากกว่า น้อยกว่า</button>
+                <button type="button" class="mode-btn" data-mode="equal">เท่ากับ ไม่เท่ากับ</button>
+                <button type="button" class="mode-btn" data-mode="order">เรียงลำดับ</button>
+              </div>
               <div class="calc-card">
+                <div id="compareRowArea">
                 <div class="compare-row">
                   <div class="compare-number" id="firstCompareNumber">0</div>
                   <div class="compare-symbols" id="compareSymbolPicker">
                     <button type="button" class="symbol-btn" data-symbol="gt">&gt;</button>
                     <button type="button" class="symbol-btn" data-symbol="lt">&lt;</button>
                     <button type="button" class="symbol-btn" data-symbol="eq">=</button>
+                    <button type="button" class="symbol-btn" data-symbol="ne" style="display: none;">≠</button>
                   </div>
                   <div class="compare-number" id="secondCompareNumber">0</div>
+                </div>
+                </div>
+                <div id="compareOrderArea" style="display: none;">
+                  <div class="word-question" id="compareOrderQuestion"></div>
+                  <div class="shape-options" id="compareOrderOptions"></div>
+                  <div class="order-picked" id="compareOrderPicked" aria-live="polite"></div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validateCompareResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
@@ -424,11 +491,16 @@
         <div class="tab-pane fade" id="content_p1_pattern" role="tabpanel" aria-labelledby="menu_p1_pattern">
           <div class="operation-panel" data-op="pattern">
             <div class="panel-header">
-              <h2><i class="bi bi-list-ol"></i> แบบรูปตัวเลข (ป.1)</h2>
-              <p>หาตัวเลขที่หายไปให้ถูกต้องตามแบบรูป</p>
+              <h2><i class="bi bi-list-ol"></i> แบบรูป (ป.1)</h2>
+              <p>หาจำนวนที่เพิ่มขึ้นหรือลดลงทีละ 1 หรือ 10 และหารูปที่หายไป</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="patternModePicker">
+                <button type="button" class="mode-btn active" data-mode="number">แบบรูปจำนวน</button>
+                <button type="button" class="mode-btn" data-mode="shape">แบบรูปซ้ำ</button>
+              </div>
               <div class="calc-card">
+                <div id="patternNumberArea">
                 <div class="pattern-sequence">
                   <span class="pattern-num" id="patternNum1">2</span>
                   <span class="pattern-comma">,</span>
@@ -440,6 +512,11 @@
                   <span class="pattern-comma">,</span>
                   <input type="number" id="patternAnswerNumber" class="calc-input pattern-answer-input"
                     placeholder="?" aria-label="Answer">
+                </div>
+                </div>
+                <div id="patternShapeArea" style="display: none;">
+                  <div class="pattern-shapes" id="patternShapeRow"></div>
+                  <div class="shape-options" id="patternShapeOptions"></div>
                 </div>
                 <button type="button" class="calc-submit" onclick="validatePatternResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
@@ -504,9 +581,13 @@
           <div class="operation-panel" data-op="shape">
             <div class="panel-header">
               <h2><i class="bi bi-circle-square"></i> รูปเรขาคณิต (ป.1)</h2>
-              <p>เลือกชื่อรูปทรงให้ตรงกับรูปที่เห็น</p>
+              <p>เลือกชื่อให้ตรงกับรูปที่เห็น</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="shapeModePicker">
+                <button type="button" class="mode-btn active" data-mode="flat">รูปเรขาคณิต</button>
+                <button type="button" class="mode-btn" data-mode="solid">รูปทรง</button>
+              </div>
               <div class="calc-card">
                 <div class="shape-display" id="shapeDisplay"></div>
                 <div class="shape-options" id="shapeOptionsPicker"></div>
@@ -533,9 +614,13 @@
           <div class="operation-panel" data-op="length">
             <div class="panel-header">
               <h2><i class="bi bi-arrows-angle-expand"></i> ความยาว (ป.1)</h2>
-              <p>เปรียบเทียบความยาวของเชือกสองเส้น</p>
+              <p>เปรียบเทียบความยาวเป็นเซนติเมตรและเมตร</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="lengthModePicker">
+                <button type="button" class="mode-btn active" data-mode="cm">เซนติเมตร</button>
+                <button type="button" class="mode-btn" data-mode="m">เมตร</button>
+              </div>
               <div class="calc-card">
                 <div class="compare-row">
                   <div class="compare-number" id="firstLengthNumber">0 ซม.</div>
@@ -569,9 +654,13 @@
           <div class="operation-panel" data-op="weight">
             <div class="panel-header">
               <h2><i class="bi bi-basket-fill"></i> น้ำหนัก (ป.1)</h2>
-              <p>เปรียบเทียบน้ำหนักของถุงสองถุง</p>
+              <p>เปรียบเทียบน้ำหนักเป็นกิโลกรัมและขีด</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="weightModePicker">
+                <button type="button" class="mode-btn active" data-mode="kg">กิโลกรัม</button>
+                <button type="button" class="mode-btn" data-mode="hg">ขีด</button>
+              </div>
               <div class="calc-card">
                 <div class="compare-row">
                   <div class="compare-number" id="firstWeightNumber">0 กก.</div>
@@ -604,7 +693,7 @@
         <div class="tab-pane fade" id="content_p1_capacity" role="tabpanel" aria-labelledby="menu_p1_capacity">
           <div class="operation-panel" data-op="capacity">
             <div class="panel-header">
-              <h2><i class="bi bi-droplet-fill"></i> ความจุ (ป.1)</h2>
+              <h2><i class="bi bi-droplet-fill"></i> ความจุ (เสริม)</h2>
               <p>เปรียบเทียบความจุของขวดสองขวด</p>
             </div>
             <div class="panel-body">
@@ -640,7 +729,7 @@
         <div class="tab-pane fade" id="content_p1_time" role="tabpanel" aria-labelledby="menu_p1_time">
           <div class="operation-panel" data-op="time">
             <div class="panel-header">
-              <h2><i class="bi bi-clock-fill"></i> เวลา (ป.1)</h2>
+              <h2><i class="bi bi-clock-fill"></i> เวลา (เสริม)</h2>
               <p>ดูนาฬิกาแล้วบอกว่าเป็นเวลากี่นาฬิกา</p>
             </div>
             <div class="panel-body">
@@ -670,7 +759,7 @@
         <div class="tab-pane fade" id="content_p1_money" role="tabpanel" aria-labelledby="menu_p1_money">
           <div class="operation-panel" data-op="money">
             <div class="panel-header">
-              <h2><i class="bi bi-cash-coin"></i> เงิน (ป.1)</h2>
+              <h2><i class="bi bi-cash-coin"></i> เงิน (เสริม)</h2>
               <p>รวมเงินเหรียญและธนบัตรทั้งหมดว่าได้กี่บาท</p>
             </div>
             <div class="panel-body">
@@ -1020,6 +1109,7 @@
             <div class="panel-body">
               <div class="mode-picker" id="p2CompareModePicker">
                 <button type="button" class="mode-btn active" data-mode="compare">เปรียบเทียบ</button>
+                <button type="button" class="mode-btn" data-mode="equal">เท่ากับ ไม่เท่ากับ</button>
                 <button type="button" class="mode-btn" data-mode="order">เรียงลำดับ</button>
               </div>
               <div class="calc-card">
@@ -1030,6 +1120,7 @@
                       <button type="button" class="symbol-btn" data-symbol="gt">&gt;</button>
                       <button type="button" class="symbol-btn" data-symbol="lt">&lt;</button>
                       <button type="button" class="symbol-btn" data-symbol="eq">=</button>
+                      <button type="button" class="symbol-btn" data-symbol="ne" style="display: none;">≠</button>
                     </div>
                     <div class="compare-number" id="secondP2CompareNumber">0</div>
                   </div>
@@ -1363,11 +1454,373 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="content_p1_missing" role="tabpanel" aria-labelledby="menu_p1_missing">
+          <div class="operation-panel" data-op="numberbond">
+            <div class="panel-header">
+              <h2><i class="bi bi-question-square-fill"></i> หาตัวไม่ทราบค่า (ป.1)</h2>
+              <p>หาจำนวนที่ใส่ใน □ แล้วทำให้ประโยคสัญลักษณ์เป็นจริง</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p1MissingModePicker">
+                <button type="button" class="mode-btn active" data-mode="add">บวก</button>
+                <button type="button" class="mode-btn" data-mode="sub">ลบ</button>
+              </div>
+              <div class="calc-card">
+                <div class="place-value-number is-expression" id="p1MissingQuestion"></div>
+                <input type="number" id="p1MissingAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP1MissingResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP1Missing"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP1MissingResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP1MissingList"></div>
+                </div>
+                <div class="side-panel" id="contentP1MissingHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP1MissingList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p1_number" role="tabpanel" aria-labelledby="menu_p1_number">
+          <div class="operation-panel" data-op="placevalue">
+            <div class="panel-header">
+              <h2><i class="bi bi-123"></i> จำนวนและตัวเลข (ป.1)</h2>
+              <p>นับจำนวน อ่านตัวเลขไทยและตัวหนังสือ ไม่เกิน 100</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p1NumberModePicker">
+                <button type="button" class="mode-btn active" data-mode="count">นับจำนวน</button>
+                <button type="button" class="mode-btn" data-mode="thai">ตัวเลขไทย</button>
+                <button type="button" class="mode-btn" data-mode="word">ตัวหนังสือ</button>
+              </div>
+              <div class="calc-card">
+                <div id="p1NumberBlocks" class="number-blocks"></div>
+                <div class="place-value-number" id="p1NumberShown" style="display: none;"></div>
+                <input type="number" id="p1NumberAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP1NumberResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP1Number"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP1NumberResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP1NumberList"></div>
+                </div>
+                <div class="side-panel" id="contentP1NumberHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP1NumberList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p1_pictograph" role="tabpanel" aria-labelledby="menu_p1_pictograph">
+          <div class="operation-panel" data-op="barchart">
+            <div class="panel-header">
+              <h2><i class="bi bi-image-fill"></i> แผนภูมิรูปภาพ (ป.1)</h2>
+              <p>อ่านแผนภูมิรูปภาพเมื่อ 1 รูปแทน 1 หน่วย</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div id="p1PictographDisplay"></div>
+                <div class="word-question" id="p1PictographQuestion"></div>
+                <input type="number" id="p1PictographAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP1PictographResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP1Pictograph"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP1PictographResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP1PictographList"></div>
+                </div>
+                <div class="side-panel" id="contentP1PictographHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP1PictographList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_fractiondecimal" role="tabpanel" aria-labelledby="menu_p5_fractiondecimal">
+          <div class="operation-panel" data-op="decimal">
+            <div class="panel-header">
+              <h2><i class="bi bi-slash-square"></i> เศษส่วนเป็นทศนิยม (ป.5)</h2>
+              <p>เขียนเศษส่วนที่มีตัวส่วนเป็นตัวประกอบของ 10, 100 หรือ 1,000 ในรูปทศนิยม</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="fraction-row">
+                  <div class="fraction">
+                    <span class="fraction-num" id="fractionDecimalNumerator">1</span>
+                    <span class="fraction-bar"></span>
+                    <span class="fraction-den" id="fractionDecimalDenominator">2</span>
+                  </div>
+                </div>
+                <input type="number" step="any" id="fractionDecimalAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateFractionDecimalResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackFractionDecimal"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentFractionDecimalResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultFractionDecimalList"></div>
+                </div>
+                <div class="side-panel" id="contentFractionDecimalHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyFractionDecimalList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_proportion" role="tabpanel" aria-labelledby="menu_p5_proportion">
+          <div class="operation-panel" data-op="percentage">
+            <div class="panel-header">
+              <h2><i class="bi bi-calculator-fill"></i> บัญญัติไตรยางศ์ (ป.5)</h2>
+              <p>หาค่าต่อหนึ่งหน่วยก่อน แล้วหาสิ่งที่โจทย์ถาม</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question" id="proportionQuestion"></div>
+                <input type="number" id="proportionAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateProportionResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackProportion"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentProportionResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultProportionList"></div>
+                </div>
+                <div class="side-panel" id="contentProportionHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyProportionList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_measure" role="tabpanel" aria-labelledby="menu_p5_measure">
+          <div class="operation-panel" data-op="length">
+            <div class="panel-header">
+              <h2><i class="bi bi-rulers"></i> ความยาวและน้ำหนัก (ป.5)</h2>
+              <p>เปลี่ยนหน่วยและเขียนในรูปทศนิยม</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="measureModePicker">
+                <button type="button" class="mode-btn active" data-mode="length">ความยาว</button>
+                <button type="button" class="mode-btn" data-mode="weight">น้ำหนัก</button>
+                <button type="button" class="mode-btn" data-mode="word">โจทย์ปัญหา</button>
+              </div>
+              <div class="calc-card">
+                <div class="word-question" id="measureQuestion"></div>
+                <input type="number" step="any" id="measureAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateMeasureResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackMeasure"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentMeasureResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultMeasureList"></div>
+                </div>
+                <div class="side-panel" id="contentMeasureHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyMeasureList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_quadrilateral" role="tabpanel" aria-labelledby="menu_p5_quadrilateral">
+          <div class="operation-panel" data-op="shape">
+            <div class="panel-header">
+              <h2><i class="bi bi-bounding-box"></i> จำแนกรูปสี่เหลี่ยม (ป.5)</h2>
+              <p>บอกชนิดของรูปสี่เหลี่ยมจากรูปและสมบัติ</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="quadrilateralModePicker">
+                <button type="button" class="mode-btn active" data-mode="picture">ดูรูป</button>
+                <button type="button" class="mode-btn" data-mode="rule">ดูสมบัติ</button>
+              </div>
+              <div class="calc-card">
+                <div class="shape-display" id="quadrilateralDisplay"></div>
+                <div class="word-question" id="quadrilateralRule" style="display: none;"></div>
+                <div class="shape-options" id="quadrilateralOptions"></div>
+                <button type="button" class="calc-submit" onclick="validateQuadrilateralResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackQuadrilateral"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentQuadrilateralResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultQuadrilateralList"></div>
+                </div>
+                <div class="side-panel" id="contentQuadrilateralHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyQuadrilateralList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_quadarea" role="tabpanel" aria-labelledby="menu_p5_quadarea">
+          <div class="operation-panel" data-op="geometry">
+            <div class="panel-header">
+              <h2><i class="bi bi-aspect-ratio"></i> รอบรูปและพื้นที่สี่เหลี่ยม (ป.5)</h2>
+              <p>หาความยาวรอบรูปของรูปสี่เหลี่ยม และพื้นที่ของรูปสี่เหลี่ยมด้านขนานและขนมเปียกปูน</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="quadAreaModePicker">
+                <button type="button" class="mode-btn active" data-mode="perimeter">ความยาวรอบรูป</button>
+                <button type="button" class="mode-btn" data-mode="area">พื้นที่</button>
+              </div>
+              <div class="calc-card">
+                <div class="shape-display" id="quadAreaDisplay"></div>
+                <div class="word-question" id="quadAreaQuestion"></div>
+                <input type="number" id="quadAreaAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateQuadAreaResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackQuadArea"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentQuadAreaResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultQuadAreaList"></div>
+                </div>
+                <div class="side-panel" id="contentQuadAreaHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyQuadAreaList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_prism" role="tabpanel" aria-labelledby="menu_p5_prism">
+          <div class="operation-panel" data-op="volume">
+            <div class="panel-header">
+              <h2><i class="bi bi-box-fill"></i> ปริซึม (ป.5)</h2>
+              <p>บอกจำนวนหน้า ขอบ และจุดยอดของปริซึม</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="shape-display" id="prismDisplay"></div>
+                <div class="word-question" id="prismQuestion"></div>
+                <input type="number" id="prismAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validatePrismResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackPrism"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentPrismResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultPrismList"></div>
+                </div>
+                <div class="side-panel" id="contentPrismHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyPrismList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_linegraph" role="tabpanel" aria-labelledby="menu_p5_linegraph">
+          <div class="operation-panel" data-op="barchart">
+            <div class="panel-header">
+              <h2><i class="bi bi-graph-up"></i> กราฟเส้น (ป.5)</h2>
+              <p>อ่านกราฟเส้นแล้วตอบคำถาม</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="line-graph" id="lineGraphDisplay"></div>
+                <div class="word-question" id="lineGraphQuestion"></div>
+                <input type="number" id="lineGraphAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateLineGraphResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackLineGraph"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentLineGraphResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultLineGraphList"></div>
+                </div>
+                <div class="side-panel" id="contentLineGraphHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyLineGraphList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p5_barwrite" role="tabpanel" aria-labelledby="menu_p5_barwrite">
+          <div class="operation-panel" data-op="barchart">
+            <div class="panel-header">
+              <h2><i class="bi bi-bar-chart-line-fill"></i> เขียนแผนภูมิแท่ง (ป.5)</h2>
+              <p>แตะช่องเพื่อสร้างแผนภูมิแท่งให้ตรงกับข้อมูล</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="barwrite-data" id="barWriteData"></div>
+                <div class="barwrite-grid" id="barWriteGrid"></div>
+                <button type="button" class="calc-submit" onclick="validateBarWriteResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackBarWrite"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentBarWriteResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultBarWriteList"></div>
+                </div>
+                <div class="side-panel" id="contentBarWriteHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyBarWriteList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="tab-pane fade" id="content_p5_decimal" role="tabpanel" aria-labelledby="menu_p5_decimal">
           <div class="operation-panel" data-op="decimal">
             <div class="panel-header">
               <h2><i class="bi bi-123"></i> ทศนิยม (ป.5)</h2>
-              <p>ฝึกการบวก ลบ คูณ หาร ทศนิยม</p>
+              <p>ฝึกการบวก ลบ คูณ หาร ทศนิยมไม่เกิน 3 ตำแหน่ง</p>
             </div>
             <div class="panel-body">
               <div class="mode-picker" id="decimalModePicker">
@@ -1383,15 +1836,15 @@
               </div>
               <div class="calc-card">
                 <div class="calc-number-display" id="decimalNumberDisplay">
-                  <input type="number" step="0.1" id="firstDecimalNumber" class="calc-input" placeholder="0"
+                  <input type="number" step="any" id="firstDecimalNumber" class="calc-input" placeholder="0"
                     aria-label="First Number">
                   <div class="calc-symbol" id="decimalSymbol">+</div>
-                  <input type="number" step="0.1" id="secondDecimalNumber" class="calc-input" placeholder="0"
+                  <input type="number" step="any" id="secondDecimalNumber" class="calc-input" placeholder="0"
                     aria-label="Second Number">
                   <div class="calc-symbol">=</div>
                 </div>
                 <div class="word-question" id="decimalWordText" style="display: none;"></div>
-                <input type="number" step="0.1" id="resultDecimalNumber" class="calc-input calc-input-result"
+                <input type="number" step="any" id="resultDecimalNumber" class="calc-input calc-input-result"
                   placeholder="?" aria-label="Result">
                 <button type="button" class="calc-submit" onclick="validateDecimalResult()">
                   ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
@@ -1507,7 +1960,7 @@
         <div class="tab-pane fade" id="content_p5_gcflcm" role="tabpanel" aria-labelledby="menu_p5_gcflcm">
           <div class="operation-panel" data-op="gcflcm">
             <div class="panel-header">
-              <h2><i class="bi bi-intersect"></i> ห.ร.ม. และ ค.ร.น. (ป.5)</h2>
+              <h2><i class="bi bi-intersect"></i> ห.ร.ม. / ค.ร.น. (ป.6)</h2>
               <p>หาตัวหารร่วมมาก (ห.ร.ม.) หรือตัวคูณร่วมน้อย (ค.ร.น.) ของสองจำนวน</p>
             </div>
             <div class="panel-body">
@@ -1605,7 +2058,7 @@
         <div class="tab-pane fade" id="content_p5_geometry" role="tabpanel" aria-labelledby="menu_p5_geometry">
           <div class="operation-panel" data-op="geometry">
             <div class="panel-header">
-              <h2><i class="bi bi-rulers"></i> พื้นที่และรอบรูป (ป.5)</h2>
+              <h2><i class="bi bi-rulers"></i> พื้นที่ / รอบรูป (เสริม)</h2>
               <p>หาพื้นที่หรือความยาวรอบรูปของสี่เหลี่ยมและสามเหลี่ยม</p>
             </div>
             <div class="panel-body">
@@ -1636,9 +2089,13 @@
           <div class="operation-panel" data-op="volume">
             <div class="panel-header">
               <h2><i class="bi bi-box"></i> ปริมาตร (ป.5)</h2>
-              <p>หาปริมาตรของกล่องสี่เหลี่ยมมุมฉาก</p>
+              <p>หาปริมาตรของทรงสี่เหลี่ยมมุมฉากและความจุของภาชนะ</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="volumeModePicker">
+                <button type="button" class="mode-btn active" data-mode="volume">ปริมาตร</button>
+                <button type="button" class="mode-btn" data-mode="capacity">ความจุ</button>
+              </div>
               <div class="calc-card">
                 <div class="word-question" id="volumeQuestion">กล่องสี่เหลี่ยมมุมฉาก กว้าง 3 ยาว 4 สูง 2 หน่วย
                   มีปริมาตรเท่ากับเท่าไร (ลูกบาศก์หน่วย)</div>
@@ -1666,7 +2123,7 @@
         <div class="tab-pane fade" id="content_p5_angle" role="tabpanel" aria-labelledby="menu_p5_angle">
           <div class="operation-panel" data-op="angle">
             <div class="panel-header">
-              <h2><i class="bi bi-compass"></i> มุม (ป.5)</h2>
+              <h2><i class="bi bi-compass"></i> มุม (เสริม)</h2>
               <p>หามุมประกอบมุมฉากหรือมุมประกอบมุมตรง</p>
             </div>
             <div class="panel-body">
@@ -1697,7 +2154,7 @@
         <div class="tab-pane fade" id="content_p5_average" role="tabpanel" aria-labelledby="menu_p5_average">
           <div class="operation-panel" data-op="average">
             <div class="panel-header">
-              <h2><i class="bi bi-clipboard-data"></i> ค่าเฉลี่ย (ป.5)</h2>
+              <h2><i class="bi bi-clipboard-data"></i> ค่าเฉลี่ย (เสริม)</h2>
               <p>หาค่าเฉลี่ยของชุดข้อมูล</p>
             </div>
             <div class="panel-body">
@@ -1732,7 +2189,7 @@
         <div class="tab-pane fade" id="content_p5_barchart" role="tabpanel" aria-labelledby="menu_p5_barchart">
           <div class="operation-panel" data-op="barchart">
             <div class="panel-header">
-              <h2><i class="bi bi-bar-chart-fill"></i> แผนภูมิแท่ง (ป.5)</h2>
+              <h2><i class="bi bi-bar-chart-fill"></i> อ่านแผนภูมิแท่ง (ป.4)</h2>
               <p>อ่านข้อมูลจากแผนภูมิแท่งแสดงจำนวนนักเรียนที่ชอบผลไม้แต่ละชนิด</p>
             </div>
             <div class="panel-body">
@@ -1764,9 +2221,15 @@
           <div class="operation-panel" data-op="wordproblem">
             <div class="panel-header">
               <h2><i class="bi bi-journal-text"></i> โจทย์ปัญหา (ป.5)</h2>
-              <p>ฝึกแก้โจทย์ปัญหาที่รวมทศนิยม ร้อยละ พื้นที่ ปริมาตร และค่าเฉลี่ย</p>
+              <p>ฝึกแก้โจทย์ปัญหา 2 ขั้นตอน</p>
             </div>
             <div class="panel-body">
+              <div class="mode-picker" id="wordProblemP5ModePicker">
+                <button type="button" class="mode-btn active" data-mode="fraction">เศษส่วน</button>
+                <button type="button" class="mode-btn" data-mode="decimal">ทศนิยม</button>
+                <button type="button" class="mode-btn" data-mode="percent">ร้อยละ</button>
+                <button type="button" class="mode-btn" data-mode="volume">ปริมาตร</button>
+              </div>
               <div class="calc-card">
                 <div class="word-question" id="wordProblemP5Text">สมชายซื้อกระเป๋าราคา 120.5 บาท และซื้อรองเท้าราคา
                   350.0 บาท สมชายต้องจ่ายเงินทั้งหมดกี่บาท</div>
@@ -2316,6 +2779,7 @@
       }
     });
   </script>
+  <script type="text/javascript" src="scrips/common/index.js"></script>
   <script type="text/javascript" src="scrips/p1plus/index.js"></script>
   <script type="text/javascript" src="scrips/p1minus/index.js"></script>
   <script type="text/javascript" src="scrips/p1compare/index.js"></script>
@@ -2329,7 +2793,6 @@
   <script type="text/javascript" src="scrips/p1time/index.js"></script>
   <script type="text/javascript" src="scrips/p1money/index.js"></script>
   <script type="text/javascript" src="scrips/p1wordproblem/index.js"></script>
-  <script type="text/javascript" src="scrips/p2common/index.js"></script>
   <script type="text/javascript" src="scrips/p2plus/index.js"></script>
   <script type="text/javascript" src="scrips/p2minus/index.js"></script>
   <script type="text/javascript" src="scrips/p2multiply/index.js"></script>
@@ -2356,6 +2819,17 @@
   <script type="text/javascript" src="scrips/p5average/index.js"></script>
   <script type="text/javascript" src="scrips/p5barchart/index.js"></script>
   <script type="text/javascript" src="scrips/p5wordproblem/index.js"></script>
+  <script type="text/javascript" src="scrips/p1missing/index.js"></script>
+  <script type="text/javascript" src="scrips/p1number/index.js"></script>
+  <script type="text/javascript" src="scrips/p1pictograph/index.js"></script>
+  <script type="text/javascript" src="scrips/p5fractiondecimal/index.js"></script>
+  <script type="text/javascript" src="scrips/p5proportion/index.js"></script>
+  <script type="text/javascript" src="scrips/p5measure/index.js"></script>
+  <script type="text/javascript" src="scrips/p5quadrilateral/index.js"></script>
+  <script type="text/javascript" src="scrips/p5quadarea/index.js"></script>
+  <script type="text/javascript" src="scrips/p5prism/index.js"></script>
+  <script type="text/javascript" src="scrips/p5linegraph/index.js"></script>
+  <script type="text/javascript" src="scrips/p5barwrite/index.js"></script>
   <script type="text/javascript" src="scrips/speedquiz/index.js"></script>
   <script type="text/javascript" src="scrips/profile/index.js"></script>
   <script type="text/javascript" src="scrips/streak/index.js"></script>

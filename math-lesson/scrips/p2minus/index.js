@@ -5,13 +5,13 @@ var p2MinusObj = {
 }
 
 function buildP2MinusWordText(firstNumber, secondNumber) {
-    let name = p2Pick(p2WordNames);
-    let itemObj = p2Pick(p2WordItems);
+    let name = pickOne(wordNames);
+    let itemObj = pickOne(wordItems);
     let templates = [
         `${name}มี${itemObj.item} ${firstNumber} ${itemObj.classifier} ให้เพื่อนไป ${secondNumber} ${itemObj.classifier} ${name}เหลือ${itemObj.item}กี่${itemObj.classifier}`,
         `${name}มี${itemObj.item} ${firstNumber} ${itemObj.classifier} ใช้ไป ${secondNumber} ${itemObj.classifier} เหลือ${itemObj.item}กี่${itemObj.classifier}`,
     ];
-    return p2Pick(templates);
+    return pickOne(templates);
 }
 
 function validateP2MinusResult() {
@@ -64,8 +64,8 @@ function addResultP2MinusToHistoryList(item) {
 }
 
 function addSuggestP2MinusValue() {
-    let firstNumber = p2RandomInt(100, 1000);
-    let secondNumber = p2RandomInt(10, firstNumber);
+    let firstNumber = randomInt(100, 1000);
+    let secondNumber = randomInt(10, firstNumber);
 
     $('#firstP2MinusNumber').val(firstNumber);
     $('#secondP2MinusNumber').val(secondNumber);

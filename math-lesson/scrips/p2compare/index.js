@@ -10,7 +10,7 @@ var p2CompareObj = {
     picked: [],
 }
 
-p2BindSymbolPicker('p2CompareSymbolPicker', p2CompareObj);
+bindSymbolPicker('p2CompareSymbolPicker', p2CompareObj);
 
 $(document).on('click', '#p2CompareOrderOptions .shape-option-btn', function () {
     let value = $(this).data('value');
@@ -35,14 +35,19 @@ function renderP2ComparePicked() {
 function validateP2CompareResult() {
     let isCorrect, expr;
 
-    if (p2CompareObj.mode === 'compare') {
+    if (p2CompareObj.mode !== 'order') {
         if (!p2CompareObj.selectedSymbol) {
             flagFieldRequired('p2CompareSymbolPicker');
             return;
         }
 
-        isCorrect = p2CompareObj.selectedSymbol === p2CompareSymbol(p2CompareObj.firstNumber, p2CompareObj.secondNumber);
-        expr = `${p2CompareObj.firstNumber} ${p2SymbolText[p2CompareObj.selectedSymbol]} ${p2CompareObj.secondNumber}`;
+        let actual = compareSymbolOf(p2CompareObj.firstNumber, p2CompareObj.secondNumber);
+        if (p2CompareObj.mode === 'equal' && actual !== 'eq') {
+            actual = 'ne';
+        }
+
+        isCorrect = p2CompareObj.selectedSymbol === actual;
+        expr = `${p2CompareObj.firstNumber} ${compareSymbolText[p2CompareObj.selectedSymbol]} ${p2CompareObj.secondNumber}`;
     } else {
         if (p2CompareObj.picked.length < p2CompareObj.numbers.length) {
             flagFieldRequired('p2CompareOrderOptions');
@@ -98,37 +103,39 @@ function addResultP2CompareToHistoryList(item) {
 // Numbers from far apart are decided by the hundreds alone, so most pairs share
 // them and the child has to look further along.
 function addSuggestP2CompareValue() {
-    let isCompare = p2CompareObj.mode === 'compare';
+    let isOrder = p2CompareObj.mode === 'order';
+    let isEqualMode = p2CompareObj.mode === 'equal';
 
-    $('#p2CompareRow').toggle(isCompare);
-    $('#p2CompareOrder').toggle(!isCompare);
+    $('#p2CompareRow').toggle(!isOrder);
+    $('#p2CompareOrder').toggle(isOrder);
 
-    if (isCompare) {
-        let firstNumber = p2RandomInt(100, 999);
-        let secondNumber = p2RandomInt(0, 1000);
+    if (!isOrder) {
+        let firstNumber = randomInt(100, 999);
+        let secondNumber = randomInt(0, 1000);
         let closeness = Math.random();
 
-        if (closeness < 0.2) {
+        if (closeness < (isEqualMode ? 0.5 : 0.2)) {
             secondNumber = firstNumber;
         } else if (closeness < 0.7) {
-            secondNumber = Math.floor(firstNumber / 100) * 100 + p2RandomInt(0, 99);
+            secondNumber = Math.floor(firstNumber / 100) * 100 + randomInt(0, 99);
         }
 
         p2CompareObj.firstNumber = firstNumber;
         p2CompareObj.secondNumber = secondNumber;
         p2CompareObj.selectedSymbol = null;
 
+        showCompareSymbols('p2CompareSymbolPicker', isEqualMode);
         $('#p2CompareSymbolPicker .symbol-btn').removeClass('selected');
         $('#firstP2CompareNumber').text(firstNumber);
         $('#secondP2CompareNumber').text(secondNumber);
         return;
     }
 
-    let count = p2RandomInt(3, 5);
+    let count = randomInt(3, 5);
     let numbers = [];
 
     while (numbers.length < count) {
-        let number = p2RandomInt(0, 1000);
+        let number = randomInt(0, 1000);
         if (numbers.indexOf(number) === -1) {
             numbers.push(number);
         }

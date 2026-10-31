@@ -1,109 +1,75 @@
 var p5WordProblemObj = {
     numRows: 1,
     numRowsHistory: 1,
+    mode: "fraction",
     expected: 0,
-    isDecimal: false,
     text: '',
 }
 
-var wordProblemP5Names = ['สมชาย', 'สมหญิง', 'มานี', 'มานะ', 'ครูใหญ่', 'แม่ค้า'];
+var wordProblemP5Names = ['สมชาย', 'สมหญิง', 'มานี', 'มานะ'];
 var wordProblemP5Items = ['กระเป๋า', 'รองเท้า', 'เสื้อ', 'หนังสือ', 'ของเล่น', 'นาฬิกา'];
 
-function pickWordProblemP5(arr) {
-    return arr[parseInt(Math.random() * arr.length)];
-}
-
-function generateMoneyAddScenario() {
-    let name = pickWordProblemP5(wordProblemP5Names);
-    let item1 = pickWordProblemP5(wordProblemP5Items);
-    let item2 = pickWordProblemP5(wordProblemP5Items);
-    let price1Tenths = parseInt(Math.random() * 990) + 10;
-    let price2Tenths = parseInt(Math.random() * 990) + 10;
-    let price1 = (price1Tenths / 10).toFixed(1);
-    let price2 = (price2Tenths / 10).toFixed(1);
-    let expected = ((price1Tenths + price2Tenths) / 10).toFixed(1);
-    let text = `${name}ซื้อ${item1}ราคา ${price1} บาท และซื้อ${item2}ราคา ${price2} บาท ${name}ต้องจ่ายเงินทั้งหมดกี่บาท`;
-    return { text, expected: +expected, isDecimal: true };
-}
-
-function generateMoneyChangeScenario() {
-    let name = pickWordProblemP5(wordProblemP5Names);
-    let item = pickWordProblemP5(wordProblemP5Items);
-    let priceTenths = parseInt(Math.random() * 490) + 10;
-    let extraTenths = parseInt(Math.random() * 500) + 10;
-    let moneyTenths = priceTenths + extraTenths;
-    let price = (priceTenths / 10).toFixed(1);
-    let money = (moneyTenths / 10).toFixed(1);
-    let expected = (extraTenths / 10).toFixed(1);
-    let text = `${name}มีเงิน ${money} บาท ซื้อ${item}ราคา ${price} บาท ${name}จะเหลือเงินกี่บาท`;
-    return { text, expected: +expected, isDecimal: true };
-}
-
-function generatePercentDiscountScenario() {
-    let item = pickWordProblemP5(wordProblemP5Items);
-    let percentOptions = [5, 10, 20, 25, 50];
-    let percent = pickWordProblemP5(percentOptions);
-    let divisor = 100 / percent;
-    let multiplier = parseInt(Math.random() * 20) + 2;
-    let price = divisor * multiplier;
-    let discount = price * percent / 100;
-    let expected = price - discount;
-    let text = `${item}ราคา ${price} บาท ลดราคาร้อยละ ${percent} ราคาหลังลดเหลือกี่บาท`;
-    return { text, expected, isDecimal: false };
-}
-
-function generatePercentPortionScenario() {
-    let percentOptions = [5, 10, 20, 25, 50];
-    let percent = pickWordProblemP5(percentOptions);
-    let divisor = 100 / percent;
-    let multiplier = parseInt(Math.random() * 20) + 1;
-    let total = divisor * multiplier;
-    let expected = multiplier;
-    let text = `ในโรงเรียนมีนักเรียน ${total} คน เป็นนักเรียนหญิงร้อยละ ${percent} มีนักเรียนหญิงกี่คน`;
-    return { text, expected, isDecimal: false };
-}
-
-function generateAreaScenario() {
-    let width = parseInt(Math.random() * 15) + 3;
-    let length = parseInt(Math.random() * 15) + 3;
-    let expected = width * length;
-    let text = `สวนรูปสี่เหลี่ยมผืนผ้ากว้าง ${width} เมตร ยาว ${length} เมตร มีพื้นที่กี่ตารางเมตร`;
-    return { text, expected, isDecimal: false };
-}
-
-function generateVolumeScenario() {
-    let w = parseInt(Math.random() * 10) + 2;
-    let l = parseInt(Math.random() * 10) + 2;
-    let h = parseInt(Math.random() * 10) + 2;
-    let expected = w * l * h;
-    let text = `กล่องใบหนึ่งกว้าง ${w} ซม. ยาว ${l} ซม. สูง ${h} ซม. มีปริมาตรกี่ลูกบาศก์เซนติเมตร`;
-    return { text, expected, isDecimal: false };
-}
-
-function generateAverageScenario() {
-    let name = pickWordProblemP5(wordProblemP5Names);
-    let n = 3 + parseInt(Math.random() * 2);
-    let avg = parseInt(Math.random() * 41) + 10;
-    let scores, last;
-
-    do {
-        scores = [];
-        let sum = 0;
-        for (let i = 0; i < n - 1; i++) {
-            let offset = parseInt(Math.random() * 21) - 10;
-            let value = avg + offset;
-            if (value < 1) value = 1;
-            scores.push(value);
-            sum += value;
-        }
-        last = avg * n - sum;
-    } while (last < 1);
-
-    scores.push(last);
-
-    let text = `${name}สอบ ${n} วิชา ได้คะแนน ${scores.join(', ')} คะแนน เฉลี่ยแล้วได้กี่คะแนน`;
-    return { text, expected: avg, isDecimal: false };
-}
+var wordProblemP5Builders = {
+    // every amount is chosen so that each fraction of it comes out whole
+    fraction: [
+        function (name) {
+            let first = pickOne([[1, 2], [1, 3], [1, 4], [2, 5], [3, 10]]);
+            let second = pickOne([[1, 4], [1, 5], [1, 10]]);
+            let total = first[1] * second[1] * randomInt(1, 4) * 2;
+            let given = total * first[0] / first[1], gained = total * second[0] / second[1];
+            return { text: `${name}มีส้ม ${total} ผล ให้พี่ ${first[0]}/${first[1]} ของทั้งหมด และให้น้อง ${second[0]}/${second[1]} ของทั้งหมด ${name}เหลือส้มกี่ผล`, expected: total - given - gained };
+        },
+        function (name) {
+            let first = pickOne([[1, 2], [1, 3], [1, 4], [1, 5]]);
+            let second = pickOne([[1, 2], [1, 3], [1, 4]]);
+            let rest = second[1] * (first[1] - first[0]) * randomInt(1, 4) * 10;
+            let total = rest * first[1] / (first[1] - first[0]);
+            let left = rest - rest * second[0] / second[1];
+            return { text: `${name}มีเงิน ${total} บาท ใช้ไป ${first[0]}/${first[1]} ของเงินทั้งหมด แล้วใช้อีก ${second[0]}/${second[1]} ของเงินที่เหลือ ${name}เหลือเงินกี่บาท`, expected: left };
+        },
+    ],
+    decimal: [
+        function (name) {
+            let first = randomInt(40, 1000) * 25, second = randomInt(40, 1000) * 25;
+            let paid = (Math.floor((first + second) / 10000) + 1) * 10000;
+            return { text: `${name}ซื้อ${pickOne(wordProblemP5Items)}ราคา ${(first / 100).toFixed(2)} บาท และซื้อ${pickOne(wordProblemP5Items)}ราคา ${(second / 100).toFixed(2)} บาท จ่ายเงิน ${paid / 100} บาท จะได้เงินทอนกี่บาท`, expected: (paid - first - second) / 100 };
+        },
+        function (name) {
+            let count = randomInt(2, 6), price = randomInt(40, 400) * 25;
+            let paid = (Math.floor(count * price / 10000) + 1) * 10000;
+            return { text: `${name}ซื้อ${pickOne(wordProblemP5Items)} ${count} ชิ้น ชิ้นละ ${(price / 100).toFixed(2)} บาท จ่ายเงิน ${paid / 100} บาท จะได้เงินทอนกี่บาท`, expected: (paid - count * price) / 100 };
+        },
+        function (name) {
+            let pieces = randomInt(3, 8), each = randomInt(10, 90) * 5, used = randomInt(2, pieces - 1);
+            return { text: `${name}มีเชือกยาว ${(pieces * each / 100).toFixed(2)} เมตร ตัดเป็น ${pieces} เส้น ยาวเท่าๆ กัน แล้วใช้ไป ${used} เส้น ใช้เชือกไปกี่เมตร`, expected: used * each / 100 };
+        },
+    ],
+    percent: [
+        function () {
+            let percent = pickOne([5, 10, 20, 25, 50]), price = 100 / percent * randomInt(2, 21) * 10;
+            return { text: `${pickOne(wordProblemP5Items)}ราคา ${price} บาท ลดราคาร้อยละ ${percent} ราคาหลังลดเหลือกี่บาท`, expected: price - price * percent / 100 };
+        },
+        function () {
+            let percent = pickOne([5, 10, 20, 25, 50]), total = 100 / percent * randomInt(1, 20);
+            return { text: `ในโรงเรียนมีนักเรียน ${total} คน เป็นนักเรียนหญิงร้อยละ ${percent} มีนักเรียนหญิงกี่คน`, expected: total * percent / 100 };
+        },
+        function (name) {
+            let percent = pickOne([5, 10, 20, 25, 50]), cost = 100 / percent * randomInt(2, 21) * 10;
+            return { text: `${name}ซื้อ${pickOne(wordProblemP5Items)}มาราคา ${cost} บาท ขายได้กำไรร้อยละ ${percent} ${name}ขายไปกี่บาท`, expected: cost + cost * percent / 100 };
+        },
+    ],
+    volume: [
+        function () {
+            let width = randomInt(2, 11), length = randomInt(2, 11), height = randomInt(2, 11);
+            return { text: `กล่องใบหนึ่งกว้าง ${width} ซม. ยาว ${length} ซม. สูง ${height} ซม. มีปริมาตรกี่ลูกบาศก์เซนติเมตร`, expected: width * length * height };
+        },
+        function () {
+            let width = randomInt(2, 6) * 10, length = randomInt(2, 6) * 10, height = randomInt(2, 6) * 10;
+            let litres = width * length * height / 1000, filled = randomInt(1, litres - 1);
+            return { text: `ถังทรงสี่เหลี่ยมมุมฉากกว้าง ${width} ซม. ยาว ${length} ซม. สูง ${height} ซม. มีน้ำอยู่ ${filled} ลิตร ต้องเติมน้ำอีกกี่ลิตรจึงจะเต็มถัง`, expected: litres - filled };
+        },
+    ],
+};
 
 function validateWordProblemP5Result() {
     if (focusFirstEmptyField(['wordProblemP5AnswerNumber'])) {
@@ -111,27 +77,19 @@ function validateWordProblemP5Result() {
     }
 
     let answer = +$('#wordProblemP5AnswerNumber').val();
-    let expected = p5WordProblemObj.expected;
-    let isCorrect = p5WordProblemObj.isDecimal
-        ? Math.round(answer * 10) === Math.round(expected * 10)
-        : answer === expected;
-    let textColor = "green";
+    let isCorrect = isSameNumber(answer, p5WordProblemObj.expected);
+    let expr = `${p5WordProblemObj.text} = ${answer}`;
 
     showFeedback('feedbackWordProblemP5', isCorrect);
-
-    let expr = `${p5WordProblemObj.text} = ${answer}`;
 
     if (isCorrect) {
         addResultWordProblemP5ToItemList({ expr })
         $('#contentWordProblemP5Result').show();
         addSuggestWordProblemP5Value();
     }
-    else {
-        textColor = "red";
-    }
 
     $('#contentWordProblemP5History').show();
-    addResultWordProblemP5ToHistoryList({ expr, color: textColor })
+    addResultWordProblemP5ToHistoryList({ expr, color: isCorrect ? "green" : "red" })
 }
 
 function addResultWordProblemP5ToItemList(item) {
@@ -161,20 +119,15 @@ function addResultWordProblemP5ToHistoryList(item) {
 }
 
 function addSuggestWordProblemP5Value() {
-    let generators = [
-        generateMoneyAddScenario, generateMoneyChangeScenario,
-        generatePercentDiscountScenario, generatePercentPortionScenario,
-        generateAreaScenario, generateVolumeScenario, generateAverageScenario
-    ];
-    let generator = generators[parseInt(Math.random() * generators.length)];
-    let scenario = generator();
+    let question = pickOne(wordProblemP5Builders[p5WordProblemObj.mode])(pickOne(wordProblemP5Names));
 
-    p5WordProblemObj.text = scenario.text;
-    p5WordProblemObj.expected = scenario.expected;
-    p5WordProblemObj.isDecimal = scenario.isDecimal;
+    p5WordProblemObj.text = question.text;
+    p5WordProblemObj.expected = question.expected;
 
-    $('#wordProblemP5Text').text(scenario.text);
+    $('#wordProblemP5Text').text(question.text);
     $('#wordProblemP5AnswerNumber').val('');
 }
+
+bindModePicker('wordProblemP5ModePicker', p5WordProblemObj, addSuggestWordProblemP5Value);
 
 addSuggestWordProblemP5Value();

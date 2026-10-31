@@ -35,22 +35,18 @@ function validateDecimalResult() {
     let resultNumber = $('#resultDecimalNumber').val();
     let symbol = p5DecimalObj.symbol;
 
-    let firstTenths = Math.round(+firstNumber * 10);
-    let secondTenths = Math.round(+secondNumber * 10);
-    let resultTenths = Math.round(+resultNumber * 10);
-
-    let expectedTenths;
+    let expected;
     if (symbol === "+") {
-        expectedTenths = firstTenths + secondTenths;
+        expected = +firstNumber + +secondNumber;
     } else if (symbol === "-") {
-        expectedTenths = firstTenths - secondTenths;
+        expected = firstNumber - secondNumber;
     } else if (symbol === "*") {
-        expectedTenths = Math.round(firstTenths * secondTenths / 10);
+        expected = firstNumber * secondNumber;
     } else {
-        expectedTenths = Math.round(firstTenths * 10 / secondTenths);
+        expected = firstNumber / secondNumber;
     }
 
-    let isCorrect = resultTenths === expectedTenths;
+    let isCorrect = isSameNumber(+resultNumber, expected);
     let textColor = "green";
 
     showFeedback('feedbackDecimal', isCorrect);
@@ -102,47 +98,47 @@ function clearDecimalValue() {
     $('#resultDecimalNumber').val('');
 }
 
-function addSuggestDecimalValue() {
-    let symbols = ["+", "-", "*", "/"];
-    let symbol = p5DecimalObj.mode === "all" ? symbols[parseInt(Math.random() * symbols.length)] : p5DecimalObj.mode;
-    p5DecimalObj.symbol = symbol;
-
-    let firstNumber, secondNumber;
+// Money in a word problem stops at two places, since nobody pays part of a satang.
+function suggestDecimalNumbers(symbol) {
+    let isWord = p5DecimalObj.format === 'word';
+    let places = isWord ? 2 : randomInt(1, 3);
+    let scale = Math.pow(10, places);
+    let scaled = randomInt(scale, 50 * scale);
 
     if (symbol === "/") {
-        let divisor = parseInt(Math.random() * 8) + 2;
-        let quotientTenths = parseInt(Math.random() * 490) + 10;
-        let dividendTenths = quotientTenths * divisor;
-        firstNumber = (dividendTenths / 10).toFixed(1);
-        secondNumber = divisor;
-        $('#firstDecimalNumber').val(firstNumber);
-        $('#secondDecimalNumber').val(secondNumber);
-        $('#decimalSymbol').text('÷');
-    } else {
-        let firstTenths = parseInt(Math.random() * 490) + 10;
-        firstNumber = (firstTenths / 10).toFixed(1);
-        $('#firstDecimalNumber').val(firstNumber);
-
-        if (symbol === "*") {
-            let multiplier = parseInt(Math.random() * 8) + 2;
-            secondNumber = multiplier;
-            $('#secondDecimalNumber').val(secondNumber);
-            $('#decimalSymbol').text('×');
-        } else if (symbol === "-") {
-            let secondTenths = parseInt(Math.random() * (firstTenths + 1));
-            secondNumber = (secondTenths / 10).toFixed(1);
-            $('#secondDecimalNumber').val(secondNumber);
-            $('#decimalSymbol').text('-');
-        } else {
-            let secondTenths = parseInt(Math.random() * 490) + 10;
-            secondNumber = (secondTenths / 10).toFixed(1);
-            $('#secondDecimalNumber').val(secondNumber);
-            $('#decimalSymbol').text('+');
-        }
+        let divisor = randomInt(2, 9);
+        return { first: (scaled * divisor / scale).toFixed(places), second: divisor };
     }
 
+    if (symbol === "*") {
+        let firstPlaces = isWord ? 2 : randomInt(1, 2);
+        let wholeMultiplier = isWord || Math.random() < 0.5;
+        return {
+            first: (scaled / scale).toFixed(firstPlaces),
+            second: wholeMultiplier ? randomInt(2, 9) : (randomInt(1, 9) / 10).toFixed(1),
+        };
+    }
+
+    return {
+        first: (scaled / scale).toFixed(places),
+        second: ((symbol === "-" ? randomInt(0, scaled) : randomInt(scale, 50 * scale)) / scale).toFixed(places),
+    };
+}
+
+function addSuggestDecimalValue() {
+    let symbols = ["+", "-", "*", "/"];
+    let symbol = p5DecimalObj.mode === "all" ? pickOne(symbols) : p5DecimalObj.mode;
+    let numbers = suggestDecimalNumbers(symbol);
+
+    p5DecimalObj.symbol = symbol;
+
+    $('#firstDecimalNumber').val(numbers.first);
+    $('#secondDecimalNumber').val(numbers.second);
+    $('#resultDecimalNumber').val('');
+    $('#decimalSymbol').text({ "+": '+', "-": '-', "*": '×', "/": '÷' }[symbol]);
+
     if (p5DecimalObj.format === 'word') {
-        $('#decimalWordText').text(buildDecimalWordText(firstNumber, secondNumber, symbol));
+        $('#decimalWordText').text(buildDecimalWordText(numbers.first, numbers.second, symbol));
     }
 }
 

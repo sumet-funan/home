@@ -1,16 +1,18 @@
 var p1WeightObj = {
     numRows: 1,
     numRowsHistory: 1,
+    mode: "kg",
     firstValue: 0,
     secondValue: 0,
     selectedSymbol: null,
 }
 
-$(document).on('click', '#weightSymbolPicker .symbol-btn', function () {
-    $('#weightSymbolPicker .symbol-btn').removeClass('selected');
-    $(this).addClass('selected');
-    p1WeightObj.selectedSymbol = $(this).data('symbol');
-});
+var p1WeightUnits = {
+    kg: { label: 'กก.', largest: 20 },
+    hg: { label: 'ขีด', largest: 10 },
+};
+
+bindSymbolPicker('weightSymbolPicker', p1WeightObj);
 
 function validateWeightResult() {
     if (!p1WeightObj.selectedSymbol) {
@@ -18,35 +20,26 @@ function validateWeightResult() {
         return;
     }
 
-    let firstValue = p1WeightObj.firstValue;
-    let secondValue = p1WeightObj.secondValue;
-    let actual = firstValue > secondValue ? 'gt' : (firstValue < secondValue ? 'lt' : 'eq');
-    let symbolText = { gt: '>', lt: '<', eq: '=' }[actual];
-    let isCorrect = p1WeightObj.selectedSymbol === actual;
-    let textColor = "green";
+    let unit = p1WeightUnits[p1WeightObj.mode].label;
+    let isCorrect = p1WeightObj.selectedSymbol === compareSymbolOf(p1WeightObj.firstValue, p1WeightObj.secondValue);
+    let expr = `${p1WeightObj.firstValue} ${unit} ${compareSymbolText[p1WeightObj.selectedSymbol]} ${p1WeightObj.secondValue} ${unit}`;
 
     showFeedback('feedbackWeight', isCorrect);
 
     if (isCorrect) {
-        addResultWeightToItemList({ firstValue, secondValue, symbol: symbolText })
+        addResultWeightToItemList({ expr })
         $('#contentWeightResult').show();
-    }
-    else {
-        textColor = "red";
+        addSuggestWeightValue();
     }
 
     $('#contentWeightHistory').show();
-    addResultWeightToHistoryList({ firstValue, secondValue, symbol: symbolText, color: textColor })
-
-    if (isCorrect) {
-        addSuggestWeightValue();
-    }
+    addResultWeightToHistoryList({ expr, color: isCorrect ? "green" : "red" })
 }
 
 function addResultWeightToItemList(item) {
     elementItem = `<div class="answer-chip">
             <span class="answer-index">${p1WeightObj.numRows}</span>
-            <span class="answer-expr">${item.firstValue} กก. ${item.symbol} ${item.secondValue} กก.</span>
+            <span class="answer-expr">${item.expr}</span>
         </div>`
     $('#resultWeightList').append(elementItem)
 
@@ -58,7 +51,7 @@ function addResultWeightToHistoryList(item) {
     elementItem = `<div class="answer-chip ${isCorrect ? 'is-correct' : 'is-incorrect'}">
             <i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
             <span class="answer-index">${p1WeightObj.numRowsHistory}</span>
-            <span class="answer-expr">${item.firstValue} กก. ${item.symbol} ${item.secondValue} กก.</span>
+            <span class="answer-expr">${item.expr}</span>
         </div>`
     $('#historyWeightList').append(elementItem)
 
@@ -70,16 +63,19 @@ function addResultWeightToHistoryList(item) {
 }
 
 function addSuggestWeightValue() {
-    let firstValue = parseInt(Math.random() * 20) + 1;
-    let secondValue = Math.random() < 0.2 ? firstValue : parseInt(Math.random() * 20) + 1;
+    let unit = p1WeightUnits[p1WeightObj.mode];
+    let firstValue = randomInt(1, unit.largest);
+    let secondValue = Math.random() < 0.2 ? firstValue : randomInt(1, unit.largest);
 
     p1WeightObj.firstValue = firstValue;
     p1WeightObj.secondValue = secondValue;
     p1WeightObj.selectedSymbol = null;
 
     $('#weightSymbolPicker .symbol-btn').removeClass('selected');
-    $('#firstWeightNumber').text(firstValue + ' กก.');
-    $('#secondWeightNumber').text(secondValue + ' กก.');
+    $('#firstWeightNumber').text(`${firstValue} ${unit.label}`);
+    $('#secondWeightNumber').text(`${secondValue} ${unit.label}`);
 }
+
+bindModePicker('weightModePicker', p1WeightObj, addSuggestWeightValue);
 
 addSuggestWeightValue();

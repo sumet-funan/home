@@ -6,45 +6,6 @@ var p2PlaceValueObj = {
     shown: '',
 }
 
-var p2ThaiDigits = '๐๑๒๓๔๕๖๗๘๙';
-var p2DigitWords = ['ศูนย์', 'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า'];
-
-function p2ToThaiDigits(number) {
-    return String(number).replace(/\d/g, function (digit) {
-        return p2ThaiDigits[digit];
-    });
-}
-
-function p2NumberToWords(number) {
-    if (number === 0) {
-        return p2DigitWords[0];
-    }
-    if (number === 1000) {
-        return 'หนึ่งพัน';
-    }
-
-    let hundreds = Math.floor(number / 100);
-    let tens = Math.floor(number / 10) % 10;
-    let units = number % 10;
-    let words = hundreds ? p2DigitWords[hundreds] + 'ร้อย' : '';
-
-    if (tens === 1) {
-        words += 'สิบ';
-    } else if (tens === 2) {
-        words += 'ยี่สิบ';
-    } else if (tens) {
-        words += p2DigitWords[tens] + 'สิบ';
-    }
-
-    if (units === 1 && number > 1) {
-        words += 'เอ็ด';
-    } else if (units) {
-        words += p2DigitWords[units];
-    }
-
-    return words;
-}
-
 function validateP2PlaceValueResult() {
     let number = p2PlaceValueObj.currentNumber;
     let isCorrect, expr;
@@ -114,13 +75,13 @@ function addResultP2PlaceValueToHistoryList(item) {
 
 function addSuggestP2PlaceValueValue() {
     let mode = p2PlaceValueObj.mode;
-    let number = mode === 'place' ? p2RandomInt(100, 999) : p2RandomInt(0, 1000);
+    let number = mode === 'place' ? randomInt(100, 999) : randomInt(0, 1000);
     let shown = number;
 
     if (mode === 'thai') {
-        shown = p2ToThaiDigits(number);
+        shown = toThaiDigits(number);
     } else if (mode === 'word') {
-        shown = p2NumberToWords(number);
+        shown = numberToThaiWords(number);
     }
 
     p2PlaceValueObj.currentNumber = number;

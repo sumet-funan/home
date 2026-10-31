@@ -98,20 +98,20 @@ function addResultP2TimeToHistoryList(item) {
 
 // Every question stays in one unit: hours, minutes or days, never a mix.
 function suggestP2TimeWord() {
-    let name = p2Pick(p2WordNames);
-    let start = p2RandomInt(7, 11);
-    let hours = p2RandomInt(1, 4);
-    let longer = p2RandomInt(4, 11) * 5;
-    let shorter = p2RandomInt(1, 3) * 5;
-    let holiday = p2RandomInt(10, 30);
-    let daysGone = p2RandomInt(2, holiday - 1);
+    let name = pickOne(wordNames);
+    let start = randomInt(7, 11);
+    let hours = randomInt(1, 4);
+    let longer = randomInt(4, 11) * 5;
+    let shorter = randomInt(1, 3) * 5;
+    let holiday = randomInt(10, 30);
+    let daysGone = randomInt(2, holiday - 1);
     let questions = [
         { text: `${name}เริ่มอ่านหนังสือเวลา ${start} นาฬิกา และอ่านจบเวลา ${start + hours} นาฬิกา ${name}อ่านหนังสือนานกี่ชั่วโมง`, expected: hours, unit: 'ชั่วโมง' },
         { text: `${name}ทำการบ้าน ${longer} นาที แล้วอ่านหนังสือต่ออีก ${shorter} นาที ${name}ใช้เวลาทั้งหมดกี่นาที`, expected: longer + shorter, unit: 'นาที' },
         { text: `เดินไปโรงเรียนใช้เวลา ${longer} นาที ขี่จักรยานใช้เวลา ${shorter} นาที เดินใช้เวลานานกว่ากี่นาที`, expected: longer - shorter, unit: 'นาที' },
         { text: `ปิดเทอม ${holiday} วัน ผ่านไปแล้ว ${daysGone} วัน เหลืออีกกี่วัน`, expected: holiday - daysGone, unit: 'วัน' },
     ];
-    let question = p2Pick(questions);
+    let question = pickOne(questions);
 
     p2TimeObj.text = question.text;
     p2TimeObj.expected = question.expected;
@@ -122,8 +122,8 @@ function suggestP2TimeWord() {
 }
 
 function suggestP2TimeClock() {
-    p2TimeObj.hour = p2RandomInt(1, 12);
-    p2TimeObj.minute = p2RandomInt(0, 11) * 5;
+    p2TimeObj.hour = randomInt(1, 12);
+    p2TimeObj.minute = randomInt(0, 11) * 5;
 
     $('#p2ClockDisplay').html(renderP2ClockSVG(p2TimeObj.hour, p2TimeObj.minute));
     $('#p2TimeHourNumber').val('');

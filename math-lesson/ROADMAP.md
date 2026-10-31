@@ -126,7 +126,7 @@ lesson module, follows the existing pattern.
 left-to-right. Reuses existing generators — mostly a matter of choosing which
 slot to blank.
 
-ป.2 has this as its own lesson (`scrips/p2missing`); ป.1 and ป.5 do not yet.
+ป.1 and ป.2 have this as a lesson of their own (`scrips/p1missing`, `scrips/p2missing`); ป.5 does not yet.
 
 ## Single times-table drills
 
