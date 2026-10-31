@@ -359,7 +359,7 @@ function finishSpeedQuiz(endedByTimeout) {
     // A timed round always records a score; a fixed-count one only counts as a
     // time worth keeping when every question was right.
     let isNewRecord = isTimed
-        ? saveSpeedQuizBestTime(correctCount)
+        ? (correctCount > 0 && saveSpeedQuizBestTime(correctCount))
         : (correctCount === speedQuizObj.size && saveSpeedQuizBestTime(elapsed));
 
     showSpeedQuizFeedback(correctCount, elapsed, isNewRecord, answeredCount, !!endedByTimeout);
@@ -556,8 +556,9 @@ $(document).on('show.bs.tab', '[data-bs-toggle="list"]', function (e) {
     let targetTab = e.target;
 
     confirmSpeedQuizLeave(function () {
-        speedQuizObj.running = false;
-        clearInterval(speedQuizObj.timerInterval);
+        // the full reset, not just stopping the clock: otherwise coming back
+        // finds a dead round still showing its grid and stop/submit buttons
+        resetSpeedQuizForNewSelection();
         bootstrap.Tab.getOrCreateInstance(targetTab).show();
     });
 });

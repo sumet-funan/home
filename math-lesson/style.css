@@ -1,79 +1,123 @@
+/* Styled after a native SwiftUI app. The colour names in the first block follow
+   their UIKit counterparts so a value can be checked against Apple's tables. */
 :root {
-  --font-main: 'Kanit', 'Leelawadee UI', 'Segoe UI', Tahoma, sans-serif;
-  --bg: #f2f5fb;
-  --card-bg: #ffffff;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --border: #e6e9f2;
-  --result-bg: #e0f2fe;
-  --radius-lg: 22px;
-  --radius-md: 16px;
+  color-scheme: light dark;
+
+  --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Leelawadee UI', Roboto, 'Noto Sans Thai', Tahoma, sans-serif;
+
+  --bg: #f2f2f7;                          /* systemGroupedBackground */
+  --card-bg: #ffffff;                     /* secondarySystemGroupedBackground */
+  --fill: rgba(118, 118, 128, .12);       /* tertiarySystemFill */
+  --fill-strong: rgba(120, 120, 128, .2); /* secondarySystemFill */
+  --thumb: #ffffff;                       /* selected segment */
+  --sheet-bg: #f2f2f7;                    /* the two raised colours differ from the page in dark mode */
+  --sheet-card: #ffffff;
+  --text: #000000;                        /* label */
+  --muted: #6c6c70;                       /* secondaryLabel, high-contrast value: the stock one misses 4.5:1 */
+  --placeholder: rgba(60, 60, 67, .45);
+  --border: rgba(60, 60, 67, .2);         /* separator */
+  --bar-bg: rgba(242, 242, 247, .78);
+  --backdrop: rgba(0, 0, 0, .3);
+  --on-accent: #ffffff;
+  --switch-on: #34c759;
+
+  /* Apple's high-contrast system colours: normal ones like #34c759 can't carry
+     white text, and every lesson puts white text on its accent. */
+  --red: #d70015;       --red-bg: #fdecee;
+  --orange: #c93400;    --orange-bg: #fdeee6;
+  --yellow: #b25000;    --yellow-bg: #fbf1e3;
+  --green: #1c7733;     --green-bg: #e7f5ea;
+  --mint: #0a7570;      --mint-bg: #e3f3f2;
+  --teal: #00717f;      --teal-bg: #e0f3f5;
+  --cyan: #0071a4;      --cyan-bg: #e0f0f8;
+  --blue: #0040dd;      --blue-bg: #e3ebfd;
+  --indigo: #3634a3;    --indigo-bg: #e9e9f8;
+  --purple: #8944ab;    --purple-bg: #f4ecf8;
+  --pink: #d30f45;      --pink-bg: #fce9ee;
+  --brown: #7f6545;     --brown-bg: #f1eeea;
+  --gray: #6c6c70;      --gray-bg: #efeff1;
+
+  --tint: #4f46e5;      /* the logo's colour, used like SwiftUI's .tint() */
+  --tint-bg: #eeedfc;
+
+  --radius-lg: 20px;
+  --radius-md: 14px;
   --radius-sm: 10px;
-  --shadow: 0 12px 32px -16px rgba(15, 23, 42, .18);
-  --shadow-sm: 0 4px 14px -6px rgba(15, 23, 42, .12);
+  --ease: cubic-bezier(.32, .72, 0, 1);   /* the curve iOS sheets and sidebars move on */
+  --sidebar-w: 300px;
+  --sidebar-inset: 10px;
+  --navbar-h: 52px;
+  --gutter: 28px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --shadow: 0 8px 32px rgba(0, 0, 0, .14);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .1);
 
-  --plus: #16a34a;
-  --plus-bg: #e9faf1;
-  --minus: #ea580c;
-  --minus-bg: #fff3ea;
-  --multiply: #7c3aed;
-  --multiply-bg: #f4efff;
-  --divide: #db2777;
-  --divide-bg: #fdeff6;
+  --plus: var(--green);             --plus-bg: var(--green-bg);
+  --minus: var(--orange);           --minus-bg: var(--orange-bg);
+  --multiply: var(--purple);        --multiply-bg: var(--purple-bg);
+  --divide: var(--pink);            --divide-bg: var(--pink-bg);
+  --compare: var(--teal);           --compare-bg: var(--teal-bg);
+  --pattern: var(--yellow);         --pattern-bg: var(--yellow-bg);
+  --placevalue: var(--indigo);      --placevalue-bg: var(--indigo-bg);
+  --decimal: var(--mint);           --decimal-bg: var(--mint-bg);
+  --percentage: var(--red);         --percentage-bg: var(--red-bg);
+  --fraction: var(--cyan);          --fraction-bg: var(--cyan-bg);
+  --gcflcm: var(--gray);            --gcflcm-bg: var(--gray-bg);
+  --mixednumber: var(--purple);     --mixednumber-bg: var(--purple-bg);
+  --geometry: var(--brown);         --geometry-bg: var(--brown-bg);
+  --volume: var(--blue);            --volume-bg: var(--blue-bg);
+  --angle: var(--indigo);           --angle-bg: var(--indigo-bg);
+  --average: var(--green);          --average-bg: var(--green-bg);
+  --barchart: var(--orange);        --barchart-bg: var(--orange-bg);
+  --shape: var(--pink);             --shape-bg: var(--pink-bg);
+  --length: var(--green);           --length-bg: var(--green-bg);
+  --weight: var(--brown);           --weight-bg: var(--brown-bg);
+  --capacity: var(--cyan);          --capacity-bg: var(--cyan-bg);
+  --time: var(--blue);              --time-bg: var(--blue-bg);
+  --money: var(--yellow);           --money-bg: var(--yellow-bg);
+  --wordproblem: var(--mint);       --wordproblem-bg: var(--mint-bg);
+  --speedquiz: var(--tint);         --speedquiz-bg: var(--tint-bg);
+  --numberbond: var(--purple);      --numberbond-bg: var(--purple-bg);
+  --profile: var(--gray);           --profile-bg: var(--gray-bg);
+  --progress: var(--blue);          --progress-bg: var(--blue-bg);
+}
 
-  --compare: #0891b2;
-  --compare-bg: #ecfeff;
-  --pattern: #d97706;
-  --pattern-bg: #fffbeb;
-  --placevalue: #4f46e5;
-  --placevalue-bg: #eef2ff;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --card-bg: #1c1c1e;
+    --fill: rgba(118, 118, 128, .24);
+    --fill-strong: rgba(120, 120, 128, .36);
+    --thumb: #636366;
+    --sheet-bg: #1c1c1e;
+    --sheet-card: #2c2c2e;
+    --text: #ffffff;
+    --muted: #aeaeb2;
+    --placeholder: rgba(235, 235, 245, .4);
+    --border: rgba(84, 84, 88, .65);
+    --bar-bg: rgba(0, 0, 0, .72);
+    --backdrop: rgba(0, 0, 0, .55);
+    --on-accent: #000000;   /* these accents are bright, so filled buttons take dark text */
+    --switch-on: #30d158;
 
-  --decimal: #0d9488;
-  --decimal-bg: #f0fdfa;
-  --percentage: #e11d48;
-  --percentage-bg: #fff1f2;
-  --fraction: #0284c7;
-  --fraction-bg: #f0f9ff;
-  --gcflcm: #475569;
-  --gcflcm-bg: #f1f5f9;
+    --red: #ff6961;       --red-bg: rgba(255, 105, 97, .18);
+    --orange: #ffb340;    --orange-bg: rgba(255, 179, 64, .16);
+    --yellow: #ffd426;    --yellow-bg: rgba(255, 212, 38, .14);
+    --green: #30db5b;     --green-bg: rgba(48, 219, 91, .15);
+    --mint: #66d4cf;      --mint-bg: rgba(102, 212, 207, .15);
+    --teal: #5de6ff;      --teal-bg: rgba(93, 230, 255, .14);
+    --cyan: #70d7ff;      --cyan-bg: rgba(112, 215, 255, .15);
+    --blue: #409cff;      --blue-bg: rgba(64, 156, 255, .18);
+    --indigo: #9d9bff;    --indigo-bg: rgba(157, 155, 255, .18);
+    --purple: #da8fff;    --purple-bg: rgba(218, 143, 255, .16);
+    --pink: #ff6482;      --pink-bg: rgba(255, 100, 130, .17);
+    --brown: #d2b48c;     --brown-bg: rgba(210, 180, 140, .16);
+    --gray: #aeaeb2;      --gray-bg: rgba(174, 174, 178, .16);
 
-  --mixednumber: #c026d3;
-  --mixednumber-bg: #fdf4ff;
-  --geometry: #78350f;
-  --geometry-bg: #fefce8;
-  --volume: #2563eb;
-  --volume-bg: #eff6ff;
-  --angle: #6b21a8;
-  --angle-bg: #faf5ff;
-  --average: #15803d;
-  --average-bg: #f0fdf4;
-  --barchart: #c2410c;
-  --barchart-bg: #fff7ed;
-
-  --shape: #ec4899;
-  --shape-bg: #fdf2f8;
-  --length: #65a30d;
-  --length-bg: #f7fee7;
-  --weight: #57534e;
-  --weight-bg: #fafaf9;
-  --capacity: #0ea5e9;
-  --capacity-bg: #f0f9ff;
-  --time: #a855f7;
-  --time-bg: #faf5ff;
-  --money: #f59e0b;
-  --money-bg: #fffbeb;
-
-  --wordproblem: #059669;
-  --wordproblem-bg: #ecfdf5;
-
-  --speedquiz: #4338ca;
-  --speedquiz-bg: #eef2ff;
-  --numberbond: #7c3aed;
-  --numberbond-bg: #f3edff;
-  --profile: #0891b2;
-  --profile-bg: #ecfeff;
-  --progress: #7c3aed;
-  --progress-bg: #f4efff;
+    --tint: #9d9bff;
+    --tint-bg: rgba(157, 155, 255, .18);
+  }
 }
 
 * {
@@ -86,44 +130,60 @@ html, body {
 
 body {
   margin: 0;
+  overflow: hidden;
   font-family: var(--font-main);
+  font-size: 17px;
+  line-height: 1.45;
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--tint);
+  outline-offset: 2px;
 }
 
 /* ---------- layout shell ---------- */
 
+/* NavigationSplitView: sidebar beside the page when there is room for both */
 .app-shell {
   display: flex;
   height: 100vh;
+  height: 100dvh;
 }
 
 .app-sidebar {
-  width: 220px;
-  flex: 0 0 220px;
+  width: var(--sidebar-w);
+  flex: 0 0 var(--sidebar-w);
+  margin: var(--sidebar-inset) 0 var(--sidebar-inset) var(--sidebar-inset);
   background: var(--card-bg);
-  border-right: 1px solid var(--border);
-  padding: 28px 18px;
+  border-radius: 24px;
+  box-shadow: 0 0 0 .5px var(--border), var(--shadow-sm);
+  padding: calc(14px + var(--safe-top)) 12px calc(12px + var(--safe-bottom));
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .app-brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.1rem;
+  font-size: 1.65rem;
   font-weight: 700;
+  letter-spacing: -.01em;
   color: var(--text);
   padding: 0 6px;
-}
-
-.app-brand i {
-  font-size: 1.5rem;
-  color: var(--plus);
 }
 
 .app-brand img {
@@ -132,11 +192,10 @@ body {
   flex: 0 0 auto;
 }
 
-/* pulled up against the brand row, past the sidebar's own 24px gap */
+/* pulled up against the brand row, past the sidebar's own gap */
 .app-brand-tagline {
-  margin: -16px 6px 0;
-  font-size: .72rem;
-  font-weight: 500;
+  margin: -12px 6px 0;
+  font-size: .8rem;
   color: var(--muted);
 }
 
@@ -145,9 +204,9 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 10px 12px;
-  margin: 4px 0 6px;
-  background: var(--bg);
+  min-height: 48px;
+  padding: 6px 12px;
+  background: var(--fill);
   border-radius: var(--radius-md);
 }
 
@@ -157,22 +216,18 @@ body {
   justify-content: center;
   gap: 8px;
   width: 100%;
+  min-height: 36px;
   border: none;
   background: none;
-  color: var(--muted);
-  font-family: var(--font-main);
+  color: var(--tint);
   font-weight: 600;
-  font-size: .9rem;
+  font-size: .95rem;
   padding: 4px;
   cursor: pointer;
 }
 
-.app-account-btn:hover {
-  color: var(--text);
-}
-
 .app-account-btn i {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .app-account-info {
@@ -182,12 +237,12 @@ body {
   min-width: 0;
   color: var(--text);
   font-weight: 600;
-  font-size: .85rem;
+  font-size: .95rem;
 }
 
 .app-account-info i {
-  font-size: 1.1rem;
-  color: var(--plus);
+  font-size: 1.2rem;
+  color: var(--tint);
   flex-shrink: 0;
 }
 
@@ -199,47 +254,43 @@ body {
 
 .app-account-signout-btn {
   flex-shrink: 0;
+  width: 36px;
+  height: 36px;
   border: none;
+  border-radius: 50%;
   background: none;
-  color: var(--muted);
-  font-size: 1.1rem;
-  padding: 4px;
+  color: var(--red);
+  font-size: 1.15rem;
   cursor: pointer;
-}
-
-.app-account-signout-btn:hover {
-  color: #dc2626;
 }
 
 .nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 14px;
 }
 
 .nav-group {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
+/* Section(isExpanded:) in a sidebar list: a plain heading with a chevron */
 .nav-group-toggle {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
-  padding: 12px 14px;
+  min-height: 40px;
+  padding: 6px 10px;
   border: none;
   background: transparent;
   border-radius: var(--radius-sm);
   color: var(--text);
   font-weight: 700;
-  font-size: .95rem;
+  font-size: 1.05rem;
   cursor: pointer;
-  transition: background .15s ease;
-}
-
-.nav-group-toggle:hover {
-  background: var(--bg);
 }
 
 .nav-group-toggle span {
@@ -247,48 +298,71 @@ body {
   text-align: left;
 }
 
-.nav-group-toggle i:first-child {
-  font-size: 1.15rem;
-  color: var(--muted);
-}
-
 .group-caret {
   font-size: .8rem;
-  color: var(--muted);
-  transition: transform .2s ease;
+  color: var(--tint);
+  transition: transform .25s var(--ease);
 }
 
 .nav-group-toggle[aria-expanded="true"] .group-caret {
-  transform: rotate(180deg);
+  transform: rotate(90deg);
 }
 
 .nav-group-items {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 4px 0 8px 14px;
+  gap: 2px;
 }
 
 .nav-menu-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  color: var(--muted);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: .98rem;
-  transition: background .15s ease, color .15s ease, transform .15s ease;
-}
-
-.nav-menu-item i {
-  font-size: 1.15rem;
-}
-
-.nav-menu-item:hover {
-  background: var(--bg);
+  min-height: 46px;
+  padding: 7px 10px;
+  border-radius: var(--radius-md);
   color: var(--text);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background .15s ease, color .15s ease;
+}
+
+/* the rounded colour tiles from the Settings app */
+.nav-menu-item i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: .95rem;
+}
+
+.nav-menu-item i::before {
+  line-height: 1;
+  vertical-align: 0;
+}
+
+.nav-menu-item span:not(.nav-review-badge) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-menu-item:active {
+  background: var(--fill);
+}
+
+@media (hover: hover) {
+  .nav-menu-item:hover,
+  .nav-group-toggle:hover {
+    background: var(--fill);
+    color: var(--text);
+  }
 }
 
 .nav-menu-item[data-op="plus"] { --accent: var(--plus); --accent-bg: var(--plus-bg); }
@@ -320,30 +394,70 @@ body {
 .nav-menu-item[data-op="profile"] { --accent: var(--profile); --accent-bg: var(--profile-bg); }
 .nav-menu-item[data-op="progress"] { --accent: var(--progress); --accent-bg: var(--progress-bg); }
 
-.nav-menu-item.active {
+.nav-menu-item.active,
+.nav-menu-item.active:hover {
   background: var(--accent-bg);
   color: var(--accent);
+  font-weight: 600;
 }
 
 .app-sidebar-footer {
   margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
+  padding-top: 8px;
   text-align: center;
-  font-size: .75rem;
-  font-weight: 600;
+  font-size: .8rem;
   color: var(--muted);
 }
 
 .app-main {
   flex: 1;
   min-width: 0;
-  padding: 36px 40px;
+  padding: 0 var(--gutter) calc(40px + var(--safe-bottom));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Clear at the top of a page, and only becomes a blurred bar with the title in
+   small once the large title has scrolled under it, as a NavigationStack does. */
+.app-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--navbar-h) + var(--safe-top));
+  margin: 0 calc(var(--gutter) * -1);
+  padding: var(--safe-top) 12px 0;
+  border-bottom: .5px solid transparent;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.app-navbar.is-scrolled {
+  background: var(--bar-bg);
+  border-bottom-color: var(--border);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.app-navbar-title {
+  position: absolute;
+  left: 50%;
+  bottom: 13px;
+  max-width: 46%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity .2s ease;
+}
+
+.app-navbar.is-scrolled .app-navbar-title {
+  opacity: 1;
 }
 
 .sidebar-toggle-btn,
-.mobile-topbar-brand,
 .sidebar-close-btn,
 .sidebar-backdrop {
   display: none;
@@ -377,66 +491,81 @@ body {
 .operation-panel[data-op="wordproblem"] { --accent: var(--wordproblem); --accent-bg: var(--wordproblem-bg); }
 .operation-panel[data-op="speedquiz"] { --accent: var(--speedquiz); --accent-bg: var(--speedquiz-bg); }
 .operation-panel[data-op="numberbond"] { --accent: var(--numberbond); --accent-bg: var(--numberbond-bg); }
-.operation-panel[data-op="profile"] { --accent: var(--profile); --accent-bg: var(--profile-bg); }
+.operation-panel[data-op="profile"] { --accent: var(--tint); --accent-bg: var(--tint-bg); }
 .operation-panel[data-op="progress"] { --accent: var(--progress); --accent-bg: var(--progress-bg); }
 
+/* one readable column: the title lines up with the cards under it */
+.operation-panel {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.operation-panel[data-op="speedquiz"],
+.operation-panel[data-op="progress"] {
+  max-width: 820px;
+}
+
 .panel-header {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .panel-header h2 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.5rem;
+  font-size: 2.1rem;
   font-weight: 700;
-  color: var(--accent);
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  color: var(--text);
   margin: 0 0 4px;
+}
+
+.panel-header h2 i {
+  display: none;
 }
 
 .panel-header p {
   margin: 0;
+  font-size: .95rem;
   color: var(--muted);
 }
 
 .panel-body {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 24px;
+  align-items: stretch;
+  gap: 20px;
 }
 
-/* ---------- mode picker ---------- */
+/* ---------- segmented picker ---------- */
 
 .mode-picker {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
-  justify-content: center;
-  margin-top: -8px;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 22px;
+  background: var(--fill);
 }
 
 .mode-btn {
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 2px solid var(--border);
-  background: var(--card-bg);
-  font-weight: 700;
-  font-size: .85rem;
-  color: var(--muted);
+  flex: 1 1 auto;
+  min-width: 44px;
+  min-height: 38px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 19px;
+  background: transparent;
+  font-weight: 500;
+  font-size: .9rem;
+  color: var(--text);
+  white-space: nowrap;
   cursor: pointer;
-  transition: background .15s ease, border-color .15s ease, color .15s ease;
-}
-
-.mode-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  transition: background .2s ease, box-shadow .2s ease;
 }
 
 .mode-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+  background: var(--thumb);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .14);
 }
 
 /* ---------- calculator card ---------- */
@@ -444,51 +573,49 @@ body {
 .calc-card {
   background: var(--card-bg);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  padding: 32px 28px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 4px;
-  max-width: 480px;
   width: 100%;
 }
 
 .calc-input {
   width: 100%;
   text-align: center;
-  font-size: 1.6rem;
-  font-weight: 700;
-  padding: 14px 12px;
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 11px 12px;
   border-radius: var(--radius-md);
-  border: 2px solid var(--border);
-  background: var(--bg);
+  border: none;
+  background: var(--fill);
   color: var(--text);
-  transition: border-color .15s ease, box-shadow .15s ease;
+  transition: box-shadow .15s ease, background .15s ease;
 }
 
 .calc-input::placeholder {
-  color: #b7bdca;
+  color: var(--placeholder);
   font-weight: 500;
 }
 
 .calc-input:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-bg);
+  box-shadow: 0 0 0 2px var(--accent);
   background: var(--card-bg);
 }
 
 .calc-input-result {
-  border-style: dashed;
+  background: var(--accent-bg);
 }
 
 .calc-symbol {
   text-align: center;
-  font-size: 1.6rem;
-  font-weight: 800;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--accent);
-  padding: 6px 0;
+  padding: 4px 0;
 }
 
 .calc-number-display {
@@ -497,29 +624,28 @@ body {
   gap: 4px;
 }
 
+/* .borderedProminent */
 .calc-submit {
   margin-top: 18px;
+  min-height: 52px;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   background: var(--accent);
-  color: #fff;
-  font-weight: 700;
+  color: var(--on-accent);
+  font-weight: 600;
   font-size: 1.05rem;
-  padding: 14px 18px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  transition: filter .15s ease, transform .05s ease;
-}
-
-.calc-submit:hover {
-  filter: brightness(1.08);
+  transition: opacity .15s ease, transform .15s var(--ease);
 }
 
 .calc-submit:active {
-  transform: translateY(1px);
+  opacity: .8;
+  transform: scale(.98);
 }
 
 .calc-feedback {
@@ -527,8 +653,8 @@ body {
   padding: 0 12px;
   max-height: 0;
   overflow: hidden;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
+  border-radius: var(--radius-md);
+  font-weight: 600;
   font-size: .95rem;
   text-align: center;
   opacity: 0;
@@ -540,18 +666,18 @@ body {
   margin-top: 14px;
   opacity: 1;
   transform: translateY(0);
-  max-height: 60px;
+  max-height: 80px;
   padding: 10px 12px;
 }
 
 .calc-feedback.is-correct {
-  background: var(--plus-bg);
-  color: var(--plus);
+  background: var(--green-bg);
+  color: var(--green);
 }
 
 .calc-feedback.is-incorrect {
-  background: #fdeeee;
-  color: #dc2626;
+  background: var(--red-bg);
+  color: var(--red);
 }
 
 .calc-feedback i {
@@ -560,72 +686,76 @@ body {
 
 /* ---------- speed quiz ---------- */
 
-/* One card holding every choice, each row labelled. Previously these were four
-   unlabelled rows of pills stacked on top of each other, which gave no clue
-   which row controlled what and pushed the quiz itself down the page. */
+/* One grouped list holding every choice, each row labelled, the way a SwiftUI
+   Form lays out settings. */
 .sq-options {
   width: 100%;
-  max-width: 720px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 16px 18px;
+  padding: 0 16px;
   background: var(--card-bg);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
 }
 
 .sq-option {
   display: flex;
   align-items: center;
   gap: 14px;
+  min-height: 58px;
+  padding: 8px 0;
+  border-bottom: .5px solid var(--border);
+}
+
+.sq-option:last-child {
+  border-bottom: none;
 }
 
 .sq-option-label {
-  flex: 0 0 68px;
-  font-size: .82rem;
-  font-weight: 700;
-  color: var(--muted);
+  flex: 0 0 auto;
+  font-size: 1rem;
+  color: var(--text);
 }
 
-/* the pickers were built with a negative top margin to sit under a heading;
-   inside a labelled row they need to sit on the line instead */
 .sq-option .mode-picker {
-  margin-top: 0;
-  justify-content: flex-start;
-  flex: 1;
+  flex: 0 1 340px;
+  margin-left: auto;
+}
+
+#speedQuizModePicker .mode-btn {
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
 @media (max-width: 520px) {
   .sq-option {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 6px;
   }
 
-  .sq-option-label {
+  .sq-option .mode-picker {
     flex: none;
+    width: 100%;
+    margin-left: 0;
   }
 }
 
 .speed-quiz-card {
   background: var(--card-bg);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  padding: 28px 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 4px;
-  max-width: 720px;
   width: 100%;
 }
 
 .speed-quiz-stats {
   display: flex;
   justify-content: center;
-  gap: 32px;
-  margin-bottom: 18px;
+  gap: 48px;
+  margin-bottom: 14px;
 }
 
 .speed-stat {
@@ -637,19 +767,18 @@ body {
 
 .speed-stat-label {
   font-size: .8rem;
-  font-weight: 600;
   color: var(--muted);
 }
 
 /* last ten seconds of a timed round */
 .speed-stat-value.is-running-out {
-  color: #dc2626;
+  color: var(--red);
 }
 
 .speed-stat-value {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--accent);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -669,10 +798,11 @@ body {
 }
 
 /* Stays in view while scrolling: the cards no longer carry the sign, so this is
-   the only way to check the operation partway down a long sheet. */
+   the only way to check the operation partway down a long sheet. Sits below the
+   navigation bar, which is sticky in the same scroller. */
 .sq-operator-hint {
   position: sticky;
-  top: 0;
+  top: calc(var(--navbar-h) + var(--safe-top) + 6px);
   z-index: 3;
   display: flex;
   align-items: center;
@@ -682,15 +812,15 @@ body {
   padding: 6px 14px;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
-  font-weight: 700;
-  font-size: .85rem;
+  color: var(--on-accent);
+  font-weight: 600;
+  font-size: .9rem;
   box-shadow: var(--shadow-sm);
 }
 
 .sq-hint-symbol {
   font-size: 1.15rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 /* Table layout: the original shared-headers grid. separate (not collapse)
@@ -704,7 +834,7 @@ body {
 
 .speed-quiz-table th,
 .speed-quiz-table td {
-  border: 1px solid var(--border);
+  border: .5px solid var(--border);
   padding: 0;
   text-align: center;
 }
@@ -712,7 +842,7 @@ body {
 .speed-quiz-table thead th {
   background: var(--accent-bg);
   color: var(--accent);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1rem;
   min-width: 44px;
   height: 44px;
@@ -724,7 +854,7 @@ body {
 
 .speed-quiz-table thead th.corner-cell {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   font-size: 1.2rem;
   left: 0;
   z-index: 3;
@@ -733,7 +863,7 @@ body {
 .speed-quiz-table tbody th {
   background: var(--accent-bg);
   color: var(--accent);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1rem;
   min-width: 44px;
   padding: 4px;
@@ -749,19 +879,19 @@ body {
   border-radius: 0;
   text-align: center;
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
-  background: var(--bg);
+  background: var(--card-bg);
 }
 
 .speed-quiz-table td.correct input {
-  background: var(--result-bg);
+  background: var(--green-bg);
   color: var(--text);
 }
 
 .speed-quiz-table td.incorrect input {
-  background: #fdeeee;
-  color: #dc2626;
+  background: var(--red-bg);
+  color: var(--red);
 }
 
 .speed-quiz-item {
@@ -770,14 +900,13 @@ body {
   align-items: flex-end;
   padding: 6px 8px 8px;
   border-radius: var(--radius-sm);
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--fill);
 }
 
 .sq-first,
 .sq-second {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
   line-height: 1.3;
   font-variant-numeric: tabular-nums;
@@ -796,10 +925,10 @@ body {
   height: 36px;
   padding: 0 2px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   text-align: center;
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
   background: var(--card-bg);
 }
@@ -807,9 +936,8 @@ body {
 /* Same button, opposite meaning while a round is running, so it must not keep
    looking like the accent-coloured "go" button. */
 #speedQuizStartBtn.is-stop {
-  background: var(--bg);
-  color: #dc2626;
-  box-shadow: inset 0 0 0 2px #dc2626;
+  background: var(--red-bg);
+  color: var(--red);
 }
 
 /* Pinned to the bottom of the screen so it is reachable from any row without
@@ -817,8 +945,8 @@ body {
    content area rather than sitting under the menu. */
 .speed-quiz-submit-btn {
   position: fixed;
-  bottom: 16px;
-  left: 240px;
+  bottom: calc(16px + var(--safe-bottom));
+  left: calc(var(--sidebar-w) + var(--sidebar-inset) + 20px);
   right: 20px;
   width: auto;
   max-width: 720px;
@@ -833,25 +961,17 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   padding-bottom: 84px;
 }
 
-@media (max-width: 720px) {
-  .speed-quiz-submit-btn {
-    left: 16px;
-    right: 16px;
-  }
-
-  /* the combo badge lives in this corner on small screens */
-  body.sq-running .combo-badge {
-    bottom: 80px;
-  }
+/* clear of the submit button above */
+body.sq-running .daily-toast {
+  bottom: calc(84px + var(--safe-bottom));
 }
 
 /* iPad/touch: bigger tap targets already set above (44px, Apple's HIG
-   minimum); these remove the tap-highlight flash and the double-tap-to-zoom
-   delay Safari adds to fast sequential taps across the grid. */
+   minimum); this removes the double-tap-to-zoom delay Safari adds to fast
+   sequential taps across the grid. */
 .operation-panel[data-op="speedquiz"] button,
 .operation-panel[data-op="speedquiz"] input {
   touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .speed-quiz-input:focus {
@@ -861,17 +981,15 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 }
 
 .speed-quiz-item.correct {
-  border-color: var(--plus);
-  background: var(--result-bg);
+  background: var(--green-bg);
 }
 
 .speed-quiz-item.incorrect {
-  border-color: #dc2626;
-  background: #fdeeee;
+  background: var(--red-bg);
 }
 
 .speed-quiz-item.incorrect input {
-  color: #dc2626;
+  color: var(--red);
 }
 
 /* ---------- daily goal ---------- */
@@ -881,7 +999,7 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 }
 
 #dailyGoalBar.is-reached {
-  background: var(--plus);
+  background: var(--green);
 }
 
 .daily-goal-head {
@@ -893,25 +1011,25 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 }
 
 .daily-goal-count {
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
 .daily-goal-done {
   display: none;
-  font-size: .8rem;
-  font-weight: 700;
-  color: var(--plus);
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--green);
 }
 
 .daily-streak-row {
   display: flex;
-  gap: 28px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px dashed var(--border);
+  gap: 32px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: .5px solid var(--border);
 }
 
 .daily-streak-stat {
@@ -921,15 +1039,14 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 }
 
 .daily-streak-label {
-  font-size: .78rem;
-  font-weight: 600;
+  font-size: .8rem;
   color: var(--muted);
 }
 
 .daily-streak-value {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--accent);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
 }
 
 /* Confirms the goal was reached without interrupting; it never blocks input
@@ -937,21 +1054,21 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 .daily-toast {
   position: fixed;
   left: 50%;
-  bottom: 24px;
+  bottom: calc(24px + var(--safe-bottom));
   z-index: 1060;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 12px 20px;
   border-radius: 999px;
-  background: var(--plus);
-  color: #fff;
-  font-weight: 700;
+  background: var(--green);
+  color: var(--on-accent);
+  font-weight: 600;
   box-shadow: var(--shadow);
   opacity: 0;
   transform: translate(-50%, 16px);
   pointer-events: none;
-  transition: opacity .25s ease, transform .25s ease;
+  transition: opacity .25s ease, transform .35s var(--ease);
 }
 
 .daily-toast.is-visible {
@@ -966,21 +1083,22 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 /* ---------- answer combo ---------- */
 
 /* Fixed rather than in the panel: it has to stay visible while the child works
-   down a long lesson, and every lesson shares this one badge. */
+   down a long lesson, and every lesson shares this one badge. It sits in the
+   trailing corner of the navigation bar, where a toolbar item would. */
 .combo-badge {
   position: fixed;
-  top: 18px;
-  right: 18px;
+  top: calc(9px + var(--safe-top));
+  right: 16px;
   z-index: 1050;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
+  padding: 6px 14px;
   border-radius: 999px;
-  background: #f97316;
-  color: #fff;
-  font-weight: 800;
-  box-shadow: var(--shadow);
+  background: var(--orange);
+  color: var(--on-accent);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
   opacity: 0;
   transform: translateY(-8px) scale(.9);
   pointer-events: none;
@@ -1003,16 +1121,13 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 
 .combo-milestone {
   display: none;
-  font-size: .8rem;
-  font-weight: 700;
-  opacity: .9;
+  font-size: .85rem;
+  font-weight: 600;
 }
 
-.combo-badge.tier-warm { background: #f97316; }
-.combo-badge.tier-hot  { background: #dc2626; }
-.combo-badge.tier-gold {
-  background: linear-gradient(135deg, #b45309, #f59e0b);
-}
+.combo-badge.tier-warm { background: var(--orange); }
+.combo-badge.tier-hot  { background: var(--red); }
+.combo-badge.tier-gold { background: var(--yellow); }
 
 /* a short pop each time the combo goes up */
 .combo-badge.is-pop {
@@ -1025,10 +1140,10 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   100% { transform: translateY(0) scale(1); }
 }
 
-/* a brief red shake when a run ends, so losing it registers */
+/* a brief shake when a run ends, so losing it registers */
 .combo-badge.is-broken {
   opacity: 1;
-  background: var(--muted);
+  background: var(--gray);
   transform: translateY(0) scale(1);
   animation: combo-break .55s ease forwards;
 }
@@ -1040,88 +1155,108 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   100% { opacity: 0; transform: translateY(10px) scale(.85) rotate(0deg); }
 }
 
-@media (max-width: 720px) {
-  /* clear of the mobile menu button and brand */
-  .combo-badge {
-    top: auto;
-    bottom: 16px;
-    right: 16px;
-  }
+/* ---------- alerts and sheets ---------- */
+
+/* the dimming colour is a token, so it has to replace bootstrap's black at 50% */
+.modal-backdrop {
+  --bs-backdrop-bg: transparent;
+  --bs-backdrop-opacity: 1;
+  background: var(--backdrop);
 }
 
-/* shared styling for yes/no confirmation dialogs (leave quiz, sign out, ...) */
+/* shared styling for yes/no confirmation dialogs (leave quiz, sign out, ...):
+   a SwiftUI .alert, with the two choices side by side along the bottom edge */
+.confirm-modal {
+  --card-bg: var(--sheet-card);
+}
+
+.confirm-modal .modal-dialog {
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .confirm-modal .modal-content {
   background: var(--card-bg);
   border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
 .confirm-modal-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 32px 28px 8px;
+  padding: 22px 18px 18px;
   text-align: center;
 }
 
 .confirm-modal-body i {
-  font-size: 2.4rem;
-  color: #ea580c;
+  display: none;
 }
 
 .confirm-modal-body p {
   margin: 0;
   color: var(--text);
-  font-weight: 600;
-  line-height: 1.6;
+  font-size: .95rem;
+  line-height: 1.5;
 }
 
 .confirm-modal .modal-footer {
-  border-top: none;
-  justify-content: center;
-  gap: 10px;
-  padding: 8px 28px 28px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  padding: 0;
+  border-top: .5px solid var(--border);
 }
 
 .confirm-modal-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 48px;
+  margin: 0;
+  padding: 8px;
   border: none;
-  border-radius: var(--radius-md);
-  font-weight: 700;
-  font-size: .95rem;
-  padding: 12px 20px;
+  background: none;
+  font-size: 1rem;
   cursor: pointer;
-  transition: filter .15s ease, transform .05s ease;
-}
-
-.confirm-modal-btn:hover {
-  filter: brightness(1.08);
 }
 
 .confirm-modal-btn:active {
-  transform: translateY(1px);
+  background: var(--fill);
+}
+
+.confirm-modal-btn + .confirm-modal-btn {
+  border-left: .5px solid var(--border);
 }
 
 .confirm-modal-btn-cancel {
-  background: var(--bg);
-  color: var(--text);
+  color: var(--tint);
+  font-weight: 600;
 }
 
 .confirm-modal-btn-confirm {
-  background: #dc2626;
-  color: #fff;
+  color: var(--red);
 }
 
+/* sending the answers is the expected next step, not a destructive one */
+#speedQuizSubmitModal .confirm-modal-btn-confirm {
+  color: var(--tint);
+}
+
+/* a .sheet: centred card on iPad, rising from the bottom edge on a phone */
 #authModal {
-  --accent: #2563eb;
-  --accent-bg: #eff6ff;
+  --accent: var(--tint);
+  --accent-bg: var(--tint-bg);
+  --card-bg: var(--sheet-card);
+}
+
+#authModal .modal-dialog {
+  max-width: 440px;
 }
 
 #authModal .modal-content {
-  background: var(--card-bg);
+  background: var(--sheet-bg);
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: 26px;
   box-shadow: var(--shadow);
 }
 
@@ -1129,7 +1264,7 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 32px 28px;
+  padding: 24px 20px;
 }
 
 .auth-tab-panel {
@@ -1143,97 +1278,240 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 }
 
 .auth-input {
+  display: block;
   width: 100%;
-  font-size: 1rem;
-  padding: 12px 14px;
-  border-radius: var(--radius-md);
-  border: 2px solid var(--border);
-  background: var(--bg);
+  font-size: 1rem;      /* 16px or larger, or iOS zooms the page on focus */
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
   color: var(--text);
   font-family: var(--font-main);
-  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.auth-input + .auth-input {
+  border-top: .5px solid var(--border);
 }
 
 .auth-input::placeholder {
-  color: #b7bdca;
+  color: var(--placeholder);
 }
 
 .auth-input:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-bg);
-  background: var(--card-bg);
+  background: var(--accent-bg);
 }
 
 .auth-error {
   min-height: 1.2em;
-  color: #dc2626;
+  color: var(--red);
   font-size: .85rem;
-  font-weight: 600;
+  font-weight: 500;
   text-align: center;
 }
 
 .auth-submit-btn {
+  min-height: 52px;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   background: var(--accent);
-  color: #fff;
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 12px 18px;
+  color: var(--on-accent);
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 12px 20px;
   cursor: pointer;
-  transition: filter .15s ease, transform .05s ease;
-}
-
-.auth-submit-btn:hover {
-  filter: brightness(1.08);
+  transition: opacity .15s ease, transform .15s var(--ease);
 }
 
 .auth-submit-btn:active {
-  transform: translateY(1px);
+  opacity: .8;
+  transform: scale(.98);
 }
 
 .auth-submit-btn:disabled {
-  opacity: .7;
+  opacity: .5;
   cursor: default;
 }
 
-.progress-summary {
+.auth-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.auth-guest-btn {
+  min-height: 44px;
+  border: none;
+  background: none;
+  color: var(--tint);
+  font-size: .95rem;
+  padding: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* ---------- forms ---------- */
+
+/* Form { Section } : a heading, a card of rows, then a footnote under the card */
+.form-section {
   display: flex;
-  justify-content: center;
-  gap: 32px;
-  flex-wrap: wrap;
-  max-width: 720px;
+  flex-direction: column;
+}
+
+.form-section-header {
+  margin: 0 0 6px 16px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.form-group {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 52px;
+  margin: 0;
+  padding: 7px 16px;
+  font-size: 1rem;
+}
+
+.form-row + .form-row {
+  border-top: .5px solid var(--border);
+}
+
+.form-row-label {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.form-row-input {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 4px 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-main);
+  font-size: 1rem;      /* 16px or larger, or iOS zooms the page on focus */
+  text-align: right;
+}
+
+.form-row-input::placeholder {
+  color: var(--placeholder);
+}
+
+.form-row-input:focus {
+  outline: none;
+  color: var(--text);
+}
+
+.form-row .mode-picker {
+  flex: 0 1 240px;
+}
+
+.form-section-footer {
+  margin: 6px 16px 0;
+  font-size: .8rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.form-section-footer:empty {
+  display: none;
+}
+
+.profile-readonly {
+  color: var(--muted);
+  cursor: default;
+}
+
+/* Toggle */
+.ios-switch {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  flex: 0 0 51px;
+  width: 51px;
+  height: 31px;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--fill-strong);
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.ios-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .22);
+  transition: transform .25s var(--ease);
+}
+
+.ios-switch:checked {
+  background: var(--switch-on);
+}
+
+.ios-switch:checked::after {
+  transform: translateX(20px);
+}
+
+/* ---------- progress ---------- */
+
+.progress-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
   width: 100%;
 }
 
 .progress-stat {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 2px;
+  padding: 14px 16px;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
 }
 
 .progress-stat-label {
   font-size: .8rem;
-  font-weight: 600;
   color: var(--muted);
 }
 
 .progress-stat-value {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--accent);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
+@media (max-width: 560px) {
+  .progress-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .progress-card {
-  max-width: 720px;
+  padding: 18px 16px;
 }
 
 .progress-row {
   padding: 12px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: .5px solid var(--border);
 }
 
 .progress-row:last-child {
@@ -1255,23 +1533,21 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 }
 
 .progress-row-name {
-  font-weight: 600;
-  font-size: .92rem;
+  font-size: 1rem;
   color: var(--text);
 }
 
 .progress-row-score {
-  font-weight: 700;
-  font-size: .85rem;
+  font-size: .9rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .progress-bar-track {
-  height: 8px;
+  height: 6px;
   border-radius: 999px;
-  background: var(--bg);
+  background: var(--fill);
   overflow: hidden;
 }
 
@@ -1281,13 +1557,13 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   transition: width .3s ease;
 }
 
-.progress-bar-fill.is-high { background: #16a34a; }
-.progress-bar-fill.is-mid  { background: #f59e0b; }
-.progress-bar-fill.is-low  { background: #dc2626; }
+.progress-bar-fill.is-high { background: var(--green); }
+.progress-bar-fill.is-mid  { background: var(--yellow); }
+.progress-bar-fill.is-low  { background: var(--red); }
 
 .progress-row-meta {
   margin-top: 6px;
-  font-size: .78rem;
+  font-size: .8rem;
   color: var(--muted);
 }
 
@@ -1298,7 +1574,7 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 .progress-row-caret {
   font-size: .7rem;
   color: var(--muted);
-  transition: transform .2s ease;
+  transition: transform .25s var(--ease);
   display: inline-block;
 }
 
@@ -1309,7 +1585,7 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 .progress-attempts {
   margin-top: 12px;
   padding-top: 8px;
-  border-top: 1px dashed var(--border);
+  border-top: .5px solid var(--border);
   max-height: 320px;
   overflow-y: auto;
 }
@@ -1318,28 +1594,27 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 4px;
-  font-size: .85rem;
+  padding: 7px 0;
+  font-size: .9rem;
 }
 
 .progress-attempt i {
   flex-shrink: 0;
-  font-size: .95rem;
+  font-size: 1rem;
 }
 
 .progress-attempt.is-correct i {
-  color: var(--plus);
+  color: var(--green);
 }
 
 .progress-attempt.is-incorrect i {
-  color: #dc2626;
+  color: var(--red);
 }
 
 .progress-attempt-expr {
   flex: 1;
   min-width: 0;
   color: var(--text);
-  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1347,14 +1622,12 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 
 .progress-attempt-noexpr {
   color: var(--muted);
-  font-weight: 500;
   font-style: italic;
 }
 
 .progress-attempt-time {
   flex-shrink: 0;
-  font-size: .72rem;
-  font-weight: 700;
+  font-size: .8rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
@@ -1362,25 +1635,26 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 /* well above this child's usual pace for this lesson: the fact is being worked
    out rather than recalled, which accuracy alone never shows */
 .progress-attempt-time.is-slow {
-  color: #b45309;
+  color: var(--yellow);
+  font-weight: 600;
 }
 
 .progress-attempt-date {
   flex-shrink: 0;
-  font-size: .75rem;
+  font-size: .8rem;
   color: var(--muted);
 }
 
 .progress-review-name {
-  font-weight: 700;
-  font-size: .9rem;
+  flex: 0 0 auto;
+  margin-right: 12px;
+  font-size: 1rem;
   color: var(--text);
 }
 
 .progress-review-reason {
   margin-left: auto;
-  font-size: .75rem;
-  font-weight: 600;
+  font-size: .8rem;
   color: var(--muted);
   text-align: right;
 }
@@ -1389,55 +1663,51 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
    having to open the page */
 .nav-review-badge {
   margin-left: auto;
-  min-width: 20px;
+  min-width: 22px;
   padding: 1px 7px;
   border-radius: 999px;
-  background: #f97316;
-  color: #fff;
-  font-size: .7rem;
-  font-weight: 800;
+  background: var(--red);
+  color: var(--on-accent);
+  font-size: .8rem;
+  font-weight: 600;
   text-align: center;
 }
 
 .progress-fix-btn {
   flex-shrink: 0;
+  min-height: 34px;
   margin-left: 10px;
-  padding: 5px 12px;
+  padding: 5px 14px;
   border: none;
   border-radius: 999px;
   background: var(--accent-bg);
   color: var(--accent);
   font-family: var(--font-main);
-  font-size: .75rem;
-  font-weight: 700;
+  font-size: .85rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: filter .15s ease;
-}
-
-.progress-fix-btn:hover {
-  filter: brightness(.95);
 }
 
 .progress-fixed-badge {
   margin-left: auto;
   padding: 3px 10px;
   border-radius: 999px;
-  background: var(--plus-bg);
-  color: var(--plus);
-  font-size: .75rem;
-  font-weight: 700;
+  background: var(--green-bg);
+  color: var(--green);
+  font-size: .8rem;
+  font-weight: 600;
 }
 
 .progress-mistake-expr {
-  font-weight: 700;
-  font-size: .92rem;
-  color: #dc2626;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--red);
   font-variant-numeric: tabular-nums;
 }
 
 .progress-mistake-lesson {
+  margin-left: auto;
   font-size: .8rem;
-  font-weight: 600;
   color: var(--muted);
   text-align: right;
 }
@@ -1445,7 +1715,7 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 .progress-empty {
   margin: 0;
   color: var(--muted);
-  font-size: .88rem;
+  font-size: .9rem;
   text-align: center;
   line-height: 1.6;
 }
@@ -1454,67 +1724,14 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 18px;
-  font-size: 1.05rem;
+  margin: 0 0 12px;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text);
 }
 
 .profile-section-title i {
   color: var(--accent);
-}
-
-.profile-label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: .85rem;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.profile-label + .auth-input,
-.profile-label + .mode-picker {
-  margin-bottom: 16px;
-}
-
-.profile-readonly {
-  background: var(--bg);
-  color: var(--muted);
-  cursor: default;
-}
-
-.profile-grade-picker,
-.profile-picker {
-  justify-content: flex-start;
-  margin-top: 0;
-}
-
-.profile-save-btn {
-  margin-top: 4px;
-}
-
-.auth-note {
-  margin: 0;
-  color: var(--muted);
-  font-size: .78rem;
-  line-height: 1.5;
-  text-align: center;
-}
-
-.auth-guest-btn {
-  border: none;
-  background: none;
-  color: var(--muted);
-  font-weight: 600;
-  font-size: .85rem;
-  padding: 4px;
-  cursor: pointer;
-  text-align: center;
-}
-
-.auth-guest-btn:hover {
-  color: var(--text);
-  text-decoration: underline;
 }
 
 @keyframes required-shake {
@@ -1525,7 +1742,7 @@ body.sq-running .operation-panel[data-op="speedquiz"] .panel-body {
 
 .field-required {
   animation: required-shake .4s ease;
-  outline: 2px solid #dc2626;
+  outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
@@ -1553,12 +1770,12 @@ input[type=number] {
 .compare-number {
   flex: 1;
   text-align: center;
-  font-size: 1.6rem;
-  font-weight: 700;
-  padding: 14px 12px;
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 11px 12px;
   border-radius: var(--radius-md);
-  border: 2px solid var(--border);
-  background: var(--bg);
+  background: var(--fill);
   color: var(--text);
 }
 
@@ -1569,27 +1786,21 @@ input[type=number] {
 }
 
 .symbol-btn {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  border: 2px solid var(--border);
-  background: var(--card-bg);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--muted);
+  border: none;
+  background: var(--fill);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
   cursor: pointer;
-  transition: background .15s ease, border-color .15s ease, color .15s ease;
-}
-
-.symbol-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  transition: background .15s ease, color .15s ease;
 }
 
 .symbol-btn.selected {
   background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 /* ---------- number patterns ---------- */
@@ -1611,16 +1822,15 @@ input[type=number] {
   height: 56px;
   padding: 0 10px;
   border-radius: var(--radius-md);
-  background: var(--bg);
-  border: 2px solid var(--border);
+  background: var(--fill);
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
 }
 
 .pattern-comma {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--muted);
 }
 
@@ -1637,7 +1847,7 @@ input[type=number] {
 .bond-hint {
   text-align: center;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--accent);
   margin-bottom: 14px;
 }
@@ -1664,22 +1874,20 @@ input[type=number] {
   height: 64px;
   padding: 0 10px;
   border-radius: var(--radius-md);
-  background: var(--bg);
-  border: 2px solid var(--border);
+  background: var(--fill);
   font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
 }
 
 .bond-num.bond-target {
   background: var(--accent-bg);
-  border-color: var(--accent);
   color: var(--accent);
 }
 
 .bond-op {
   font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--muted);
 }
 
@@ -1690,7 +1898,6 @@ input[type=number] {
   height: 64px;
   padding: 0 6px;
 }
-
 
 /* keep "? + 8 = 20" on one line on phones -- wrapping drops the total onto its
    own row and leaves the "=" dangling, which reads as a different question */
@@ -1723,7 +1930,6 @@ input[type=number] {
 .word-question {
   text-align: center;
   font-size: 1.15rem;
-  font-weight: 600;
   line-height: 1.6;
   color: var(--text);
   padding: 10px 4px 18px;
@@ -1731,7 +1937,7 @@ input[type=number] {
 
 .word-question span {
   color: var(--accent);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.3rem;
 }
 
@@ -1756,7 +1962,7 @@ input[type=number] {
 .fraction-num,
 .fraction-den {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -1769,7 +1975,7 @@ input[type=number] {
 
 .fraction-symbol {
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--accent);
 }
 
@@ -1801,7 +2007,7 @@ input[type=number] {
 
 .mixed-whole {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -1811,7 +2017,7 @@ input[type=number] {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 16px;
+  gap: clamp(6px, 2.5vw, 16px);
   height: 200px;
   padding: 10px 6px 0;
   margin-bottom: 18px;
@@ -1824,12 +2030,12 @@ input[type=number] {
   justify-content: flex-end;
   height: 100%;
   gap: 6px;
-  flex: 0 0 auto;
-  width: 52px;
+  flex: 0 1 52px;
+  min-width: 0;
 }
 
 .bar-value {
-  font-weight: 700;
+  font-weight: 600;
   font-size: .9rem;
   color: var(--accent);
 }
@@ -1837,14 +2043,13 @@ input[type=number] {
 .bar-fill {
   width: 100%;
   background: var(--accent);
-  border-radius: 6px 6px 0 0;
+  border-radius: 8px 8px 0 0;
   min-height: 4px;
   transition: height .3s ease;
 }
 
 .bar-label {
-  font-size: .78rem;
-  font-weight: 600;
+  font-size: .8rem;
   color: var(--muted);
   text-align: center;
   white-space: nowrap;
@@ -1873,26 +2078,21 @@ input[type=number] {
 }
 
 .shape-option-btn {
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
-  border: 2px solid var(--border);
-  background: var(--card-bg);
-  font-weight: 700;
-  font-size: .9rem;
-  color: var(--muted);
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  background: var(--fill);
+  font-weight: 500;
+  font-size: .95rem;
+  color: var(--text);
   cursor: pointer;
-  transition: background .15s ease, border-color .15s ease, color .15s ease;
-}
-
-.shape-option-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  transition: background .15s ease, color .15s ease;
 }
 
 .shape-option-btn.selected {
   background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 /* ---------- clock ---------- */
@@ -1940,12 +2140,12 @@ input[type=number] {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 600;
   font-size: .85rem;
   line-height: 1.3;
   color: var(--accent);
   background: var(--accent-bg);
-  border: 2px solid var(--accent);
+  border: 1.5px solid var(--accent);
 }
 
 .money-coin {
@@ -1964,8 +2164,8 @@ input[type=number] {
 
 .place-value-number {
   text-align: center;
-  font-size: 2.2rem;
-  font-weight: 800;
+  font-size: 2.4rem;
+  font-weight: 700;
   color: var(--accent);
   padding: 6px 0 18px;
 }
@@ -1985,58 +2185,56 @@ input[type=number] {
 
 .place-value-field label {
   font-size: .85rem;
-  font-weight: 700;
   color: var(--muted);
   text-align: center;
 }
 
 /* ---------- side panels (answers / history) ---------- */
 
+/* a Section: the heading sits on the page background above a card of rows */
 .side-panels {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  max-width: 480px;
   width: 100%;
-}
-
-.side-panel {
-  background: var(--card-bg);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: 20px;
-  min-height: 120px;
 }
 
 .side-panel h3 {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: .95rem;
+  gap: 6px;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .03em;
-  margin: 0 0 14px;
+  color: var(--text);
+  margin: 0 0 6px 16px;
+}
+
+.side-panel h3 i {
+  color: var(--accent);
 }
 
 .answer-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  padding: 0 16px;
   max-height: 340px;
   overflow-y: auto;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
 }
 
 .answer-chip {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  background: var(--result-bg);
-  font-weight: 600;
-  font-size: .95rem;
+  min-height: 46px;
+  padding: 10px 0;
+  font-size: 1rem;
+  border-bottom: .5px solid var(--border);
+}
+
+.answer-chip:last-child {
+  border-bottom: none;
 }
 
 .answer-chip .answer-index {
@@ -2044,8 +2242,8 @@ input[type=number] {
   min-width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .7);
-  color: var(--accent);
+  background: var(--fill);
+  color: var(--muted);
   font-size: .75rem;
   display: flex;
   align-items: center;
@@ -2054,105 +2252,83 @@ input[type=number] {
 
 .answer-chip .answer-expr {
   color: var(--text);
-}
-
-.answer-chip.is-correct {
-  background: var(--plus-bg);
+  font-variant-numeric: tabular-nums;
 }
 
 .answer-chip.is-correct i {
-  color: var(--plus);
-}
-
-.answer-chip.is-incorrect {
-  background: #fdeeee;
+  color: var(--green);
 }
 
 .answer-chip.is-incorrect i {
-  color: #dc2626;
+  color: var(--red);
 }
 
 /* ---------- responsive ---------- */
 
+/* iPad in portrait: too narrow for both, so the sidebar slides over the page
+   from a toolbar button, as NavigationSplitView does. The width here has to
+   match the one in the sidebar's click handler in index.html. */
 @media (max-width: 900px) {
+  :root {
+    --gutter: 20px;
+  }
+
   .side-panels {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 720px) {
-  .app-shell {
-    display: block;
-    height: auto;
-    min-height: 100vh;
   }
 
   .sidebar-toggle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: fixed;
-    top: 14px;
-    left: 14px;
-    width: 44px;
+    gap: 2px;
+    min-width: 44px;
     height: 44px;
-    border-radius: 50%;
+    padding: 0 10px;
     border: none;
-    background: var(--card-bg);
-    box-shadow: var(--shadow-sm);
-    color: var(--text);
-    font-size: 1.3rem;
-    z-index: 1001;
+    border-radius: 999px;
+    background: var(--fill);
+    color: var(--tint);
+    font-size: 1.25rem;
     cursor: pointer;
   }
 
-  .mobile-topbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    position: fixed;
-    top: 22px;
-    left: 68px;
-    font-weight: 700;
-    color: var(--text);
-    z-index: 999;
-  }
-
-  .mobile-topbar-brand img {
-    width: 28px;
-    height: 28px;
+  .sidebar-toggle-btn .toggle-back,
+  .sidebar-toggle-btn .toggle-label {
+    display: none;
   }
 
   .sidebar-backdrop {
-    display: none;
+    display: block;
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, .45);
+    background: var(--backdrop);
+    opacity: 0;
+    pointer-events: none;
     z-index: 1001;
+    transition: opacity .3s ease;
   }
 
   .sidebar-backdrop.show {
-    display: block;
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .app-sidebar {
     position: fixed;
     top: 0;
+    bottom: 0;
     left: 0;
-    width: 280px;
-    max-width: 85vw;
-    height: 100vh;
-    max-height: none;
-    padding: 16px;
-    overflow-y: auto;
-    border-right: none;
-    box-shadow: var(--shadow);
-    transform: translateX(-100%);
-    transition: transform .25s ease;
+    width: var(--sidebar-w);
+    max-width: calc(100vw - 2 * var(--sidebar-inset));
+    box-shadow: none;     /* or its blur shows at the screen edge while closed */
+    transform: translateX(calc(-100% - 2 * var(--sidebar-inset)));
+    transition: transform .4s var(--ease);
     z-index: 1002;
   }
 
   .app-sidebar.open {
+    box-shadow: var(--shadow);
     transform: translateX(0);
   }
 
@@ -2160,74 +2336,113 @@ input[type=number] {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 0 0 auto;
     margin-left: auto;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border: none;
-    background: none;
+    border-radius: 50%;
+    background: var(--fill);
     color: var(--muted);
-    font-size: 1rem;
+    font-size: .85rem;
     cursor: pointer;
   }
 
-  .app-main {
-    padding: 72px 16px 24px;
-    height: auto;
-    overflow-y: visible;
-  }
-
-  body.sidebar-open {
-    overflow: hidden;
+  .speed-quiz-submit-btn {
+    left: 16px;
+    right: 16px;
   }
 }
 
-@media (prefers-color-scheme: dark) {
+/* Phone: NavigationStack. The sidebar becomes the root list, full screen, and
+   the toolbar button becomes a back button. Same element, same open/close code,
+   so a running quiz still gets its leave confirmation from the list. */
+@media (max-width: 600px) {
   :root {
-    --bg: #10131c;
-    --card-bg: #171b26;
-    --text: #e7e9ee;
-    --muted: #9aa1b0;
-    --border: #262b3a;
-    --result-bg: #062330;
-    --plus-bg: #10281c;
-    --minus-bg: #2c1a0e;
-    --multiply-bg: #221a38;
-    --divide-bg: #2b1524;
-    --compare-bg: #0b2530;
-    --pattern-bg: #2c2008;
-    --placevalue-bg: #1c1a35;
-    --decimal-bg: #062420;
-    --percentage-bg: #2c0f16;
-    --fraction-bg: #0b1f2e;
-    --gcflcm-bg: #1c222b;
-    --mixednumber-bg: #2b0a30;
-    --geometry-bg: #241c06;
-    --volume-bg: #0d1b30;
-    --angle-bg: #1f0f2e;
-    --average-bg: #0c2417;
-    --barchart-bg: #2b1206;
-    --shape-bg: #2b0e20;
-    --length-bg: #1c2408;
-    --weight-bg: #1c1a18;
-    --capacity-bg: #04202e;
-    --time-bg: #220d30;
-    --money-bg: #2c2007;
-    --wordproblem-bg: #052e22;
-    --speedquiz-bg: #1a1740;
-    --numberbond-bg: #241a3d;
-    --profile-bg: #062c33;
-    --progress-bg: #241a45;
+    --gutter: 16px;
   }
 
-  .answer-chip.is-incorrect {
-    background: #2c1414;
+  .sidebar-toggle-btn {
+    padding: 0 10px 0 6px;
+    background: none;
+    font-size: 1.05rem;
   }
 
-  .calc-feedback.is-incorrect {
-    background: #2c1414;
+  .sidebar-toggle-btn .toggle-sidebar {
+    display: none;
   }
 
-  .calc-input::placeholder {
-    color: #4a5064;
+  .sidebar-toggle-btn .toggle-back,
+  .sidebar-toggle-btn .toggle-label {
+    display: inline;
+  }
+
+  .sidebar-backdrop,
+  .sidebar-backdrop.show {
+    display: none;
+  }
+
+  .app-sidebar {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: calc(14px + var(--safe-top)) 16px calc(16px + var(--safe-bottom));
+    border-radius: 0;
+    background: var(--bg);
+    box-shadow: none;
+    transform: translateX(-100%);
+  }
+
+  .app-account {
+    background: var(--card-bg);
+  }
+
+  .nav-group {
+    padding: 4px 6px;
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+  }
+
+  .calc-card,
+  .speed-quiz-card {
+    padding: 20px 16px;
+  }
+
+  .panel-header h2 {
+    font-size: 1.9rem;
+  }
+
+  /* .sheet on a phone */
+  #authModal .modal-dialog {
+    align-items: flex-end;
+    max-width: none;
+    min-height: 100%;
+    margin: 0;
+  }
+
+  #authModal.fade .modal-dialog {
+    transform: translateY(100%);
+    transition: transform .4s var(--ease);
+  }
+
+  #authModal.show .modal-dialog {
+    transform: none;
+  }
+
+  #authModal .modal-content {
+    border-radius: 26px 26px 0 0;
+  }
+
+  .auth-modal-body {
+    padding-bottom: calc(24px + var(--safe-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
   }
 }

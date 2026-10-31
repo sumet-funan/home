@@ -14,13 +14,11 @@ function showProfileFeedback(feedbackId, isSuccess, message) {
         .addClass('show');
 }
 
-function syncProfileReviewPicker() {
+function syncProfileReviewToggle() {
     if (typeof isReviewEnabled !== 'function') {
         return;
     }
-    let review = isReviewEnabled() ? 'on' : 'off';
-    $('#profileReviewPicker .mode-btn').removeClass('active');
-    $('#profileReviewPicker .mode-btn[data-review="' + review + '"]').addClass('active');
+    $('#profileReviewToggle').prop('checked', isReviewEnabled());
 }
 
 function loadProfileIntoForm(user) {
@@ -65,7 +63,7 @@ function loadProfileIntoForm(user) {
         $('#profileDailyGoal').val(getDailyGoal());
     }
 
-    syncProfileReviewPicker();
+    syncProfileReviewToggle();
 
     $('#profileNewPassword, #profileNewPasswordConfirm').val('');
     $('#feedbackProfile, #feedbackProfilePassword').removeClass('show is-correct is-incorrect').text('');
@@ -113,11 +111,6 @@ $('#profileGradePicker').on('click', '.mode-btn', function () {
     $(this).addClass('active');
 });
 
-$('#profileReviewPicker').on('click', '.mode-btn', function () {
-    $('#profileReviewPicker .mode-btn').removeClass('active');
-    $(this).addClass('active');
-});
-
 // Converting an email account has to happen server-side (it rewrites the auth
 // address), so this calls the claim-username Edge Function rather than writing
 // to profiles directly.
@@ -159,7 +152,7 @@ function claimUsernameForEmailAccount(username, $btn) {
 
 $('#profileSaveBtn').on('click', function () {
     let grade = $('#profileGradePicker .mode-btn.active').data('grade') || '';
-    let showReview = $('#profileReviewPicker .mode-btn.active').data('review') !== 'off';
+    let showReview = $('#profileReviewToggle').prop('checked');
     let $btn = $(this);
     let typedName = $('#profileUsername').val().trim().toLowerCase();
     let currentName = (profileLoadedUser && profileLoadedUser.user_metadata.username) || '';

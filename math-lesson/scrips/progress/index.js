@@ -285,8 +285,8 @@ function setReviewPreference(user) {
         return;
     }
     reviewEnabled = enabled;
-    if (typeof syncProfileReviewPicker === 'function') {
-        syncProfileReviewPicker();
+    if (typeof syncProfileReviewToggle === 'function') {
+        syncProfileReviewToggle();
     }
 }
 

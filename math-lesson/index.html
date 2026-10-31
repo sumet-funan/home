@@ -3,16 +3,14 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>ThinkGrow (ธิงก์โกรว์) - บทเรียนคณิตศาสตร์</title>
   <link rel="icon" href="images/logo-small.svg" type="image/svg+xml">
   <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="ThinkGrow">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
+  <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="style.css">
@@ -20,14 +18,6 @@
 
 <body>
   <div class="app-shell">
-    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" type="button" aria-label="เปิดเมนู"
-      aria-expanded="false" aria-controls="appSidebar">
-      <i class="bi bi-list"></i>
-    </button>
-    <div class="mobile-topbar-brand">
-      <img src="images/logo-small.svg" alt="">
-      <span>ThinkGrow</span>
-    </div>
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
     <aside class="app-sidebar" id="appSidebar">
@@ -65,8 +55,8 @@
         <div class="nav-group">
           <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-p1"
             aria-expanded="false" aria-controls="group-p1">
-            <i class="bi bi-mortarboard-fill"></i><span>ป.1</span>
-            <i class="bi bi-chevron-down group-caret"></i>
+            <span>ป.1</span>
+            <i class="bi bi-chevron-right group-caret"></i>
           </button>
           <div class="collapse nav-group-items" id="group-p1">
             <a class="nav-menu-item" id="menu_p1_plus" data-bs-toggle="list" href="#content_p1_plus" role="tab"
@@ -127,8 +117,8 @@
         <div class="nav-group">
           <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-p5"
             aria-expanded="false" aria-controls="group-p5">
-            <i class="bi bi-mortarboard-fill"></i><span>ป.5</span>
-            <i class="bi bi-chevron-down group-caret"></i>
+            <span>ป.5</span>
+            <i class="bi bi-chevron-right group-caret"></i>
           </button>
           <div class="collapse nav-group-items" id="group-p5">
             <a class="nav-menu-item" id="menu_p5_decimal" data-bs-toggle="list" href="#content_p5_decimal" role="tab"
@@ -179,10 +169,19 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v3.8.1</div>
+      <div class="app-sidebar-footer">v4.0.0</div>
     </aside>
 
-    <main class="app-main">
+    <main class="app-main" id="appMain">
+      <header class="app-navbar" id="appNavbar">
+        <button class="sidebar-toggle-btn" id="sidebarToggleBtn" type="button" aria-label="เปิดเมนู"
+          aria-expanded="false" aria-controls="appSidebar">
+          <i class="bi bi-layout-sidebar toggle-sidebar"></i>
+          <i class="bi bi-chevron-left toggle-back"></i>
+          <span class="toggle-label">บทเรียน</span>
+        </button>
+        <span class="app-navbar-title" id="appNavbarTitle" aria-hidden="true"></span>
+      </header>
       <div class="tab-content">
 
         <div class="tab-pane fade" id="content_p1_plus" role="tabpanel" aria-labelledby="menu_p1_plus">
@@ -1234,56 +1233,84 @@
               <p>จัดการข้อมูลบัญชีของคุณ</p>
             </div>
             <div class="panel-body">
-              <div class="calc-card">
-                <h3 class="profile-section-title"><i class="bi bi-person-badge"></i> ข้อมูลผู้ใช้</h3>
-
-                <label class="profile-label" for="profileUsername">ชื่อผู้ใช้ (ใช้เข้าสู่ระบบ)</label>
-                <input type="text" class="auth-input" id="profileUsername" placeholder="ยังไม่มีชื่อผู้ใช้"
-                  autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="20">
-                <p class="auth-note profile-username-note" id="profileUsernameNote" style="display: none;">
+              <div class="form-section">
+                <h3 class="form-section-header">ข้อมูลผู้ใช้</h3>
+                <div class="form-group">
+                  <label class="form-row" for="profileUsername">
+                    <span class="form-row-label">ชื่อผู้ใช้ (ใช้เข้าสู่ระบบ)</span>
+                    <input type="text" class="form-row-input" id="profileUsername" placeholder="ยังไม่มีชื่อผู้ใช้"
+                      autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="20">
+                  </label>
+                </div>
+                <p class="form-section-footer" id="profileUsernameNote" style="display: none;">
                   เปลี่ยนชื่อผู้ใช้ได้ แต่ชื่อเดิมจะใช้ไม่ได้อีกตลอดไป และต้องใช้ชื่อใหม่ในการเข้าสู่ระบบ
                 </p>
-
-                <label class="profile-label" for="profileEmail">อีเมล</label>
-                <input type="email" class="auth-input" id="profileEmail" placeholder="ไม่บังคับ" autocomplete="email">
-                <p class="auth-note" id="profileEmailNote"></p>
-
-                <label class="profile-label" for="profileDailyGoal">เป้าหมายต่อวัน (ข้อ)</label>
-                <input type="number" class="auth-input" id="profileDailyGoal" min="1" max="500" step="1">
-                <p class="auth-note">ไว้ให้ตั้งใจทำให้ถึง ไม่ได้จำกัดการเล่น ทำเกินได้เสมอ</p>
-
-                <label class="profile-label">การ์ด "ควรทบทวน" ในหน้าความก้าวหน้า</label>
-                <div class="mode-picker profile-picker" id="profileReviewPicker">
-                  <button type="button" class="mode-btn active" data-review="on">แสดง</button>
-                  <button type="button" class="mode-btn" data-review="off">ซ่อน</button>
-                </div>
-                <p class="auth-note">ถ้าเลือกซ่อน จะไม่แสดงการ์ดควรทบทวนและตัวเลขแจ้งเตือนที่เมนูความก้าวหน้า</p>
-
-                <label class="profile-label">ระดับชั้น</label>
-                <div class="mode-picker profile-grade-picker" id="profileGradePicker">
-                  <button type="button" class="mode-btn active" data-grade="">ไม่ระบุ</button>
-                  <button type="button" class="mode-btn" data-grade="p1">ป.1</button>
-                  <button type="button" class="mode-btn" data-grade="p5">ป.5</button>
-                </div>
-
-                <button type="button" class="auth-submit-btn profile-save-btn" id="profileSaveBtn">บันทึกข้อมูล</button>
-                <div class="calc-feedback" id="feedbackProfile"></div>
               </div>
 
-              <div class="calc-card">
-                <h3 class="profile-section-title"><i class="bi bi-key-fill"></i> เปลี่ยนรหัสผ่าน</h3>
-
-                <label class="profile-label" for="profileNewPassword">รหัสผ่านใหม่</label>
-                <input type="password" class="auth-input" id="profileNewPassword"
-                  placeholder="อย่างน้อย 6 ตัวอักษร" autocomplete="new-password">
-
-                <label class="profile-label" for="profileNewPasswordConfirm">ยืนยันรหัสผ่านใหม่</label>
-                <input type="password" class="auth-input" id="profileNewPasswordConfirm"
-                  placeholder="พิมพ์รหัสผ่านใหม่อีกครั้ง" autocomplete="new-password">
-
-                <button type="button" class="auth-submit-btn profile-save-btn" id="profilePasswordBtn">เปลี่ยนรหัสผ่าน</button>
-                <div class="calc-feedback" id="feedbackProfilePassword"></div>
+              <div class="form-section">
+                <div class="form-group">
+                  <label class="form-row" for="profileEmail">
+                    <span class="form-row-label">อีเมล</span>
+                    <input type="email" class="form-row-input" id="profileEmail" placeholder="ไม่บังคับ" autocomplete="email">
+                  </label>
+                </div>
+                <p class="form-section-footer" id="profileEmailNote"></p>
               </div>
+
+              <div class="form-section">
+                <div class="form-group">
+                  <label class="form-row" for="profileDailyGoal">
+                    <span class="form-row-label">เป้าหมายต่อวัน (ข้อ)</span>
+                    <input type="number" class="form-row-input" id="profileDailyGoal" min="1" max="500" step="1">
+                  </label>
+                </div>
+                <p class="form-section-footer">ไว้ให้ตั้งใจทำให้ถึง ไม่ได้จำกัดการเล่น ทำเกินได้เสมอ</p>
+              </div>
+
+              <div class="form-section">
+                <div class="form-group">
+                  <label class="form-row" for="profileReviewToggle">
+                    <span class="form-row-label">การ์ด "ควรทบทวน" ในหน้าความก้าวหน้า</span>
+                    <input type="checkbox" class="ios-switch" id="profileReviewToggle" role="switch" checked>
+                  </label>
+                </div>
+                <p class="form-section-footer">ถ้าปิด จะไม่แสดงการ์ดควรทบทวนและตัวเลขแจ้งเตือนที่เมนูความก้าวหน้า</p>
+              </div>
+
+              <div class="form-section">
+                <div class="form-group">
+                  <div class="form-row">
+                    <span class="form-row-label">ระดับชั้น</span>
+                    <div class="mode-picker" id="profileGradePicker">
+                      <button type="button" class="mode-btn active" data-grade="">ไม่ระบุ</button>
+                      <button type="button" class="mode-btn" data-grade="p1">ป.1</button>
+                      <button type="button" class="mode-btn" data-grade="p5">ป.5</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" class="auth-submit-btn" id="profileSaveBtn">บันทึกข้อมูล</button>
+              <div class="calc-feedback" id="feedbackProfile"></div>
+
+              <div class="form-section">
+                <h3 class="form-section-header">เปลี่ยนรหัสผ่าน</h3>
+                <div class="form-group">
+                  <label class="form-row" for="profileNewPassword">
+                    <span class="form-row-label">รหัสผ่านใหม่</span>
+                    <input type="password" class="form-row-input" id="profileNewPassword"
+                      placeholder="อย่างน้อย 6 ตัวอักษร" autocomplete="new-password">
+                  </label>
+                  <label class="form-row" for="profileNewPasswordConfirm">
+                    <span class="form-row-label">ยืนยันรหัสผ่านใหม่</span>
+                    <input type="password" class="form-row-input" id="profileNewPasswordConfirm"
+                      placeholder="พิมพ์อีกครั้ง" autocomplete="new-password">
+                  </label>
+                </div>
+              </div>
+
+              <button type="button" class="auth-submit-btn" id="profilePasswordBtn">เปลี่ยนรหัสผ่าน</button>
+              <div class="calc-feedback" id="feedbackProfilePassword"></div>
             </div>
           </div>
         </div>
@@ -1358,19 +1385,23 @@
           </div>
 
           <div class="auth-tab-panel active" id="authPanelSignin">
+            <div class="form-group">
             <input type="text" class="auth-input" id="signinIdentifier" placeholder="ชื่อผู้ใช้ หรือ อีเมล"
               autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false">
             <input type="password" class="auth-input" id="signinPassword" placeholder="รหัสผ่าน" autocomplete="current-password">
+            </div>
             <div class="auth-error" id="signinError"></div>
             <button type="button" class="auth-submit-btn" id="signinSubmitBtn">เข้าสู่ระบบ</button>
           </div>
 
           <div class="auth-tab-panel" id="authPanelRegister">
+            <div class="form-group">
             <input type="text" class="auth-input" id="registerIdentifier" placeholder="ชื่อผู้ใช้ (a-z, 0-9, _)"
               autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="20">
             <input type="email" class="auth-input" id="registerEmail" placeholder="อีเมล (ไม่บังคับ)" autocomplete="email">
             <input type="password" class="auth-input" id="registerPassword" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)" autocomplete="new-password">
             <input type="password" class="auth-input" id="registerPasswordConfirm" placeholder="ยืนยันรหัสผ่าน" autocomplete="new-password">
+            </div>
             <div class="auth-error" id="registerError"></div>
             <button type="button" class="auth-submit-btn" id="registerSubmitBtn">สมัครสมาชิก</button>
             <p class="auth-note">เข้าสู่ระบบด้วยชื่อผู้ใช้ อีเมลเก็บไว้ติดต่อเท่านั้น<br>จำรหัสผ่านให้ดีนะ ถ้าลืมต้องให้ผู้ดูแลรีเซ็ตให้</p>
@@ -1547,10 +1578,29 @@
     $('#sidebarCloseBtn').on('click', closeSidebar);
     $('#sidebarBackdrop').on('click', closeSidebar);
     $('#list-tab').on('click', 'a.nav-menu-item', function () {
-      if (window.innerWidth <= 720) {
+      if (window.innerWidth <= 900) {
         closeSidebar();
       }
     });
+
+    // The navigation bar: clear at the top of a page, then a blurred bar showing
+    // the title in small once the large title has gone underneath it.
+    const appMain = document.getElementById('appMain');
+    const appNavbar = document.getElementById('appNavbar');
+
+    function updateNavbar() {
+      let title = document.querySelector('.tab-pane.active .panel-header h2');
+      $('#appNavbarTitle').text(title.textContent.trim());
+      let hidden = title.getBoundingClientRect().bottom <= appNavbar.getBoundingClientRect().bottom;
+      appNavbar.classList.toggle('is-scrolled', hidden);
+    }
+
+    appMain.addEventListener('scroll', updateNavbar, { passive: true });
+    $(document).on('shown.bs.tab', '[data-bs-toggle="list"]', function () {
+      appMain.scrollTop = 0;
+      updateNavbar();
+    });
+    updateNavbar();
 
     $(document).on('keydown', '.calc-card input', function (e) {
       if (e.key === 'Enter') {
