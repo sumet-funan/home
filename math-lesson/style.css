@@ -126,6 +126,20 @@ body {
   color: var(--plus);
 }
 
+.app-brand img {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+}
+
+/* pulled up against the brand row, past the sidebar's own 24px gap */
+.app-brand-tagline {
+  margin: -16px 6px 0;
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
 .app-account {
   display: flex;
   align-items: center;
@@ -2104,9 +2118,9 @@ input[type=number] {
     z-index: 999;
   }
 
-  .mobile-topbar-brand i {
-    color: var(--plus);
-    font-size: 1.3rem;
+  .mobile-topbar-brand img {
+    width: 28px;
+    height: 28px;
   }
 
   .sidebar-backdrop {
