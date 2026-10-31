@@ -568,6 +568,452 @@ input {
   box-shadow: 0 1px 4px rgba(0, 0, 0, .14);
 }
 
+/* ---------- learn card ---------- */
+
+.learn-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+body.sq-running .learn-card {
+  display: none;
+}
+
+.learn-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.learn-toggle-icon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.learn-toggle-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.learn-toggle-text strong {
+  font-weight: 600;
+}
+
+.learn-toggle-text span {
+  font-size: .82rem;
+  color: var(--muted);
+}
+
+.learn-caret {
+  margin-left: auto;
+  color: var(--muted);
+  transition: transform .25s var(--ease);
+}
+
+.learn-toggle[aria-expanded="true"] .learn-caret {
+  transform: rotate(90deg);
+}
+
+.learn-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 2px 16px 16px;
+}
+
+.learn-body[hidden] {
+  display: none;
+}
+
+.learn-title {
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.learn-step {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 150px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--accent-bg);
+}
+
+.learn-say {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.learn-say strong {
+  color: var(--accent);
+}
+
+.learn-show {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 28px;
+  max-width: 100%;
+}
+
+.learn-show svg {
+  max-width: 100%;
+  height: auto;
+  max-height: 170px;
+}
+
+.learn-show .money-items {
+  margin-bottom: 0;
+}
+
+.learn-meter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.learn-progress {
+  flex: 1 1 0;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--fill);
+  overflow: hidden;
+}
+
+.learn-progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width .25s var(--ease);
+}
+
+.learn-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.learn-count {
+  font-size: .82rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.learn-back,
+.learn-next {
+  min-height: 44px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 22px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.learn-back {
+  padding-left: 4px;
+  background: transparent;
+  color: var(--accent);
+}
+
+.learn-back:disabled {
+  visibility: hidden;
+}
+
+.learn-next {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* the worked sums and pictures inside a step */
+
+.learn-column {
+  display: inline-grid;
+  justify-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+
+.lc-cell {
+  min-width: 1.3em;
+  padding: 0 3px;
+  text-align: center;
+  justify-self: stretch;
+}
+
+.lc-cell.is-point {
+  min-width: .5em;
+  padding: 0;
+}
+
+.lc-cell.is-on:not(.lc-carry) {
+  background: var(--card-bg);
+}
+
+.lc-cell.is-struck {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.lc-head {
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.lc-carry {
+  min-height: 1.5em;
+  font-size: .9rem;
+  color: var(--accent);
+}
+
+.lc-symbol {
+  color: var(--muted);
+}
+
+.lc-answer {
+  border-top: 2px solid var(--text);
+  color: var(--accent);
+}
+
+.learn-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.learn-lines strong {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.learn-frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  font-size: .95em;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+
+.learn-frac span {
+  padding: 0 4px;
+}
+
+.learn-frac span:first-child {
+  border-bottom: 1.5px solid currentColor;
+}
+
+.learn-mixed {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.learn-dots,
+.learn-units {
+  display: grid;
+  grid-template-columns: repeat(5, 18px);
+  gap: 6px;
+}
+
+.learn-units {
+  align-content: end;
+}
+
+.learn-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+}
+
+.learn-dot.is-filled {
+  background: var(--accent);
+}
+
+.learn-blocks {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.learn-tens {
+  display: flex;
+  gap: 5px;
+}
+
+.learn-tens span {
+  width: 12px;
+  height: 74px;
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+.learn-places {
+  display: flex;
+  gap: 10px;
+}
+
+.learn-places div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 84px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: .8rem;
+  color: var(--muted);
+}
+
+.learn-places strong {
+  font-size: 2rem;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.learn-places .is-on {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.learn-places .is-on strong {
+  color: var(--accent);
+}
+
+.learn-sequence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.learn-term {
+  min-width: 42px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--card-bg);
+  font-weight: 600;
+  text-align: center;
+}
+
+.learn-hop {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.learn-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.learn-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .85rem;
+}
+
+.learn-bar-label {
+  flex: 0 0 62px;
+  color: var(--muted);
+}
+
+.learn-bar-track {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.learn-bar-track span {
+  display: block;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--accent);
+}
+
+.learn-bar-value {
+  flex: 0 0 auto;
+  font-weight: 600;
+}
+
+.learn-chart {
+  width: 100%;
+  height: 170px;
+  margin-bottom: 0;
+}
+
+.learn-bar-dim {
+  opacity: .3;
+}
+
+.learn-grid {
+  display: inline-grid;
+  gap: 2px;
+}
+
+.learn-grid span {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+.learn-svg-text {
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--text);
+}
+
+.learn-svg-line {
+  stroke: var(--text);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.learn-svg-line.is-accent {
+  stroke: var(--accent);
+}
+
+@media (hover: hover) {
+  .learn-toggle:hover {
+    background: var(--fill);
+  }
+}
+
 /* ---------- calculator card ---------- */
 
 .calc-card {
