@@ -889,7 +889,8 @@ body.sq-running .learn-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 84px;
+  flex: 0 1 84px;
+  min-width: 0;
   padding: 6px 10px;
   border-radius: var(--radius-sm);
   font-size: .8rem;
@@ -2633,6 +2634,113 @@ input[type=number] {
   font-size: .85rem;
   color: var(--muted);
   text-align: center;
+}
+
+/* four grades no longer fit beside the label on a phone */
+@media (max-width: 420px) {
+  .form-row.form-row-stacked {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .form-row.form-row-stacked .mode-picker {
+    flex: none;
+  }
+}
+
+/* ---------- lessons for p2 ---------- */
+
+.place-value-number.is-expression {
+  font-size: 1.9rem;
+}
+
+@media (max-width: 420px) {
+  .place-value-number.is-expression {
+    font-size: 1.5rem;
+  }
+}
+
+.place-value-number.is-words {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.compare-number.is-compound {
+  font-size: 1.15rem;
+  line-height: 1.4;
+  padding: 14px 8px;
+}
+
+.order-picked {
+  min-height: 2.5rem;
+  padding: 12px 4px 4px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.clock-numeral {
+  fill: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.clock-hand-minute {
+  stroke: var(--text);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.pictograph {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--fill);
+}
+
+.pictograph-title {
+  text-align: center;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pictograph-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pictograph-label {
+  flex: 0 0 68px;
+  font-size: .9rem;
+  color: var(--text);
+}
+
+.pictograph-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.pictograph-key {
+  text-align: right;
+  font-size: .85rem;
+  color: var(--muted);
+}
+
+.pictograph-key .bi {
+  color: var(--accent);
 }
 
 /* ---------- side panels (answers / history) ---------- */

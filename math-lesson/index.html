@@ -115,6 +115,76 @@
         </div>
 
         <div class="nav-group">
+          <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-p2"
+            aria-expanded="false" aria-controls="group-p2">
+            <span>ป.2</span>
+            <i class="bi bi-chevron-right group-caret"></i>
+          </button>
+          <div class="collapse nav-group-items" id="group-p2">
+            <a class="nav-menu-item" id="menu_p2_plus" data-bs-toggle="list" href="#content_p2_plus" role="tab"
+              aria-controls="content_p2_plus" data-op="plus">
+              <i class="bi bi-plus-circle-fill"></i><span>บวก (ไม่เกิน 1,000)</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_minus" data-bs-toggle="list" href="#content_p2_minus" role="tab"
+              aria-controls="content_p2_minus" data-op="minus">
+              <i class="bi bi-dash-circle-fill"></i><span>ลบ (ไม่เกิน 1,000)</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_multiply" data-bs-toggle="list" href="#content_p2_multiply" role="tab"
+              aria-controls="content_p2_multiply" data-op="multiply">
+              <i class="bi bi-x-circle-fill"></i><span>คูณ</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_divide" data-bs-toggle="list" href="#content_p2_divide" role="tab"
+              aria-controls="content_p2_divide" data-op="divide">
+              <i class="bi bi-slash-circle-fill"></i><span>หาร</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_mixed" data-bs-toggle="list" href="#content_p2_mixed" role="tab"
+              aria-controls="content_p2_mixed" data-op="average">
+              <i class="bi bi-calculator-fill"></i><span>บวก ลบ คูณ หารระคน</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_missing" data-bs-toggle="list" href="#content_p2_missing" role="tab"
+              aria-controls="content_p2_missing" data-op="numberbond">
+              <i class="bi bi-question-square-fill"></i><span>หาตัวไม่ทราบค่า</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_placevalue" data-bs-toggle="list" href="#content_p2_placevalue" role="tab"
+              aria-controls="content_p2_placevalue" data-op="placevalue">
+              <i class="bi bi-columns-gap"></i><span>จำนวนไม่เกิน 1,000</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_compare" data-bs-toggle="list" href="#content_p2_compare" role="tab"
+              aria-controls="content_p2_compare" data-op="compare">
+              <i class="bi bi-arrow-left-right"></i><span>เปรียบเทียบและเรียงลำดับ</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_length" data-bs-toggle="list" href="#content_p2_length" role="tab"
+              aria-controls="content_p2_length" data-op="length">
+              <i class="bi bi-arrows-angle-expand"></i><span>ความยาว</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_weight" data-bs-toggle="list" href="#content_p2_weight" role="tab"
+              aria-controls="content_p2_weight" data-op="weight">
+              <i class="bi bi-basket-fill"></i><span>น้ำหนัก</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_capacity" data-bs-toggle="list" href="#content_p2_capacity" role="tab"
+              aria-controls="content_p2_capacity" data-op="capacity">
+              <i class="bi bi-droplet-fill"></i><span>ปริมาตรและความจุ</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_time" data-bs-toggle="list" href="#content_p2_time" role="tab"
+              aria-controls="content_p2_time" data-op="time">
+              <i class="bi bi-clock-fill"></i><span>เวลา</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_shape" data-bs-toggle="list" href="#content_p2_shape" role="tab"
+              aria-controls="content_p2_shape" data-op="shape">
+              <i class="bi bi-circle-square"></i><span>รูปหลายเหลี่ยมและวงกลม</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_pictograph" data-bs-toggle="list" href="#content_p2_pictograph" role="tab"
+              aria-controls="content_p2_pictograph" data-op="barchart">
+              <i class="bi bi-image-fill"></i><span>แผนภูมิรูปภาพ</span>
+            </a>
+            <a class="nav-menu-item" id="menu_p2_wordproblem" data-bs-toggle="list" href="#content_p2_wordproblem" role="tab"
+              aria-controls="content_p2_wordproblem" data-op="wordproblem">
+              <i class="bi bi-journal-text"></i><span>โจทย์ปัญหา 2 ขั้นตอน</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="nav-group">
           <button class="nav-group-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#group-p5"
             aria-expanded="false" aria-controls="group-p5">
             <span>ป.5</span>
@@ -169,7 +239,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.1.0</div>
+      <div class="app-sidebar-footer">v4.2.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -651,6 +721,642 @@
                 <div class="side-panel" id="contentWordProblemP1History" style="display: none;">
                   <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
                   <div class="answer-list" id="historyWordProblemP1List"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_plus" role="tabpanel" aria-labelledby="menu_p2_plus">
+          <div class="operation-panel" data-op="plus">
+            <div class="panel-header">
+              <h2><i class="bi bi-plus-circle-fill"></i> บวก (ป.2)</h2>
+              <p>ฝึกการบวกจำนวนนับไม่เกิน 1,000</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2PlusFormatPicker">
+                <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
+                <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
+              </div>
+              <div class="calc-card">
+                <div class="calc-number-display" id="p2PlusNumberDisplay">
+                  <input type="number" id="firstP2PlusNumber" class="calc-input" placeholder="0"
+                    aria-label="First Number">
+                  <div class="calc-symbol">+</div>
+                  <input type="number" id="secondP2PlusNumber" class="calc-input" placeholder="0"
+                    aria-label="Second Number">
+                  <div class="calc-symbol">=</div>
+                </div>
+                <div class="word-question" id="p2PlusWordText" style="display: none;"></div>
+                <input type="number" id="resultP2PlusNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP2PlusResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Plus"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2PlusResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2PlusList"></div>
+                </div>
+                <div class="side-panel" id="contentP2PlusHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2PlusList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_minus" role="tabpanel" aria-labelledby="menu_p2_minus">
+          <div class="operation-panel" data-op="minus">
+            <div class="panel-header">
+              <h2><i class="bi bi-dash-circle-fill"></i> ลบ (ป.2)</h2>
+              <p>ฝึกการลบจำนวนนับไม่เกิน 1,000</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2MinusFormatPicker">
+                <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
+                <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
+              </div>
+              <div class="calc-card">
+                <div class="calc-number-display" id="p2MinusNumberDisplay">
+                  <input type="number" id="firstP2MinusNumber" class="calc-input" placeholder="0"
+                    aria-label="First Number">
+                  <div class="calc-symbol">−</div>
+                  <input type="number" id="secondP2MinusNumber" class="calc-input" placeholder="0"
+                    aria-label="Second Number">
+                  <div class="calc-symbol">=</div>
+                </div>
+                <div class="word-question" id="p2MinusWordText" style="display: none;"></div>
+                <input type="number" id="resultP2MinusNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP2MinusResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Minus"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2MinusResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2MinusList"></div>
+                </div>
+                <div class="side-panel" id="contentP2MinusHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2MinusList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_multiply" role="tabpanel" aria-labelledby="menu_p2_multiply">
+          <div class="operation-panel" data-op="multiply">
+            <div class="panel-header">
+              <h2><i class="bi bi-x-circle-fill"></i> คูณ (ป.2)</h2>
+              <p>ฝึกการคูณจำนวน 1 หลักกับจำนวนไม่เกิน 2 หลัก</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2MultiplyModePicker">
+                <button type="button" class="mode-btn active" data-mode="table">สูตรคูณ</button>
+                <button type="button" class="mode-btn" data-mode="long">จำนวน 2 หลัก</button>
+              </div>
+              <div class="calc-card">
+                <div class="calc-number-display" id="p2MultiplyNumberDisplay">
+                  <input type="number" id="firstP2MultiplyNumber" class="calc-input" placeholder="0"
+                    aria-label="First Number">
+                  <div class="calc-symbol">×</div>
+                  <input type="number" id="secondP2MultiplyNumber" class="calc-input" placeholder="0"
+                    aria-label="Second Number">
+                  <div class="calc-symbol">=</div>
+                </div>
+                <input type="number" id="resultP2MultiplyNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP2MultiplyResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Multiply"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2MultiplyResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2MultiplyList"></div>
+                </div>
+                <div class="side-panel" id="contentP2MultiplyHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2MultiplyList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_divide" role="tabpanel" aria-labelledby="menu_p2_divide">
+          <div class="operation-panel" data-op="divide">
+            <div class="panel-header">
+              <h2><i class="bi bi-slash-circle-fill"></i> หาร (ป.2)</h2>
+              <p>ฝึกการหารด้วยจำนวน 1 หลัก ทั้งหารลงตัวและหารไม่ลงตัว</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2DivideModePicker">
+                <button type="button" class="mode-btn active" data-mode="exact">หารลงตัว</button>
+                <button type="button" class="mode-btn" data-mode="remainder">หารมีเศษ</button>
+              </div>
+              <div class="calc-card">
+                <div class="place-value-number" id="p2DivideQuestion">12 ÷ 4</div>
+                <div class="place-value-fields">
+                  <div class="place-value-field">
+                    <label for="p2DivideQuotientNumber">ผลหาร</label>
+                    <input type="number" id="p2DivideQuotientNumber" class="calc-input" placeholder="?" aria-label="ผลหาร">
+                  </div>
+                  <div class="place-value-field" id="p2DivideRemainderField" style="display: none;">
+                    <label for="p2DivideRemainderNumber">เศษ</label>
+                    <input type="number" id="p2DivideRemainderNumber" class="calc-input" placeholder="?" aria-label="เศษ">
+                  </div>
+                </div>
+                <button type="button" class="calc-submit" onclick="validateP2DivideResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Divide"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2DivideResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2DivideList"></div>
+                </div>
+                <div class="side-panel" id="contentP2DivideHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2DivideList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_mixed" role="tabpanel" aria-labelledby="menu_p2_mixed">
+          <div class="operation-panel" data-op="average">
+            <div class="panel-header">
+              <h2><i class="bi bi-calculator-fill"></i> บวก ลบ คูณ หารระคน (ป.2)</h2>
+              <p>หาผลลัพธ์ของโจทย์ที่มีหลายเครื่องหมายปนกัน</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2MixedModePicker">
+                <button type="button" class="mode-btn active" data-mode="addsub">บวก ลบ</button>
+                <button type="button" class="mode-btn" data-mode="all">คูณ หาร ด้วย</button>
+              </div>
+              <div class="calc-card">
+                <div class="place-value-number is-expression" id="p2MixedQuestion"></div>
+                <input type="number" id="p2MixedAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP2MixedResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Mixed"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2MixedResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2MixedList"></div>
+                </div>
+                <div class="side-panel" id="contentP2MixedHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2MixedList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_missing" role="tabpanel" aria-labelledby="menu_p2_missing">
+          <div class="operation-panel" data-op="numberbond">
+            <div class="panel-header">
+              <h2><i class="bi bi-question-square-fill"></i> หาตัวไม่ทราบค่า (ป.2)</h2>
+              <p>หาจำนวนที่ใส่ใน □ แล้วทำให้ประโยคสัญลักษณ์เป็นจริง</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2MissingModePicker">
+                <button type="button" class="mode-btn active" data-mode="addsub">บวก ลบ</button>
+                <button type="button" class="mode-btn" data-mode="muldiv">คูณ หาร</button>
+              </div>
+              <div class="calc-card">
+                <div class="place-value-number is-expression" id="p2MissingQuestion"></div>
+                <input type="number" id="p2MissingAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP2MissingResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Missing"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2MissingResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2MissingList"></div>
+                </div>
+                <div class="side-panel" id="contentP2MissingHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2MissingList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_placevalue" role="tabpanel" aria-labelledby="menu_p2_placevalue">
+          <div class="operation-panel" data-op="placevalue">
+            <div class="panel-header">
+              <h2><i class="bi bi-columns-gap"></i> จำนวนไม่เกิน 1,000 (ป.2)</h2>
+              <p>บอกหลักของจำนวน และอ่านตัวเลขไทยกับตัวหนังสือ</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2PlaceValueModePicker">
+                <button type="button" class="mode-btn active" data-mode="place">หลัก</button>
+                <button type="button" class="mode-btn" data-mode="thai">ตัวเลขไทย</button>
+                <button type="button" class="mode-btn" data-mode="word">ตัวหนังสือ</button>
+              </div>
+              <div class="calc-card">
+                <div class="place-value-number" id="p2PlaceValueNumber">345</div>
+                <div class="place-value-fields" id="p2PlaceFields">
+                  <div class="place-value-field">
+                    <label for="p2PlaceHundredsNumber">หลักร้อย</label>
+                    <input type="number" id="p2PlaceHundredsNumber" class="calc-input" placeholder="?" aria-label="หลักร้อย">
+                  </div>
+                  <div class="place-value-field">
+                    <label for="p2PlaceTensNumber">หลักสิบ</label>
+                    <input type="number" id="p2PlaceTensNumber" class="calc-input" placeholder="?" aria-label="หลักสิบ">
+                  </div>
+                  <div class="place-value-field">
+                    <label for="p2PlaceUnitsNumber">หลักหน่วย</label>
+                    <input type="number" id="p2PlaceUnitsNumber" class="calc-input" placeholder="?" aria-label="หลักหน่วย">
+                  </div>
+                </div>
+                <input type="number" id="p2PlaceAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer" style="display: none;">
+                <button type="button" class="calc-submit" onclick="validateP2PlaceValueResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2PlaceValue"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2PlaceValueResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2PlaceValueList"></div>
+                </div>
+                <div class="side-panel" id="contentP2PlaceValueHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2PlaceValueList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_compare" role="tabpanel" aria-labelledby="menu_p2_compare">
+          <div class="operation-panel" data-op="compare">
+            <div class="panel-header">
+              <h2><i class="bi bi-arrow-left-right"></i> เปรียบเทียบและเรียงลำดับ (ป.2)</h2>
+              <p>เปรียบเทียบจำนวนไม่เกิน 1,000 และเรียงลำดับ 3 ถึง 5 จำนวน</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2CompareModePicker">
+                <button type="button" class="mode-btn active" data-mode="compare">เปรียบเทียบ</button>
+                <button type="button" class="mode-btn" data-mode="order">เรียงลำดับ</button>
+              </div>
+              <div class="calc-card">
+                <div id="p2CompareRow">
+                  <div class="compare-row">
+                    <div class="compare-number" id="firstP2CompareNumber">0</div>
+                    <div class="compare-symbols" id="p2CompareSymbolPicker">
+                      <button type="button" class="symbol-btn" data-symbol="gt">&gt;</button>
+                      <button type="button" class="symbol-btn" data-symbol="lt">&lt;</button>
+                      <button type="button" class="symbol-btn" data-symbol="eq">=</button>
+                    </div>
+                    <div class="compare-number" id="secondP2CompareNumber">0</div>
+                  </div>
+                </div>
+                <div id="p2CompareOrder" style="display: none;">
+                  <div class="word-question" id="p2CompareOrderQuestion"></div>
+                  <div class="shape-options" id="p2CompareOrderOptions"></div>
+                  <div class="order-picked" id="p2CompareOrderPicked" aria-live="polite"></div>
+                </div>
+                <button type="button" class="calc-submit" onclick="validateP2CompareResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Compare"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2CompareResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2CompareList"></div>
+                </div>
+                <div class="side-panel" id="contentP2CompareHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2CompareList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_length" role="tabpanel" aria-labelledby="menu_p2_length">
+          <div class="operation-panel" data-op="length">
+            <div class="panel-header">
+              <h2><i class="bi bi-arrows-angle-expand"></i> ความยาว (ป.2)</h2>
+              <p>เปรียบเทียบและบวกลบความยาวเป็นเมตรและเซนติเมตร</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2LengthModePicker">
+                <button type="button" class="mode-btn active" data-mode="compare">เปรียบเทียบ</button>
+                <button type="button" class="mode-btn" data-mode="word">บวก ลบ</button>
+              </div>
+              <div class="calc-card">
+                <div id="p2LengthCompareArea">
+                  <div class="compare-row">
+                    <div class="compare-number is-compound" id="firstP2LengthNumber">0</div>
+                    <div class="compare-symbols" id="p2LengthSymbolPicker">
+                      <button type="button" class="symbol-btn" data-symbol="gt">&gt;</button>
+                      <button type="button" class="symbol-btn" data-symbol="lt">&lt;</button>
+                      <button type="button" class="symbol-btn" data-symbol="eq">=</button>
+                    </div>
+                    <div class="compare-number is-compound" id="secondP2LengthNumber">0</div>
+                  </div>
+                </div>
+                <div id="p2LengthWordArea" style="display: none;">
+                  <div class="word-question" id="p2LengthWordText"></div>
+                  <div class="place-value-fields">
+                  <div class="place-value-field">
+                    <label for="p2LengthMetresNumber">เมตร</label>
+                    <input type="number" id="p2LengthMetresNumber" class="calc-input" placeholder="?" aria-label="เมตร">
+                  </div>
+                  <div class="place-value-field">
+                    <label for="p2LengthCentimetresNumber">เซนติเมตร</label>
+                    <input type="number" id="p2LengthCentimetresNumber" class="calc-input" placeholder="?" aria-label="เซนติเมตร">
+                  </div>
+                  </div>
+                </div>
+                <button type="button" class="calc-submit" onclick="validateP2LengthResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Length"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2LengthResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2LengthList"></div>
+                </div>
+                <div class="side-panel" id="contentP2LengthHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2LengthList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_weight" role="tabpanel" aria-labelledby="menu_p2_weight">
+          <div class="operation-panel" data-op="weight">
+            <div class="panel-header">
+              <h2><i class="bi bi-basket-fill"></i> น้ำหนัก (ป.2)</h2>
+              <p>เปรียบเทียบและบวกลบน้ำหนักเป็นกิโลกรัมกับกรัม และกิโลกรัมกับขีด</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2WeightModePicker">
+                <button type="button" class="mode-btn active" data-mode="compare">เปรียบเทียบ</button>
+                <button type="button" class="mode-btn" data-mode="word">บวก ลบ</button>
+              </div>
+              <div class="calc-card">
+                <div id="p2WeightCompareArea">
+                  <div class="compare-row">
+                    <div class="compare-number is-compound" id="firstP2WeightNumber">0</div>
+                    <div class="compare-symbols" id="p2WeightSymbolPicker">
+                      <button type="button" class="symbol-btn" data-symbol="gt">&gt;</button>
+                      <button type="button" class="symbol-btn" data-symbol="lt">&lt;</button>
+                      <button type="button" class="symbol-btn" data-symbol="eq">=</button>
+                    </div>
+                    <div class="compare-number is-compound" id="secondP2WeightNumber">0</div>
+                  </div>
+                </div>
+                <div id="p2WeightWordArea" style="display: none;">
+                  <div class="word-question" id="p2WeightWordText"></div>
+                  <div class="place-value-fields">
+                  <div class="place-value-field">
+                    <label for="p2WeightKilogramsNumber">กิโลกรัม</label>
+                    <input type="number" id="p2WeightKilogramsNumber" class="calc-input" placeholder="?" aria-label="กิโลกรัม">
+                  </div>
+                  <div class="place-value-field">
+                    <label for="p2WeightSmallNumber" id="p2WeightSmallLabel">กรัม</label>
+                    <input type="number" id="p2WeightSmallNumber" class="calc-input" placeholder="?" aria-label="หน่วยที่เล็กกว่า">
+                  </div>
+                  </div>
+                </div>
+                <button type="button" class="calc-submit" onclick="validateP2WeightResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Weight"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2WeightResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2WeightList"></div>
+                </div>
+                <div class="side-panel" id="contentP2WeightHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2WeightList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_capacity" role="tabpanel" aria-labelledby="menu_p2_capacity">
+          <div class="operation-panel" data-op="capacity">
+            <div class="panel-header">
+              <h2><i class="bi bi-droplet-fill"></i> ปริมาตรและความจุ (ป.2)</h2>
+              <p>เปรียบเทียบปริมาตรและความจุ และแก้โจทย์เป็นลิตร</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2CapacityModePicker">
+                <button type="button" class="mode-btn active" data-mode="compare">เปรียบเทียบ</button>
+                <button type="button" class="mode-btn" data-mode="word">โจทย์ปัญหา</button>
+              </div>
+              <div class="calc-card">
+                <div id="p2CapacityCompareArea">
+                  <div class="compare-row">
+                    <div class="compare-number" id="firstP2CapacityNumber">0</div>
+                    <div class="compare-symbols" id="p2CapacitySymbolPicker">
+                      <button type="button" class="symbol-btn" data-symbol="gt">&gt;</button>
+                      <button type="button" class="symbol-btn" data-symbol="lt">&lt;</button>
+                      <button type="button" class="symbol-btn" data-symbol="eq">=</button>
+                    </div>
+                    <div class="compare-number" id="secondP2CapacityNumber">0</div>
+                  </div>
+                </div>
+                <div id="p2CapacityWordArea" style="display: none;">
+                  <div class="word-question" id="p2CapacityWordText"></div>
+                  <input type="number" id="p2CapacityAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                </div>
+                <button type="button" class="calc-submit" onclick="validateP2CapacityResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Capacity"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2CapacityResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2CapacityList"></div>
+                </div>
+                <div class="side-panel" id="contentP2CapacityHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2CapacityList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_time" role="tabpanel" aria-labelledby="menu_p2_time">
+          <div class="operation-panel" data-op="time">
+            <div class="panel-header">
+              <h2><i class="bi bi-clock-fill"></i> เวลา (ป.2)</h2>
+              <p>ดูนาฬิกาบอกชั่วโมงและนาที และแก้โจทย์เกี่ยวกับเวลา</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2TimeModePicker">
+                <button type="button" class="mode-btn active" data-mode="clock">ดูนาฬิกา</button>
+                <button type="button" class="mode-btn" data-mode="word">โจทย์ปัญหา</button>
+              </div>
+              <div class="calc-card">
+                <div id="p2TimeClockArea">
+                  <div class="clock-display" id="p2ClockDisplay"></div>
+                  <div class="place-value-fields">
+                  <div class="place-value-field">
+                    <label for="p2TimeHourNumber">นาฬิกา</label>
+                    <input type="number" id="p2TimeHourNumber" class="calc-input" placeholder="?" aria-label="นาฬิกา">
+                  </div>
+                  <div class="place-value-field">
+                    <label for="p2TimeMinuteNumber">นาที</label>
+                    <input type="number" id="p2TimeMinuteNumber" class="calc-input" placeholder="?" aria-label="นาที">
+                  </div>
+                  </div>
+                </div>
+                <div id="p2TimeWordArea" style="display: none;">
+                  <div class="word-question" id="p2TimeWordText"></div>
+                  <input type="number" id="p2TimeWordAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                </div>
+                <button type="button" class="calc-submit" onclick="validateP2TimeResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Time"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2TimeResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2TimeList"></div>
+                </div>
+                <div class="side-panel" id="contentP2TimeHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2TimeList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_shape" role="tabpanel" aria-labelledby="menu_p2_shape">
+          <div class="operation-panel" data-op="shape">
+            <div class="panel-header">
+              <h2><i class="bi bi-circle-square"></i> รูปหลายเหลี่ยมและวงกลม (ป.2)</h2>
+              <p>บอกชื่อรูป และนับจำนวนด้านกับมุม</p>
+            </div>
+            <div class="panel-body">
+              <div class="mode-picker" id="p2ShapeModePicker">
+                <button type="button" class="mode-btn active" data-mode="name">บอกชื่อรูป</button>
+                <button type="button" class="mode-btn" data-mode="count">นับด้านและมุม</button>
+              </div>
+              <div class="calc-card">
+                <div class="shape-display" id="p2ShapeDisplay"></div>
+                <div class="shape-options" id="p2ShapeOptionsPicker"></div>
+                <div id="p2ShapeCountArea" style="display: none;">
+                  <div class="word-question" id="p2ShapeQuestion"></div>
+                  <input type="number" id="p2ShapeAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                </div>
+                <button type="button" class="calc-submit" onclick="validateP2ShapeResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Shape"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2ShapeResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2ShapeList"></div>
+                </div>
+                <div class="side-panel" id="contentP2ShapeHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2ShapeList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_pictograph" role="tabpanel" aria-labelledby="menu_p2_pictograph">
+          <div class="operation-panel" data-op="barchart">
+            <div class="panel-header">
+              <h2><i class="bi bi-image-fill"></i> แผนภูมิรูปภาพ (ป.2)</h2>
+              <p>อ่านแผนภูมิรูปภาพเมื่อ 1 รูปแทน 2, 5 หรือ 10 หน่วย</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div id="p2PictographDisplay"></div>
+                <div class="word-question" id="p2PictographQuestion"></div>
+                <input type="number" id="p2PictographAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP2PictographResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2Pictograph"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2PictographResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2PictographList"></div>
+                </div>
+                <div class="side-panel" id="contentP2PictographHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2PictographList"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_p2_wordproblem" role="tabpanel" aria-labelledby="menu_p2_wordproblem">
+          <div class="operation-panel" data-op="wordproblem">
+            <div class="panel-header">
+              <h2><i class="bi bi-journal-text"></i> โจทย์ปัญหา 2 ขั้นตอน (ป.2)</h2>
+              <p>ฝึกแก้โจทย์ปัญหาที่ต้องคิด 2 ขั้นตอน</p>
+            </div>
+            <div class="panel-body">
+              <div class="calc-card">
+                <div class="word-question" id="p2WordProblemText"></div>
+                <input type="number" id="p2WordProblemAnswerNumber" class="calc-input calc-input-result" placeholder="?"
+                  aria-label="Answer">
+                <button type="button" class="calc-submit" onclick="validateP2WordProblemResult()">
+                  ตรวจคำตอบ <i class="bi bi-check2-circle"></i>
+                </button>
+                <div class="calc-feedback" id="feedbackP2WordProblem"></div>
+              </div>
+              <div class="side-panels">
+                <div class="side-panel" id="contentP2WordProblemResult" style="display: none;">
+                  <h3><i class="bi bi-list-check"></i> คำตอบที่ถูก</h3>
+                  <div class="answer-list" id="resultP2WordProblemList"></div>
+                </div>
+                <div class="side-panel" id="contentP2WordProblemHistory" style="display: none;">
+                  <h3><i class="bi bi-clock-history"></i> ประวัติ</h3>
+                  <div class="answer-list" id="historyP2WordProblemList"></div>
                 </div>
               </div>
             </div>
@@ -1279,11 +1985,12 @@
 
               <div class="form-section">
                 <div class="form-group">
-                  <div class="form-row">
+                  <div class="form-row form-row-stacked">
                     <span class="form-row-label">ระดับชั้น</span>
                     <div class="mode-picker" id="profileGradePicker">
                       <button type="button" class="mode-btn active" data-grade="">ไม่ระบุ</button>
                       <button type="button" class="mode-btn" data-grade="p1">ป.1</button>
+                      <button type="button" class="mode-btn" data-grade="p2">ป.2</button>
                       <button type="button" class="mode-btn" data-grade="p5">ป.5</button>
                     </div>
                   </div>
@@ -1622,6 +2329,22 @@
   <script type="text/javascript" src="scrips/p1time/index.js"></script>
   <script type="text/javascript" src="scrips/p1money/index.js"></script>
   <script type="text/javascript" src="scrips/p1wordproblem/index.js"></script>
+  <script type="text/javascript" src="scrips/p2common/index.js"></script>
+  <script type="text/javascript" src="scrips/p2plus/index.js"></script>
+  <script type="text/javascript" src="scrips/p2minus/index.js"></script>
+  <script type="text/javascript" src="scrips/p2multiply/index.js"></script>
+  <script type="text/javascript" src="scrips/p2divide/index.js"></script>
+  <script type="text/javascript" src="scrips/p2mixed/index.js"></script>
+  <script type="text/javascript" src="scrips/p2missing/index.js"></script>
+  <script type="text/javascript" src="scrips/p2placevalue/index.js"></script>
+  <script type="text/javascript" src="scrips/p2compare/index.js"></script>
+  <script type="text/javascript" src="scrips/p2length/index.js"></script>
+  <script type="text/javascript" src="scrips/p2weight/index.js"></script>
+  <script type="text/javascript" src="scrips/p2capacity/index.js"></script>
+  <script type="text/javascript" src="scrips/p2time/index.js"></script>
+  <script type="text/javascript" src="scrips/p2shape/index.js"></script>
+  <script type="text/javascript" src="scrips/p2pictograph/index.js"></script>
+  <script type="text/javascript" src="scrips/p2wordproblem/index.js"></script>
   <script type="text/javascript" src="scrips/p5decimal/index.js"></script>
   <script type="text/javascript" src="scrips/p5percentage/index.js"></script>
   <script type="text/javascript" src="scrips/p5fraction/index.js"></script>

@@ -126,6 +126,8 @@ lesson module, follows the existing pattern.
 left-to-right. Reuses existing generators — mostly a matter of choosing which
 slot to blank.
 
+ป.2 has this as its own lesson (`scrips/p2missing`); ป.1 and ป.5 do not yet.
+
 ## Single times-table drills
 
 Practising only the 7× table is a different exercise from mixed multiplication,

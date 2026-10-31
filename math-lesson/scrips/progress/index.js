@@ -18,6 +18,21 @@ const LESSON_LABELS = {
     p1time: 'เวลา (ป.1)',
     p1money: 'เงิน (ป.1)',
     p1wordproblem: 'โจทย์ปัญหา (ป.1)',
+    p2plus: 'บวก (ป.2)',
+    p2minus: 'ลบ (ป.2)',
+    p2multiply: 'คูณ (ป.2)',
+    p2divide: 'หาร (ป.2)',
+    p2mixed: 'ระคน (ป.2)',
+    p2missing: 'ตัวไม่ทราบค่า (ป.2)',
+    p2placevalue: 'จำนวนไม่เกิน 1,000 (ป.2)',
+    p2compare: 'เปรียบเทียบจำนวน (ป.2)',
+    p2length: 'ความยาว (ป.2)',
+    p2weight: 'น้ำหนัก (ป.2)',
+    p2capacity: 'ความจุ (ป.2)',
+    p2time: 'เวลา (ป.2)',
+    p2shape: 'รูปเรขาคณิต (ป.2)',
+    p2pictograph: 'แผนภูมิรูปภาพ (ป.2)',
+    p2wordproblem: 'โจทย์ปัญหา (ป.2)',
     p5decimal: 'ทศนิยม (ป.5)',
     p5percentage: 'ร้อยละ (ป.5)',
     p5fraction: 'เศษส่วน (ป.5)',
@@ -249,7 +264,7 @@ function renderProgressQuiz(results) {
 // Returns null when no such menu exists, which is the case for the four
 // general lessons that were removed but whose history is still shown.
 function lessonMenuId(lessonId) {
-    let menuId = lessonId.replace(/^(p1|p5)/, 'menu_$1_');
+    let menuId = lessonId.replace(/^(p1|p2|p5)/, 'menu_$1_');
     return document.getElementById(menuId) ? menuId : null;
 }
 
