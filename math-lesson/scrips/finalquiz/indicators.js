@@ -360,7 +360,7 @@ var finalQuizNotCovered = {
 
 var finalQuizIndicators = {
     p1: [
-        { code: 'ค 1.1 ป.1/1', text: 'บอกจำนวน อ่านและเขียนตัวเลขฮินดูอารบิกและตัวเลขไทย ไม่เกิน 100 และ 0', lesson: 'p1number', also: ['p1placevalue'], build: function () {
+        { code: 'ค 1.1 ป.1/1', text: 'บอกจำนวน อ่านและเขียนตัวเลขฮินดูอารบิกและตัวเลขไทย ไม่เกิน 100 และ 0', lesson: 'p1number', also: ['p1numberbond', 'p1placevalue'], build: function () {
             let number = randomInt(0, 100);
             if (number && number < 100 && Math.random() < 0.5) {
                 return numberQuestion('รูปนี้แสดงจำนวนใด', number, renderNumberBlocks(number));
@@ -372,7 +372,7 @@ var finalQuizIndicators = {
             return compareStatements(first, second, String(first), String(second));
         } },
         { code: 'ค 1.1 ป.1/3', text: 'เรียงลำดับจำนวนนับไม่เกิน 100 และ 0 ตั้งแต่ 3 ถึง 5 จำนวน', lesson: 'p1compare', build: function () { return orderQuestion(100); } },
-        { code: 'ค 1.1 ป.1/4', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การบวกและการลบ', lesson: 'p1missing', also: ['p1plus', 'p1minus', 'p1numberbond'], build: function () { return finalMissing(p1MissingBuilders[pickOne(['add', 'sub'])]); } },
+        { code: 'ค 1.1 ป.1/4', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การบวกและการลบ', lesson: 'p1missing', also: ['p1plus', 'p1minus'], build: function () { return finalMissing(p1MissingBuilders[pickOne(['add', 'sub'])]); } },
         { code: 'ค 1.1 ป.1/5', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาการบวกและการลบ', lesson: 'p1wordproblem', build: finalP1WordProblem },
         { code: 'ค 1.2 ป.1/1', text: 'ระบุจำนวนที่หายไปในแบบรูปทีละ 1 และทีละ 10 และรูปที่หายไปในแบบรูปซ้ำ', lesson: 'p1pattern', build: finalP1Pattern },
         { code: 'ค 2.1 ป.1/1', text: 'วัดและเปรียบเทียบความยาวเป็นเซนติเมตร เป็นเมตร', lesson: 'p1length', build: function () {
