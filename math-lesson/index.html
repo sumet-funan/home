@@ -52,7 +52,7 @@
           </a>
           <a class="nav-menu-item" id="menu_finalquiz" data-bs-toggle="list" href="#content_finalquiz" role="tab"
             aria-controls="content_finalquiz" data-op="progress">
-            <i class="bi bi-mortarboard-fill"></i><span>แบบทดสอบตามตัวชี้วัด</span>
+            <i class="bi bi-mortarboard-fill"></i><span>แบบทดสอบ</span>
           </a>
         </div>
 
@@ -297,7 +297,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.7.0</div>
+      <div class="app-sidebar-footer">v4.8.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -323,8 +323,8 @@
         <div class="tab-pane fade" id="content_finalquiz" role="tabpanel" aria-labelledby="menu_finalquiz">
           <div class="operation-panel" data-op="progress">
             <div class="panel-header">
-              <h2><i class="bi bi-mortarboard-fill"></i> แบบทดสอบตามตัวชี้วัด</h2>
-              <p>ทดสอบครบทุกตัวชี้วัดของชั้น แล้วดูว่าเรื่องไหนต้องกลับไปฝึก</p>
+              <h2><i class="bi bi-mortarboard-fill"></i> แบบทดสอบ</h2>
+              <p>ทดสอบครบทุกเรื่องของชั้น แล้วดูว่าเรื่องไหนต้องกลับไปฝึก</p>
             </div>
             <div class="panel-body">
               <div id="finalQuizSetup">
@@ -365,7 +365,6 @@
                     <span class="fq-clock"><i class="bi bi-clock"></i> <span id="finalQuizClock">0:00</span></span>
                   </div>
                   <div class="learn-progress fq-progress"><span id="finalQuizProgress"></span></div>
-                  <div class="fq-code" id="finalQuizCode"></div>
                   <div class="fq-figure" id="finalQuizFigure"></div>
                   <div class="word-question fq-question" id="finalQuizQuestion" aria-live="polite"></div>
                   <div class="fq-options" id="finalQuizOptions"></div>
@@ -387,7 +386,7 @@
                   <button type="button" class="calc-submit" id="finalQuizAgainBtn">ทำชุดใหม่ <i class="bi bi-arrow-repeat"></i></button>
                 </div>
                 <div class="side-panel fq-section">
-                  <h3><i class="bi bi-list-check"></i> ผลตามตัวชี้วัด</h3>
+                  <h3><i class="bi bi-list-check"></i> ผลแยกตามเรื่อง</h3>
                   <div class="fq-rows" id="finalQuizIndicators"></div>
                 </div>
                 <div class="side-panel fq-section" id="finalQuizMissedSection">
@@ -410,7 +409,7 @@
                 <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
                 <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
               </div>
-              <div class="calc-card">
+              <div class="calc-card calc-card-equation">
                 <div class="calc-number-display" id="p1PlusNumberDisplay">
                   <input type="number" id="firstP1PlusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
@@ -452,7 +451,7 @@
                 <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
                 <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
               </div>
-              <div class="calc-card">
+              <div class="calc-card calc-card-equation">
                 <div class="calc-number-display" id="p1MinusNumberDisplay">
                   <input type="number" id="firstP1MinusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
@@ -491,8 +490,8 @@
             </div>
             <div class="panel-body">
               <div class="mode-picker" id="compareModePicker">
-                <button type="button" class="mode-btn active" data-mode="compare">มากกว่า น้อยกว่า</button>
-                <button type="button" class="mode-btn" data-mode="equal">เท่ากับ ไม่เท่ากับ</button>
+                <button type="button" class="mode-btn active" data-mode="compare" aria-label="มากกว่า น้อยกว่า">&gt; &lt;</button>
+                <button type="button" class="mode-btn" data-mode="equal" aria-label="เท่ากับ ไม่เท่ากับ">= ≠</button>
                 <button type="button" class="mode-btn" data-mode="order">เรียงลำดับ</button>
               </div>
               <div class="calc-card">
@@ -918,7 +917,7 @@
                 <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
                 <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
               </div>
-              <div class="calc-card">
+              <div class="calc-card calc-card-equation">
                 <div class="calc-number-display" id="p2PlusNumberDisplay">
                   <input type="number" id="firstP2PlusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
@@ -960,7 +959,7 @@
                 <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
                 <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
               </div>
-              <div class="calc-card">
+              <div class="calc-card calc-card-equation">
                 <div class="calc-number-display" id="p2MinusNumberDisplay">
                   <input type="number" id="firstP2MinusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
@@ -1002,7 +1001,7 @@
                 <button type="button" class="mode-btn active" data-mode="table">สูตรคูณ</button>
                 <button type="button" class="mode-btn" data-mode="long">จำนวน 2 หลัก</button>
               </div>
-              <div class="calc-card">
+              <div class="calc-card calc-card-equation">
                 <div class="calc-number-display" id="p2MultiplyNumberDisplay">
                   <input type="number" id="firstP2MultiplyNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
@@ -1199,8 +1198,8 @@
             </div>
             <div class="panel-body">
               <div class="mode-picker" id="p2CompareModePicker">
-                <button type="button" class="mode-btn active" data-mode="compare">เปรียบเทียบ</button>
-                <button type="button" class="mode-btn" data-mode="equal">เท่ากับ ไม่เท่ากับ</button>
+                <button type="button" class="mode-btn active" data-mode="compare" aria-label="มากกว่า น้อยกว่า">&gt; &lt;</button>
+                <button type="button" class="mode-btn" data-mode="equal" aria-label="เท่ากับ ไม่เท่ากับ">= ≠</button>
                 <button type="button" class="mode-btn" data-mode="order">เรียงลำดับ</button>
               </div>
               <div class="calc-card">
@@ -1924,7 +1923,7 @@
                 <button type="button" class="mode-btn active" data-format="number">ตัวเลข</button>
                 <button type="button" class="mode-btn" data-format="word">โจทย์ปัญหา</button>
               </div>
-              <div class="calc-card">
+              <div class="calc-card calc-card-equation">
                 <div class="calc-number-display" id="decimalNumberDisplay">
                   <input type="number" step="any" id="firstDecimalNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
@@ -2849,6 +2848,10 @@
       // having a hard day still sees the day count
       if (typeof registerDailyActivity === 'function') {
         registerDailyActivity();
+      }
+
+      if (typeof noteLessonAnswer === 'function') {
+        noteLessonAnswer(feedbackId, isCorrect);
       }
 
       let $feedback = $('#' + feedbackId);

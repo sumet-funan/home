@@ -63,15 +63,63 @@ function closeLearnCard(card) {
     resetQuestionTimer();
 }
 
+function openLearnCard(card) {
+    card.find('.learn-body').prop('hidden', false);
+    card.find('.learn-toggle').attr('aria-expanded', 'true');
+    renderLearnStep(card);
+}
+
 $(document).on('click', '.learn-toggle', function () {
     let card = $(this).closest('.learn-card');
 
     if (card.find('.learn-body').prop('hidden')) {
-        card.find('.learn-body').prop('hidden', false);
-        $(this).attr('aria-expanded', 'true');
-        renderLearnStep(card);
+        openLearnCard(card);
     } else {
         closeLearnCard(card);
+    }
+});
+
+// Two misses in a row usually mean the method is missing, not the effort, so the
+// lesson offers its worked example instead of asking for a third guess.
+const LEARN_HINT_AFTER_MISSES = 2;
+var learnMisses = {};
+
+function clearLearnHint(feedbackId) {
+    delete learnMisses[feedbackId];
+    $('#' + feedbackId).siblings('.learn-hint').remove();
+}
+
+function noteLessonAnswer(feedbackId, isCorrect) {
+    if (isCorrect) {
+        clearLearnHint(feedbackId);
+        return;
+    }
+
+    let $feedback = $('#' + feedbackId);
+    learnMisses[feedbackId] = (learnMisses[feedbackId] || 0) + 1;
+
+    if (learnMisses[feedbackId] >= LEARN_HINT_AFTER_MISSES && !$feedback.siblings('.learn-hint').length) {
+        $feedback.after(`<button type="button" class="learn-hint" data-feedback="${feedbackId}">
+            <i class="bi bi-lightbulb-fill"></i> ลองดูวิธีทำก่อนไหม
+        </button>`);
+    }
+}
+
+$(document).on('click', '.learn-hint', function () {
+    let card = $(this).closest('.panel-body').find('.learn-card');
+
+    clearLearnHint($(this).data('feedback'));
+    if (card.find('.learn-body').prop('hidden')) {
+        openLearnCard(card);
+    }
+    card[0].scrollIntoView({ block: 'center' });
+});
+
+// a different kind of question starts the count again
+$(document).on('click', '.operation-panel .mode-btn', function () {
+    let feedback = $(this).closest('.panel-body').find('.calc-feedback').attr('id');
+    if (feedback) {
+        clearLearnHint(feedback);
     }
 });
 

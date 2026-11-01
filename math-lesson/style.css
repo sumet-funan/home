@@ -195,7 +195,7 @@ input {
 /* pulled up against the brand row, past the sidebar's own gap */
 .app-brand-tagline {
   margin: -12px 6px 0;
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -216,7 +216,7 @@ input {
   justify-content: center;
   gap: 8px;
   width: 100%;
-  min-height: 36px;
+  min-height: 44px;
   border: none;
   background: none;
   color: var(--tint);
@@ -282,7 +282,7 @@ input {
   align-items: center;
   gap: 8px;
   width: 100%;
-  min-height: 40px;
+  min-height: 44px;
   padding: 6px 10px;
   border: none;
   background: transparent;
@@ -299,7 +299,7 @@ input {
 }
 
 .group-caret {
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--tint);
   transition: transform .25s var(--ease);
 }
@@ -405,7 +405,7 @@ input {
   margin-top: auto;
   padding-top: 8px;
   text-align: center;
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -542,20 +542,20 @@ input {
   flex-wrap: wrap;
   gap: 2px;
   padding: 3px;
-  border-radius: 22px;
+  border-radius: 25px;
   background: var(--fill);
 }
 
 .mode-btn {
   flex: 1 1 auto;
   min-width: 44px;
-  min-height: 38px;
+  min-height: 44px;
   padding: 6px 12px;
   border: none;
-  border-radius: 19px;
+  border-radius: 22px;
   background: transparent;
   font-weight: 500;
-  font-size: .9rem;
+  font-size: 1rem;
   color: var(--text);
   white-space: nowrap;
   cursor: pointer;
@@ -621,7 +621,7 @@ body.fq-running .learn-card {
 }
 
 .learn-toggle-text span {
-  font-size: .82rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -718,7 +718,7 @@ body.fq-running .learn-card {
 }
 
 .learn-count {
-  font-size: .82rem;
+  font-size: .875rem;
   color: var(--muted);
   white-space: nowrap;
 }
@@ -782,7 +782,7 @@ body.fq-running .learn-card {
 }
 
 .lc-head {
-  font-size: .72rem;
+  font-size: .875rem;
   font-weight: 500;
   color: var(--muted);
   line-height: 1.6;
@@ -897,7 +897,7 @@ body.fq-running .learn-card {
   min-width: 0;
   padding: 6px 10px;
   border-radius: var(--radius-sm);
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -934,7 +934,7 @@ body.fq-running .learn-card {
 }
 
 .learn-hop {
-  font-size: .78rem;
+  font-size: .875rem;
   font-weight: 600;
   color: var(--accent);
 }
@@ -950,7 +950,7 @@ body.fq-running .learn-card {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: .85rem;
+  font-size: .9rem;
 }
 
 .learn-bar-label {
@@ -1217,7 +1217,7 @@ body.fq-running .learn-card {
 }
 
 .speed-stat-label {
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -1470,7 +1470,7 @@ body.sq-running .daily-toast {
 
 .daily-goal-done {
   display: none;
-  font-size: .85rem;
+  font-size: .9rem;
   font-weight: 600;
   color: var(--green);
 }
@@ -1490,7 +1490,7 @@ body.sq-running .daily-toast {
 }
 
 .daily-streak-label {
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -1572,7 +1572,7 @@ body.sq-running .daily-toast {
 
 .combo-milestone {
   display: none;
-  font-size: .85rem;
+  font-size: .9rem;
   font-weight: 600;
 }
 
@@ -1755,7 +1755,7 @@ body.sq-running .daily-toast {
 .auth-error {
   min-height: 1.2em;
   color: var(--red);
-  font-size: .85rem;
+  font-size: .9rem;
   font-weight: 500;
   text-align: center;
 }
@@ -1786,7 +1786,7 @@ body.sq-running .daily-toast {
 .auth-note {
   margin: 0;
   color: var(--muted);
-  font-size: .8rem;
+  font-size: .875rem;
   line-height: 1.5;
   text-align: center;
 }
@@ -1870,7 +1870,7 @@ body.sq-running .daily-toast {
 
 .form-section-footer {
   margin: 6px 16px 0;
-  font-size: .8rem;
+  font-size: .875rem;
   line-height: 1.5;
   color: var(--muted);
 }
@@ -1939,7 +1939,7 @@ body.sq-running .daily-toast {
 }
 
 .progress-stat-label {
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -2014,7 +2014,7 @@ body.sq-running .daily-toast {
 
 .progress-row-meta {
   margin-top: 6px;
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -2078,7 +2078,7 @@ body.sq-running .daily-toast {
 
 .progress-attempt-time {
   flex-shrink: 0;
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
@@ -2092,7 +2092,7 @@ body.sq-running .daily-toast {
 
 .progress-attempt-date {
   flex-shrink: 0;
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -2105,7 +2105,7 @@ body.sq-running .daily-toast {
 
 .progress-review-reason {
   margin-left: auto;
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
   text-align: right;
 }
@@ -2119,7 +2119,7 @@ body.sq-running .daily-toast {
   border-radius: 999px;
   background: var(--red);
   color: var(--on-accent);
-  font-size: .8rem;
+  font-size: .875rem;
   font-weight: 600;
   text-align: center;
 }
@@ -2134,7 +2134,7 @@ body.sq-running .daily-toast {
   background: var(--accent-bg);
   color: var(--accent);
   font-family: var(--font-main);
-  font-size: .85rem;
+  font-size: .9rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -2145,7 +2145,7 @@ body.sq-running .daily-toast {
   border-radius: 999px;
   background: var(--green-bg);
   color: var(--green);
-  font-size: .8rem;
+  font-size: .875rem;
   font-weight: 600;
 }
 
@@ -2158,7 +2158,7 @@ body.sq-running .daily-toast {
 
 .progress-mistake-lesson {
   margin-left: auto;
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
   text-align: right;
 }
@@ -2380,7 +2380,7 @@ input[type=number] {
 
 .word-question {
   text-align: center;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   line-height: 1.6;
   color: var(--text);
   padding: 10px 4px 18px;
@@ -2389,7 +2389,7 @@ input[type=number] {
 .word-question span {
   color: var(--accent);
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
 }
 
 /* ---------- fractions ---------- */
@@ -2500,7 +2500,7 @@ input[type=number] {
 }
 
 .bar-label {
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
   text-align: center;
   white-space: nowrap;
@@ -2598,7 +2598,7 @@ input[type=number] {
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: .85rem;
+  font-size: .9rem;
   line-height: 1.3;
   color: var(--accent);
   background: var(--accent-bg);
@@ -2641,7 +2641,7 @@ input[type=number] {
 }
 
 .place-value-field label {
-  font-size: .85rem;
+  font-size: .9rem;
   color: var(--muted);
   text-align: center;
 }
@@ -2745,7 +2745,7 @@ input[type=number] {
 
 .pictograph-key {
   text-align: right;
-  font-size: .85rem;
+  font-size: .9rem;
   color: var(--muted);
 }
 
@@ -2875,7 +2875,7 @@ input[type=number] {
   padding: 6px 2px;
   border-radius: var(--radius-sm);
   background: var(--fill);
-  font-size: .85rem;
+  font-size: .9rem;
   color: var(--muted);
 }
 
@@ -2895,12 +2895,12 @@ input[type=number] {
 .barwrite-scale {
   padding-right: 4px;
   text-align: right;
-  font-size: .78rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
 .barwrite-cell {
-  height: 34px;
+  height: 40px;
   padding: 0;
   border: none;
   border-radius: 4px;
@@ -2915,8 +2915,55 @@ input[type=number] {
 .barwrite-label {
   padding-top: 4px;
   text-align: center;
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--text);
+}
+
+/* ---------- marking a lesson answer ---------- */
+
+/* The space is kept for the message, so that the page stays still when it comes
+   and goes while a child's finger is near the button. */
+.calc-card .calc-feedback,
+.calc-card .calc-feedback.show {
+  min-height: 44px;
+  max-height: none;
+  margin-top: 14px;
+  padding: 10px 12px;
+}
+
+.learn-hint {
+  grid-column: 1 / -1;
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 22px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- a sum on one line ---------- */
+
+/* With room to spare the sum reads as it is written, 203 + 528 = ?, which also
+   keeps the answer high enough to stay clear of the on-screen keyboard. */
+@media (min-width: 601px) {
+  .calc-card-equation {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1.2fr);
+    column-gap: 10px;
+    align-items: center;
+  }
+
+  .calc-card-equation .calc-number-display {
+    display: contents;
+  }
+
+  .calc-card-equation > :not(.calc-number-display):not(.calc-input-result),
+  .calc-card-equation .calc-number-display[style*="none"] ~ .calc-input-result {
+    grid-column: 1 / -1;
+  }
 }
 
 /* ---------- numbers of a question ---------- */
@@ -3125,11 +3172,6 @@ input[type=number] {
   margin: 8px 0 12px;
 }
 
-.fq-code {
-  font-size: .8rem;
-  color: var(--muted);
-}
-
 .fq-figure {
   display: flex;
   justify-content: center;
@@ -3220,13 +3262,13 @@ input[type=number] {
 
 .fq-map {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
   gap: 6px;
   margin-top: 16px;
 }
 
 .fq-map-btn {
-  height: 40px;
+  height: 44px;
   padding: 0;
   border: none;
   border-radius: var(--radius-sm);
@@ -3282,7 +3324,7 @@ input[type=number] {
 
 .fq-note {
   margin: 6px 0 0;
-  font-size: .8rem;
+  font-size: .875rem;
   color: var(--muted);
 }
 
@@ -3321,12 +3363,14 @@ input[type=number] {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  font-size: .85rem;
+  font-size: .875rem;
   line-height: 1.45;
   color: var(--muted);
 }
 
 .fq-row-text strong {
+  font-size: 1rem;
+  font-weight: 500;
   color: var(--text);
 }
 
@@ -3339,13 +3383,13 @@ input[type=number] {
 
 .fq-practice {
   flex: none;
-  min-height: 36px;
-  padding: 4px 12px;
+  min-height: 44px;
+  padding: 4px 14px;
   border: none;
-  border-radius: 18px;
+  border-radius: 22px;
   background: var(--accent);
   color: var(--on-accent);
-  font-size: .85rem;
+  font-size: .9rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -3378,7 +3422,7 @@ input[type=number] {
 }
 
 .fq-missed-line span {
-  font-size: .8rem;
+  font-size: .875rem;
   font-weight: 500;
   color: var(--muted);
 }
@@ -3457,12 +3501,12 @@ input[type=number] {
 
 .answer-chip .answer-index {
   flex: 0 0 auto;
-  min-width: 22px;
-  height: 22px;
+  min-width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: var(--fill);
   color: var(--muted);
-  font-size: .75rem;
+  font-size: .875rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3562,13 +3606,13 @@ input[type=number] {
     justify-content: center;
     flex: 0 0 auto;
     margin-left: auto;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border: none;
     border-radius: 50%;
     background: var(--fill);
     color: var(--muted);
-    font-size: .85rem;
+    font-size: .9rem;
     cursor: pointer;
   }
 

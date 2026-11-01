@@ -154,7 +154,7 @@ function renderFinalQuizSetup() {
     let count = indicators * finalQuizPerIndicator();
     let last = readFinalQuizResults()[finalQuizObj.grade];
 
-    $('#finalQuizInfo').text(`${indicators} ตัวชี้วัด · ${count} ข้อ · เวลาแนะนำ ${count * FINAL_QUIZ_SUGGESTED_MINUTES} นาที · ผ่านที่ร้อยละ ${FINAL_QUIZ_PASS_PERCENT}`);
+    $('#finalQuizInfo').text(`${indicators} เรื่อง · ${count} ข้อ · เวลาแนะนำ ${count * FINAL_QUIZ_SUGGESTED_MINUTES} นาที · ผ่านที่ร้อยละ ${FINAL_QUIZ_PASS_PERCENT}`);
     $('#finalQuizLast').text(last ? `ครั้งล่าสุด ได้ ${last.correct} จาก ${last.total} ข้อ` : '');
 
     let saved = readSavedFinalQuiz();
@@ -203,7 +203,6 @@ function renderFinalQuizQuestion() {
 
     $('#finalQuizCount').text(`ข้อ ${index + 1} จาก ${total}`);
     $('#finalQuizProgress').css('width', (index + 1) / total * 100 + '%');
-    $('#finalQuizCode').text(question.indicator.code);
     $('#finalQuizFigure').html(question.figure).toggle(!!question.figure);
     $('#finalQuizQuestion').text(question.text);
     $('#finalQuizOptions').html(options.join(''));
@@ -315,8 +314,8 @@ function renderFinalQuizResult(correct, total, scores) {
         return `<div class="fq-row">
             <i class="bi ${isFull ? 'bi-check-circle-fill is-good' : 'bi-exclamation-circle-fill is-weak'}"></i>
             <div class="fq-row-text">
-                <strong>${code}</strong>
-                <span>${score.indicator.text}</span>
+                <strong>${score.indicator.text}</strong>
+                <span>${code}</span>
             </div>
             <span class="fq-row-score">${score.correct}/${score.total}</span>
             ${practice}
