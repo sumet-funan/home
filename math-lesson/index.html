@@ -297,7 +297,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.5.0</div>
+      <div class="app-sidebar-footer">v4.6.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -398,10 +398,10 @@
               </div>
               <div class="calc-card">
                 <div class="calc-number-display" id="p1PlusNumberDisplay">
-                  <input type="number" id="firstP1PlusNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="firstP1PlusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
                   <div class="calc-symbol">+</div>
-                  <input type="number" id="secondP1PlusNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="secondP1PlusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="Second Number">
                   <div class="calc-symbol">=</div>
                 </div>
@@ -440,10 +440,10 @@
               </div>
               <div class="calc-card">
                 <div class="calc-number-display" id="p1MinusNumberDisplay">
-                  <input type="number" id="firstP1MinusNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="firstP1MinusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
                   <div class="calc-symbol">-</div>
-                  <input type="number" id="secondP1MinusNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="secondP1MinusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="Second Number">
                   <div class="calc-symbol">=</div>
                 </div>
@@ -906,10 +906,10 @@
               </div>
               <div class="calc-card">
                 <div class="calc-number-display" id="p2PlusNumberDisplay">
-                  <input type="number" id="firstP2PlusNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="firstP2PlusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
                   <div class="calc-symbol">+</div>
-                  <input type="number" id="secondP2PlusNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="secondP2PlusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="Second Number">
                   <div class="calc-symbol">=</div>
                 </div>
@@ -948,10 +948,10 @@
               </div>
               <div class="calc-card">
                 <div class="calc-number-display" id="p2MinusNumberDisplay">
-                  <input type="number" id="firstP2MinusNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="firstP2MinusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
                   <div class="calc-symbol">−</div>
-                  <input type="number" id="secondP2MinusNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="secondP2MinusNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="Second Number">
                   <div class="calc-symbol">=</div>
                 </div>
@@ -990,10 +990,10 @@
               </div>
               <div class="calc-card">
                 <div class="calc-number-display" id="p2MultiplyNumberDisplay">
-                  <input type="number" id="firstP2MultiplyNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="firstP2MultiplyNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
                   <div class="calc-symbol">×</div>
-                  <input type="number" id="secondP2MultiplyNumber" class="calc-input" placeholder="0"
+                  <input type="number" id="secondP2MultiplyNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="Second Number">
                   <div class="calc-symbol">=</div>
                 </div>
@@ -1912,10 +1912,10 @@
               </div>
               <div class="calc-card">
                 <div class="calc-number-display" id="decimalNumberDisplay">
-                  <input type="number" step="any" id="firstDecimalNumber" class="calc-input" placeholder="0"
+                  <input type="number" step="any" id="firstDecimalNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="First Number">
                   <div class="calc-symbol" id="decimalSymbol">+</div>
-                  <input type="number" step="any" id="secondDecimalNumber" class="calc-input" placeholder="0"
+                  <input type="number" step="any" id="secondDecimalNumber" class="calc-input" readonly tabindex="-1"
                     aria-label="Second Number">
                   <div class="calc-symbol">=</div>
                 </div>
@@ -2332,6 +2332,18 @@
 
         <div class="tab-pane fade show active" id="content_speedquiz" role="tabpanel" aria-labelledby="menu_speedquiz">
           <div class="operation-panel" data-op="speedquiz">
+            <div class="home-shortcuts" id="homeShortcuts">
+              <span class="home-shortcuts-label">เลือกบทเรียน</span>
+              <div class="home-shortcut-list">
+                <button type="button" class="home-shortcut" data-group="p1">ป.1</button>
+                <button type="button" class="home-shortcut" data-group="p2">ป.2</button>
+                <button type="button" class="home-shortcut" data-group="p5">ป.5</button>
+                <button type="button" class="home-shortcut" data-group="extra">เสริม</button>
+              </div>
+              <button type="button" class="home-signin" id="homeSigninBtn" style="display: none;">
+                <i class="bi bi-person-circle"></i> เข้าสู่ระบบเพื่อเก็บความก้าวหน้า
+              </button>
+            </div>
             <div class="panel-header">
               <h2><i class="bi bi-stopwatch-fill"></i> แบบฝึกคำนวณเร็ว</h2>
               <p>เลือกแบบฝึกที่ต้องการ แล้วกดเริ่ม<br>
@@ -3003,6 +3015,7 @@
   <script type="text/javascript" src="scrips/streak/index.js"></script>
   <script type="text/javascript" src="scrips/daily/index.js"></script>
   <script type="text/javascript" src="scrips/recovery/index.js"></script>
+  <script type="text/javascript" src="scrips/nav/index.js"></script>
   <script type="text/javascript" src="scrips/progress/index.js"></script>
   <script type="text/javascript" src="scrips/learn/lessons.js"></script>
   <script type="text/javascript" src="scrips/learn/index.js"></script>

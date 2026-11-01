@@ -577,6 +577,7 @@ input {
 }
 
 body.sq-running .learn-card,
+body.sq-running .home-shortcuts,
 body.fq-running .learn-card {
   display: none;
 }
@@ -2916,6 +2917,70 @@ input[type=number] {
   color: var(--text);
 }
 
+/* ---------- numbers of a question ---------- */
+
+/* Shown, not typed: only the answer should look like somewhere to write. */
+.calc-input[readonly] {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background: transparent;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- way into the lessons from the first page ---------- */
+
+.home-shortcuts {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .home-shortcuts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+}
+
+.home-shortcuts-label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.home-shortcut-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.home-shortcut {
+  min-height: 52px;
+  padding: 6px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.home-shortcut.is-mine {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.home-signin {
+  min-height: 44px;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
 /* ---------- account recovery ---------- */
 
 .auth-link-btn {
@@ -3385,9 +3450,15 @@ input[type=number] {
     cursor: pointer;
   }
 
-  .sidebar-toggle-btn .toggle-back,
-  .sidebar-toggle-btn .toggle-label {
+  /* an icon alone gives a child no clue that all the lessons are behind it */
+  .sidebar-toggle-btn .toggle-back {
     display: none;
+  }
+
+  .sidebar-toggle-btn .toggle-label {
+    margin-left: 4px;
+    font-size: 1rem;
+    font-weight: 600;
   }
 
   .sidebar-backdrop {
