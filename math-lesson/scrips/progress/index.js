@@ -281,7 +281,6 @@ function renderProgressQuiz(results) {
 
 function renderProgressFinalQuiz(results, speedCount) {
     let grades = Object.keys(results).sort();
-    let percent = function (row) { return Math.round(100 * row.correct / row.total); };
 
     $('#progressFinalQuizList').html(grades.length
         ? grades.map(function (grade) {
@@ -289,7 +288,7 @@ function renderProgressFinalQuiz(results, speedCount) {
             return '<div class="progress-row progress-row-compact">' +
                 '<span class="progress-row-name">' + progressGroupLabel(grade) + '</span>' +
                 '<span class="progress-row-score">' + row.correct + '/' + row.total +
-                    ' (' + percent(row) + '%) · ' + formatProgressDate(row.at) + '</span>' +
+                    ' (' + finalQuizPercent(row) + '%) · ' + formatProgressDate(row.at) + '</span>' +
             '</div>';
         }).join('')
         : '<p class="progress-empty">ยังไม่มีคะแนนแบบทดสอบ</p>');
@@ -302,9 +301,16 @@ function renderProgressFinalQuiz(results, speedCount) {
         notes.push('คำนวณเร็ว ' + speedCount + ' รายการ');
     }
     if (latest) {
-        notes.push('แบบทดสอบล่าสุด ' + percent(latest) + '%');
+        notes.push('แบบทดสอบล่าสุด ' + finalQuizPercent(latest) + '%');
     }
     $('#progressStatsNote').text(notes.join(' · ') || 'ยังไม่มีสถิติ');
+}
+
+// Only once there is something on it: three empty slots are an invitation on the
+// quiz page, but here they would be one more thing a new child has not done.
+function renderProgressTrophies(results) {
+    $('#progressTrophyCard').toggle(!!results && finalQuizHasTrophy(results));
+    $('#progressTrophyShelf').html(finalQuizShelfHtml(results || {}));
 }
 
 // Lesson ids map onto menu ids by grade prefix (p5decimal -> menu_p5_decimal).
@@ -803,7 +809,8 @@ function refreshProgressPage() {
     });
 
     Promise.all([fetchQuizBests(), fetchFinalQuizResults()]).then(function (results) {
-        renderProgressFinalQuiz(results[1], renderProgressQuiz(results[0]));
+        renderProgressTrophies(results[1]);
+        renderProgressFinalQuiz(results[1] || {}, renderProgressQuiz(results[0]));
     });
 
     fetchFixedMistakeCount().then(function (count) {

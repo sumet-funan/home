@@ -40,6 +40,10 @@
   --tint: #4f46e5;      /* the logo's colour, used like SwiftUI's .tint() */
   --tint-bg: #eeedfc;
 
+  --trophy-gold: #b8860b;
+  --trophy-silver: #7d8590;
+  --trophy-bronze: #a8562a;
+
   --radius-lg: 20px;
   --radius-md: 14px;
   --radius-sm: 10px;
@@ -117,6 +121,10 @@
 
     --tint: #9d9bff;
     --tint-bg: rgba(157, 155, 255, .18);
+
+    --trophy-gold: #ffd426;
+    --trophy-silver: #c7ccd4;
+    --trophy-bronze: #e0915a;
   }
 }
 
@@ -3569,6 +3577,67 @@ input[type=number] {
 
 .fq-result .calc-submit {
   width: 100%;
+}
+
+/* the colour only repeats the word beside it, so it never has to be told apart */
+.trophy-gold { color: var(--trophy-gold); }
+.trophy-silver { color: var(--trophy-silver); }
+.trophy-bronze { color: var(--trophy-bronze); }
+.trophy-none { color: var(--muted); }
+
+.fq-shelf {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.fq-shelf-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 4px;
+  text-align: center;
+  background: var(--fill);
+  border-radius: var(--radius-md);
+}
+
+.fq-shelf-slot i {
+  font-size: 1.9rem;
+  line-height: 1.2;
+}
+
+.fq-shelf-slot strong {
+  color: var(--text);
+}
+
+.fq-shelf-slot span {
+  font-size: .875rem;
+  color: var(--muted);
+}
+
+.fq-trophy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--muted);
+}
+
+.fq-trophy i {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  animation: fq-trophy-pop .5s var(--ease);
+}
+
+.fq-trophy strong {
+  font-size: 1.15rem;
+  color: var(--text);
+}
+
+@keyframes fq-trophy-pop {
+  from { opacity: 0; transform: scale(.5); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 .fq-score {

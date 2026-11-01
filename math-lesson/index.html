@@ -297,7 +297,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.10.0</div>
+      <div class="app-sidebar-footer">v4.11.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -356,6 +356,12 @@
                   <p class="fq-last" id="finalQuizLast"></p>
                   <button type="button" class="calc-submit" id="finalQuizStartBtn">เริ่มทำแบบทดสอบ <i class="bi bi-play-fill"></i></button>
                 </div>
+                <div class="calc-card" id="finalQuizShelfCard" style="display: none;">
+                  <h3 class="profile-section-title"><i class="bi bi-trophy-fill"></i> ถ้วยรางวัล</h3>
+                  <div class="fq-shelf" id="finalQuizShelf"></div>
+                  <p class="fq-note" id="finalQuizTrophyRule"></p>
+                  <p class="fq-note">ถ้วยที่ได้แล้วไม่หาย แม้ครั้งต่อไปได้คะแนนน้อยลง</p>
+                </div>
               </div>
 
               <div id="finalQuizRunning" style="display: none;">
@@ -379,6 +385,7 @@
 
               <div id="finalQuizResult" style="display: none;">
                 <div class="calc-card fq-result">
+                  <div class="fq-trophy" id="finalQuizTrophy"></div>
                   <div class="fq-score" id="finalQuizScore"></div>
                   <div class="fq-verdict" id="finalQuizVerdict"></div>
                   <div class="fq-level" id="finalQuizLevel"></div>
@@ -2472,6 +2479,11 @@
                 </div>
                 <p class="daily-chart-note" id="dailyChartNote" aria-live="polite"></p>
               </div>
+              </div>
+
+              <div class="calc-card progress-card" id="progressTrophyCard" style="display: none;">
+                <h3 class="profile-section-title"><i class="bi bi-trophy-fill"></i> ถ้วยรางวัล</h3>
+                <div class="fq-shelf" id="progressTrophyShelf"></div>
               </div>
 
               <div class="calc-card progress-card" id="progressMapCard">

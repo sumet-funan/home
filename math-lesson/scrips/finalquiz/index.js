@@ -20,6 +20,14 @@ const FINAL_QUIZ_RESULT_KEY = 'mathLessonFinalQuizLast';
 const FINAL_QUIZ_SAVE_KEY = 'mathLessonFinalQuizSaved';
 const FINAL_QUIZ_LEVELS = [[80, 4], [75, 3.5], [70, 3], [65, 2.5], [60, 2], [55, 1.5], [50, 1], [0, 0]];
 
+// Bronze is the pass mark and gold the top level above, so a trophy says the same
+// thing as the verdict beside it. Highest first.
+const FINAL_QUIZ_TROPHIES = [
+    { id: 'gold', percent: 80, label: 'ถ้วยทอง' },
+    { id: 'silver', percent: 65, label: 'ถ้วยเงิน' },
+    { id: 'bronze', percent: FINAL_QUIZ_PASS_PERCENT, label: 'ถ้วยทองแดง' },
+];
+
 function finalQuizPerIndicator() {
     return finalQuizObj.length === 'short' ? 1 : 2;
 }
@@ -42,6 +50,54 @@ function readFinalQuizResults() {
     }
 }
 
+function finalQuizPercent(score) {
+    return Math.round(score.correct / score.total * 100);
+}
+
+function finalQuizTrophy(percent) {
+    return FINAL_QUIZ_TROPHIES.find(function (trophy) { return percent >= trophy.percent; }) || null;
+}
+
+// A tie goes to the longer set, which is the harder one to do well on.
+function betterFinalQuizScore(first, second) {
+    if (!first) {
+        return second;
+    }
+
+    let gain = finalQuizPercent(second) - finalQuizPercent(first);
+    return gain > 0 || (!gain && second.total > first.total) ? second : first;
+}
+
+// A trophy is kept whatever comes after it, so it comes from the best score and
+// not the latest. Scores saved before trophies existed are their own best.
+function finalQuizBest(result) {
+    return result.best || result;
+}
+
+function finalQuizHasTrophy(results) {
+    return Object.keys(results).some(function (grade) {
+        return finalQuizTrophy(finalQuizPercent(finalQuizBest(results[grade])));
+    });
+}
+
+function finalQuizTrophyIcon(trophy) {
+    return `<i class="bi ${trophy ? 'bi-trophy-fill trophy-' + trophy.id : 'bi-trophy trophy-none'}" aria-hidden="true"></i>`;
+}
+
+function finalQuizShelfHtml(results) {
+    return Object.keys(finalQuizIndicators).map(function (grade) {
+        let best = results[grade] ? finalQuizBest(results[grade]) : null;
+        let percent = best ? finalQuizPercent(best) : 0;
+        let trophy = finalQuizTrophy(percent);
+
+        return `<div class="fq-shelf-slot">
+            ${finalQuizTrophyIcon(trophy)}
+            <strong>${$('#finalQuizGradePicker [data-grade="' + grade + '"]').text()}</strong>
+            <span>${trophy ? trophy.label + '<br>' + percent + '%' : 'ยังไม่มีถ้วย'}</span>
+        </div>`;
+    }).join('');
+}
+
 function saveFinalQuizResult(grade, correct, total) {
     if (currentUserId) {
         recordFinalQuizResult(grade, correct, total);
@@ -49,7 +105,10 @@ function saveFinalQuizResult(grade, correct, total) {
     }
 
     let results = readFinalQuizResults();
-    results[grade] = { correct: correct, total: total, at: new Date().toISOString() };
+    let score = { correct: correct, total: total, at: new Date().toISOString() };
+    let earlier = results[grade];
+
+    results[grade] = Object.assign({}, score, { best: betterFinalQuizScore(earlier ? finalQuizBest(earlier) : null, score) });
     try {
         localStorage.setItem(FINAL_QUIZ_RESULT_KEY, JSON.stringify(results));
     } catch (e) {
@@ -156,12 +215,21 @@ function buildFinalQuiz(grade, perIndicator) {
 
 function showFinalQuizLast() {
     let grade = finalQuizObj.grade;
+    let owner = finalQuizOwner();
     let results = currentUserId ? fetchFinalQuizResults() : Promise.resolve(readFinalQuizResults());
 
     $('#finalQuizLast').text('');
     results.then(function (byGrade) {
+        // a slow answer must not put one child's trophies in front of the next
+        if (finalQuizOwner() !== owner) {
+            return;
+        }
+
+        $('#finalQuizShelfCard').toggle(!!byGrade);
+        $('#finalQuizShelf').html(finalQuizShelfHtml(byGrade || {}));
+
         // the child may have moved to another grade while this was loading
-        let last = byGrade[grade];
+        let last = byGrade && byGrade[grade];
         if (last && finalQuizObj.grade === grade) {
             $('#finalQuizLast').text(`ครั้งล่าสุด ได้ ${last.correct} จาก ${last.total} ข้อ`);
         }
@@ -313,11 +381,38 @@ function finishFinalQuiz() {
     showFinalQuizStage('result');
 }
 
+// How many more right answers reach the next trophy, counted through the same
+// rounding as the score. Null once there is nothing left to reach.
+function finalQuizNextTrophy(correct, total) {
+    let earned = FINAL_QUIZ_TROPHIES.indexOf(finalQuizTrophy(finalQuizPercent({ correct: correct, total: total })));
+    let trophy = FINAL_QUIZ_TROPHIES[(earned === -1 ? FINAL_QUIZ_TROPHIES.length : earned) - 1];
+
+    if (!trophy) {
+        return null;
+    }
+
+    let more = 1;
+    while (finalQuizPercent({ correct: correct + more, total: total }) < trophy.percent) {
+        more++;
+    }
+    return { label: trophy.label, more: more };
+}
+
+function renderFinalQuizTrophy(correct, total) {
+    let trophy = finalQuizTrophy(finalQuizPercent({ correct: correct, total: total }));
+    let next = finalQuizNextTrophy(correct, total);
+
+    $('#finalQuizTrophy').html(`${finalQuizTrophyIcon(trophy)}
+        ${trophy ? `<strong>ได้${trophy.label}</strong>` : ''}
+        ${next ? `<span>อีก ${next.more} ข้อจะได้${next.label}</span>` : ''}`);
+}
+
 function renderFinalQuizResult(correct, total, scores) {
-    let percent = Math.round(correct / total * 100);
+    let percent = finalQuizPercent({ correct: correct, total: total });
     let passed = percent >= FINAL_QUIZ_PASS_PERCENT;
     let seconds = Math.floor((Date.now() - finalQuizObj.startedAt) / 1000);
 
+    renderFinalQuizTrophy(correct, total);
     $('#finalQuizScore').text(`${correct} / ${total}`);
     $('#finalQuizVerdict')
         .text(passed ? `ผ่าน ร้อยละ ${percent}` : `ยังไม่ผ่าน ร้อยละ ${percent}`)
@@ -482,5 +577,9 @@ supabaseClient.auth.onAuthStateChange(function (event, session) {
     // this reads the database, and supabase-js holds its auth lock until we return
     setTimeout(renderFinalQuizSetup, 0);
 });
+
+$('#finalQuizTrophyRule').text(FINAL_QUIZ_TROPHIES.map(function (trophy) {
+    return `ร้อยละ ${trophy.percent} ขึ้นไป ${trophy.label}`;
+}).join(' · '));
 
 renderFinalQuizSetup();

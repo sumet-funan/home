@@ -183,7 +183,8 @@ function recordFinalQuizResult(grade, correctCount, total) {
     });
 }
 
-// Newest first, so the first row seen for a grade is its latest score.
+// Newest first, so the first row seen for a grade is its latest score. Null means
+// the request failed, which must not read as a child with no trophies.
 function fetchFinalQuizResults() {
     if (!currentUserId) {
         return Promise.resolve({});
@@ -193,13 +194,17 @@ function fetchFinalQuizResults() {
         .from('final_quiz_results')
         .select('grade, correct_count, total, created_at')
         .order('created_at', { ascending: false })
-        .limit(100)
+        .limit(1000)
         .then(function (result) {
+            if (result.error) {
+                return null;
+            }
+
             let latest = {};
-            (result.error ? [] : result.data).forEach(function (row) {
-                if (!latest[row.grade]) {
-                    latest[row.grade] = { correct: row.correct_count, total: row.total, at: row.created_at };
-                }
+            result.data.forEach(function (row) {
+                let score = { correct: row.correct_count, total: row.total, at: row.created_at };
+                latest[row.grade] = latest[row.grade] || Object.assign({ best: null }, score);
+                latest[row.grade].best = betterFinalQuizScore(latest[row.grade].best, score);
             });
             return latest;
         });
