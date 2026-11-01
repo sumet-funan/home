@@ -67,6 +67,7 @@ function fractionLcmOrderQuestion() {
 function ratioFields(firstLabel, first, secondLabel, second) {
     return {
         fields: [{ label: firstLabel, value: first }, { label: secondLabel, value: second }],
+        ratio: [first, second],
         same: function (values) { return values[1] > 0 && values[0] * second === first * values[1]; },
     };
 }
@@ -110,16 +111,16 @@ function lcmOfList(list) {
     return list.reduce(function (result, number) { return lcmOf(result, number); });
 }
 
-function threeNumbersQuestion() {
+function threeNumbersGcfQuestion() {
     let base = randomInt(2, 12);
     let list = shuffleList([2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 3).map(function (factor) { return base * factor; });
 
-    if (Math.random() < 0.5) {
-        return { text: `ห.ร.ม. ของ ${list.join(', ')} คือเท่าใด`, answer: gcfOfList(list) };
-    }
+    return { text: `ห.ร.ม. ของ ${list.join(', ')} คือเท่าใด`, answer: gcfOfList(list) };
+}
 
-    let small = shuffleList([2, 3, 4, 5, 6, 8, 9, 10, 12, 15]).slice(0, 3);
-    return { text: `ค.ร.น. ของ ${small.join(', ')} คือเท่าใด`, answer: lcmOfList(small) };
+function threeNumbersLcmQuestion() {
+    let list = shuffleList([2, 3, 4, 5, 6, 8, 9, 10, 12, 15]).slice(0, 3);
+    return { text: `ค.ร.น. ของ ${list.join(', ')} คือเท่าใด`, answer: lcmOfList(list) };
 }
 
 function factorWordQuestion() {
@@ -493,7 +494,8 @@ addLessons('p6', [
         id: 'p6factor', menu: 'โจทย์ ห.ร.ม. และ ค.ร.น.', title: 'โจทย์ ห.ร.ม. และ ค.ร.น. (ป.6)', label: 'โจทย์ ห.ร.ม. ค.ร.น. (ป.6)',
         intro: 'หา ห.ร.ม. และ ค.ร.น. ของ 3 จำนวน และแก้โจทย์ปัญหา', icon: 'bi-intersect', op: 'gcflcm',
         modes: [
-            { label: '3 จำนวน', build: threeNumbersQuestion },
+            { label: 'ห.ร.ม.', build: threeNumbersGcfQuestion },
+            { label: 'ค.ร.น.', build: threeNumbersLcmQuestion },
             { label: 'โจทย์ปัญหา', build: factorWordQuestion },
         ],
         learn: [{
@@ -699,27 +701,27 @@ addLessons('p6', [
     },
 ]);
 
-lessonIndicators.p6 = [
+addFinalQuiz('p6', [
     { code: 'ค 1.1 ป.6/1', text: 'เปรียบเทียบ เรียงลำดับเศษส่วนและจำนวนคละ จากสถานการณ์ต่าง ๆ', lesson: 'p6fraction' },
-    { code: 'ค 1.1 ป.6/2', text: 'เขียนอัตราส่วนแสดงการเปรียบเทียบปริมาณ 2 ปริมาณ จากข้อความหรือสถานการณ์', lesson: 'p6ratio' },
-    { code: 'ค 1.1 ป.6/3', text: 'หาอัตราส่วนที่เท่ากับอัตราส่วนที่กำหนดให้', lesson: 'p6ratio' },
-    { code: 'ค 1.1 ป.6/4', text: 'หา ห.ร.ม. ของจำนวนนับไม่เกิน 3 จำนวน', lesson: 'p5gcflcm', also: ['p6factor'] },
-    { code: 'ค 1.1 ป.6/5', text: 'หา ค.ร.น. ของจำนวนนับไม่เกิน 3 จำนวน', lesson: 'p5gcflcm', also: ['p6factor'] },
-    { code: 'ค 1.1 ป.6/6', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาโดยใช้ความรู้เกี่ยวกับ ห.ร.ม. และ ค.ร.น.', lesson: 'p6factor' },
-    { code: 'ค 1.1 ป.6/7', text: 'หาผลลัพธ์ของการบวก ลบ คูณ หารระคนของเศษส่วนและจำนวนคละ', lesson: 'p6fractionops' },
-    { code: 'ค 1.1 ป.6/8', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเศษส่วนและจำนวนคละ 2-3 ขั้นตอน', lesson: 'p6fractionops' },
-    { code: 'ค 1.1 ป.6/9', text: 'หาผลหารของทศนิยมที่ตัวหารและผลหารเป็นทศนิยมไม่เกิน 3 ตำแหน่ง', lesson: 'p6decimal' },
-    { code: 'ค 1.1 ป.6/10', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาการบวก การลบ การคูณ การหารทศนิยม 3 ขั้นตอน', lesson: 'p6decimal' },
-    { code: 'ค 1.1 ป.6/11', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาอัตราส่วน', lesson: 'p6ratio' },
+    { code: 'ค 1.1 ป.6/2', text: 'เขียนอัตราส่วนแสดงการเปรียบเทียบปริมาณ 2 ปริมาณ จากข้อความหรือสถานการณ์', lesson: 'p6ratio', ask: ['เขียนอัตราส่วน'] },
+    { code: 'ค 1.1 ป.6/3', text: 'หาอัตราส่วนที่เท่ากับอัตราส่วนที่กำหนดให้', lesson: 'p6ratio', ask: ['อัตราส่วนเท่ากัน'] },
+    { code: 'ค 1.1 ป.6/4', text: 'หา ห.ร.ม. ของจำนวนนับไม่เกิน 3 จำนวน', lesson: 'p6factor', also: ['p5gcflcm'], ask: ['ห.ร.ม.'] },
+    { code: 'ค 1.1 ป.6/5', text: 'หา ค.ร.น. ของจำนวนนับไม่เกิน 3 จำนวน', lesson: 'p6factor', also: ['p5gcflcm'], ask: ['ค.ร.น.'] },
+    { code: 'ค 1.1 ป.6/6', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาโดยใช้ความรู้เกี่ยวกับ ห.ร.ม. และ ค.ร.น.', lesson: 'p6factor', ask: ['โจทย์ปัญหา'] },
+    { code: 'ค 1.1 ป.6/7', text: 'หาผลลัพธ์ของการบวก ลบ คูณ หารระคนของเศษส่วนและจำนวนคละ', lesson: 'p6fractionops', ask: ['บวก ลบ', 'ระคน'] },
+    { code: 'ค 1.1 ป.6/8', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเศษส่วนและจำนวนคละ 2-3 ขั้นตอน', lesson: 'p6fractionops', ask: ['โจทย์ปัญหา'] },
+    { code: 'ค 1.1 ป.6/9', text: 'หาผลหารของทศนิยมที่ตัวหารและผลหารเป็นทศนิยมไม่เกิน 3 ตำแหน่ง', lesson: 'p6decimal', ask: ['หาร'] },
+    { code: 'ค 1.1 ป.6/10', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาการบวก การลบ การคูณ การหารทศนิยม 3 ขั้นตอน', lesson: 'p6decimal', ask: ['โจทย์ปัญหา', 'แลกเงิน'] },
+    { code: 'ค 1.1 ป.6/11', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาอัตราส่วน', lesson: 'p6ratio', ask: ['โจทย์ปัญหา', 'มาตราส่วน'] },
     { code: 'ค 1.1 ป.6/12', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาร้อยละ 2-3 ขั้นตอน', lesson: 'p6percent' },
     { code: 'ค 1.2 ป.6/1', text: 'แสดงวิธีคิดและหาคำตอบของปัญหาเกี่ยวกับแบบรูป', lesson: 'p6pattern' },
     { code: 'ค 2.1 ป.6/1', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับปริมาตรของรูปเรขาคณิตสามมิติที่ประกอบด้วยทรงสี่เหลี่ยมมุมฉาก', lesson: 'p6volume' },
     { code: 'ค 2.1 ป.6/2', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับความยาวรอบรูปและพื้นที่ของรูปหลายเหลี่ยม', lesson: 'p6polygon' },
     { code: 'ค 2.1 ป.6/3', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับความยาวรอบรูปและพื้นที่ของวงกลม', lesson: 'p6circle' },
     { code: 'ค 2.2 ป.6/1', text: 'จำแนกรูปสามเหลี่ยมโดยพิจารณาจากสมบัติของรูป', lesson: 'p6triangle' },
-    { code: 'ค 2.2 ป.6/3', text: 'บอกลักษณะของรูปเรขาคณิตสามมิติชนิดต่าง ๆ', lesson: 'p6solid' },
-    { code: 'ค 2.2 ป.6/4', text: 'ระบุรูปเรขาคณิตสามมิติที่ประกอบจากรูปคลี่ และระบุรูปคลี่ของรูปเรขาคณิตสามมิติ', lesson: 'p6solid' },
+    { code: 'ค 2.2 ป.6/3', text: 'บอกลักษณะของรูปเรขาคณิตสามมิติชนิดต่าง ๆ', lesson: 'p6solid', ask: ['ลักษณะ'] },
+    { code: 'ค 2.2 ป.6/4', text: 'ระบุรูปเรขาคณิตสามมิติที่ประกอบจากรูปคลี่ และระบุรูปคลี่ของรูปเรขาคณิตสามมิติ', lesson: 'p6solid', ask: ['รูปคลี่'] },
     { code: 'ค 3.1 ป.6/1', text: 'ใช้ข้อมูลจากแผนภูมิรูปวงกลมในการหาคำตอบของโจทย์ปัญหา', lesson: 'p6piechart' },
-];
+]);
 
 finalQuizNotCovered.p6 = 'ยังมีอีก 1 ตัวชี้วัด คือ ค 2.2 ป.6/2 การสร้างรูปสามเหลี่ยม ซึ่งต้องใช้ไม้บรรทัดและวงเวียน เว็บนี้จึงฝึกให้ไม่ได้';

@@ -10,10 +10,6 @@
 //   choices: ['a', 'b'], answer: 'a'    tap one
 var lessonBook = {};
 
-// The curriculum list for the grades that have lessons but no final quiz yet. The
-// Progress page reads these the same way it reads finalQuizIndicators.
-var lessonIndicators = {};
-
 const LESSON_SAME_QUESTION_RETRIES = 8;
 
 function commaNumber(number) {
@@ -65,9 +61,12 @@ function compareQuestion(text, first, second, figure) {
     return { text: text, figure: figure, answer: compareSymbolText[compareSymbolOf(first, second)], choices: ['>', '<', '='] };
 }
 
-function fractionFields(numerator, denominator) {
+// `asWritten` keeps the final quiz from simplifying the answer, for a grade that
+// has not met simplifying, or a question that is about the improper form itself.
+function fractionFields(numerator, denominator, asWritten) {
     return {
         fields: [{ label: 'ตัวเศษ', value: numerator }, { label: 'ตัวส่วน', value: denominator }],
+        fraction: { top: numerator, bottom: denominator, asWritten: asWritten },
         same: function (values) {
             return values[1] > 0 && values[0] * denominator === numerator * values[1];
         },
@@ -282,6 +281,88 @@ $(document).on('click', '.lesson-modes .mode-btn', function () {
     lesson.state.mode = +$(this).data('mode');
     askLessonQuestion(lesson);
 });
+
+const QUIZ_LABEL_FIRST = ['ผลหาร', 'เศษ'];
+
+function quizFieldsText(fields, shifts) {
+    return fields.map(function (field, index) {
+        let value = field.value + (shifts[index] || 0);
+        return QUIZ_LABEL_FIRST.indexOf(field.label) === -1 ? `${value} ${field.label}` : `${field.label} ${value}`;
+    }).join(' ');
+}
+
+function quizFieldsQuestion(question) {
+    let last = question.fields[question.fields.length - 1].value;
+    let step = last && last % 5 === 0 ? 5 : 1;
+
+    return {
+        text: question.text,
+        figure: question.figure,
+        answer: quizFieldsText(question.fields, []),
+        wrong: [[1, 0], [0, step], [1, step]].map(function (shifts) { return quizFieldsText(question.fields, shifts); }),
+    };
+}
+
+function quizRatioQuestion(question) {
+    let first = question.ratio[0], second = question.ratio[1];
+    let wrong = [`${second} : ${first}`, `${first + 1} : ${second}`, `${first} : ${second + 1}`, `${first + 1} : ${second + 2}`]
+        .filter(function (text) { return text !== `${first} : ${second}`; });
+
+    return { text: question.text, answer: `${first} : ${second}`, wrong: wrong.slice(0, 3) };
+}
+
+function quizWrittenFractionQuestion(question) {
+    let top = question.fraction.top, bottom = question.fraction.bottom;
+
+    return {
+        text: question.text,
+        figure: question.figure,
+        answer: `${top}/${bottom}`,
+        wrong: [`${top + 1}/${bottom}`, `${top}/${bottom + 1}`, `${top + bottom}/${bottom}`],
+    };
+}
+
+function quizNumberQuestion(question) {
+    let unit = question.unit ? ' ' + question.unit : '';
+    let write = function (value) { return commaNumber(+value) + unit; };
+    let built = numberQuestion(question.text, question.answer, question.figure);
+
+    return { text: built.text, figure: built.figure, answer: write(built.answer), wrong: built.wrong.map(write) };
+}
+
+// A lesson's question as the final quiz asks it: four answers to choose from.
+function quizQuestion(question) {
+    if (question.choices) {
+        let others = question.choices.filter(function (choice) { return choice !== question.answer; });
+        return { text: question.text, figure: question.figure, answer: question.answer, wrong: shuffleList(others).slice(0, FINAL_QUIZ_LETTERS.length - 1) };
+    }
+    if (question.fraction && question.fraction.asWritten) {
+        return quizWrittenFractionQuestion(question);
+    }
+    if (question.fraction) {
+        let text = question.text.replace(/ \(ตอบเป็น[^)]*\)/, '');
+        return Object.assign({ figure: question.figure }, fractionChoices(text, question.fraction.top, question.fraction.bottom));
+    }
+    if (question.ratio) {
+        return quizRatioQuestion(question);
+    }
+    return question.fields ? quizFieldsQuestion(question) : quizNumberQuestion(question);
+}
+
+// Each indicator asks from its lesson, through `ask` where only some of the
+// lesson's kinds of question are about that indicator.
+function addFinalQuiz(grade, indicators) {
+    finalQuizIndicators[grade] = indicators.map(function (indicator) {
+        return Object.assign({
+            build: function () {
+                let modes = lessonBook[indicator.lesson].modes.filter(function (mode) {
+                    return !indicator.ask || indicator.ask.indexOf(mode.label) !== -1;
+                });
+                return quizQuestion(pickOne(modes).build());
+            },
+        }, indicator);
+    });
+}
 
 // `moved` puts a lesson that already exists into this grade's list, where it
 // belongs in the teaching order. It keeps its id, and so the child's history.

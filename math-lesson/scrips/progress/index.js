@@ -646,7 +646,7 @@ function combinedLessonStage(lessons) {
 function progressIndicators(grade) {
     let lessons = progressGroupLessons(grade);
 
-    return (finalQuizIndicators[grade] || lessonIndicators[grade]).map(function (indicator) {
+    return finalQuizIndicators[grade].map(function (indicator) {
         let ids = [indicator.lesson].concat(indicator.also || []);
         let linked = lessons.filter(function (lesson) { return ids.indexOf(lesson.id) !== -1; });
         let next = linked.filter(function (lesson) { return lesson.stage !== 'strong'; })[0] || null;

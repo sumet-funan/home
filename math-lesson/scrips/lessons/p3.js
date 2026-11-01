@@ -81,7 +81,9 @@ function missingAddendQuestion(largest) {
     if (Math.random() < 0.5) {
         return { text: `□ + ${commaNumber(second)} = ${total} จำนวนใน □ คือเท่าใด`, answer: first };
     }
-    return { text: `${commaNumber(first)} − □ = ${commaNumber(first - Math.min(first, second))} จำนวนใน □ คือเท่าใด`, answer: Math.min(first, second) };
+
+    let taken = randomInt(1, first - 1);
+    return { text: `${commaNumber(first)} − □ = ${commaNumber(first - taken)} จำนวนใน □ คือเท่าใด`, answer: taken };
 }
 
 function missingFactorQuestion(firstMin, firstMax, secondMin, secondMax) {
@@ -168,6 +170,7 @@ function p3FractionPicture() {
         text: 'ส่วนที่ระบายสีคิดเป็นเศษส่วนเท่าใดของทั้งหมด',
         figure: fractionBarFigure(numerator, denominator),
         fields: [{ label: 'ตัวเศษ', value: numerator }, { label: 'ตัวส่วน', value: denominator }],
+        fraction: { top: numerator, bottom: denominator, asWritten: true },
     };
 }
 
@@ -182,12 +185,12 @@ function p3FractionCompare() {
 
 function p3FractionSum() {
     let denominator = randomInt(3, 12), first = randomInt(1, denominator - 1), second = randomInt(1, denominator - first);
-    return Object.assign({ text: `${first}/${denominator} + ${second}/${denominator} เท่ากับเท่าใด` }, fractionFields(first + second, denominator));
+    return Object.assign({ text: `${first}/${denominator} + ${second}/${denominator} เท่ากับเท่าใด` }, fractionFields(first + second, denominator, true));
 }
 
 function p3FractionDifference() {
     let denominator = randomInt(3, 12), first = randomInt(2, denominator), second = randomInt(1, first - 1);
-    return Object.assign({ text: `${first}/${denominator} − ${second}/${denominator} เท่ากับเท่าใด` }, fractionFields(first - second, denominator));
+    return Object.assign({ text: `${first}/${denominator} − ${second}/${denominator} เท่ากับเท่าใด` }, fractionFields(first - second, denominator, true));
 }
 
 function p3FractionWord() {
@@ -195,11 +198,11 @@ function p3FractionWord() {
 
     if (Math.random() < 0.5) {
         let first = randomInt(1, denominator - 1), second = randomInt(1, denominator - first);
-        return Object.assign({ text: `แม่แบ่งเค้กให้พี่ ${first}/${denominator} ของก้อน และให้น้อง ${second}/${denominator} ของก้อน แบ่งให้ไปทั้งหมดกี่ส่วนของก้อน` }, fractionFields(first + second, denominator));
+        return Object.assign({ text: `แม่แบ่งเค้กให้พี่ ${first}/${denominator} ของก้อน และให้น้อง ${second}/${denominator} ของก้อน แบ่งให้ไปทั้งหมดกี่ส่วนของก้อน` }, fractionFields(first + second, denominator, true));
     }
 
     let first = randomInt(2, denominator - 1), second = randomInt(1, first - 1);
-    return Object.assign({ text: `มีน้ำ ${first}/${denominator} ลิตร ใช้ไป ${second}/${denominator} ลิตร เหลือน้ำกี่ลิตร` }, fractionFields(first - second, denominator));
+    return Object.assign({ text: `มีน้ำ ${first}/${denominator} ลิตร ใช้ไป ${second}/${denominator} ลิตร เหลือน้ำกี่ลิตร` }, fractionFields(first - second, denominator, true));
 }
 
 function equalStepPattern() {
@@ -848,33 +851,33 @@ addLessons('p3', [
     },
 ]);
 
-lessonIndicators.p3 = [
+addFinalQuiz('p3', [
     { code: 'ค 1.1 ป.3/1', text: 'อ่านและเขียนตัวเลขฮินดูอารบิก ตัวเลขไทย และตัวหนังสือ แสดงจำนวนนับไม่เกิน 100,000 และ 0', lesson: 'p3number' },
     { code: 'ค 1.1 ป.3/2', text: 'เปรียบเทียบและเรียงลำดับจำนวนนับไม่เกิน 100,000 จากสถานการณ์ต่าง ๆ', lesson: 'p3compare' },
-    { code: 'ค 1.1 ป.3/3', text: 'บอก อ่าน และเขียนเศษส่วน แสดงปริมาณสิ่งต่าง ๆ และแสดงสิ่งต่าง ๆ ตามเศษส่วนที่กำหนด', lesson: 'p3fraction' },
-    { code: 'ค 1.1 ป.3/4', text: 'เปรียบเทียบเศษส่วนที่ตัวเศษเท่ากัน โดยที่ตัวเศษน้อยกว่าหรือเท่ากับตัวส่วน', lesson: 'p3fraction' },
-    { code: 'ค 1.1 ป.3/5', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์แสดงการบวกและการลบของจำนวนนับไม่เกิน 100,000 และ 0', lesson: 'p3missing', also: ['p3addsub'] },
+    { code: 'ค 1.1 ป.3/3', text: 'บอก อ่าน และเขียนเศษส่วน แสดงปริมาณสิ่งต่าง ๆ และแสดงสิ่งต่าง ๆ ตามเศษส่วนที่กำหนด', lesson: 'p3fraction', ask: ['จากรูป'] },
+    { code: 'ค 1.1 ป.3/4', text: 'เปรียบเทียบเศษส่วนที่ตัวเศษเท่ากัน โดยที่ตัวเศษน้อยกว่าหรือเท่ากับตัวส่วน', lesson: 'p3fraction', ask: ['เปรียบเทียบ'] },
+    { code: 'ค 1.1 ป.3/5', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์แสดงการบวกและการลบของจำนวนนับไม่เกิน 100,000 และ 0', lesson: 'p3missing', also: ['p3addsub'], ask: ['บวก ลบ'] },
     { code: 'ค 1.1 ป.3/6', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์แสดงการคูณของจำนวน 1 หลักกับจำนวนไม่เกิน 4 หลัก และจำนวน 2 หลักกับจำนวน 2 หลัก', lesson: 'p3multiply', also: ['p3missing'] },
     { code: 'ค 1.1 ป.3/7', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์แสดงการหารที่ตัวตั้งไม่เกิน 4 หลัก ตัวหาร 1 หลัก', lesson: 'p3divide', also: ['p3missing'] },
     { code: 'ค 1.1 ป.3/8', text: 'หาผลลัพธ์การบวก ลบ คูณ หารระคนของจำนวนนับไม่เกิน 100,000 และ 0', lesson: 'p3mixed' },
     { code: 'ค 1.1 ป.3/9', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหา 2 ขั้นตอนของจำนวนนับไม่เกิน 100,000 และ 0', lesson: 'p3wordproblem' },
-    { code: 'ค 1.1 ป.3/10', text: 'หาผลบวกของเศษส่วนที่มีตัวส่วนเท่ากันและผลบวกไม่เกิน 1 และหาผลลบของเศษส่วนที่มีตัวส่วนเท่ากัน', lesson: 'p3fractionsum' },
-    { code: 'ค 1.1 ป.3/11', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาการบวกและการลบเศษส่วนที่มีตัวส่วนเท่ากัน', lesson: 'p3fractionsum' },
+    { code: 'ค 1.1 ป.3/10', text: 'หาผลบวกของเศษส่วนที่มีตัวส่วนเท่ากันและผลบวกไม่เกิน 1 และหาผลลบของเศษส่วนที่มีตัวส่วนเท่ากัน', lesson: 'p3fractionsum', ask: ['บวก', 'ลบ'] },
+    { code: 'ค 1.1 ป.3/11', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาการบวกและการลบเศษส่วนที่มีตัวส่วนเท่ากัน', lesson: 'p3fractionsum', ask: ['โจทย์ปัญหา'] },
     { code: 'ค 1.2 ป.3/1', text: 'ระบุจำนวนที่หายไปในแบบรูปของจำนวนที่เพิ่มขึ้นหรือลดลงทีละเท่า ๆ กัน', lesson: 'p3pattern' },
     { code: 'ค 2.1 ป.3/1', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับเงิน', lesson: 'p3money' },
     { code: 'ค 2.1 ป.3/2', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับเวลาและระยะเวลา', lesson: 'p3time' },
-    { code: 'ค 2.1 ป.3/3', text: 'เลือกใช้เครื่องวัดความยาวที่เหมาะสม วัดและบอกความยาวเป็นเซนติเมตรและมิลลิเมตร เมตรและเซนติเมตร', lesson: 'p3length' },
-    { code: 'ค 2.1 ป.3/4', text: 'คาดคะเนความยาวเป็นเมตรและเป็นเซนติเมตร', lesson: 'p3length' },
-    { code: 'ค 2.1 ป.3/5', text: 'เปรียบเทียบความยาวระหว่างเซนติเมตรกับมิลลิเมตร เมตรกับเซนติเมตร กิโลเมตรกับเมตร จากสถานการณ์ต่าง ๆ', lesson: 'p3length' },
-    { code: 'ค 2.1 ป.3/6', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับความยาวที่มีหน่วยเป็นเซนติเมตรและมิลลิเมตร เมตรและเซนติเมตร กิโลเมตรและเมตร', lesson: 'p3length' },
-    { code: 'ค 2.1 ป.3/7', text: 'เลือกใช้เครื่องชั่งที่เหมาะสม วัดและบอกน้ำหนักเป็นกิโลกรัมและขีด กิโลกรัมและกรัม', lesson: 'p3weight' },
-    { code: 'ค 2.1 ป.3/8', text: 'คาดคะเนน้ำหนักเป็นกิโลกรัมและเป็นขีด', lesson: 'p3weight' },
-    { code: 'ค 2.1 ป.3/9', text: 'เปรียบเทียบน้ำหนักระหว่างกิโลกรัมกับกรัม เมตริกตันกับกิโลกรัม จากสถานการณ์ต่าง ๆ', lesson: 'p3weight' },
-    { code: 'ค 2.1 ป.3/10', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับน้ำหนักที่มีหน่วยเป็นกิโลกรัมกับกรัม เมตริกตันกับกิโลกรัม', lesson: 'p3weight' },
-    { code: 'ค 2.1 ป.3/11', text: 'เลือกใช้เครื่องตวงที่เหมาะสม วัดและเปรียบเทียบปริมาตร ความจุเป็นลิตรและมิลลิลิตร', lesson: 'p3capacity' },
-    { code: 'ค 2.1 ป.3/12', text: 'คาดคะเนปริมาตรและความจุเป็นลิตร', lesson: 'p3capacity' },
-    { code: 'ค 2.1 ป.3/13', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับปริมาตรและความจุที่มีหน่วยเป็นลิตรและมิลลิลิตร ช้อนชา ช้อนโต๊ะ ถ้วยตวง', lesson: 'p3capacity' },
+    { code: 'ค 2.1 ป.3/3', text: 'เลือกใช้เครื่องวัดความยาวที่เหมาะสม วัดและบอกความยาวเป็นเซนติเมตรและมิลลิเมตร เมตรและเซนติเมตร', lesson: 'p3length', ask: ['เครื่องวัด', 'เปลี่ยนหน่วย'] },
+    { code: 'ค 2.1 ป.3/4', text: 'คาดคะเนความยาวเป็นเมตรและเป็นเซนติเมตร', lesson: 'p3length', ask: ['คาดคะเน'] },
+    { code: 'ค 2.1 ป.3/5', text: 'เปรียบเทียบความยาวระหว่างเซนติเมตรกับมิลลิเมตร เมตรกับเซนติเมตร กิโลเมตรกับเมตร จากสถานการณ์ต่าง ๆ', lesson: 'p3length', ask: ['เปรียบเทียบ'] },
+    { code: 'ค 2.1 ป.3/6', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับความยาวที่มีหน่วยเป็นเซนติเมตรและมิลลิเมตร เมตรและเซนติเมตร กิโลเมตรและเมตร', lesson: 'p3length', ask: ['โจทย์ปัญหา'] },
+    { code: 'ค 2.1 ป.3/7', text: 'เลือกใช้เครื่องชั่งที่เหมาะสม วัดและบอกน้ำหนักเป็นกิโลกรัมและขีด กิโลกรัมและกรัม', lesson: 'p3weight', ask: ['เครื่องชั่ง', 'เปลี่ยนหน่วย'] },
+    { code: 'ค 2.1 ป.3/8', text: 'คาดคะเนน้ำหนักเป็นกิโลกรัมและเป็นขีด', lesson: 'p3weight', ask: ['คาดคะเน'] },
+    { code: 'ค 2.1 ป.3/9', text: 'เปรียบเทียบน้ำหนักระหว่างกิโลกรัมกับกรัม เมตริกตันกับกิโลกรัม จากสถานการณ์ต่าง ๆ', lesson: 'p3weight', ask: ['เปรียบเทียบ'] },
+    { code: 'ค 2.1 ป.3/10', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับน้ำหนักที่มีหน่วยเป็นกิโลกรัมกับกรัม เมตริกตันกับกิโลกรัม', lesson: 'p3weight', ask: ['โจทย์ปัญหา'] },
+    { code: 'ค 2.1 ป.3/11', text: 'เลือกใช้เครื่องตวงที่เหมาะสม วัดและเปรียบเทียบปริมาตร ความจุเป็นลิตรและมิลลิลิตร', lesson: 'p3capacity', ask: ['เครื่องตวง', 'เปลี่ยนหน่วย'] },
+    { code: 'ค 2.1 ป.3/12', text: 'คาดคะเนปริมาตรและความจุเป็นลิตร', lesson: 'p3capacity', ask: ['คาดคะเน'] },
+    { code: 'ค 2.1 ป.3/13', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับปริมาตรและความจุที่มีหน่วยเป็นลิตรและมิลลิลิตร ช้อนชา ช้อนโต๊ะ ถ้วยตวง', lesson: 'p3capacity', ask: ['โจทย์ปัญหา', 'ช้อนและถ้วย'] },
     { code: 'ค 2.2 ป.3/1', text: 'ระบุรูปเรขาคณิตสองมิติที่มีแกนสมมาตรและจำนวนแกนสมมาตร', lesson: 'p3symmetry' },
-    { code: 'ค 3.1 ป.3/1', text: 'เขียนแผนภูมิรูปภาพ และใช้ข้อมูลจากแผนภูมิรูปภาพในการหาคำตอบของโจทย์ปัญหา', lesson: 'p3chart' },
-    { code: 'ค 3.1 ป.3/2', text: 'เขียนตารางทางเดียวจากข้อมูลที่เป็นจำนวนนับ และใช้ข้อมูลจากตารางทางเดียวในการหาคำตอบของโจทย์ปัญหา', lesson: 'p3chart' },
-];
+    { code: 'ค 3.1 ป.3/1', text: 'เขียนแผนภูมิรูปภาพ และใช้ข้อมูลจากแผนภูมิรูปภาพในการหาคำตอบของโจทย์ปัญหา', lesson: 'p3chart', ask: ['อ่านแผนภูมิ', 'เขียนแผนภูมิ'] },
+    { code: 'ค 3.1 ป.3/2', text: 'เขียนตารางทางเดียวจากข้อมูลที่เป็นจำนวนนับ และใช้ข้อมูลจากตารางทางเดียวในการหาคำตอบของโจทย์ปัญหา', lesson: 'p3chart', ask: ['ตารางทางเดียว'] },
+]);

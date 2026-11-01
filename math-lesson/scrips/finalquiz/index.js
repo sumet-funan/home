@@ -85,7 +85,8 @@ function finalQuizTrophyIcon(trophy) {
 }
 
 function finalQuizShelfHtml(results) {
-    return Object.keys(finalQuizIndicators).map(function (grade) {
+    // the grades above ป.2 are added by their lesson files, so keys are not in order
+    return Object.keys(finalQuizIndicators).sort().map(function (grade) {
         let best = results[grade] ? finalQuizBest(results[grade]) : null;
         let percent = best ? finalQuizPercent(best) : 0;
         let trophy = finalQuizTrophy(percent);
