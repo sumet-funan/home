@@ -2883,6 +2883,28 @@ input[type=number] {
   color: var(--muted);
 }
 
+.figure-text {
+  font-size: 14px;
+  fill: var(--text);
+}
+
+.figure-line {
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.figure-tick {
+  stroke: var(--muted);
+  stroke-width: 1;
+}
+
+.figure-arc {
+  fill: var(--accent-bg);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
 .lesson-table {
   width: 100%;
   border-collapse: collapse;

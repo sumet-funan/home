@@ -509,7 +509,7 @@ const LESSON_STAGES = {
     new: { label: 'ยังไม่เริ่ม', icon: 'bi-circle' },
 };
 
-const PROGRESS_GRADE_GROUPS = ['p1', 'p2', 'p3', 'p5'];
+const PROGRESS_GRADE_GROUPS = ['p1', 'p2', 'p3', 'p4', 'p5'];
 const PROGRESS_MAP_SHOWN = 6;
 const MISTAKE_EXAMPLES_SHOWN = 3;
 const PROGRESS_MISTAKE_LIMIT = 1000;      // PostgREST's row cap, far past any real list

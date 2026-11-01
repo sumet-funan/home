@@ -299,7 +299,7 @@ function p3TimeConvert() {
 }
 
 function measureStep(pair) {
-    return pair.rate === 10 ? 1 : (pair.rate === 100 ? 5 : 50);
+    return pair.step || (pair.rate === 10 ? 1 : (pair.rate === 100 ? 5 : 50));
 }
 
 function measureAmount(pair) {
