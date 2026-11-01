@@ -313,6 +313,7 @@ function finishSpeedQuiz(endedByTimeout) {
     let correctCount = 0;
 
     let answeredCount = 0;
+    let typedCount = 0;
 
     $('.speed-quiz-input').each(function () {
         let question = speedQuizObj.questions[+$(this).data('index')];
@@ -328,6 +329,7 @@ function finishSpeedQuiz(endedByTimeout) {
         }
 
         answeredCount++;
+        typedCount += raw === '' ? 0 : 1;
 
         // blank counts as wrong, but must not be read as 0
         if (raw !== '' && +raw === question.expected) {
@@ -340,7 +342,9 @@ function finishSpeedQuiz(endedByTimeout) {
 
     let isTimed = speedQuizObj.kind === 'timed';
 
-    if (typeof recordQuizResult === 'function') {
+    // a round with nothing typed says nothing about the child, so it stays out
+    // of their record
+    if (typedCount > 0 && typeof recordQuizResult === 'function') {
         recordQuizResult(
             speedQuizObj.mode,
             isTimed ? SPEED_QUIZ_TIMED_SECONDS : speedQuizObj.size,
