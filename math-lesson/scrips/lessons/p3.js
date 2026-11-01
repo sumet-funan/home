@@ -363,10 +363,10 @@ const LENGTH_TOOLS = [
 ];
 
 const LENGTH_GUESSES = [
-    { thing: 'ดินสอ 1 แท่ง', answer: '18 เซนติเมตร', wrong: ['18 เมตร', '2 เซนติเมตร'] },
+    { thing: 'ดินสอ 1 แท่งยาว', answer: '18 เซนติเมตร', wrong: ['18 เมตร', '2 เซนติเมตร'] },
     { thing: 'ประตูห้องเรียนสูง', answer: '2 เมตร', wrong: ['20 เซนติเมตร', '20 เมตร'] },
     { thing: 'สมุด 1 เล่มกว้าง', answer: '20 เซนติเมตร', wrong: ['2 เมตร', '2 เซนติเมตร'] },
-    { thing: 'รถบัสยาว', answer: '10 เมตร', wrong: ['10 เซนติเมตร', '100 เมตร'] },
+    { thing: 'รถบัส 1 คันยาว', answer: '10 เมตร', wrong: ['10 เซนติเมตร', '100 เมตร'] },
 ];
 
 const WEIGHT_PAIRS = [
@@ -748,11 +748,11 @@ addLessons('p3', [
             { label: 'เปลี่ยนหน่วย', build: function () { return measureConvertQuestion(LENGTH_PAIRS); } },
             { label: 'เปรียบเทียบ', build: function () { return measureCompareQuestion(LENGTH_PAIRS); } },
             { label: 'เครื่องวัด', build: function () { return measurePickQuestion(LENGTH_TOOLS, function (item) { return `ถ้าจะวัด${item.thing} ควรใช้เครื่องมือใด`; }); } },
-            { label: 'คาดคะเน', build: function () { return measurePickQuestion(LENGTH_GUESSES, function (item) { return `${item.thing} ยาวหรือสูงประมาณเท่าใด`; }); } },
+            { label: 'คาดคะเน', build: function () { return measurePickQuestion(LENGTH_GUESSES, function (item) { return `${item.thing}ประมาณเท่าใด`; }); } },
             { label: 'โจทย์ปัญหา', build: function () {
                 return measureWordQuestion(LENGTH_PAIRS,
-                    function (first, second) { return `ริบบิ้นสีแดงยาว ${first} ริบบิ้นสีฟ้ายาว ${second} ต่อกันแล้วยาวเท่าใด`; },
-                    function (first, second) { return `เชือกยาว ${first} ตัดออกไป ${second} เหลือเชือกยาวเท่าใด`; });
+                    function (first, second) { return `เส้นตรงเส้นแรกยาว ${first} เส้นที่สองยาว ${second} ต่อกันแล้วยาวเท่าใด`; },
+                    function (first, second) { return `เส้นตรงยาว ${first} ตัดออกไป ${second} เหลือยาวเท่าใด`; });
             } },
         ],
         learn: [{
