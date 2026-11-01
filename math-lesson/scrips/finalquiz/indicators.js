@@ -1,7 +1,9 @@
 // The grade indicators the final quiz is built from, in the words of the core
 // curriculum (ตัวชี้วัดและสาระการเรียนรู้แกนกลาง กลุ่มสาระคณิตศาสตร์ ฉบับปรับปรุง พ.ศ. 2560).
 // Each one names the lesson that teaches it and builds a question for it, and the
-// parent section of the Progress page reads them too. A question is
+// parent section of the Progress page reads them too. `also` lists any other lessons
+// that practise what the sentence names: they count on the Progress page, while the
+// quiz keeps to `lesson`, which is the one its question is about. A question is
 // { text, figure?, answer, wrong: [three others] }, and an answer is either plain
 // text or { html, label } when it has to be drawn.
 //
@@ -358,7 +360,7 @@ var finalQuizNotCovered = {
 
 var finalQuizIndicators = {
     p1: [
-        { code: 'ค 1.1 ป.1/1', text: 'บอกจำนวน อ่านและเขียนตัวเลขฮินดูอารบิกและตัวเลขไทย ไม่เกิน 100 และ 0', lesson: 'p1number', build: function () {
+        { code: 'ค 1.1 ป.1/1', text: 'บอกจำนวน อ่านและเขียนตัวเลขฮินดูอารบิกและตัวเลขไทย ไม่เกิน 100 และ 0', lesson: 'p1number', also: ['p1placevalue'], build: function () {
             let number = randomInt(0, 100);
             if (number && number < 100 && Math.random() < 0.5) {
                 return numberQuestion('รูปนี้แสดงจำนวนใด', number, renderNumberBlocks(number));
@@ -370,7 +372,7 @@ var finalQuizIndicators = {
             return compareStatements(first, second, String(first), String(second));
         } },
         { code: 'ค 1.1 ป.1/3', text: 'เรียงลำดับจำนวนนับไม่เกิน 100 และ 0 ตั้งแต่ 3 ถึง 5 จำนวน', lesson: 'p1compare', build: function () { return orderQuestion(100); } },
-        { code: 'ค 1.1 ป.1/4', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การบวกและการลบ', lesson: 'p1missing', build: function () { return finalMissing(p1MissingBuilders[pickOne(['add', 'sub'])]); } },
+        { code: 'ค 1.1 ป.1/4', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การบวกและการลบ', lesson: 'p1missing', also: ['p1plus', 'p1minus', 'p1numberbond'], build: function () { return finalMissing(p1MissingBuilders[pickOne(['add', 'sub'])]); } },
         { code: 'ค 1.1 ป.1/5', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาการบวกและการลบ', lesson: 'p1wordproblem', build: finalP1WordProblem },
         { code: 'ค 1.2 ป.1/1', text: 'ระบุจำนวนที่หายไปในแบบรูปทีละ 1 และทีละ 10 และรูปที่หายไปในแบบรูปซ้ำ', lesson: 'p1pattern', build: finalP1Pattern },
         { code: 'ค 2.1 ป.1/1', text: 'วัดและเปรียบเทียบความยาวเป็นเซนติเมตร เป็นเมตร', lesson: 'p1length', build: function () {
@@ -393,9 +395,9 @@ var finalQuizIndicators = {
             return compareStatements(first, second, String(first), String(second));
         } },
         { code: 'ค 1.1 ป.2/3', text: 'เรียงลำดับจำนวนนับไม่เกิน 1,000 และ 0 ตั้งแต่ 3 ถึง 5 จำนวน', lesson: 'p2compare', build: function () { return orderQuestion(1000); } },
-        { code: 'ค 1.1 ป.2/4', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การบวกและการลบ', lesson: 'p2missing', build: function () { return finalMissing(pickOne(p2MissingBuilders.addsub)); } },
-        { code: 'ค 1.1 ป.2/5', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การคูณของจำนวน 1 หลักกับจำนวนไม่เกิน 2 หลัก', lesson: 'p2multiply', build: function () { return finalMissing(p2MissingBuilders.muldiv[0]); } },
-        { code: 'ค 1.1 ป.2/6', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การหาร ทั้งหารลงตัวและหารไม่ลงตัว', lesson: 'p2divide', build: finalP2Divide },
+        { code: 'ค 1.1 ป.2/4', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การบวกและการลบ', lesson: 'p2missing', also: ['p2plus', 'p2minus'], build: function () { return finalMissing(pickOne(p2MissingBuilders.addsub)); } },
+        { code: 'ค 1.1 ป.2/5', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การคูณของจำนวน 1 หลักกับจำนวนไม่เกิน 2 หลัก', lesson: 'p2multiply', also: ['p2missing'], build: function () { return finalMissing(p2MissingBuilders.muldiv[0]); } },
+        { code: 'ค 1.1 ป.2/6', text: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การหาร ทั้งหารลงตัวและหารไม่ลงตัว', lesson: 'p2divide', also: ['p2missing'], build: finalP2Divide },
         { code: 'ค 1.1 ป.2/7', text: 'หาผลลัพธ์การบวก ลบ คูณ หารระคน', lesson: 'p2mixed', build: function () {
             let question = pickOne(p2MixedBuilders[pickOne(['addsub', 'all'])])();
             return numberQuestion(`${question.text} เท่ากับข้อใด`, question.expected);
@@ -423,13 +425,13 @@ var finalQuizIndicators = {
             let question = pickOne(proportionBuilders)();
             return numberQuestion(question.text, question.expected);
         } },
-        { code: 'ค 1.1 ป.5/3', text: 'หาผลบวก ผลลบของเศษส่วนและจำนวนคละ', lesson: 'p5fraction', build: function () { return finalP5FractionSum(['+', '−']); } },
-        { code: 'ค 1.1 ป.5/4', text: 'หาผลคูณ ผลหารของเศษส่วนและจำนวนคละ', lesson: 'p5fraction', build: function () { return finalP5FractionSum(['×', '÷']); } },
+        { code: 'ค 1.1 ป.5/3', text: 'หาผลบวก ผลลบของเศษส่วนและจำนวนคละ', lesson: 'p5fraction', also: ['p5mixednumber'], build: function () { return finalP5FractionSum(['+', '−']); } },
+        { code: 'ค 1.1 ป.5/4', text: 'หาผลคูณ ผลหารของเศษส่วนและจำนวนคละ', lesson: 'p5fraction', also: ['p5mixednumber'], build: function () { return finalP5FractionSum(['×', '÷']); } },
         { code: 'ค 1.1 ป.5/5', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเศษส่วน 2 ขั้นตอน', lesson: 'p5wordproblem', build: function () { return finalWordProblem(wordProblemP5Builders.fraction); } },
         { code: 'ค 1.1 ป.5/6', text: 'หาผลคูณของทศนิยมที่ผลคูณเป็นทศนิยมไม่เกิน 3 ตำแหน่ง', lesson: 'p5decimal', build: function () { return finalDecimal('×', '×'); } },
         { code: 'ค 1.1 ป.5/7', text: 'หาผลหารที่ตัวตั้งเป็นจำนวนนับหรือทศนิยมไม่เกิน 3 ตำแหน่ง และตัวหารเป็นจำนวนนับ', lesson: 'p5decimal', build: function () { return finalDecimal('÷', '÷'); } },
         { code: 'ค 1.1 ป.5/8', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาทศนิยม 2 ขั้นตอน', lesson: 'p5wordproblem', build: function () { return finalWordProblem(wordProblemP5Builders.decimal); } },
-        { code: 'ค 1.1 ป.5/9', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาร้อยละไม่เกิน 2 ขั้นตอน', lesson: 'p5wordproblem', build: function () { return finalWordProblem(wordProblemP5Builders.percent); } },
+        { code: 'ค 1.1 ป.5/9', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาร้อยละไม่เกิน 2 ขั้นตอน', lesson: 'p5wordproblem', also: ['p5percentage'], build: function () { return finalWordProblem(wordProblemP5Builders.percent); } },
         { code: 'ค 2.1 ป.5/1', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับความยาวที่มีการเปลี่ยนหน่วยและเขียนในรูปทศนิยม', lesson: 'p5measure', build: function () { return finalMeasure(measureBuilders.length); } },
         { code: 'ค 2.1 ป.5/2', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับน้ำหนักที่มีการเปลี่ยนหน่วยและเขียนในรูปทศนิยม', lesson: 'p5measure', build: function () { return finalMeasure(measureBuilders.weight); } },
         { code: 'ค 2.1 ป.5/3', text: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับปริมาตรและความจุของทรงสี่เหลี่ยมมุมฉาก', lesson: 'p5volume', build: finalVolume },

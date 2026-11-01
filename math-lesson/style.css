@@ -2485,6 +2485,10 @@ body.sq-running .daily-toast {
   color: var(--muted);
 }
 
+.progress-indicator-next {
+  flex-basis: 100%;
+}
+
 .progress-curriculum-note {
   margin: 12px 0 0;
   font-size: .875rem;

@@ -624,20 +624,46 @@ $('#progressMapMore').on('click', function () {
     renderProgressMap();
 });
 
-// Answers are only recorded per lesson, so an indicator takes the stage of the
-// lesson that teaches it, and every indicator sharing a lesson reads the same.
+// Strong only when every lesson is. Adding the answers up instead would let two
+// hundred additions read as strong on an indicator that also asks for subtraction.
+function combinedLessonStage(lessons) {
+    let has = function (stage) {
+        return lessons.some(function (lesson) { return lesson.stage === stage; });
+    };
+
+    if (lessons.every(function (lesson) { return lesson.stage === 'strong'; })) {
+        return 'strong';
+    }
+    if (has('strong') || has('practising')) {
+        return 'practising';
+    }
+    return has('started') ? 'started' : 'new';
+}
+
+// Answers are only recorded per lesson, so an indicator takes its stage from the
+// lessons that teach it, and every indicator sharing them reads the same. They come
+// in sidebar order, so a row leads to the first lesson still to do.
 function progressIndicators(grade) {
-    let byId = progressStatsById();
+    let lessons = progressGroupLessons(grade);
 
     return finalQuizIndicators[grade].map(function (indicator) {
-        let stats = byId[indicator.lesson] || null;
+        let ids = [indicator.lesson].concat(indicator.also || []);
+        let linked = lessons.filter(function (lesson) { return ids.indexOf(lesson.id) !== -1; });
+        let next = linked.filter(function (lesson) { return lesson.stage !== 'strong'; })[0] || null;
+
         return {
             code: indicator.code,
             text: indicator.text,
             strand: indicator.code.split(' ป.')[0],
-            menuId: lessonMenuId(indicator.lesson),
-            stats: stats,
-            stage: lessonStage(stats)
+            lessons: linked,
+            next: next,
+            menuId: (next || linked[0]).menuId,
+            stats: {
+                total: linked.reduce(function (sum, lesson) {
+                    return sum + (lesson.stats ? +lesson.stats.total : 0);
+                }, 0)
+            },
+            stage: combinedLessonStage(linked)
         };
     });
 }
@@ -646,15 +672,32 @@ function progressStrongCount(indicators) {
     return indicators.filter(function (indicator) { return indicator.stage === 'strong'; }).length;
 }
 
+function progressIndicatorNext(indicator) {
+    let count = indicator.lessons.length;
+
+    if (count < 2 || !indicator.next) {
+        return '';
+    }
+
+    let strong = count - indicator.lessons.filter(function (lesson) { return lesson.stage !== 'strong'; }).length;
+
+    return '<span class="progress-indicator-next">' +
+        (strong ? 'เก่งแล้ว ' + strong + ' จาก ' + count + ' บท · ' : '') + 'ต่อไป ' + indicator.next.name +
+    '</span>';
+}
+
 function progressIndicatorRow(indicator) {
+    let names = indicator.lessons.map(function (lesson) { return lesson.name; }).join(', ');
+
     return '<button type="button" class="progress-map-row progress-indicator-row is-' + indicator.stage +
         '" data-menu-id="' + indicator.menuId + '">' +
         '<i class="bi ' + LESSON_STAGES[indicator.stage].icon + '"></i>' +
         '<span class="progress-indicator-text">' +
             '<span class="progress-map-name">' + $('<div>').text(indicator.text).html() + '</span>' +
             '<span class="progress-indicator-meta">' +
-                '<span>' + indicator.code + ' · ' + $('#' + indicator.menuId).find('span').text() + '</span>' +
+                '<span>' + indicator.code + ' · ' + names + '</span>' +
                 '<span class="progress-map-stage">' + lessonStageText(indicator.stage, indicator.stats) + '</span>' +
+                progressIndicatorNext(indicator) +
             '</span>' +
         '</span>' +
     '</button>';
