@@ -94,15 +94,21 @@ Happened once already, on 2026-08-19, while clearing username data.
 cascades cleanly), or first restore each converted account's real email in
 Authentication → Users so email login still works.
 
-### No password reset
+### Recovery codes stand in for password reset
 
-Email sending fails project-wide, so a forgotten password must be reset by an
-admin in the Dashboard. Changing a user's email through the API also fails for
-every account — the error misleadingly claims the *current* address is invalid.
-Configuring SMTP would fix password reset for accounts that have a contact
-email on file.
+Email sending fails project-wide, so an account is recovered with a code rather
+than a link. The `account-recovery` Edge Function does the work.
 
----
+- A username alone never resets anything. It takes the username and the code.
+- Only an HMAC of the code is stored, in `recovery_codes`, keyed with the service
+  role key. **Rotating that key cancels every code**, and each child must make a
+  new one in their profile.
+- Five wrong codes lock that username for an hour, so someone can keep a child
+  out of recovery for that long by guessing on purpose. Signing in still works.
+- Changing the password leaves sessions on other devices signed in until they
+  expire. Nothing revokes them yet.
+- An account with no code, or a lost one, still needs an admin to set a password
+  in the Dashboard.
 
 ## Re-testing
 

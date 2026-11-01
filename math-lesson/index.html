@@ -297,7 +297,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.4.0</div>
+      <div class="app-sidebar-footer">v4.5.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -2540,6 +2540,17 @@
               <div class="calc-feedback" id="feedbackProfile"></div>
 
               <div class="form-section">
+                <h3 class="form-section-header">รหัสกู้คืน</h3>
+                <div class="form-group">
+                  <div class="form-row">
+                    <span class="form-row-label" id="profileRecoveryStatus">กำลังโหลด...</span>
+                  </div>
+                </div>
+                <p class="form-section-footer">ใช้กู้บัญชีเมื่อลืมชื่อผู้ใช้หรือรหัสผ่าน ควรให้ผู้ปกครองจดเก็บไว้</p>
+              </div>
+              <button type="button" class="auth-submit-btn" id="profileRecoveryBtn" style="display: none;">สร้างรหัสกู้คืน</button>
+
+              <div class="form-section">
                 <h3 class="form-section-header">เปลี่ยนรหัสผ่าน</h3>
                 <div class="form-group">
                   <label class="form-row" for="profileNewPassword">
@@ -2636,6 +2647,37 @@
     </div>
   </div>
 
+  <div class="modal fade confirm-modal" id="recoveryCodeModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="confirm-modal-body">
+          <i class="bi bi-key-fill"></i>
+          <p>จดรหัสกู้คืนนี้เก็บไว้ ถ้าลืมชื่อผู้ใช้หรือรหัสผ่าน จะใช้รหัสนี้กู้บัญชีได้ ระบบจะแสดงรหัสนี้เพียงครั้งเดียว และไม่ควรบอกรหัสนี้กับคนอื่น</p>
+          <div class="recovery-code" id="recoveryCodeValue"></div>
+          <button type="button" class="auth-link-btn" id="recoveryCopyBtn"><i class="bi bi-clipboard"></i> คัดลอก</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" data-bs-dismiss="modal">จดเก็บแล้ว</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade confirm-modal" id="recoveryReplaceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="confirm-modal-body">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <p>ถ้าสร้างรหัสใหม่ รหัสกู้คืนเดิมจะใช้ไม่ได้อีก ต้องการสร้างรหัสใหม่หรือไม่?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" data-bs-dismiss="modal">ยกเลิก</button>
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" id="recoveryReplaceConfirmBtn">สร้างรหัสใหม่</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -2653,6 +2695,39 @@
             </div>
             <div class="auth-error" id="signinError"></div>
             <button type="button" class="auth-submit-btn" id="signinSubmitBtn">เข้าสู่ระบบ</button>
+            <button type="button" class="auth-link-btn" id="authForgotBtn">ลืมชื่อผู้ใช้หรือรหัสผ่าน?</button>
+          </div>
+
+          <div class="auth-tab-panel" id="authPanelRecover">
+            <div id="recoverForm">
+              <div class="mode-picker recover-picker" id="recoverModePicker">
+                <button type="button" class="mode-btn active" data-recover="password">ลืมรหัสผ่าน</button>
+                <button type="button" class="mode-btn" data-recover="username">ลืมชื่อผู้ใช้</button>
+              </div>
+              <div class="form-group">
+                <input type="text" class="auth-input" id="recoverUsername" placeholder="ชื่อผู้ใช้"
+                  autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="20">
+                <input type="text" class="auth-input" id="recoverCode" placeholder="รหัสกู้คืน เช่น ABCD-2345"
+                  autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" maxlength="12">
+                <input type="password" class="auth-input" id="recoverPassword" placeholder="รหัสผ่านใหม่ (อย่างน้อย 6 ตัวอักษร)"
+                  autocomplete="new-password">
+                <input type="password" class="auth-input" id="recoverPasswordConfirm" placeholder="ยืนยันรหัสผ่านใหม่"
+                  autocomplete="new-password">
+              </div>
+              <div class="auth-error" id="recoverError"></div>
+              <button type="button" class="auth-submit-btn" id="recoverSubmitBtn">ตั้งรหัสผ่านใหม่</button>
+              <p class="auth-note">รหัสกู้คืนคือรหัสที่ได้ตอนสมัคร หรือสร้างไว้ในหน้าโปรไฟล์ ถ้าไม่มีรหัสนี้ ให้ผู้ดูแลแอปช่วยตั้งรหัสผ่านใหม่</p>
+            </div>
+            <div id="recoverDone" style="display: none;">
+              <p class="recover-message" id="recoverDoneMessage"></p>
+              <div class="recovery-code" id="recoverDoneUsername"></div>
+              <div id="recoverDoneCodeBlock">
+                <p class="recover-message">รหัสกู้คืนใหม่</p>
+                <div class="recovery-code" id="recoverDoneCode"></div>
+              </div>
+              <button type="button" class="auth-submit-btn" id="recoverSigninBtn">ไปหน้าเข้าสู่ระบบ</button>
+            </div>
+            <button type="button" class="auth-link-btn" id="recoverBackBtn">กลับไปเข้าสู่ระบบ</button>
           </div>
 
           <div class="auth-tab-panel" id="authPanelRegister">
@@ -2927,6 +3002,7 @@
   <script type="text/javascript" src="scrips/profile/index.js"></script>
   <script type="text/javascript" src="scrips/streak/index.js"></script>
   <script type="text/javascript" src="scrips/daily/index.js"></script>
+  <script type="text/javascript" src="scrips/recovery/index.js"></script>
   <script type="text/javascript" src="scrips/progress/index.js"></script>
   <script type="text/javascript" src="scrips/learn/lessons.js"></script>
   <script type="text/javascript" src="scrips/learn/index.js"></script>

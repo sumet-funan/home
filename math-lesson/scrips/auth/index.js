@@ -133,6 +133,8 @@ function renderAccountUI(user) {
 function resetAuthModal() {
     $('.auth-error').text('');
     $('#signinIdentifier, #signinPassword, #registerIdentifier, #registerEmail, #registerPassword, #registerPasswordConfirm').val('');
+    $('#recoverUsername, #recoverCode, #recoverPassword, #recoverPasswordConfirm').val('');
+    $('#authTabPicker').show();
     $('#authTabPicker .mode-btn').removeClass('active');
     $('#authTabPicker .mode-btn[data-auth-tab="signin"]').addClass('active');
     $('.auth-tab-panel').removeClass('active');
@@ -330,6 +332,7 @@ $('#registerSubmitBtn').on('click', function () {
                 .then(function (ins) {
                     if (!ins.error) {
                         done(null);
+                        issueRecoveryCodeForNewAccount();
                         return;
                     }
                     // The name was taken in the gap since the check. Sign back
