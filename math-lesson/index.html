@@ -297,7 +297,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.8.1</div>
+      <div class="app-sidebar-footer">v4.9.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -2434,64 +2434,117 @@
           <div class="operation-panel" data-op="progress">
             <div class="panel-header">
               <h2><i class="bi bi-graph-up-arrow"></i> ความก้าวหน้า</h2>
-              <p>สรุปผลการฝึกของคุณในแต่ละบทเรียน</p>
+              <p>ดูว่าควรทำอะไรต่อ และไปถึงไหนแล้ว</p>
             </div>
             <div class="panel-body">
-              <div class="mode-picker" id="progressRangePicker">
-                <button type="button" class="mode-btn" data-range="day">วันนี้</button>
-                <button type="button" class="mode-btn" data-range="week">สัปดาห์นี้</button>
-                <button type="button" class="mode-btn" data-range="month">เดือนนี้</button>
-                <button type="button" class="mode-btn" data-range="year">ปีนี้</button>
-                <button type="button" class="mode-btn active" data-range="all">ทั้งหมด</button>
+              <div class="calc-card progress-card progress-next" id="progressNextCard" style="display: none;">
+                <span class="progress-next-label">ทำต่อเลย</span>
+                <strong class="progress-next-title" id="progressNextTitle"></strong>
+                <span class="progress-next-reason" id="progressNextReason"></span>
+                <button type="button" class="calc-submit" id="progressNextBtn">
+                  <i class="bi bi-play-fill"></i> <span id="progressNextAction">เริ่มฝึก</span>
+                </button>
               </div>
 
               <div class="calc-card progress-card" id="dailyGoalCard">
-                <h3 class="profile-section-title"><i class="bi bi-bullseye"></i> เป้าหมายวันนี้</h3>
+                <h3 class="profile-section-title"><i class="bi bi-bullseye"></i> วันนี้</h3>
                 <div class="daily-goal-head">
                   <span class="daily-goal-count" id="dailyGoalCount">0 / 20 ข้อ</span>
+                  <span class="daily-goal-left" id="dailyGoalLeft"></span>
                   <span class="daily-goal-done" id="dailyGoalDone">สำเร็จแล้ว!</span>
                 </div>
                 <div class="progress-bar-track">
                   <div class="progress-bar-fill" id="dailyGoalBar" style="width: 0%;"></div>
                 </div>
-                <div class="daily-streak-row">
-                  <div class="daily-streak-stat">
-                    <span class="daily-streak-label">ฝึกต่อเนื่อง</span>
-                    <span class="daily-streak-value" id="dayStreakValue">0 วัน</span>
-                  </div>
-                  <div class="daily-streak-stat">
-                    <span class="daily-streak-label">สถิติสูงสุด</span>
-                    <span class="daily-streak-value" id="dayStreakBest">0 วัน</span>
-                  </div>
+                <p class="daily-streak-line">
+                  <i class="bi bi-fire"></i> ฝึกต่อเนื่อง <strong id="dayStreakValue">0 วัน</strong>
+                  · สูงสุด <strong id="dayStreakBest">0 วัน</strong>
+                </p>
+              </div>
+
+              <div class="calc-card progress-card" id="progressMapCard">
+                <div class="progress-map-head">
+                  <h3 class="profile-section-title"><i class="bi bi-map-fill"></i> แผนที่บทเรียน</h3>
+                  <span class="progress-map-count" id="progressMapCount"></span>
                 </div>
+                <div class="mode-picker" id="progressMapPicker">
+                  <button type="button" class="mode-btn" data-group="p1">ป.1</button>
+                  <button type="button" class="mode-btn" data-group="p2">ป.2</button>
+                  <button type="button" class="mode-btn" data-group="p5">ป.5</button>
+                  <button type="button" class="mode-btn" data-group="extra">เสริม</button>
+                </div>
+                <div class="progress-bar-track progress-map-bar">
+                  <div class="progress-bar-fill is-high" id="progressMapBar" style="width: 0%;"></div>
+                </div>
+                <div id="progressMapList"></div>
+                <button type="button" class="progress-map-more" id="progressMapMore" style="display: none;"></button>
               </div>
 
-              <div class="progress-summary" id="progressSummary"></div>
+              <div class="progress-folds">
+                <details class="progress-fold" id="progressReviewCard" style="display: none;">
+                  <summary>
+                    <span class="progress-fold-text">
+                      <span class="progress-fold-title"><i class="bi bi-arrow-repeat"></i> ควรทบทวน · <span id="progressReviewCount">0 บท</span></span>
+                      <span class="progress-fold-note">บทที่ไม่ได้ฝึกนาน หรือยังไม่แม่น</span>
+                    </span>
+                    <i class="bi bi-chevron-right progress-fold-caret"></i>
+                  </summary>
+                  <div class="progress-fold-body">
+                    <div id="progressReviewList"></div>
+                  </div>
+                </details>
 
-              <div class="calc-card progress-card" id="progressReviewCard" style="display: none;">
-                <h3 class="profile-section-title"><i class="bi bi-arrow-repeat"></i> ควรทบทวน</h3>
-                <div id="progressReviewList"></div>
+                <details class="progress-fold">
+                  <summary>
+                    <span class="progress-fold-text">
+                      <span class="progress-fold-title"><i class="bi bi-journal-x"></i> ข้อที่ต้องแก้ · <span id="progressMistakeCount">0 ข้อ</span></span>
+                      <span class="progress-fold-note" id="progressMistakeNote">แยกตามบทเรียน</span>
+                    </span>
+                    <i class="bi bi-chevron-right progress-fold-caret"></i>
+                  </summary>
+                  <div class="progress-fold-body">
+                    <div id="progressMistakeList"></div>
+                  </div>
+                </details>
+
+                <details class="progress-fold">
+                  <summary>
+                    <span class="progress-fold-text">
+                      <span class="progress-fold-title"><i class="bi bi-stopwatch-fill"></i> คำนวณเร็วและแบบทดสอบ</span>
+                      <span class="progress-fold-note" id="progressStatsNote">ยังไม่มีสถิติ</span>
+                    </span>
+                    <i class="bi bi-chevron-right progress-fold-caret"></i>
+                  </summary>
+                  <div class="progress-fold-body">
+                    <h4 class="progress-sub-title">สถิติคำนวณเร็ว</h4>
+                    <div id="progressQuizList"></div>
+                    <h4 class="progress-sub-title">แบบทดสอบล่าสุดบนเครื่องนี้</h4>
+                    <div id="progressFinalQuizList"></div>
+                  </div>
+                </details>
               </div>
 
-              <div class="calc-card progress-card">
-                <h3 class="profile-section-title"><i class="bi bi-list-check"></i> รายบทเรียน</h3>
-                <div id="progressLessonList"></div>
-              </div>
-
-              <div class="calc-card progress-card">
-                <h3 class="profile-section-title"><i class="bi bi-stopwatch-fill"></i> สถิติคำนวณเร็ว</h3>
-                <div id="progressQuizList"></div>
-              </div>
-
-              <div class="calc-card progress-card">
-                <h3 class="profile-section-title">
-                  <i class="bi bi-journal-x"></i> ข้อที่ต้องแก้
-                  <span class="progress-fixed-badge" style="display: none;">
-                    แก้แล้ว <strong id="progressFixedCount">0</strong> ข้อ
+              <details class="progress-fold progress-parent">
+                <summary>
+                  <span class="progress-fold-text">
+                    <span class="progress-fold-title"><i class="bi bi-people-fill"></i> สำหรับผู้ปกครอง</span>
+                    <span class="progress-fold-note">ช่วงเวลา ความแม่นยำ เวลาเฉลี่ย และประวัติทุกข้อ</span>
                   </span>
-                </h3>
-                <div id="progressMistakeList"></div>
-              </div>
+                  <i class="bi bi-chevron-right progress-fold-caret"></i>
+                </summary>
+                <div class="progress-fold-body">
+                  <div class="mode-picker" id="progressRangePicker">
+                    <button type="button" class="mode-btn" data-range="day">วันนี้</button>
+                    <button type="button" class="mode-btn" data-range="week">สัปดาห์นี้</button>
+                    <button type="button" class="mode-btn" data-range="month">เดือนนี้</button>
+                    <button type="button" class="mode-btn" data-range="year">ปีนี้</button>
+                    <button type="button" class="mode-btn active" data-range="all">ทั้งหมด</button>
+                  </div>
+                  <div class="progress-summary" id="progressSummary"></div>
+                  <h4 class="progress-sub-title">รายบทเรียน</h4>
+                  <div id="progressLessonList"></div>
+                </div>
+              </details>
             </div>
           </div>
         </div>

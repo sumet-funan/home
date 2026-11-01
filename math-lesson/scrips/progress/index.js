@@ -132,7 +132,16 @@ function renderProgressLessons(stats) {
 
     known.sort(function (a, b) { return b.total - a.total; });
 
-    let html = known.map(function (row) {
+    let current = known.filter(function (row) { return lessonMenuId(row.lesson_id); });
+    let removed = known.filter(function (row) { return !lessonMenuId(row.lesson_id); });
+
+    $('#progressLessonList').html(progressLessonRows(current) + (removed.length
+        ? '<h4 class="progress-sub-title">บทเก่าที่เอาออกจากเมนูแล้ว</h4>' + progressLessonRows(removed)
+        : ''));
+}
+
+function progressLessonRows(rows) {
+    return rows.map(function (row) {
         let pct = +row.accuracy_pct;
         return '<div class="progress-row is-expandable" data-lesson-id="' + row.lesson_id + '">' +
             '<div class="progress-row-head">' +
@@ -151,8 +160,6 @@ function renderProgressLessons(stats) {
             '<div class="progress-attempts" style="display: none;"></div>' +
         '</div>';
     }).join('');
-
-    $('#progressLessonList').html(html);
 }
 
 function formatResponseTime(ms) {
@@ -249,9 +256,10 @@ function renderProgressQuiz(results) {
     });
 
     let keys = Object.keys(bests);
+    renderProgressFinalQuiz(keys.length);
+
     if (!keys.length) {
-        $('#progressQuizList').html('<p class="progress-empty">' +
-            (progressEmptyText('สถิติคำนวณเร็ว') || 'ยังไม่มีสถิติ ลองทำแบบฝึกคำนวณเร็วให้ครบทุกข้อนะ') + '</p>');
+        $('#progressQuizList').html('<p class="progress-empty">ยังไม่มีสถิติ ลองทำแบบฝึกคำนวณเร็วให้ครบทุกข้อนะ</p>');
         return;
     }
 
@@ -271,6 +279,37 @@ function renderProgressQuiz(results) {
     $('#progressQuizList').html(html);
 }
 
+// Kept per device until scores move onto the account, so the heading says so:
+// on a shared tablet this may be another child's score.
+function renderProgressFinalQuiz(speedCount) {
+    let results = typeof readFinalQuizResults === 'function' ? readFinalQuizResults() : {};
+    let grades = Object.keys(results).sort();
+    let percent = function (row) { return Math.round(100 * row.correct / row.total); };
+
+    $('#progressFinalQuizList').html(grades.length
+        ? grades.map(function (grade) {
+            let row = results[grade];
+            return '<div class="progress-row progress-row-compact">' +
+                '<span class="progress-row-name">' + progressGroupLabel(grade) + '</span>' +
+                '<span class="progress-row-score">' + row.correct + '/' + row.total +
+                    ' (' + percent(row) + '%) · ' + formatProgressDate(row.at) + '</span>' +
+            '</div>';
+        }).join('')
+        : '<p class="progress-empty">ยังไม่มีคะแนนแบบทดสอบบนเครื่องนี้</p>');
+
+    let latest = grades.map(function (grade) { return results[grade]; })
+        .sort(function (a, b) { return a.at < b.at ? 1 : -1; })[0];
+    let notes = [];
+
+    if (speedCount) {
+        notes.push('คำนวณเร็ว ' + speedCount + ' รายการ');
+    }
+    if (latest) {
+        notes.push('แบบทดสอบล่าสุด ' + percent(latest) + '%');
+    }
+    $('#progressStatsNote').text(notes.join(' · ') || 'ยังไม่มีสถิติ');
+}
+
 // Lesson ids map onto menu ids by grade prefix (p5decimal -> menu_p5_decimal).
 // Returns null when no such menu exists, which is the case for the four
 // general lessons that were removed but whose history is still shown.
@@ -279,9 +318,11 @@ function lessonMenuId(lessonId) {
     return document.getElementById(menuId) ? menuId : null;
 }
 
-$(document).on('click', '.progress-fix-btn', function (e) {
+// attr rather than data: jQuery would remember the first value, and the next-step
+// button changes target as the child works through things
+$(document).on('click', '.progress-fix-btn, .progress-map-row, #progressNextBtn', function (e) {
     e.stopPropagation();
-    let el = document.getElementById($(this).data('menu-id'));
+    let el = document.getElementById($(this).attr('data-menu-id'));
     if (el) {
         bootstrap.Tab.getOrCreateInstance(el).show();
     }
@@ -348,8 +389,9 @@ function daysSince(iso) {
 }
 
 function buildReviewList(stats) {
+    // a lesson taken out of the menu cannot be practised, so it is never due
     return stats
-        .filter(function (row) { return LESSON_LABELS[row.lesson_id]; })
+        .filter(function (row) { return LESSON_LABELS[row.lesson_id] && lessonMenuId(row.lesson_id); })
         .map(function (row) {
             let days = daysSince(row.last_practiced_at);
             let accuracy = +row.accuracy_pct;
@@ -391,41 +433,250 @@ function renderProgressReview(stats) {
         return;
     }
 
+    $('#progressReviewCount').text(rows.length + ' บท');
+
     $('#menu_progress').append('<span class="nav-review-badge">' + rows.length + '</span>');
 
     $('#progressReviewList').html(rows.map(function (row) {
-        let menuId = lessonMenuId(row.lessonId);
         return '<div class="progress-row progress-row-compact">' +
             '<span class="progress-review-name">' + LESSON_LABELS[row.lessonId] + '</span>' +
             '<span class="progress-review-reason">' + row.reasons.join(' · ') + '</span>' +
-            (menuId
-                ? '<button type="button" class="progress-fix-btn" data-menu-id="' + menuId + '">ทบทวน</button>'
-                : '') +
+            '<button type="button" class="progress-fix-btn" data-menu-id="' + lessonMenuId(row.lessonId) + '">ทบทวน</button>' +
         '</div>';
     }).join(''));
 }
 
+// Newest mistake first, so the group order follows what happened most recently.
+function groupMistakes(rows) {
+    let groups = [];
+    let byLesson = {};
+
+    rows.forEach(function (row) {
+        if (!byLesson[row.lesson_id]) {
+            byLesson[row.lesson_id] = { lessonId: row.lesson_id, expressions: [] };
+            groups.push(byLesson[row.lesson_id]);
+        }
+        byLesson[row.lesson_id].expressions.push(row.expression);
+    });
+
+    return groups;
+}
+
 function renderProgressMistakes(rows) {
+    $('#progressMistakeCount').text(rows.length + ' ข้อ');
+
     if (!rows.length) {
-        $('#progressMistakeList').html('<p class="progress-empty">' +
-            (progressEmptyText('ข้อที่ตอบผิด') || 'ยังไม่มีข้อที่ตอบผิด เก่งมาก!') + '</p>');
+        $('#progressMistakeList').html('<p class="progress-empty">ยังไม่มีข้อที่ตอบผิด เก่งมาก!</p>');
         return;
     }
 
-    let html = rows.map(function (row) {
-        let label = LESSON_LABELS[row.lesson_id] || row.lesson_id;
+    $('#progressMistakeList').html(groupMistakes(rows).map(function (group) {
+        let label = LESSON_LABELS[group.lessonId] || group.lessonId;
         // the four removed general lessons have no menu to send anyone to
-        let menuId = lessonMenuId(row.lesson_id);
-        return '<div class="progress-row progress-row-compact">' +
-            '<span class="progress-mistake-expr">' + $('<div>').text(row.expression).html() + '</span>' +
-            '<span class="progress-mistake-lesson">' + label + '</span>' +
-            (menuId
-                ? '<button type="button" class="progress-fix-btn" data-menu-id="' + menuId + '">ฝึกแก้</button>'
-                : '') +
-        '</div>';
-    }).join('');
+        let menuId = lessonMenuId(group.lessonId);
+        let shown = group.expressions.slice(0, MISTAKE_EXAMPLES_SHOWN);
+        let hidden = group.expressions.length - shown.length;
 
-    $('#progressMistakeList').html(html);
+        return '<div class="progress-row">' +
+            '<div class="progress-mistake-head">' +
+                '<span class="progress-review-name">' + label + '</span>' +
+                '<span class="progress-mistake-lesson">' + group.expressions.length + ' ข้อ</span>' +
+                (menuId
+                    ? '<button type="button" class="progress-fix-btn" data-menu-id="' + menuId + '">ฝึกแก้</button>'
+                    : '') +
+            '</div>' +
+            shown.map(function (expression) {
+                return '<div class="progress-mistake-expr">' + $('<div>').text(expression).html() + '</div>';
+            }).join('') +
+            (hidden ? '<div class="progress-mistake-more">และอีก ' + hidden + ' ข้อ</div>' : '') +
+        '</div>';
+    }).join(''));
+}
+
+// All-time, because how far a lesson has come does not change with the range
+// picker. Ten answers is the least that says anything: most lessons have fewer,
+// and one wrong out of three would otherwise read as a weak lesson.
+const LESSON_STAGE_MIN_ANSWERS = 10;
+const LESSON_STRONG_ACCURACY = 80;
+
+const LESSON_STAGES = {
+    strong: { label: 'เก่งแล้ว', icon: 'bi-star-fill' },
+    practising: { label: 'กำลังฝึก', icon: 'bi-pencil-fill' },
+    started: { label: 'เพิ่งเริ่ม', icon: 'bi-play-circle' },
+    new: { label: 'ยังไม่เริ่ม', icon: 'bi-circle' },
+};
+
+const PROGRESS_GRADE_GROUPS = ['p1', 'p2', 'p5'];
+const PROGRESS_MAP_SHOWN = 6;
+const MISTAKE_EXAMPLES_SHOWN = 3;
+const PROGRESS_MISTAKE_LIMIT = 1000;      // PostgREST's row cap, far past any real list
+
+var progressAllStats = [];
+var progressMapGroup = null;              // null until the child picks a tab
+var progressMapExpanded = false;
+
+function progressGroupLabel(group) {
+    return $('#progressMapPicker [data-group="' + group + '"]').text();
+}
+
+// The sidebar already lists every lesson in teaching order, so the map reads it
+// instead of keeping a second list that could drift from the menu.
+function progressGroupLessons(group) {
+    let byId = {};
+    progressAllStats.forEach(function (row) { byId[row.lesson_id] = row; });
+
+    return $('#group-' + group + ' .nav-menu-item').map(function () {
+        let id = this.id.replace('menu_', '').replace('_', '');
+        let stats = byId[id] || null;
+        return {
+            id: id,
+            menuId: this.id,
+            name: $(this).find('span').text(),
+            stats: stats,
+            stage: lessonStage(stats)
+        };
+    }).get();
+}
+
+function lessonStage(stats) {
+    if (!stats) {
+        return 'new';
+    }
+    if (stats.total < LESSON_STAGE_MIN_ANSWERS) {
+        return 'started';
+    }
+    return +stats.accuracy_pct >= LESSON_STRONG_ACCURACY ? 'strong' : 'practising';
+}
+
+// The grade from the profile when there is one, otherwise wherever the child has
+// done the most work. เสริม is not a grade, so it is never the starting point.
+function homeProgressGroup() {
+    if (PROGRESS_GRADE_GROUPS.indexOf(menuGradeApplied) !== -1) {
+        return menuGradeApplied;
+    }
+
+    let answers = function (group) {
+        return progressGroupLessons(group).reduce(function (sum, lesson) {
+            return sum + (lesson.stats ? +lesson.stats.total : 0);
+        }, 0);
+    };
+
+    return PROGRESS_GRADE_GROUPS.reduce(function (best, group) {
+        return answers(group) > answers(best) ? group : best;
+    });
+}
+
+function renderProgressMap() {
+    let group = progressMapGroup || homeProgressGroup();
+    let lessons = progressGroupLessons(group);
+    let strong = lessons.filter(function (lesson) { return lesson.stage === 'strong'; }).length;
+    let shown = progressMapExpanded ? lessons : lessons.slice(0, PROGRESS_MAP_SHOWN);
+    let hidden = lessons.length - PROGRESS_MAP_SHOWN;
+
+    $('#progressMapPicker .mode-btn').removeClass('active');
+    $('#progressMapPicker [data-group="' + group + '"]').addClass('active');
+    $('#progressMapCount').text('เก่งแล้ว ' + strong + ' จาก ' + lessons.length + ' บท');
+    $('#progressMapBar').css('width', (lessons.length ? 100 * strong / lessons.length : 0) + '%');
+
+    $('#progressMapList').html(shown.map(function (lesson) {
+        let stage = LESSON_STAGES[lesson.stage];
+        return '<button type="button" class="progress-map-row is-' + lesson.stage + '" data-menu-id="' + lesson.menuId + '">' +
+            '<i class="bi ' + stage.icon + '"></i>' +
+            '<span class="progress-map-name">' + lesson.name + '</span>' +
+            '<span class="progress-map-stage">' + stage.label +
+                (lesson.stage === 'started' ? ' ' + lesson.stats.total + ' ข้อ' : '') + '</span>' +
+        '</button>';
+    }).join(''));
+
+    $('#progressMapMore')
+        .toggle(hidden > 0)
+        .text(progressMapExpanded ? 'ย่อรายการ' : 'ดูอีก ' + hidden + ' บท');
+}
+
+$('#progressMapPicker').on('click', '.mode-btn', function () {
+    progressMapGroup = $(this).data('group');
+    progressMapExpanded = false;
+    renderProgressMap();
+});
+
+$('#progressMapMore').on('click', function () {
+    progressMapExpanded = !progressMapExpanded;
+    renderProgressMap();
+});
+
+function mistakeNextStep(mistakes) {
+    let top = groupMistakes(mistakes)
+        .filter(function (group) { return lessonMenuId(group.lessonId); })
+        .sort(function (a, b) { return b.expressions.length - a.expressions.length; })[0];
+
+    return top && {
+        menuId: lessonMenuId(top.lessonId),
+        title: 'ฝึกแก้ ' + LESSON_LABELS[top.lessonId],
+        reason: 'มีข้อที่ต้องแก้ ' + top.expressions.length + ' ข้อ'
+    };
+}
+
+function reviewNextStep() {
+    if (!isReviewEnabled()) {
+        return null;
+    }
+
+    let top = buildReviewList(progressAllStats)[0];
+
+    return top && {
+        menuId: lessonMenuId(top.lessonId),
+        title: 'ทบทวน ' + LESSON_LABELS[top.lessonId],
+        reason: top.reasons.join(' · ')
+    };
+}
+
+// Past mistakes and reviews the next step stays within the child's own grade, so
+// it follows the order the lessons are taught in.
+function lessonNextStep() {
+    let group = homeProgressGroup();
+    let lessons = progressGroupLessons(group);
+
+    let underway = lessons
+        .filter(function (lesson) { return lesson.stage === 'started' || lesson.stage === 'practising'; })
+        .sort(function (a, b) { return a.stats.last_practiced_at < b.stats.last_practiced_at ? 1 : -1; })[0];
+
+    if (underway) {
+        return {
+            menuId: underway.menuId,
+            title: 'ฝึกต่อ ' + LESSON_LABELS[underway.id],
+            reason: underway.stage === 'started'
+                ? 'ทำแล้ว ' + underway.stats.total + ' ข้อ อีก ' +
+                    (LESSON_STAGE_MIN_ANSWERS - underway.stats.total) + ' ข้อจะรู้ระดับ'
+                : 'ตอบถูก ' + underway.stats.accuracy_pct + '% ฝึกให้ถึง ' + LESSON_STRONG_ACCURACY + '%'
+        };
+    }
+
+    let fresh = lessons.filter(function (lesson) { return lesson.stage === 'new'; })[0];
+
+    if (fresh) {
+        return {
+            menuId: fresh.menuId,
+            title: 'เริ่มบทใหม่ ' + LESSON_LABELS[fresh.id],
+            reason: 'ยังไม่เคยฝึกบทนี้'
+        };
+    }
+
+    return {
+        menuId: 'menu_finalquiz',
+        title: 'เก่งครบทุกบทของ ' + progressGroupLabel(group) + ' แล้ว',
+        reason: 'ลองทำแบบทดสอบดูว่าพร้อมแค่ไหน',
+        action: 'ไปที่แบบทดสอบ'
+    };
+}
+
+function renderProgressNext(mistakes) {
+    let step = mistakeNextStep(mistakes) || reviewNextStep() || lessonNextStep();
+
+    $('#progressNextTitle').text(step.title);
+    $('#progressNextReason').text(step.reason);
+    $('#progressNextAction').text(step.action || 'เริ่มฝึก');
+    $('#progressNextBtn').attr('data-menu-id', step.menuId);
+    $('#progressNextCard').show();
 }
 
 var progressRange = 'all';
@@ -444,6 +695,7 @@ function renderDailyGoal() {
 
     $('#dailyGoalCount').text(done + ' / ' + goal + ' ข้อ');
     $('#dailyGoalDone').toggle(reached);
+    $('#dailyGoalLeft').text('อีก ' + (goal - done) + ' ข้อ').toggle(!reached);
     // No red for "not there yet": a partly filled goal is progress, not a
     // failing score, and colouring it like one would discourage exactly the
     // child who most needs encouraging.
@@ -455,13 +707,9 @@ function renderDailyGoal() {
     $('#dayStreakBest').text(getBestDayStreak() + ' วัน');
 }
 
-function refreshProgressPage() {
-    renderDailyGoal();
-
-    if (typeof fetchLessonStats !== 'function') {
-        return;
-    }
-
+// Only the parent section follows the range picker: everything above it is about
+// where the child stands now, which a filter would make misleading.
+function refreshProgressRange() {
     let range = progressRange;
 
     fetchLessonStats(range).then(function (stats) {
@@ -472,30 +720,34 @@ function refreshProgressPage() {
         renderProgressSummary(stats);
         renderProgressLessons(stats);
     });
+}
 
-    // Always all-time, whatever range is selected: "not practised for 5 days"
-    // is meaningless inside a "today" filter, which would list every lesson.
-    applyReviewVisibility();
+function refreshProgressPage() {
+    renderDailyGoal();
 
-    fetchQuizBests(range).then(function (rows) {
-        if (progressRange !== range) {
-            return;
-        }
-        renderProgressQuiz(rows);
+    if (typeof fetchLessonStats !== 'function') {
+        return;
+    }
+
+    refreshProgressRange();
+
+    // Waits on the review setting too, so a child who has hidden reviews is not
+    // sent to one by the next-step card.
+    Promise.all([
+        fetchLessonStats('all'),
+        fetchRecentMistakes(PROGRESS_MISTAKE_LIMIT),
+        applyReviewVisibility()
+    ]).then(function (results) {
+        progressAllStats = results[0];
+        renderProgressMap();
+        renderProgressNext(results[1]);
+        renderProgressMistakes(results[1]);
     });
 
-    fetchRecentMistakes(10, range).then(function (rows) {
-        if (progressRange !== range) {
-            return;
-        }
-        renderProgressMistakes(rows);
-    });
+    fetchQuizBests().then(renderProgressQuiz);
 
-    fetchFixedMistakeCount(range).then(function (count) {
-        if (progressRange !== range) {
-            return;
-        }
-        $('#progressFixedCount').text(count).parent().toggle(count > 0);
+    fetchFixedMistakeCount().then(function (count) {
+        $('#progressMistakeNote').text(count > 0 ? 'แก้แล้ว ' + count + ' ข้อ' : 'แยกตามบทเรียน');
     });
 }
 
@@ -503,7 +755,7 @@ $('#progressRangePicker').on('click', '.mode-btn', function () {
     $('#progressRangePicker .mode-btn').removeClass('active');
     $(this).addClass('active');
     progressRange = $(this).data('range');
-    refreshProgressPage();
+    refreshProgressRange();
 });
 
 // Recompute when the page is opened so it always reflects the latest answers.
@@ -515,6 +767,7 @@ $(document).on('shown.bs.tab', '#menu_progress', refreshProgressPage);
 supabaseClient.auth.onAuthStateChange(function (event, session) {
     if (!session) {
         reviewEnabled = true;   // the next account starts from its own setting
+        progressMapGroup = null;
         hideProgressReview();
         return;
     }
