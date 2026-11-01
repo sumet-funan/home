@@ -50,6 +50,10 @@
             aria-controls="content_speedquiz" data-op="speedquiz">
             <i class="bi bi-stopwatch-fill"></i><span>ฝึกคำนวณเร็ว</span>
           </a>
+          <a class="nav-menu-item" id="menu_finalquiz" data-bs-toggle="list" href="#content_finalquiz" role="tab"
+            aria-controls="content_finalquiz" data-op="progress">
+            <i class="bi bi-mortarboard-fill"></i><span>แบบทดสอบตามตัวชี้วัด</span>
+          </a>
         </div>
 
         <div class="nav-group">
@@ -293,7 +297,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.3.0</div>
+      <div class="app-sidebar-footer">v4.4.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -307,6 +311,79 @@
         <span class="app-navbar-title" id="appNavbarTitle" aria-hidden="true"></span>
       </header>
       <div class="tab-content">
+
+        <div class="tab-pane fade" id="content_finalquiz" role="tabpanel" aria-labelledby="menu_finalquiz">
+          <div class="operation-panel" data-op="progress">
+            <div class="panel-header">
+              <h2><i class="bi bi-mortarboard-fill"></i> แบบทดสอบตามตัวชี้วัด</h2>
+              <p>ทดสอบครบทุกตัวชี้วัดของชั้น แล้วดูว่าเรื่องไหนต้องกลับไปฝึก</p>
+            </div>
+            <div class="panel-body">
+              <div id="finalQuizSetup">
+                <div class="sq-options">
+                  <div class="sq-option">
+                    <span class="sq-option-label">ชั้น</span>
+                    <div class="mode-picker" id="finalQuizGradePicker">
+                      <button type="button" class="mode-btn active" data-grade="p1">ป.1</button>
+                      <button type="button" class="mode-btn" data-grade="p2">ป.2</button>
+                      <button type="button" class="mode-btn" data-grade="p5">ป.5</button>
+                    </div>
+                  </div>
+                  <div class="sq-option">
+                    <span class="sq-option-label">ชุด</span>
+                    <div class="mode-picker" id="finalQuizLengthPicker">
+                      <button type="button" class="mode-btn active" data-length="short">ชุดสั้น</button>
+                      <button type="button" class="mode-btn" data-length="full">ชุดเต็ม</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="calc-card fq-start-card">
+                  <p class="fq-info" id="finalQuizInfo"></p>
+                  <p class="fq-last" id="finalQuizLast"></p>
+                  <button type="button" class="calc-submit" id="finalQuizStartBtn">เริ่มทำแบบทดสอบ <i class="bi bi-play-fill"></i></button>
+                </div>
+              </div>
+
+              <div id="finalQuizRunning" style="display: none;">
+                <div class="calc-card">
+                  <div class="fq-head">
+                    <span id="finalQuizCount"></span>
+                    <span class="fq-clock"><i class="bi bi-clock"></i> <span id="finalQuizClock">0:00</span></span>
+                  </div>
+                  <div class="learn-progress fq-progress"><span id="finalQuizProgress"></span></div>
+                  <div class="fq-code" id="finalQuizCode"></div>
+                  <div class="fq-figure" id="finalQuizFigure"></div>
+                  <div class="word-question fq-question" id="finalQuizQuestion" aria-live="polite"></div>
+                  <div class="fq-options" id="finalQuizOptions"></div>
+                  <div class="fq-nav">
+                    <button type="button" class="fq-nav-btn" id="finalQuizBackBtn"><i class="bi bi-chevron-left"></i> ข้อก่อนหน้า</button>
+                    <button type="button" class="fq-nav-btn" id="finalQuizNextBtn">ข้อถัดไป <i class="bi bi-chevron-right"></i></button>
+                  </div>
+                </div>
+                <div class="fq-map" id="finalQuizMap"></div>
+                <button type="button" class="calc-submit fq-submit" id="finalQuizSubmitBtn">ส่งคำตอบ <i class="bi bi-send-fill"></i></button>
+              </div>
+
+              <div id="finalQuizResult" style="display: none;">
+                <div class="calc-card fq-result">
+                  <div class="fq-score" id="finalQuizScore"></div>
+                  <div class="fq-verdict" id="finalQuizVerdict"></div>
+                  <div class="fq-level" id="finalQuizLevel"></div>
+                  <p class="fq-note">เกณฑ์นี้เป็นเกณฑ์ที่ใช้ทั่วไป แต่ละโรงเรียนอาจกำหนดต่างกัน</p>
+                  <button type="button" class="calc-submit" id="finalQuizAgainBtn">ทำชุดใหม่ <i class="bi bi-arrow-repeat"></i></button>
+                </div>
+                <div class="side-panel fq-section">
+                  <h3><i class="bi bi-list-check"></i> ผลตามตัวชี้วัด</h3>
+                  <div class="fq-rows" id="finalQuizIndicators"></div>
+                </div>
+                <div class="side-panel fq-section" id="finalQuizMissedSection">
+                  <h3><i class="bi bi-pencil-fill"></i> ข้อที่ควรทบทวน</h3>
+                  <div id="finalQuizMissed"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="tab-pane fade" id="content_p1_plus" role="tabpanel" aria-labelledby="menu_p1_plus">
           <div class="operation-panel" data-op="plus">
@@ -1492,13 +1569,12 @@
           <div class="operation-panel" data-op="placevalue">
             <div class="panel-header">
               <h2><i class="bi bi-123"></i> จำนวนและตัวเลข (ป.1)</h2>
-              <p>นับจำนวน อ่านตัวเลขไทยและตัวหนังสือ ไม่เกิน 100</p>
+              <p>นับจำนวน และอ่านตัวเลขไทย ไม่เกิน 100</p>
             </div>
             <div class="panel-body">
               <div class="mode-picker" id="p1NumberModePicker">
                 <button type="button" class="mode-btn active" data-mode="count">นับจำนวน</button>
                 <button type="button" class="mode-btn" data-mode="thai">ตัวเลขไทย</button>
-                <button type="button" class="mode-btn" data-mode="word">ตัวหนังสือ</button>
               </div>
               <div class="calc-card">
                 <div id="p1NumberBlocks" class="number-blocks"></div>
@@ -2504,6 +2580,21 @@
     </div>
   </div>
 
+  <div class="modal fade confirm-modal" id="finalQuizConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="confirm-modal-body">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <p id="finalQuizConfirmMessage"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-cancel" data-bs-dismiss="modal">ทำต่อ</button>
+          <button type="button" class="confirm-modal-btn confirm-modal-btn-confirm" id="finalQuizConfirmBtn"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="daily-toast" id="dailyGoalToast" aria-live="polite">
     <i class="bi bi-trophy-fill"></i>
     <span class="daily-toast-text"></span>
@@ -2830,6 +2921,8 @@
   <script type="text/javascript" src="scrips/p5prism/index.js"></script>
   <script type="text/javascript" src="scrips/p5linegraph/index.js"></script>
   <script type="text/javascript" src="scrips/p5barwrite/index.js"></script>
+  <script type="text/javascript" src="scrips/finalquiz/indicators.js"></script>
+  <script type="text/javascript" src="scrips/finalquiz/index.js"></script>
   <script type="text/javascript" src="scrips/speedquiz/index.js"></script>
   <script type="text/javascript" src="scrips/profile/index.js"></script>
   <script type="text/javascript" src="scrips/streak/index.js"></script>

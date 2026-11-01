@@ -86,7 +86,7 @@ function addResultPrismToHistoryList(item) {
     }
 }
 
-function addSuggestPrismValue() {
+function buildPrismQuestion() {
     let sides = randomInt(3, 6);
     let name = `ปริซึมฐาน${prismBaseNames[sides]}`;
     let question = pickOne([
@@ -95,6 +95,14 @@ function addSuggestPrismValue() {
         { text: `${name} มีกี่ขอบ`, expected: sides * 3 },
         { text: `${name} มีกี่จุดยอด`, expected: sides * 2 },
     ]);
+
+    question.sides = sides;
+    return question;
+}
+
+function addSuggestPrismValue() {
+    let question = buildPrismQuestion();
+    let sides = question.sides;
 
     p5PrismObj.sides = sides;
     p5PrismObj.text = question.text;

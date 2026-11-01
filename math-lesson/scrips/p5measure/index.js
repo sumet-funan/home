@@ -33,10 +33,6 @@ var measureBuilders = {
             return { text: `${kilograms} กิโลกรัม ${grams} กรัม`, expected: (kilograms * 1000 + grams) / 1000, unit: 'กิโลกรัม' };
         },
         function () {
-            let tons = randomInt(1, 9), kilograms = randomInt(1, 999);
-            return { text: `${tons} ตัน ${kilograms} กิโลกรัม`, expected: (tons * 1000 + kilograms) / 1000, unit: 'ตัน' };
-        },
-        function () {
             let grams = randomInt(1001, 9999);
             return { text: `${(grams / 1000).toFixed(3)} กิโลกรัม`, expected: grams, unit: 'กรัม' };
         },

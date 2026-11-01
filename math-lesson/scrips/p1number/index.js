@@ -67,10 +67,10 @@ function addSuggestP1NumberValue() {
     let number = mode === 'count' ? randomInt(1, 99) : randomInt(0, 100);
 
     p1NumberObj.expected = number;
-    p1NumberObj.shown = mode === 'count' ? 'นับได้' : (mode === 'thai' ? toThaiDigits(number) : numberToThaiWords(number));
+    p1NumberObj.shown = mode === 'count' ? 'นับได้' : toThaiDigits(number);
 
     $('#p1NumberBlocks').html(mode === 'count' ? renderNumberBlocks(number) : '').toggle(mode === 'count');
-    $('#p1NumberShown').text(p1NumberObj.shown).toggle(mode !== 'count').toggleClass('is-words', mode === 'word');
+    $('#p1NumberShown').text(p1NumberObj.shown).toggle(mode !== 'count');
     $('#p1NumberAnswerNumber').val('');
 }
 

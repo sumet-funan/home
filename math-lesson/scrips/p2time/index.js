@@ -97,7 +97,7 @@ function addResultP2TimeToHistoryList(item) {
 }
 
 // Every question stays in one unit: hours, minutes or days, never a mix.
-function suggestP2TimeWord() {
+function buildP2TimeWord() {
     let name = pickOne(wordNames);
     let start = randomInt(7, 11);
     let hours = randomInt(1, 4);
@@ -111,7 +111,11 @@ function suggestP2TimeWord() {
         { text: `เดินไปโรงเรียนใช้เวลา ${longer} นาที ขี่จักรยานใช้เวลา ${shorter} นาที เดินใช้เวลานานกว่ากี่นาที`, expected: longer - shorter, unit: 'นาที' },
         { text: `ปิดเทอม ${holiday} วัน ผ่านไปแล้ว ${daysGone} วัน เหลืออีกกี่วัน`, expected: holiday - daysGone, unit: 'วัน' },
     ];
-    let question = pickOne(questions);
+    return pickOne(questions);
+}
+
+function suggestP2TimeWord() {
+    let question = buildP2TimeWord();
 
     p2TimeObj.text = question.text;
     p2TimeObj.expected = question.expected;

@@ -90,7 +90,7 @@ function addResultLineGraphToHistoryList(item) {
     }
 }
 
-function addSuggestLineGraphValue() {
+function buildLineGraphQuestion() {
     let topic = pickOne(lineGraphTopics);
     let count = randomInt(5, 6);
     let months = lineGraphMonths.slice(0, count);
@@ -107,10 +107,17 @@ function addSuggestLineGraphValue() {
         { text: `เดือน ${months[first]} และเดือน ${months[second]} รวมกันกี่${topic.unit}`, expected: values[first] + values[second] },
     ]);
 
+    question.figure = renderLineGraph(topic.title, months, values);
+    return question;
+}
+
+function addSuggestLineGraphValue() {
+    let question = buildLineGraphQuestion();
+
     p5LineGraphObj.text = question.text;
     p5LineGraphObj.expected = question.expected;
 
-    $('#lineGraphDisplay').html(renderLineGraph(topic.title, months, values));
+    $('#lineGraphDisplay').html(question.figure);
     $('#lineGraphQuestion').text(question.text);
     $('#lineGraphAnswerNumber').val('');
 }

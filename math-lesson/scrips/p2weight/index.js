@@ -89,7 +89,7 @@ function addResultP2WeightToHistoryList(item) {
 }
 
 // The smaller unit never carries into kilograms, as with length.
-function suggestP2WeightWord() {
+function buildP2WeightWord() {
     let unit = pickOne(p2WeightUnits);
     let steps = unit.perKilogram / unit.step;
     let isAddition = Math.random() < 0.5;
@@ -109,10 +109,22 @@ function suggestP2WeightWord() {
             `แตงโมหนัก ${first} ฟักทองหนัก ${second} แตงโมหนักกว่าฟักทองเท่าไร`,
         ];
 
+    return {
+        unit: unit,
+        text: pickOne(templates),
+        expectedKilograms: isAddition ? firstKilograms + secondKilograms : firstKilograms - secondKilograms,
+        expectedSmall: (isAddition ? firstSmall + secondSmall : firstSmall - secondSmall) * unit.step,
+    };
+}
+
+function suggestP2WeightWord() {
+    let question = buildP2WeightWord();
+    let unit = question.unit;
+
     p2WeightObj.unit = unit;
-    p2WeightObj.text = pickOne(templates);
-    p2WeightObj.expectedKilograms = isAddition ? firstKilograms + secondKilograms : firstKilograms - secondKilograms;
-    p2WeightObj.expectedSmall = (isAddition ? firstSmall + secondSmall : firstSmall - secondSmall) * unit.step;
+    p2WeightObj.text = question.text;
+    p2WeightObj.expectedKilograms = question.expectedKilograms;
+    p2WeightObj.expectedSmall = question.expectedSmall;
 
     $('#p2WeightWordText').text(p2WeightObj.text);
     $('#p2WeightSmallLabel').text(unit.name);

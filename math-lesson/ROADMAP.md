@@ -15,8 +15,9 @@ they struggled with three weeks ago may never come back.
 
 **We do not store the question or its correct answer.** An attempt row holds
 `expression` — `"6 + 9 = 20"` — which embeds the child's *wrong* answer, and
-nothing recording that the answer was 15. The app never displays the correct
-answer either, so it cannot be recovered later.
+nothing recording that the answer was 15. A lesson never displays the correct
+answer either, so it cannot be recovered later. (The final quiz shows it once
+marked, but that page is not stored.)
 
 So the smallest thing we can currently schedule is a **lesson**, not a fact.
 That splits the work in two.

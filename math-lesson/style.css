@@ -576,7 +576,8 @@ input {
   overflow: hidden;
 }
 
-body.sq-running .learn-card {
+body.sq-running .learn-card,
+body.fq-running .learn-card {
   display: none;
 }
 
@@ -2542,6 +2543,12 @@ input[type=number] {
   color: var(--on-accent);
 }
 
+/* a drawn option would otherwise vanish into its own selected background */
+.shape-option-btn.selected .shape-fill,
+.fq-option.selected .shape-fill {
+  fill: var(--on-accent);
+}
+
 /* ---------- clock ---------- */
 
 .clock-display {
@@ -2907,6 +2914,330 @@ input[type=number] {
   text-align: center;
   font-size: .8rem;
   color: var(--text);
+}
+
+/* ---------- final quiz ---------- */
+
+.fq-start-card {
+  margin-top: 16px;
+}
+
+.fq-info {
+  margin: 0;
+  text-align: center;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.fq-last {
+  margin: 4px 0 0;
+  text-align: center;
+  font-size: .9rem;
+  color: var(--muted);
+}
+
+.fq-last:empty {
+  display: none;
+}
+
+.fq-head {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.fq-clock {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.fq-progress {
+  flex: none;
+  margin: 8px 0 12px;
+}
+
+.fq-code {
+  font-size: .8rem;
+  color: var(--muted);
+}
+
+.fq-figure {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 8px 0;
+}
+
+.fq-figure svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.fq-question {
+  padding: 8px 0 14px;
+  text-align: left;
+}
+
+.fq-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fq-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--fill);
+  color: var(--text);
+  font-size: 1.05rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+
+.fq-option.selected {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.fq-letter {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  color: var(--text);
+  font-weight: 600;
+  line-height: 30px;
+  text-align: center;
+}
+
+.fq-option-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.fq-option-text svg {
+  display: block;
+}
+
+.fq-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.fq-nav-btn {
+  min-height: 44px;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fq-nav-btn:disabled {
+  color: var(--muted);
+  opacity: .5;
+  cursor: default;
+}
+
+.fq-map {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.fq-map-btn {
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+.fq-map-btn.is-answered {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.fq-map-btn.is-current {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.fq-submit {
+  width: 100%;
+}
+
+.fq-result {
+  align-items: center;
+  text-align: center;
+}
+
+.fq-result .calc-submit {
+  width: 100%;
+}
+
+.fq-score {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.fq-verdict {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.fq-verdict.is-passed {
+  color: var(--accent);
+}
+
+.fq-level {
+  margin-top: 4px;
+  color: var(--text);
+}
+
+.fq-note {
+  margin: 6px 0 0;
+  font-size: .8rem;
+  color: var(--muted);
+}
+
+.fq-section {
+  margin-top: 20px;
+}
+
+.fq-rows {
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  overflow: hidden;
+}
+
+.fq-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: .5px solid var(--border);
+}
+
+.fq-row:last-child {
+  border-bottom: none;
+}
+
+.fq-row .is-good {
+  color: var(--accent);
+}
+
+.fq-row .is-weak {
+  color: var(--muted);
+}
+
+.fq-row-text {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: .85rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.fq-row-text strong {
+  color: var(--text);
+}
+
+.fq-row-score {
+  flex: none;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.fq-practice {
+  flex: none;
+  min-height: 36px;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 18px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fq-missed {
+  margin-bottom: 10px;
+  padding: 14px;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.fq-missed p {
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+
+.fq-missed-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.fq-missed-line.is-given {
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.fq-missed-line span {
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* a long title must not run into the back button, and the result rows need room
+   for their text once the score and button have taken theirs */
+@media (max-width: 420px) {
+  .app-navbar-title {
+    max-width: 40%;
+  }
+
+  .fq-row {
+    flex-wrap: wrap;
+  }
+
+  .fq-row-text {
+    flex: 1 1 calc(100% - 34px);
+  }
+
+  .fq-row-score {
+    margin-left: 26px;
+  }
+
+  .fq-practice {
+    margin-left: auto;
+  }
 }
 
 /* ---------- side panels (answers / history) ---------- */

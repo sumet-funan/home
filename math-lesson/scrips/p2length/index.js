@@ -82,7 +82,7 @@ function addResultP2LengthToHistoryList(item) {
 }
 
 // The centimetres never carry into metres, so the two parts are worked separately.
-function suggestP2LengthWord() {
+function buildP2LengthWord() {
     let isAddition = Math.random() < 0.5;
     let firstMetres = isAddition ? randomInt(1, 5) : randomInt(3, 9);
     let secondMetres = isAddition ? randomInt(1, 4) : randomInt(1, firstMetres - 1);
@@ -100,9 +100,19 @@ function suggestP2LengthWord() {
             `ไม้ท่อนแรกยาว ${first} ไม้ท่อนที่สองยาว ${second} ไม้ท่อนแรกยาวกว่าเท่าไร`,
         ];
 
-    p2LengthObj.text = pickOne(templates);
-    p2LengthObj.expectedMetres = isAddition ? firstMetres + secondMetres : firstMetres - secondMetres;
-    p2LengthObj.expectedCentimetres = isAddition ? firstCentimetres + secondCentimetres : firstCentimetres - secondCentimetres;
+    return {
+        text: pickOne(templates),
+        expectedMetres: isAddition ? firstMetres + secondMetres : firstMetres - secondMetres,
+        expectedCentimetres: isAddition ? firstCentimetres + secondCentimetres : firstCentimetres - secondCentimetres,
+    };
+}
+
+function suggestP2LengthWord() {
+    let question = buildP2LengthWord();
+
+    p2LengthObj.text = question.text;
+    p2LengthObj.expectedMetres = question.expectedMetres;
+    p2LengthObj.expectedCentimetres = question.expectedCentimetres;
 
     $('#p2LengthWordText').text(p2LengthObj.text);
     $('#p2LengthMetresNumber').val('');
