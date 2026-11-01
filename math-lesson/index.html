@@ -297,7 +297,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.9.0</div>
+      <div class="app-sidebar-footer">v4.10.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -2446,6 +2446,7 @@
                 </button>
               </div>
 
+              <div class="progress-today">
               <div class="calc-card progress-card" id="dailyGoalCard">
                 <h3 class="profile-section-title"><i class="bi bi-bullseye"></i> วันนี้</h3>
                 <div class="daily-goal-head">
@@ -2460,6 +2461,17 @@
                   <i class="bi bi-fire"></i> ฝึกต่อเนื่อง <strong id="dayStreakValue">0 วัน</strong>
                   · สูงสุด <strong id="dayStreakBest">0 วัน</strong>
                 </p>
+              </div>
+
+              <div class="calc-card progress-card" id="dailyChartCard" style="display: none;">
+                <h3 class="profile-section-title"><i class="bi bi-bar-chart-fill"></i> 14 วันที่ผ่านมา</h3>
+                <div class="daily-chart" id="dailyChart" role="group" aria-label="จำนวนข้อที่ฝึกในแต่ละวัน"></div>
+                <div class="daily-chart-axis">
+                  <span id="dailyChartStart"></span>
+                  <span>วันนี้</span>
+                </div>
+                <p class="daily-chart-note" id="dailyChartNote" aria-live="polite"></p>
+              </div>
               </div>
 
               <div class="calc-card progress-card" id="progressMapCard">
@@ -2518,7 +2530,7 @@
                   <div class="progress-fold-body">
                     <h4 class="progress-sub-title">สถิติคำนวณเร็ว</h4>
                     <div id="progressQuizList"></div>
-                    <h4 class="progress-sub-title">แบบทดสอบล่าสุดบนเครื่องนี้</h4>
+                    <h4 class="progress-sub-title">แบบทดสอบล่าสุด</h4>
                     <div id="progressFinalQuizList"></div>
                   </div>
                 </details>

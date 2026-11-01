@@ -162,6 +162,63 @@ function recordQuizResult(mode, size, correctCount, durationMs, kind) {
     });
 }
 
+function recordFinalQuizResult(grade, correctCount, total) {
+    if (!currentUserId) {
+        return;
+    }
+
+    let row = {
+        user_id: currentUserId,
+        grade: grade,
+        correct_count: correctCount,
+        total: total
+    };
+
+    supabaseClient.from('final_quiz_results').insert(row).then(function (result) {
+        if (result.error) {
+            queueForRetry('final_quiz_results', row);
+            return;
+        }
+        flushOutbox();
+    });
+}
+
+// Newest first, so the first row seen for a grade is its latest score.
+function fetchFinalQuizResults() {
+    if (!currentUserId) {
+        return Promise.resolve({});
+    }
+
+    return supabaseClient
+        .from('final_quiz_results')
+        .select('grade, correct_count, total, created_at')
+        .order('created_at', { ascending: false })
+        .limit(100)
+        .then(function (result) {
+            let latest = {};
+            (result.error ? [] : result.data).forEach(function (row) {
+                if (!latest[row.grade]) {
+                    latest[row.grade] = { correct: row.correct_count, total: row.total, at: row.created_at };
+                }
+            });
+            return latest;
+        });
+}
+
+// Answers per day in the child's own time zone. Null means the request failed,
+// which is different from a new account with no days yet.
+function fetchDailyActivity() {
+    if (!currentUserId) {
+        return Promise.resolve(null);
+    }
+
+    return supabaseClient
+        .rpc('daily_activity', { tz: Intl.DateTimeFormat().resolvedOptions().timeZone })
+        .then(function (result) {
+            return result.error ? null : result.data;
+        });
+}
+
 // Two different notions of "best": a fixed-count round is the fastest perfect
 // run, a timed one is the highest score. Returns whichever this kind means.
 function fetchBestQuizResult(mode, size, kind) {

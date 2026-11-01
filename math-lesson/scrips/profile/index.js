@@ -188,8 +188,8 @@ $('#profileSaveBtn').on('click', function () {
         return;
     }
 
-    // The daily goal is a local preference, saved whether or not the account
-    // save below succeeds, and it applies to guests too.
+    // Kept here as well as on the account, so it takes effect at once and applies
+    // to guests too.
     if (typeof setDailyGoal === 'function') {
         let typedGoal = parseInt($('#profileDailyGoal').val(), 10);
         if (!isNaN(typedGoal) && typedGoal >= 1 && typedGoal <= 500) {
@@ -206,7 +206,7 @@ $('#profileSaveBtn').on('click', function () {
         showProfileFeedback('feedbackProfile', ok, message);
     };
 
-    supabaseClient.auth.updateUser({ data: { grade: grade, review_enabled: showReview } }).then(function (result) {
+    supabaseClient.auth.updateUser({ data: { grade: grade, review_enabled: showReview, daily_goal: getDailyGoal() } }).then(function (result) {
         if (result.error) {
             finish(false, 'บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง');
             return;

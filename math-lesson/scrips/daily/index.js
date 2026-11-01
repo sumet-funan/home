@@ -2,7 +2,9 @@
 //
 // Neither of these blocks anything: the goal is a target to aim at and the
 // streak counts days practised, so a child who wants to keep going always can.
-// Both live in localStorage, so they work signed out and survive a reload.
+// Both live in localStorage, so they work signed out and survive a reload. For
+// an account the database is the record: it replaces what is here at sign-in and
+// each time the Progress page opens, so every device shows the same numbers.
 
 const DAILY_DATE_KEY = 'mathLessonDailyDate';
 const DAILY_COUNT_KEY = 'mathLessonDailyCount';
@@ -108,6 +110,68 @@ function registerDailyActivity() {
         showDailyGoalToast(goal);
     }
 }
+
+function dayAfter(key) {
+    let parts = key.split('-');
+    return localDateKey(new Date(+parts[0], +parts[1] - 1, +parts[2] + 1));
+}
+
+function dayRuns(days) {
+    let last = null;
+    let run = 0;
+    let best = 0;
+
+    days.forEach(function (row) {
+        run = last && dayAfter(last) === row.day ? run + 1 : 1;
+        best = Math.max(best, run);
+        last = row.day;
+    });
+
+    return { last: last, run: run, best: best };
+}
+
+function adoptDailyActivity(days) {
+    let today = localDateKey();
+    let runs = dayRuns(days);
+    let todayRow = days.filter(function (row) { return row.day === today; })[0];
+
+    writeValue(DAILY_DATE_KEY, today);
+    writeValue(DAILY_COUNT_KEY, todayRow ? todayRow.answers : 0);
+    writeValue(DAY_STREAK_KEY, runs.run);
+    writeValue(DAY_STREAK_LAST_KEY, runs.last || '');
+    writeValue(DAY_STREAK_BEST_KEY, runs.best);
+}
+
+// A failed request leaves this device's numbers alone rather than clearing them.
+function syncDailyActivity() {
+    return fetchDailyActivity().then(function (days) {
+        if (days) {
+            adoptDailyActivity(days);
+        }
+        return days;
+    });
+}
+
+var dailySyncedUser = null;
+
+// Refreshed tokens fire this too, so only a new account starts a sync. Deferred
+// because supabase-js holds its auth lock until this callback returns.
+supabaseClient.auth.onAuthStateChange(function (event, session) {
+    let user = session ? session.user : null;
+    let goal = user && user.user_metadata && user.user_metadata.daily_goal;
+
+    if (goal) {
+        setDailyGoal(goal);
+    }
+    if ((user ? user.id : null) === dailySyncedUser) {
+        return;
+    }
+
+    dailySyncedUser = user ? user.id : null;
+    if (user) {
+        setTimeout(syncDailyActivity, 0);
+    }
+});
 
 function showDailyGoalToast(goal) {
     let $toast = $('#dailyGoalToast');

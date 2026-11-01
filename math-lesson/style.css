@@ -2188,6 +2188,69 @@ body.sq-running .daily-toast {
   padding: 12px 32px;
 }
 
+.progress-today {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.progress-today .calc-card {
+  min-width: 0;
+}
+
+.daily-chart {
+  display: flex;
+  align-items: stretch;
+  height: 72px;
+  border-bottom: 1px solid var(--border);
+}
+
+.daily-chart-day {
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 1px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.daily-chart-bar {
+  width: 100%;
+  max-width: 24px;
+  min-height: 4px;
+  border-radius: 4px 4px 0 0;
+  background: var(--accent);
+  opacity: .5;
+}
+
+.daily-chart-day:hover .daily-chart-bar,
+.daily-chart-day:focus-visible .daily-chart-bar,
+.daily-chart-day.is-today .daily-chart-bar {
+  opacity: 1;
+}
+
+.daily-chart-bar.is-empty {
+  background: var(--fill);
+  opacity: 1;
+}
+
+.daily-chart-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: .875rem;
+  color: var(--muted);
+}
+
+.daily-chart-note {
+  margin: 8px 0 0;
+  font-size: .95rem;
+  color: var(--text);
+}
+
 .progress-map-head {
   display: flex;
   flex-wrap: wrap;

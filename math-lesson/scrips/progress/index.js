@@ -256,11 +256,10 @@ function renderProgressQuiz(results) {
     });
 
     let keys = Object.keys(bests);
-    renderProgressFinalQuiz(keys.length);
 
     if (!keys.length) {
         $('#progressQuizList').html('<p class="progress-empty">ยังไม่มีสถิติ ลองทำแบบฝึกคำนวณเร็วให้ครบทุกข้อนะ</p>');
-        return;
+        return 0;
     }
 
     let symbols = { '+': '+', '-': '−', '*': '×' };
@@ -277,12 +276,10 @@ function renderProgressQuiz(results) {
     }).join('');
 
     $('#progressQuizList').html(html);
+    return keys.length;
 }
 
-// Kept per device until scores move onto the account, so the heading says so:
-// on a shared tablet this may be another child's score.
-function renderProgressFinalQuiz(speedCount) {
-    let results = typeof readFinalQuizResults === 'function' ? readFinalQuizResults() : {};
+function renderProgressFinalQuiz(results, speedCount) {
     let grades = Object.keys(results).sort();
     let percent = function (row) { return Math.round(100 * row.correct / row.total); };
 
@@ -295,7 +292,7 @@ function renderProgressFinalQuiz(speedCount) {
                     ' (' + percent(row) + '%) · ' + formatProgressDate(row.at) + '</span>' +
             '</div>';
         }).join('')
-        : '<p class="progress-empty">ยังไม่มีคะแนนแบบทดสอบบนเครื่องนี้</p>');
+        : '<p class="progress-empty">ยังไม่มีคะแนนแบบทดสอบ</p>');
 
     let latest = grades.map(function (grade) { return results[grade]; })
         .sort(function (a, b) { return a.at < b.at ? 1 : -1; })[0];
@@ -679,6 +676,62 @@ function renderProgressNext(mistakes) {
     $('#progressNextCard').show();
 }
 
+const DAILY_CHART_DAYS = 14;
+
+var dailyChartSummary = '';
+
+function dailyChartDayName(date, options) {
+    return date.toLocaleDateString('th-TH', options);
+}
+
+// A day only counts as practised if it is in the list: a speed quiz with nothing
+// right is still a day the child sat down and tried.
+function renderDailyChart(days) {
+    $('#dailyChartCard').toggle(!!days);
+    if (!days) {
+        return;
+    }
+
+    let answersOn = {};
+    days.forEach(function (row) { answersOn[row.day] = +row.answers; });
+
+    let chart = [];
+    for (let back = DAILY_CHART_DAYS - 1; back >= 0; back--) {
+        let date = new Date();
+        date.setDate(date.getDate() - back);
+        chart.push({ date: date, answers: answersOn[localDateKey(date)] });
+    }
+
+    let practised = chart.filter(function (day) { return day.answers !== undefined; });
+    let total = practised.reduce(function (sum, day) { return sum + day.answers; }, 0);
+    let most = practised.reduce(function (top, day) { return Math.max(top, day.answers); }, 0);
+
+    dailyChartSummary = 'ฝึก ' + practised.length + ' จาก ' + DAILY_CHART_DAYS + ' วัน · ' + total + ' ข้อ' +
+        (most ? ' · มากสุด ' + most + ' ข้อ' : '');
+
+    $('#dailyChart').html(chart.map(function (day, index) {
+        let name = dailyChartDayName(day.date, { weekday: 'short', day: 'numeric', month: 'short' });
+        let note = name + ': ' + (day.answers === undefined ? 'ไม่ได้ฝึก' : day.answers + ' ข้อ');
+        let height = most && day.answers ? 100 * day.answers / most : 0;
+
+        return '<button type="button" class="daily-chart-day' + (index === chart.length - 1 ? ' is-today' : '') +
+            '" data-note="' + note + '" aria-label="' + note + '">' +
+            '<span class="daily-chart-bar' + (height ? '' : ' is-empty') + '" style="height: ' + height + '%;"></span>' +
+        '</button>';
+    }).join(''));
+
+    $('#dailyChartStart').text(dailyChartDayName(chart[0].date, { day: 'numeric', month: 'short' }));
+    $('#dailyChartNote').text(dailyChartSummary);
+}
+
+$('#dailyChart').on('mouseenter focusin click', '.daily-chart-day', function () {
+    $('#dailyChartNote').text($(this).attr('data-note'));
+});
+
+$('#dailyChart').on('mouseleave focusout', '.daily-chart-day', function () {
+    $('#dailyChartNote').text(dailyChartSummary);
+});
+
 var progressRange = 'all';
 
 // Deliberately independent of the range picker: "today" and "days in a row"
@@ -731,6 +784,11 @@ function refreshProgressPage() {
 
     refreshProgressRange();
 
+    syncDailyActivity().then(function (days) {
+        renderDailyGoal();
+        renderDailyChart(days);
+    });
+
     // Waits on the review setting too, so a child who has hidden reviews is not
     // sent to one by the next-step card.
     Promise.all([
@@ -744,7 +802,9 @@ function refreshProgressPage() {
         renderProgressMistakes(results[1]);
     });
 
-    fetchQuizBests().then(renderProgressQuiz);
+    Promise.all([fetchQuizBests(), fetchFinalQuizResults()]).then(function (results) {
+        renderProgressFinalQuiz(results[1], renderProgressQuiz(results[0]));
+    });
 
     fetchFixedMistakeCount().then(function (count) {
         $('#progressMistakeNote').text(count > 0 ? 'แก้แล้ว ' + count + ' ข้อ' : 'แยกตามบทเรียน');

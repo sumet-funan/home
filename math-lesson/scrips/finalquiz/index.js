@@ -32,8 +32,8 @@ function finalQuizOptionHtml(option) {
     return typeof option === 'string' ? option : option.html;
 }
 
-// The result is kept on this device: quiz_results holds speed quiz rounds, and a
-// row of another shape there would be misread as one.
+// A guest's result stays on this device. An account's goes to the database, so
+// it follows the child and a shared tablet never shows another child's score.
 function readFinalQuizResults() {
     try {
         return JSON.parse(localStorage.getItem(FINAL_QUIZ_RESULT_KEY)) || {};
@@ -43,6 +43,11 @@ function readFinalQuizResults() {
 }
 
 function saveFinalQuizResult(grade, correct, total) {
+    if (currentUserId) {
+        recordFinalQuizResult(grade, correct, total);
+        return;
+    }
+
     let results = readFinalQuizResults();
     results[grade] = { correct: correct, total: total, at: new Date().toISOString() };
     try {
@@ -149,13 +154,26 @@ function buildFinalQuiz(grade, perIndicator) {
     return shuffleList(questions);
 }
 
+function showFinalQuizLast() {
+    let grade = finalQuizObj.grade;
+    let results = currentUserId ? fetchFinalQuizResults() : Promise.resolve(readFinalQuizResults());
+
+    $('#finalQuizLast').text('');
+    results.then(function (byGrade) {
+        // the child may have moved to another grade while this was loading
+        let last = byGrade[grade];
+        if (last && finalQuizObj.grade === grade) {
+            $('#finalQuizLast').text(`ครั้งล่าสุด ได้ ${last.correct} จาก ${last.total} ข้อ`);
+        }
+    });
+}
+
 function renderFinalQuizSetup() {
     let indicators = finalQuizIndicators[finalQuizObj.grade].length;
     let count = indicators * finalQuizPerIndicator();
-    let last = readFinalQuizResults()[finalQuizObj.grade];
 
     $('#finalQuizInfo').text(`${indicators} เรื่อง · ${count} ข้อ · เวลาแนะนำ ${count * FINAL_QUIZ_SUGGESTED_MINUTES} นาที · ผ่านที่ร้อยละ ${FINAL_QUIZ_PASS_PERCENT}`);
-    $('#finalQuizLast').text(last ? `ครั้งล่าสุด ได้ ${last.correct} จาก ${last.total} ข้อ` : '');
+    showFinalQuizLast();
 
     let saved = readSavedFinalQuiz();
 
@@ -460,8 +478,9 @@ supabaseClient.auth.onAuthStateChange(function (event, session) {
         $('#finalQuizGradePicker [data-grade="' + grade + '"]').addClass('active');
     }
 
-    // whose saved quiz to offer depends on who has just signed in
-    renderFinalQuizSetup();
+    // whose saved quiz to offer depends on who has just signed in; deferred because
+    // this reads the database, and supabase-js holds its auth lock until we return
+    setTimeout(renderFinalQuizSetup, 0);
 });
 
 renderFinalQuizSetup();

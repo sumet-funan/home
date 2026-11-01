@@ -107,15 +107,10 @@ Roughly in order of value per unit of work.
 
 ## Progress page, later stages
 
-The page was rebuilt around what to do next in v4.9.0. What is left needs the
-database or builds on it:
-
-- A function returning answers per day, for a 14-day chart and for a goal and
-  day streak that follow the account. Today both live on the device, so a new
-  tablet starts from zero.
-- Final quiz scores on the account instead of in localStorage.
-- A curriculum view for parents, built from the lesson each indicator names in
-  `scrips/finalquiz/indicators.js`.
+The page was rebuilt around what to do next in v4.9.0, and its daily numbers and
+final quiz scores moved onto the account in v4.10.0. One piece is left: a
+curriculum view for parents, built from the lesson each indicator names in
+`scrips/finalquiz/indicators.js`.
 
 ## Response time per question
 
