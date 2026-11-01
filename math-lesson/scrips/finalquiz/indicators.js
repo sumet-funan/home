@@ -1,8 +1,9 @@
 // The grade indicators the final quiz is built from, in the words of the core
 // curriculum (ตัวชี้วัดและสาระการเรียนรู้แกนกลาง กลุ่มสาระคณิตศาสตร์ ฉบับปรับปรุง พ.ศ. 2560).
-// Each one names the lesson that teaches it and builds a question for it. A
-// question is { text, figure?, answer, wrong: [three others] }, and an answer is
-// either plain text or { html, label } when it has to be drawn.
+// Each one names the lesson that teaches it and builds a question for it, and the
+// parent section of the Progress page reads them too. A question is
+// { text, figure?, answer, wrong: [three others] }, and an answer is either plain
+// text or { html, label } when it has to be drawn.
 //
 // ป.5 has 19 indicators and 17 are here: ค 2.2 ป.5/1 and ป.5/3 ask a child to draw
 // with a ruler and protractor, which a tap cannot show.
@@ -349,6 +350,11 @@ function finalBarWrite() {
     let category = pickOne(barWriteCategories);
     return numberQuestion(`เขียนแผนภูมิแท่งโดยให้ 1 ช่องแทน ${scale} คน ถ้ามีคนชอบ${category} ${height * scale} คน แท่งของ${category}ต้องสูงกี่ช่อง`, height);
 }
+
+// said to parents under the list, so the count there is not taken for all of them
+var finalQuizNotCovered = {
+    p5: 'ยังมีอีก 2 ตัวชี้วัด คือ ค 2.2 ป.5/1 และ ป.5/3 ซึ่งเป็นการสร้างรูปด้วยไม้บรรทัดและไม้โปรแทรกเตอร์ เว็บนี้จึงฝึกให้ไม่ได้',
+};
 
 var finalQuizIndicators = {
     p1: [

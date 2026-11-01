@@ -514,19 +514,34 @@ const PROGRESS_MAP_SHOWN = 6;
 const MISTAKE_EXAMPLES_SHOWN = 3;
 const PROGRESS_MISTAKE_LIMIT = 1000;      // PostgREST's row cap, far past any real list
 
+// The curriculum's standards under the names a parent would look for them by.
+const PROGRESS_STRANDS = {
+    'ค 1.1': 'จำนวนและการดำเนินการ',
+    'ค 1.2': 'แบบรูปและความสัมพันธ์',
+    'ค 2.1': 'การวัด',
+    'ค 2.2': 'เรขาคณิต',
+    'ค 3.1': 'สถิติ',
+};
+
 var progressAllStats = [];
 var progressMapGroup = null;              // null until the child picks a tab
 var progressMapExpanded = false;
+var progressCurriculumGrade = null;       // null until a parent picks one
 
 function progressGroupLabel(group) {
     return $('#progressMapPicker [data-group="' + group + '"]').text();
 }
 
+function progressStatsById() {
+    let byId = {};
+    progressAllStats.forEach(function (row) { byId[row.lesson_id] = row; });
+    return byId;
+}
+
 // The sidebar already lists every lesson in teaching order, so the map reads it
 // instead of keeping a second list that could drift from the menu.
 function progressGroupLessons(group) {
-    let byId = {};
-    progressAllStats.forEach(function (row) { byId[row.lesson_id] = row; });
+    let byId = progressStatsById();
 
     return $('#group-' + group + ' .nav-menu-item').map(function () {
         let id = this.id.replace('menu_', '').replace('_', '');
@@ -549,6 +564,10 @@ function lessonStage(stats) {
         return 'started';
     }
     return +stats.accuracy_pct >= LESSON_STRONG_ACCURACY ? 'strong' : 'practising';
+}
+
+function lessonStageText(stage, stats) {
+    return LESSON_STAGES[stage].label + (stage === 'started' ? ' ' + stats.total + ' ข้อ' : '');
 }
 
 // The grade from the profile when there is one, otherwise wherever the child has
@@ -582,12 +601,10 @@ function renderProgressMap() {
     $('#progressMapBar').css('width', (lessons.length ? 100 * strong / lessons.length : 0) + '%');
 
     $('#progressMapList').html(shown.map(function (lesson) {
-        let stage = LESSON_STAGES[lesson.stage];
         return '<button type="button" class="progress-map-row is-' + lesson.stage + '" data-menu-id="' + lesson.menuId + '">' +
-            '<i class="bi ' + stage.icon + '"></i>' +
+            '<i class="bi ' + LESSON_STAGES[lesson.stage].icon + '"></i>' +
             '<span class="progress-map-name">' + lesson.name + '</span>' +
-            '<span class="progress-map-stage">' + stage.label +
-                (lesson.stage === 'started' ? ' ' + lesson.stats.total + ' ข้อ' : '') + '</span>' +
+            '<span class="progress-map-stage">' + lessonStageText(lesson.stage, lesson.stats) + '</span>' +
         '</button>';
     }).join(''));
 
@@ -605,6 +622,75 @@ $('#progressMapPicker').on('click', '.mode-btn', function () {
 $('#progressMapMore').on('click', function () {
     progressMapExpanded = !progressMapExpanded;
     renderProgressMap();
+});
+
+// Answers are only recorded per lesson, so an indicator takes the stage of the
+// lesson that teaches it, and every indicator sharing a lesson reads the same.
+function progressIndicators(grade) {
+    let byId = progressStatsById();
+
+    return finalQuizIndicators[grade].map(function (indicator) {
+        let stats = byId[indicator.lesson] || null;
+        return {
+            code: indicator.code,
+            text: indicator.text,
+            strand: indicator.code.split(' ป.')[0],
+            menuId: lessonMenuId(indicator.lesson),
+            stats: stats,
+            stage: lessonStage(stats)
+        };
+    });
+}
+
+function progressStrongCount(indicators) {
+    return indicators.filter(function (indicator) { return indicator.stage === 'strong'; }).length;
+}
+
+function progressIndicatorRow(indicator) {
+    return '<button type="button" class="progress-map-row progress-indicator-row is-' + indicator.stage +
+        '" data-menu-id="' + indicator.menuId + '">' +
+        '<i class="bi ' + LESSON_STAGES[indicator.stage].icon + '"></i>' +
+        '<span class="progress-indicator-text">' +
+            '<span class="progress-map-name">' + $('<div>').text(indicator.text).html() + '</span>' +
+            '<span class="progress-indicator-meta">' +
+                '<span>' + indicator.code + ' · ' + $('#' + indicator.menuId).find('span').text() + '</span>' +
+                '<span class="progress-map-stage">' + lessonStageText(indicator.stage, indicator.stats) + '</span>' +
+            '</span>' +
+        '</span>' +
+    '</button>';
+}
+
+// All-time, like the map above it: the range picker below only moves what is
+// under it, because a term's coverage does not reset each week.
+function renderProgressCurriculum() {
+    let grade = progressCurriculumGrade || homeProgressGroup();
+    let indicators = progressIndicators(grade);
+    let strong = progressStrongCount(indicators);
+    let strands = indicators
+        .map(function (indicator) { return indicator.strand; })
+        .filter(function (strand, index, all) { return all.indexOf(strand) === index; });
+
+    $('#progressCurriculumPicker .mode-btn').removeClass('active');
+    $('#progressCurriculumPicker [data-grade="' + grade + '"]').addClass('active');
+    $('#progressCurriculumCount').text('เก่งแล้ว ' + strong + ' จาก ' + indicators.length + ' ตัวชี้วัด');
+    $('#progressCurriculumBar').css('width', 100 * strong / indicators.length + '%');
+    $('#progressCurriculumGap').text(finalQuizNotCovered[grade] || '');
+
+    $('#progressCurriculumList').html(strands.map(function (strand) {
+        let rows = indicators.filter(function (indicator) { return indicator.strand === strand; });
+        return '<div class="progress-strand">' +
+            '<div class="progress-strand-head">' +
+                '<span>' + PROGRESS_STRANDS[strand] + '</span>' +
+                '<span>เก่งแล้ว ' + progressStrongCount(rows) + ' จาก ' + rows.length + '</span>' +
+            '</div>' +
+            rows.map(progressIndicatorRow).join('') +
+        '</div>';
+    }).join(''));
+}
+
+$('#progressCurriculumPicker').on('click', '.mode-btn', function () {
+    progressCurriculumGrade = $(this).data('grade');
+    renderProgressCurriculum();
 });
 
 function mistakeNextStep(mistakes) {
@@ -804,6 +890,7 @@ function refreshProgressPage() {
     ]).then(function (results) {
         progressAllStats = results[0];
         renderProgressMap();
+        renderProgressCurriculum();
         renderProgressNext(results[1]);
         renderProgressMistakes(results[1]);
     });
@@ -835,6 +922,7 @@ supabaseClient.auth.onAuthStateChange(function (event, session) {
     if (!session) {
         reviewEnabled = true;   // the next account starts from its own setting
         progressMapGroup = null;
+        progressCurriculumGrade = null;
         hideProgressReview();
         return;
     }

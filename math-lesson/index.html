@@ -297,7 +297,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.11.0</div>
+      <div class="app-sidebar-footer">v4.12.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -2552,11 +2552,29 @@
                 <summary>
                   <span class="progress-fold-text">
                     <span class="progress-fold-title"><i class="bi bi-people-fill"></i> สำหรับผู้ปกครอง</span>
-                    <span class="progress-fold-note">ช่วงเวลา ความแม่นยำ เวลาเฉลี่ย และประวัติทุกข้อ</span>
+                    <span class="progress-fold-note">ตัวชี้วัด ความแม่นยำ เวลาเฉลี่ย และประวัติทุกข้อ</span>
                   </span>
                   <i class="bi bi-chevron-right progress-fold-caret"></i>
                 </summary>
                 <div class="progress-fold-body">
+                  <div class="progress-curriculum">
+                    <div class="progress-map-head">
+                      <h4 class="progress-sub-title">ตัวชี้วัดตามหลักสูตร</h4>
+                      <span class="progress-map-count" id="progressCurriculumCount"></span>
+                    </div>
+                    <div class="mode-picker" id="progressCurriculumPicker">
+                      <button type="button" class="mode-btn" data-grade="p1">ป.1</button>
+                      <button type="button" class="mode-btn" data-grade="p2">ป.2</button>
+                      <button type="button" class="mode-btn" data-grade="p5">ป.5</button>
+                    </div>
+                    <div class="progress-bar-track progress-map-bar">
+                      <div class="progress-bar-fill is-high" id="progressCurriculumBar" style="width: 0%;"></div>
+                    </div>
+                    <div id="progressCurriculumList"></div>
+                    <p class="progress-curriculum-note">ระดับมาจากการฝึกในบทเรียนที่สอนเรื่องนั้น บทเดียวอาจครอบคลุมหลายตัวชี้วัด และไม่ใช่ผลการประเมินของโรงเรียน</p>
+                    <p class="progress-curriculum-note" id="progressCurriculumGap"></p>
+                  </div>
+                  <h4 class="progress-sub-title">ผลตามช่วงเวลา</h4>
                   <div class="mode-picker" id="progressRangePicker">
                     <button type="button" class="mode-btn" data-range="day">วันนี้</button>
                     <button type="button" class="mode-btn" data-range="week">สัปดาห์นี้</button>

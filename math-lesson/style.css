@@ -2268,7 +2268,8 @@ body.sq-running .daily-toast {
   margin-bottom: 10px;
 }
 
-.progress-map-head .profile-section-title {
+.progress-map-head .profile-section-title,
+.progress-map-head .progress-sub-title {
   margin: 0;
 }
 
@@ -2433,6 +2434,66 @@ body.sq-running .daily-toast {
 
 .progress-parent .progress-stat {
   background: var(--fill);
+}
+
+.progress-strand {
+  margin-top: 16px;
+}
+
+.progress-strand-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 4px;
+  border-bottom: .5px solid var(--border);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.progress-strand-head span:last-child {
+  flex-shrink: 0;
+  font-size: .875rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* an indicator runs to two lines or more, so the stage moves under it instead of
+   squeezing it into a narrow column beside the pill */
+.progress-indicator-row {
+  align-items: flex-start;
+  padding: 10px 0;
+}
+
+.progress-indicator-row i {
+  margin-top: 3px;
+}
+
+.progress-indicator-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.progress-indicator-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: .875rem;
+  color: var(--muted);
+}
+
+.progress-curriculum-note {
+  margin: 12px 0 0;
+  font-size: .875rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.progress-curriculum-note:empty {
+  display: none;
 }
 
 @media (max-width: 560px) {

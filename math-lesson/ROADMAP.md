@@ -105,13 +105,6 @@ the same lesson prominently in both on the same day.
 
 Roughly in order of value per unit of work.
 
-## Progress page, later stages
-
-The page was rebuilt around what to do next in v4.9.0, and its daily numbers and
-final quiz scores moved onto the account in v4.10.0. One piece is left: a
-curriculum view for parents, built from the lesson each indicator names in
-`scrips/finalquiz/indicators.js`.
-
 ## Response time per question
 
 Accuracy hides a lot. A child who answers `7 × 8` correctly after six seconds
