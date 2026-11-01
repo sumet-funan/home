@@ -17,6 +17,7 @@ const FINAL_QUIZ_LETTERS = ['ก', 'ข', 'ค', 'ง'];
 const FINAL_QUIZ_SUGGESTED_MINUTES = 2;
 const FINAL_QUIZ_PASS_PERCENT = 50;
 const FINAL_QUIZ_RESULT_KEY = 'mathLessonFinalQuizLast';
+const FINAL_QUIZ_SAVE_KEY = 'mathLessonFinalQuizSaved';
 const FINAL_QUIZ_LEVELS = [[80, 4], [75, 3.5], [70, 3], [65, 2.5], [60, 2], [55, 1.5], [50, 1], [0, 0]];
 
 function finalQuizPerIndicator() {
@@ -51,6 +52,78 @@ function saveFinalQuizResult(grade, correct, total) {
     }
 }
 
+// A full set takes over an hour, so a quiz has to survive being put down. Every
+// answer is saved to this device, and leaving just pauses it. A tablet may be
+// shared, so a saved quiz is only offered to whoever started it.
+function finalQuizOwner() {
+    return currentUserId || 'guest';
+}
+
+function saveFinalQuizProgress() {
+    if (!finalQuizObj.running) {
+        return;
+    }
+
+    try {
+        localStorage.setItem(FINAL_QUIZ_SAVE_KEY, JSON.stringify({
+            owner: finalQuizOwner(),
+            grade: finalQuizObj.grade,
+            length: finalQuizObj.length,
+            index: finalQuizObj.index,
+            answers: finalQuizObj.answers,
+            elapsedMs: Date.now() - finalQuizObj.startedAt,
+            questions: finalQuizObj.questions.map(function (question) {
+                return {
+                    code: question.indicator.code,
+                    text: question.text,
+                    figure: question.figure,
+                    options: question.options,
+                    correctIndex: question.correctIndex,
+                };
+            }),
+        }));
+    } catch (e) {
+        // no storage: the quiz still runs, it just cannot be picked up later
+    }
+}
+
+function clearSavedFinalQuiz() {
+    try {
+        localStorage.removeItem(FINAL_QUIZ_SAVE_KEY);
+    } catch (e) {
+        // nothing was saved in the first place
+    }
+}
+
+function readSavedFinalQuiz() {
+    let saved;
+
+    try {
+        saved = JSON.parse(localStorage.getItem(FINAL_QUIZ_SAVE_KEY));
+    } catch (e) {
+        return null;
+    }
+
+    if (!saved || saved.owner !== finalQuizOwner() || !finalQuizIndicators[saved.grade]) {
+        return null;
+    }
+
+    // Indicators are looked up again rather than stored, since each holds a
+    // function. One that no longer exists means the quiz is out of date.
+    let questions = saved.questions.map(function (question) {
+        let indicator = finalQuizIndicators[saved.grade].find(function (item) {
+            return item.code === question.code;
+        });
+        return indicator ? Object.assign({}, question, { indicator: indicator }) : null;
+    });
+
+    if (questions.indexOf(null) !== -1) {
+        return null;
+    }
+
+    return Object.assign({}, saved, { questions: questions });
+}
+
 function buildFinalQuizQuestion(indicator) {
     let question = indicator.build();
     let options = shuffleList([question.answer].concat(question.wrong));
@@ -83,6 +156,15 @@ function renderFinalQuizSetup() {
 
     $('#finalQuizInfo').text(`${indicators} ตัวชี้วัด · ${count} ข้อ · เวลาแนะนำ ${count * FINAL_QUIZ_SUGGESTED_MINUTES} นาที · ผ่านที่ร้อยละ ${FINAL_QUIZ_PASS_PERCENT}`);
     $('#finalQuizLast').text(last ? `ครั้งล่าสุด ได้ ${last.correct} จาก ${last.total} ข้อ` : '');
+
+    let saved = readSavedFinalQuiz();
+
+    $('#finalQuizResume').toggle(!!saved);
+    if (saved) {
+        let answered = saved.answers.filter(function (answer) { return answer !== null; }).length;
+        let gradeName = $('#finalQuizGradePicker [data-grade="' + saved.grade + '"]').text();
+        $('#finalQuizResumeText').text(`${gradeName} ${saved.length === 'short' ? 'ชุดสั้น' : 'ชุดเต็ม'} ตอบแล้ว ${answered} จาก ${saved.questions.length} ข้อ`);
+    }
 }
 
 function showFinalQuizStage(stage) {
@@ -130,17 +212,46 @@ function renderFinalQuizQuestion() {
     $('#finalQuizNextBtn').prop('disabled', index === total - 1);
 }
 
-function startFinalQuiz() {
-    finalQuizObj.questions = buildFinalQuiz(finalQuizObj.grade, finalQuizPerIndicator());
-    finalQuizObj.answers = finalQuizObj.questions.map(function () { return null; });
-    finalQuizObj.index = 0;
+function runFinalQuiz() {
     finalQuizObj.running = true;
-    finalQuizObj.startedAt = Date.now();
     finalQuizObj.timer = setInterval(renderFinalQuizClock, 1000);
 
     renderFinalQuizClock();
     renderFinalQuizQuestion();
     showFinalQuizStage('running');
+    saveFinalQuizProgress();
+}
+
+function startFinalQuiz() {
+    finalQuizObj.questions = buildFinalQuiz(finalQuizObj.grade, finalQuizPerIndicator());
+    finalQuizObj.answers = finalQuizObj.questions.map(function () { return null; });
+    finalQuizObj.index = 0;
+    finalQuizObj.startedAt = Date.now();
+    runFinalQuiz();
+}
+
+function resumeFinalQuiz() {
+    let saved = readSavedFinalQuiz();
+
+    if (!saved) {
+        renderFinalQuizSetup();
+        return;
+    }
+
+    finalQuizObj.grade = saved.grade;
+    finalQuizObj.length = saved.length;
+    finalQuizObj.questions = saved.questions;
+    finalQuizObj.answers = saved.answers;
+    finalQuizObj.index = saved.index;
+    finalQuizObj.startedAt = Date.now() - saved.elapsedMs;
+    runFinalQuiz();
+}
+
+function pauseFinalQuiz() {
+    saveFinalQuizProgress();
+    stopFinalQuizClock();
+    renderFinalQuizSetup();
+    showFinalQuizStage('setup');
 }
 
 function stopFinalQuizClock() {
@@ -154,6 +265,7 @@ function finalQuizLevel(percent) {
 
 function finishFinalQuiz() {
     stopFinalQuizClock();
+    clearSavedFinalQuiz();
 
     let questions = finalQuizObj.questions;
     let answers = finalQuizObj.answers;
@@ -233,12 +345,6 @@ function renderFinalQuizResult(correct, total, scores) {
     $('#finalQuizMissed').html(missed);
 }
 
-function resetFinalQuiz() {
-    stopFinalQuizClock();
-    renderFinalQuizSetup();
-    showFinalQuizStage('setup');
-}
-
 function confirmFinalQuiz(message, confirmLabel, onConfirm) {
     let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('finalQuizConfirmModal'));
 
@@ -266,26 +372,47 @@ $('#finalQuizLengthPicker').on('click', '.mode-btn', function () {
     renderFinalQuizSetup();
 });
 
-$('#finalQuizStartBtn, #finalQuizAgainBtn').on('click', startFinalQuiz);
+$('#finalQuizAgainBtn').on('click', startFinalQuiz);
+
+$('#finalQuizStartBtn').on('click', function () {
+    if (readSavedFinalQuiz()) {
+        confirmFinalQuiz('มีแบบทดสอบที่ยังทำไม่เสร็จ ถ้าเริ่มชุดใหม่ คำตอบเดิมจะหายไป ต้องการเริ่มใหม่หรือไม่?', 'เริ่มชุดใหม่', startFinalQuiz);
+    } else {
+        startFinalQuiz();
+    }
+});
+
+$('#finalQuizResumeBtn').on('click', resumeFinalQuiz);
+
+$('#finalQuizDiscardBtn').on('click', function () {
+    confirmFinalQuiz('ถ้าลบแบบทดสอบนี้ คำตอบที่ทำไว้จะหายไป ต้องการลบหรือไม่?', 'ลบแบบทดสอบ', function () {
+        clearSavedFinalQuiz();
+        renderFinalQuizSetup();
+    });
+});
 
 $('#finalQuizOptions').on('click', '.fq-option', function () {
     finalQuizObj.answers[finalQuizObj.index] = +$(this).data('option');
     renderFinalQuizQuestion();
+    saveFinalQuizProgress();
 });
 
 $('#finalQuizBackBtn').on('click', function () {
     finalQuizObj.index--;
     renderFinalQuizQuestion();
+    saveFinalQuizProgress();
 });
 
 $('#finalQuizNextBtn').on('click', function () {
     finalQuizObj.index++;
     renderFinalQuizQuestion();
+    saveFinalQuizProgress();
 });
 
 $('#finalQuizMap').on('click', '.fq-map-btn', function () {
     finalQuizObj.index = +$(this).data('question');
     renderFinalQuizQuestion();
+    saveFinalQuizProgress();
 });
 
 $('#finalQuizSubmitBtn').on('click', function () {
@@ -305,26 +432,18 @@ $('#finalQuizIndicators').on('click', '.fq-practice', function () {
     }
 });
 
-// switching to another lesson while the quiz is open
+// Nothing is lost by leaving, so going elsewhere just pauses the quiz.
 $(document).on('show.bs.tab', '[data-bs-toggle="list"]', function (e) {
-    let leavingQuiz = e.relatedTarget && e.relatedTarget.id === 'menu_finalquiz';
-    if (!leavingQuiz || !finalQuizObj.running) {
-        return;
+    if (e.relatedTarget && e.relatedTarget.id === 'menu_finalquiz' && finalQuizObj.running) {
+        pauseFinalQuiz();
     }
-
-    e.preventDefault();
-    let targetTab = e.target;
-
-    confirmFinalQuiz('กำลังทำแบบทดสอบอยู่ ถ้าออกตอนนี้คำตอบจะหายไป ต้องการออกจากหน้านี้หรือไม่?', 'ออกจากหน้านี้', function () {
-        resetFinalQuiz();
-        bootstrap.Tab.getOrCreateInstance(targetTab).show();
-    });
 });
 
-window.addEventListener('beforeunload', function (e) {
-    if (finalQuizObj.running) {
-        e.preventDefault();
-        e.returnValue = '';
+// the last chance to save the clock before the tab goes away
+window.addEventListener('pagehide', saveFinalQuizProgress);
+document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+        saveFinalQuizProgress();
     }
 });
 
@@ -332,13 +451,17 @@ window.addEventListener('beforeunload', function (e) {
 supabaseClient.auth.onAuthStateChange(function (event, session) {
     let grade = session && session.user.user_metadata && session.user.user_metadata.grade;
 
-    if (!grade || !finalQuizIndicators[grade] || finalQuizObj.gradeChosen || finalQuizObj.running) {
+    if (finalQuizObj.running) {
         return;
     }
 
-    finalQuizObj.grade = grade;
-    $('#finalQuizGradePicker .mode-btn').removeClass('active');
-    $('#finalQuizGradePicker [data-grade="' + grade + '"]').addClass('active');
+    if (grade && finalQuizIndicators[grade] && !finalQuizObj.gradeChosen) {
+        finalQuizObj.grade = grade;
+        $('#finalQuizGradePicker .mode-btn').removeClass('active');
+        $('#finalQuizGradePicker [data-grade="' + grade + '"]').addClass('active');
+    }
+
+    // whose saved quiz to offer depends on who has just signed in
     renderFinalQuizSetup();
 });
 

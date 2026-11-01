@@ -11,6 +11,10 @@ const RECOVERY_MESSAGES = {
     weak_password: 'รหัสผ่านนี้ใช้ไม่ได้ กรุณาตั้งให้ยาวขึ้นหรือเดายากขึ้น',
 };
 
+const RECOVERY_ISSUE_FAILED = 'สร้างรหัสไม่สำเร็จ กรุณาลองอีกครั้ง';
+const RECOVERY_NUDGE_TEXT = 'ยังไม่มีรหัสกู้คืน ถ้าลืมรหัสผ่านจะเข้าบัญชีไม่ได้';
+const RECOVERY_NUDGE_PAUSE_MS = 24 * 60 * 60 * 1000;
+
 function invokeRecovery(body) {
     return supabaseClient.functions.invoke('account-recovery', { body: body })
         .then(function (result) {
@@ -40,7 +44,10 @@ function showRecoveryCode(code) {
 function issueRecoveryCodeForNewAccount() {
     invokeRecovery({ action: 'issue' }).then(function (result) {
         if (result.code) {
+            hideRecoveryNudge();
             showRecoveryCode(result.code);
+        } else {
+            showRecoveryNudge();
         }
     });
 }
@@ -208,9 +215,13 @@ function issueRecoveryCode() {
     invokeRecovery({ action: 'issue' }).then(function (result) {
         $btn.prop('disabled', false);
         if (result.code) {
+            hideRecoveryNudge();
             showRecoveryCode(result.code);
+            refreshRecoveryStatus();
+        } else {
+            $('#profileRecoveryStatus').text(RECOVERY_ISSUE_FAILED);
+            $('#recoveryNudgeText').text(RECOVERY_ISSUE_FAILED);
         }
-        refreshRecoveryStatus();
     });
 }
 
@@ -227,4 +238,70 @@ $('#profileRecoveryBtn').on('click', function () {
 $('#recoveryReplaceConfirmBtn').on('click', function () {
     bootstrap.Modal.getInstance(document.getElementById('recoveryReplaceModal')).hide();
     issueRecoveryCode();
+});
+
+// ---------- reminding accounts that have no code ----------
+
+// An account made before codes existed has no way back in if its password goes,
+// and nothing else would ever tell the child that. "Later" holds for a day, so
+// the reminder stays useful without greeting a child at every visit.
+var recoveryNudgeCheckedFor = null;
+
+function recoveryNudgeKey() {
+    return 'mathLessonRecoveryNudgeLater:' + currentUserId;
+}
+
+function isRecoveryNudgePaused() {
+    try {
+        return Date.now() < +localStorage.getItem(recoveryNudgeKey());
+    } catch (e) {
+        return false;
+    }
+}
+
+function showRecoveryNudge() {
+    if (!isRecoveryNudgePaused()) {
+        $('#recoveryNudgeText').text(RECOVERY_NUDGE_TEXT);
+        $('#recoveryNudge').show();
+    }
+}
+
+function hideRecoveryNudge() {
+    $('#recoveryNudge').hide();
+}
+
+function checkRecoveryNudge() {
+    invokeRecovery({ action: 'status' }).then(function (result) {
+        if (result.ok && !result.created_at) {
+            showRecoveryNudge();
+        }
+    });
+}
+
+$('#recoveryNudgeBtn').on('click', issueRecoveryCode);
+
+$('#recoveryNudgeLaterBtn').on('click', function () {
+    try {
+        localStorage.setItem(recoveryNudgeKey(), String(Date.now() + RECOVERY_NUDGE_PAUSE_MS));
+    } catch (e) {
+        // it will simply ask again next visit
+    }
+    hideRecoveryNudge();
+});
+
+supabaseClient.auth.onAuthStateChange(function (event, session) {
+    let userId = session ? session.user.id : null;
+
+    if (userId === recoveryNudgeCheckedFor) {
+        return;
+    }
+
+    recoveryNudgeCheckedFor = userId;
+    hideRecoveryNudge();
+
+    // Deferred: supabase-js holds its auth lock during this callback, and the
+    // function call below needs that same lock to read the session.
+    if (userId) {
+        setTimeout(checkRecoveryNudge, 0);
+    }
 });

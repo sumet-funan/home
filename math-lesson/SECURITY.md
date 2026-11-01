@@ -108,7 +108,7 @@ than a link. The `account-recovery` Edge Function does the work.
 - Changing the password leaves sessions on other devices signed in until they
   expire. Nothing revokes them yet.
 - An account with no code, or a lost one, still needs an admin to set a password
-  in the Dashboard.
+  in the Dashboard. A banner asks signed-in accounts with no code to make one.
 
 ## Re-testing
 

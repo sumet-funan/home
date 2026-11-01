@@ -297,7 +297,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.6.0</div>
+      <div class="app-sidebar-footer">v4.7.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -310,6 +310,14 @@
         </button>
         <span class="app-navbar-title" id="appNavbarTitle" aria-hidden="true"></span>
       </header>
+      <div class="recovery-nudge" id="recoveryNudge" role="status" style="display: none;">
+        <i class="bi bi-key-fill"></i>
+        <span class="recovery-nudge-text" id="recoveryNudgeText"></span>
+        <div class="recovery-nudge-actions">
+          <button type="button" class="recovery-nudge-later" id="recoveryNudgeLaterBtn">ไว้ก่อน</button>
+          <button type="button" class="recovery-nudge-btn" id="recoveryNudgeBtn">สร้างรหัส</button>
+        </div>
+      </div>
       <div class="tab-content">
 
         <div class="tab-pane fade" id="content_finalquiz" role="tabpanel" aria-labelledby="menu_finalquiz">
@@ -320,6 +328,12 @@
             </div>
             <div class="panel-body">
               <div id="finalQuizSetup">
+                <div class="calc-card fq-resume" id="finalQuizResume" style="display: none;">
+                  <strong>มีแบบทดสอบที่ยังทำไม่เสร็จ</strong>
+                  <p class="fq-last" id="finalQuizResumeText"></p>
+                  <button type="button" class="calc-submit" id="finalQuizResumeBtn">ทำต่อ <i class="bi bi-play-fill"></i></button>
+                  <button type="button" class="fq-nav-btn" id="finalQuizDiscardBtn">ลบแบบทดสอบนี้</button>
+                </div>
                 <div class="sq-options">
                   <div class="sq-option">
                     <span class="sq-option-label">ชั้น</span>

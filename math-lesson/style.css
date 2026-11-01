@@ -578,6 +578,8 @@ input {
 
 body.sq-running .learn-card,
 body.sq-running .home-shortcuts,
+body.sq-running .recovery-nudge,
+body.fq-running .recovery-nudge,
 body.fq-running .learn-card {
   display: none;
 }
@@ -3007,6 +3009,54 @@ input[type=number] {
   color: var(--text);
 }
 
+.recovery-nudge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.recovery-nudge .bi {
+  color: var(--tint);
+}
+
+.recovery-nudge-text {
+  flex: 1 1 200px;
+  font-size: .95rem;
+  line-height: 1.45;
+}
+
+.recovery-nudge-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.recovery-nudge-btn,
+.recovery-nudge-later {
+  min-height: 44px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 22px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.recovery-nudge-btn {
+  background: var(--tint);
+  color: var(--on-accent);
+}
+
+.recovery-nudge-later {
+  background: transparent;
+  color: var(--tint);
+}
+
 .recovery-code {
   margin: 6px 0 14px;
   padding: 12px;
@@ -3026,6 +3076,17 @@ input[type=number] {
 
 .fq-start-card {
   margin-top: 16px;
+}
+
+.fq-resume {
+  align-items: center;
+  margin-bottom: 16px;
+  text-align: center;
+  color: var(--text);
+}
+
+.fq-resume .calc-submit {
+  width: 100%;
 }
 
 .fq-info {
