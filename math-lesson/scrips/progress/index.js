@@ -317,7 +317,7 @@ function renderProgressTrophies(results) {
 // Returns null when no such menu exists, which is the case for the four
 // general lessons that were removed but whose history is still shown.
 function lessonMenuId(lessonId) {
-    let menuId = lessonId.replace(/^(p1|p2|p5)/, 'menu_$1_');
+    let menuId = lessonId.replace(/^(p\d)/, 'menu_$1_');
     return document.getElementById(menuId) ? menuId : null;
 }
 
@@ -509,7 +509,7 @@ const LESSON_STAGES = {
     new: { label: 'ยังไม่เริ่ม', icon: 'bi-circle' },
 };
 
-const PROGRESS_GRADE_GROUPS = ['p1', 'p2', 'p5'];
+const PROGRESS_GRADE_GROUPS = ['p1', 'p2', 'p3', 'p5'];
 const PROGRESS_MAP_SHOWN = 6;
 const MISTAKE_EXAMPLES_SHOWN = 3;
 const PROGRESS_MISTAKE_LIMIT = 1000;      // PostgREST's row cap, far past any real list
@@ -646,7 +646,7 @@ function combinedLessonStage(lessons) {
 function progressIndicators(grade) {
     let lessons = progressGroupLessons(grade);
 
-    return finalQuizIndicators[grade].map(function (indicator) {
+    return (finalQuizIndicators[grade] || lessonIndicators[grade]).map(function (indicator) {
         let ids = [indicator.lesson].concat(indicator.also || []);
         let linked = lessons.filter(function (lesson) { return ids.indexOf(lesson.id) !== -1; });
         let next = linked.filter(function (lesson) { return lesson.stage !== 'strong'; })[0] || null;

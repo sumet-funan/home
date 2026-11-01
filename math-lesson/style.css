@@ -2849,6 +2849,62 @@ input[type=number] {
   white-space: nowrap;
 }
 
+/* ---------- lessons from ป.3 up ---------- */
+
+.lesson-figure {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  margin-bottom: 8px;
+  overflow-x: auto;
+}
+
+.lesson-figure svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.lesson-single {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.lesson-single .calc-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.lesson-unit {
+  flex-shrink: 0;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.lesson-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.lesson-table th,
+.lesson-table td {
+  padding: 8px 10px;
+  border-bottom: .5px solid var(--border);
+  text-align: center;
+}
+
+.lesson-table th {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.calc-card .lesson-answer + .calc-submit {
+  margin-top: 12px;
+}
+
 /* ---------- shapes ---------- */
 
 .shape-display {

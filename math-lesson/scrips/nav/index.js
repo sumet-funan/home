@@ -1,4 +1,4 @@
-// Keeps the lesson menu pointing at where the child is. With 50 lessons behind
+// Keeps the lesson menu pointing at where the child is. With this many lessons behind
 // collapsed groups, an unopened menu says nothing about which lesson is showing.
 var menuGradeApplied = '';
 var menuScrollTarget = null;
