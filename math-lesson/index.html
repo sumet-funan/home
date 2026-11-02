@@ -13,7 +13,7 @@
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="style.css?v=4.21.0">
+  <link rel="stylesheet" href="style.css?v=4.22.0">
 </head>
 
 <body>
@@ -328,7 +328,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.21.0</div>
+      <div class="app-sidebar-footer">v4.22.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -2480,6 +2480,14 @@
                 <i class="bi bi-person-circle"></i> เข้าสู่ระบบเพื่อเก็บความก้าวหน้า
               </button>
             </div>
+            <button type="button" class="home-trophies" id="homeTrophies" style="display: none;">
+              <i class="bi bi-trophy-fill" id="homeTrophyIcon" aria-hidden="true"></i>
+              <span class="home-trophies-text">
+                <strong id="homeTrophyCount"></strong>
+                <span id="homeTrophyKinds"></span>
+              </span>
+              <i class="bi bi-chevron-right home-trophies-caret" aria-hidden="true"></i>
+            </button>
             <div class="panel-header">
               <h2><i class="bi bi-stopwatch-fill"></i> แบบฝึกคำนวณเร็ว</h2>
               <p>เลือกแบบฝึกที่ต้องการ แล้วกดเริ่ม<br>
@@ -3007,8 +3015,8 @@
   <script type="text/javascript" src="jquery-3.7.1.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <!-- ?v= is the app version, so a release never runs a new page against scripts the browser still has cached -->
-  <script type="text/javascript" src="scrips/auth/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/data/index.js?v=4.21.0"></script>
+  <script type="text/javascript" src="scrips/auth/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/data/index.js?v=4.22.0"></script>
   <script>
     function validateResult(firstNumber, secondNumber, resultNumber, symbol) {
       let isCorrect;
@@ -3204,73 +3212,74 @@
       }
     });
   </script>
-  <script type="text/javascript" src="scrips/common/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1plus/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1minus/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1compare/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1numberbond/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1pattern/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1placevalue/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1shape/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1length/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1weight/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1capacity/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1time/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1money/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1wordproblem/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2plus/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2minus/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2multiply/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2divide/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2mixed/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2missing/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2placevalue/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2compare/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2length/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2weight/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2capacity/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2time/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2shape/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2pictograph/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p2wordproblem/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5decimal/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5percentage/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5fraction/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5gcflcm/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5mixednumber/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5geometry/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5volume/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5angle/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5average/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5barchart/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5wordproblem/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1missing/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1number/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p1pictograph/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5fractiondecimal/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5proportion/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5measure/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5quadrilateral/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5quadarea/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5prism/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5linegraph/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/p5barwrite/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/finalquiz/indicators.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/speedquiz/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/profile/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/streak/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/daily/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/recovery/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/nav/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/progress/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/learn/lessons.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/lessons/engine.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/lessons/p3.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/lessons/p4.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/lessons/p6.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/finalquiz/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/mockexam/index.js?v=4.21.0"></script>
-  <script type="text/javascript" src="scrips/learn/index.js?v=4.21.0"></script>
+  <script type="text/javascript" src="scrips/common/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1plus/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1minus/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1compare/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1numberbond/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1pattern/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1placevalue/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1shape/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1length/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1weight/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1capacity/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1time/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1money/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1wordproblem/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2plus/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2minus/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2multiply/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2divide/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2mixed/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2missing/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2placevalue/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2compare/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2length/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2weight/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2capacity/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2time/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2shape/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2pictograph/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p2wordproblem/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5decimal/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5percentage/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5fraction/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5gcflcm/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5mixednumber/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5geometry/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5volume/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5angle/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5average/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5barchart/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5wordproblem/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1missing/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1number/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p1pictograph/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5fractiondecimal/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5proportion/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5measure/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5quadrilateral/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5quadarea/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5prism/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5linegraph/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/p5barwrite/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/finalquiz/indicators.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/speedquiz/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/profile/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/streak/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/daily/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/recovery/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/nav/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/progress/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/learn/lessons.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/lessons/engine.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/lessons/p3.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/lessons/p4.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/lessons/p6.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/finalquiz/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/mockexam/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/home/index.js?v=4.22.0"></script>
+  <script type="text/javascript" src="scrips/learn/index.js?v=4.22.0"></script>
 </body>
 
 </html>
