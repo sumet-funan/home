@@ -255,6 +255,33 @@ function mockScoreText(score) {
     return String(+score.toFixed(3));
 }
 
+// The final quiz's trophies, read straight off the score: a paper is out of 100,
+// so its score is already the percentage the levels are set in. Not rounded up,
+// so 79.5 is not gold. From the best score, so a trophy is never taken back.
+function mockExamTrophy(result) {
+    return result ? finalQuizTrophy(result.best.score) : null;
+}
+
+function mockExamHasTrophy(results) {
+    return Object.keys(MOCK_EXAMS).some(function (exam) { return mockExamTrophy(results[exam]); });
+}
+
+function mockExamShelfHtml(results) {
+    return Object.keys(MOCK_EXAMS).map(function (exam) {
+        let result = results[exam];
+        return trophySlotHtml(MOCK_EXAMS[exam].name, mockExamTrophy(result), result ? mockScoreText(result.best.score) + ' คะแนน' : '');
+    }).join('');
+}
+
+function renderMockExamTrophy(score) {
+    let trophy = finalQuizTrophy(score);
+    let next = FINAL_QUIZ_TROPHIES[(trophy ? FINAL_QUIZ_TROPHIES.indexOf(trophy) : FINAL_QUIZ_TROPHIES.length) - 1];
+
+    $('#mockExamTrophy').html(`${finalQuizTrophyIcon(trophy)}
+        ${trophy ? `<strong>ได้${trophy.label}</strong>` : ''}
+        ${next ? `<span>อีก ${mockScoreText(next.percent - score)} คะแนนจะได้${next.label}</span>` : ''}`);
+}
+
 function isMockAnswered(answer) {
     if (Array.isArray(answer)) {
         return answer.some(function (value) { return value !== null; });
@@ -279,8 +306,16 @@ function renderMockExamSetup() {
     $('#mockExamLast').text('');
     loadMockExamResults().then(function (results) {
         // the answer may arrive after the child has signed out or switched paper
+        if (mockExamOwner() !== owner) {
+            return;
+        }
+
+        // a failed request says nothing about trophies rather than "none"
+        $('#mockExamShelfCard').toggle(!!results);
+        $('#mockExamShelf').html(mockExamShelfHtml(results || {}));
+
         let result = results && results[examId];
-        if (result && mockExamOwner() === owner && mockExamObj.exam === examId) {
+        if (result && mockExamObj.exam === examId) {
             $('#mockExamLast').text(`ครั้งล่าสุด ${mockScoreText(result.score)} คะแนน · ดีที่สุด ${mockScoreText(result.best.score)} คะแนน`);
         }
     });
@@ -487,6 +522,7 @@ function mockIndicatorText(code) {
 }
 
 function renderMockExamResult(score, parts, codes, timeUp) {
+    renderMockExamTrophy(score);
     $('#mockExamScore').text(`${mockScoreText(score)} / 100`);
     $('#mockExamTimeUp').toggle(!!timeUp);
     $('#mockExamParts2').html(parts.map(function (part) {
@@ -625,5 +661,9 @@ supabaseClient.auth.onAuthStateChange(function (event, session) {
     }
     setTimeout(renderMockExamSetup, 0);
 });
+
+$('#mockExamTrophyRule').text(FINAL_QUIZ_TROPHIES.map(function (trophy) {
+    return `${trophy.percent} คะแนนขึ้นไป ${trophy.label}`;
+}).join(' · '));
 
 renderMockExamSetup();

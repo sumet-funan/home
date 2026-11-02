@@ -84,18 +84,22 @@ function finalQuizTrophyIcon(trophy) {
     return `<i class="bi ${trophy ? 'bi-trophy-fill trophy-' + trophy.id : 'bi-trophy trophy-none'}" aria-hidden="true"></i>`;
 }
 
+// One place on a shelf. The practice papers' shelves use it too.
+function trophySlotHtml(name, trophy, detail) {
+    return `<div class="fq-shelf-slot">
+        ${finalQuizTrophyIcon(trophy)}
+        <strong>${name}</strong>
+        <span>${trophy ? trophy.label + '<br>' + detail : 'ยังไม่มีถ้วย'}</span>
+    </div>`;
+}
+
 function finalQuizShelfHtml(results) {
     // the grades above ป.2 are added by their lesson files, so keys are not in order
     return Object.keys(finalQuizIndicators).sort().map(function (grade) {
         let best = results[grade] ? finalQuizBest(results[grade]) : null;
         let percent = best ? finalQuizPercent(best) : 0;
-        let trophy = finalQuizTrophy(percent);
 
-        return `<div class="fq-shelf-slot">
-            ${finalQuizTrophyIcon(trophy)}
-            <strong>${$('#finalQuizGradePicker [data-grade="' + grade + '"]').text()}</strong>
-            <span>${trophy ? trophy.label + '<br>' + percent + '%' : 'ยังไม่มีถ้วย'}</span>
-        </div>`;
+        return trophySlotHtml($('#finalQuizGradePicker [data-grade="' + grade + '"]').text(), finalQuizTrophy(percent), percent + '%');
     }).join('');
 }
 

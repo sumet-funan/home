@@ -329,11 +329,18 @@ function renderProgressFinalQuiz(results, speedCount, mockLatest) {
     $('#progressStatsNote').text(notes.join(' · ') || 'ยังไม่มีสถิติ');
 }
 
-// Only once there is something on it: three empty slots are an invitation on the
-// quiz page, but here they would be one more thing a new child has not done.
-function renderProgressTrophies(results) {
-    $('#progressTrophyCard').toggle(!!results && finalQuizHasTrophy(results));
+// Only once there is something on it: empty slots are an invitation on the quiz
+// pages, but here they would be one more thing a new child has not done. Each
+// shelf shows only once it has a trophy of its own.
+function renderProgressTrophies(results, mockResults) {
+    let hasQuiz = !!results && finalQuizHasTrophy(results);
+    let hasMock = !!mockResults && mockExamHasTrophy(mockResults);
+
+    $('#progressTrophyCard').toggle(hasQuiz || hasMock);
+    $('#progressTrophyQuiz').toggle(hasQuiz);
     $('#progressTrophyShelf').html(finalQuizShelfHtml(results || {}));
+    $('#progressTrophyMock').toggle(hasMock);
+    $('#progressMockTrophyShelf').html(mockExamShelfHtml(mockResults || {}));
 }
 
 // Lesson ids map onto menu ids by grade prefix (p5decimal -> menu_p5_decimal).
@@ -962,7 +969,7 @@ function refreshProgressPage() {
     });
 
     Promise.all([fetchQuizBests(), fetchFinalQuizResults(), fetchMockExamResults()]).then(function (results) {
-        renderProgressTrophies(results[1]);
+        renderProgressTrophies(results[1], results[2]);
         renderProgressFinalQuiz(results[1] || {}, renderProgressQuiz(results[0]), renderProgressMockExam(results[2]));
     });
 

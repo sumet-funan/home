@@ -3819,6 +3819,10 @@ input[type=number] {
   gap: 8px;
 }
 
+.mock-shelf {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .fq-shelf-slot {
   display: flex;
   flex-direction: column;
