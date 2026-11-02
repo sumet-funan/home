@@ -13,7 +13,7 @@ matter more the wider the app is shared.
 
 | Check | Result |
 | --- | --- |
-| Anonymous read of `profiles`, `attempts`, `quiz_results`, `final_quiz_results`, `retired_usernames` | 0 rows or refused — RLS and grants block all five |
+| Anonymous read of `profiles`, `attempts`, `quiz_results`, `final_quiz_results`, `mock_exam_results`, `retired_usernames` | 0 rows or refused — RLS and grants block all six |
 | Insert a row under another user's `user_id` | rejected, Postgres `42501` |
 | Update or delete your own `attempts` rows | silently affects 0 rows — no UPDATE/DELETE policy exists, so history is append-only |
 | Direct write to `retired_usernames` | rejected, `42501` |
@@ -117,7 +117,7 @@ anonymous surface:
 
 ```js
 (async () => {
-  for (const t of ['profiles','attempts','quiz_results','final_quiz_results','retired_usernames']) {
+  for (const t of ['profiles','attempts','quiz_results','final_quiz_results','mock_exam_results','retired_usernames']) {
     const r = await supabaseClient.from(t).select('*');
     console.log(t, r.error ? 'blocked' : r.data.length + ' rows (expect 0)');
   }

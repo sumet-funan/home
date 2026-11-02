@@ -210,6 +210,51 @@ function fetchFinalQuizResults() {
         });
 }
 
+function recordMockExamResult(exam, score) {
+    if (!currentUserId) {
+        return;
+    }
+
+    let row = { user_id: currentUserId, exam: exam, score: score };
+
+    supabaseClient.from('mock_exam_results').insert(row).then(function (result) {
+        if (result.error) {
+            queueForRetry('mock_exam_results', row);
+            return;
+        }
+        flushOutbox();
+    });
+}
+
+// The same shape as a guest's results on the device: the latest score per paper,
+// and the best. Null means the request failed, not that nothing was sat.
+function fetchMockExamResults() {
+    if (!currentUserId) {
+        return Promise.resolve({});
+    }
+
+    return supabaseClient
+        .from('mock_exam_results')
+        .select('exam, score, created_at')
+        .order('created_at', { ascending: false })
+        .limit(1000)
+        .then(function (result) {
+            if (result.error) {
+                return null;
+            }
+
+            let latest = {};
+            result.data.forEach(function (row) {
+                let score = { score: +row.score, at: row.created_at };
+                latest[row.exam] = latest[row.exam] || Object.assign({ best: score }, score);
+                if (score.score > latest[row.exam].best.score) {
+                    latest[row.exam].best = score;
+                }
+            });
+            return latest;
+        });
+}
+
 // Answers per day in the child's own time zone. Null means the request failed,
 // which is different from a new account with no days yet.
 function fetchDailyActivity() {

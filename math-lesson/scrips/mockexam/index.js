@@ -180,24 +180,35 @@ function mockExamOwner() {
     return currentUserId || 'guest';
 }
 
+// A guest's scores stay on this device and an account's go to the database, the
+// same split as the final quiz, so a shared tablet shows each child their own.
 function readMockExamResults() {
     try {
         let all = JSON.parse(localStorage.getItem(MOCK_EXAM_RESULT_KEY)) || {};
-        return all[mockExamOwner()] || {};
+        return all.guest || {};
     } catch (e) {
         return {};
     }
 }
 
+function loadMockExamResults() {
+    return currentUserId ? fetchMockExamResults() : Promise.resolve(readMockExamResults());
+}
+
 function saveMockExamResult(examId, score) {
+    if (currentUserId) {
+        recordMockExamResult(examId, score);
+        return;
+    }
+
     try {
         let all = JSON.parse(localStorage.getItem(MOCK_EXAM_RESULT_KEY)) || {};
-        let mine = all[mockExamOwner()] || {};
+        let mine = all.guest || {};
         let earlier = mine[examId];
         let result = { score: score, at: new Date().toISOString() };
 
         mine[examId] = Object.assign({}, result, { best: earlier && earlier.best && earlier.best.score >= score ? earlier.best : result });
-        all[mockExamOwner()] = mine;
+        all.guest = mine;
         localStorage.setItem(MOCK_EXAM_RESULT_KEY, JSON.stringify(all));
     } catch (e) {
         // no storage: the result on screen is all that is lost
@@ -257,14 +268,22 @@ function renderMockExamSetup() {
     let parts = exam.parts.map(function (part) {
         return `<li>${part.name} ${part.slots.length} ข้อ ข้อละ ${mockScoreText(part.points)} คะแนน</li>`;
     }).join('');
-    let results = readMockExamResults()[mockExamObj.exam];
+    let owner = mockExamOwner();
+    let examId = mockExamObj.exam;
 
     $('#mockExamPicker .mode-btn').removeClass('active');
     $('#mockExamPicker [data-exam="' + mockExamObj.exam + '"]').addClass('active');
     $('#mockExamTitle').text(exam.title);
     $('#mockExamInfo').text(`${items} ข้อ · คะแนนเต็ม 100 · เวลา ${exam.minutes} นาที`);
     $('#mockExamParts').html(parts);
-    $('#mockExamLast').text(results ? `ครั้งล่าสุด ${mockScoreText(results.score)} คะแนน · ดีที่สุด ${mockScoreText(results.best.score)} คะแนน` : '');
+    $('#mockExamLast').text('');
+    loadMockExamResults().then(function (results) {
+        // the answer may arrive after the child has signed out or switched paper
+        let result = results && results[examId];
+        if (result && mockExamOwner() === owner && mockExamObj.exam === examId) {
+            $('#mockExamLast').text(`ครั้งล่าสุด ${mockScoreText(result.score)} คะแนน · ดีที่สุด ${mockScoreText(result.best.score)} คะแนน`);
+        }
+    });
 
     let saved = readSavedMockExam();
     $('#mockExamResume').toggle(!!saved);
