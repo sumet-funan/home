@@ -332,9 +332,45 @@ function renderProgressFinalQuiz(results, speedCount, mockLatest) {
 // Only once there is something on it: empty slots are an invitation on the quiz
 // pages, but here they would be one more thing a new child has not done. Each
 // shelf shows only once it has a trophy of its own.
+// Every trophy held, each counted at its best: the final quiz's grades and the
+// practice papers.
+function progressTrophyTally(results, mockResults) {
+    let tally = { gold: 0, silver: 0, bronze: 0 };
+    let trophies = Object.keys(results).map(function (grade) {
+        return finalQuizTrophy(finalQuizPercent(finalQuizBest(results[grade])));
+    }).concat(Object.keys(MOCK_EXAMS).map(function (exam) {
+        return mockExamTrophy(mockResults[exam]);
+    }));
+
+    trophies.forEach(function (trophy) {
+        if (trophy) {
+            tally[trophy.id]++;
+        }
+    });
+    return tally;
+}
+
+// "3 ใบ · ทอง 1 · เงิน 2", leaving out the kinds not held. A count from one of the
+// two requests would be short, so it waits for both.
+function progressTrophyCountText(results, mockResults) {
+    if (!results || !mockResults) {
+        return '';
+    }
+
+    let tally = progressTrophyTally(results, mockResults);
+    let kinds = FINAL_QUIZ_TROPHIES
+        .filter(function (trophy) { return tally[trophy.id]; })
+        .map(function (trophy) { return trophy.label.replace('ถ้วย', '') + ' ' + tally[trophy.id]; });
+
+    return [(tally.gold + tally.silver + tally.bronze) + ' ใบ'].concat(kinds).join(' · ');
+}
+
 function renderProgressTrophies(results, mockResults) {
     let hasQuiz = !!results && finalQuizHasTrophy(results);
     let hasMock = !!mockResults && mockExamHasTrophy(mockResults);
+    let count = progressTrophyCountText(results, mockResults);
+
+    $('#progressTrophyCount').text(count).toggle(!!count);
 
     $('#progressTrophyCard').toggle(hasQuiz || hasMock);
     $('#progressTrophyQuiz').toggle(hasQuiz);
