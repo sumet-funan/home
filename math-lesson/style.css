@@ -3507,16 +3507,10 @@ input[type=number] {
   cursor: pointer;
 }
 
-.home-today-goal {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
 .home-today-line {
   display: flex;
+  flex: 1;
+  min-width: 0;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 4px 8px;
@@ -3532,19 +3526,6 @@ input[type=number] {
   font-size: .875rem;
   font-weight: 600;
   color: var(--green);
-}
-
-#homeTodayBar {
-  display: block;
-  background: var(--accent);
-}
-
-#homeTodayBar.is-reached {
-  background: var(--green);
-}
-
-.home-today .progress-bar-track {
-  display: block;
 }
 
 .home-today-streak {

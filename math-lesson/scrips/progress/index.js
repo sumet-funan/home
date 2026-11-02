@@ -1028,17 +1028,6 @@ $(document).on('shown.bs.tab', '#menu_progress', refreshProgressPage);
 // job of telling a child there is something to come back to.
 // Saving the setting lands here too (USER_UPDATED), so it takes effect at once.
 supabaseClient.auth.onAuthStateChange(function (event, session) {
-    // opened on this page (see index.html), so nothing has shown the tab: fill it
-    // once the account is known. That can be before the later scripts this page
-    // reads (the trophies, the practice papers) have run, so it waits for them;
-    // after that it is only deferred for supabase-js's auth lock.
-    if (session && (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') && $('#content_progress').hasClass('active')) {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', refreshProgressPage, { once: true });
-        } else {
-            setTimeout(refreshProgressPage, 0);
-        }
-    }
     if (!session) {
         reviewEnabled = true;   // the next account starts from its own setting
         progressMapGroup = null;

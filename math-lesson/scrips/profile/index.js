@@ -100,8 +100,7 @@ function applyProfileAuthState(user) {
 
     $('#navGroupProfile').hide();
 
-    // signed out while on a page only an account has, or opened on the Progress
-    // page with a session that turned out to be gone: back to the speed quiz
+    // signed out while on a page only an account has: back to the speed quiz
     if ($('#content_profile, #content_progress').hasClass('active')) {
         bootstrap.Tab.getOrCreateInstance(document.getElementById('menu_speedquiz')).show();
     }

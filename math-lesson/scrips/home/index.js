@@ -8,9 +8,6 @@ function renderHomeToday() {
 
     $('#homeTodayCount').text(done + ' / ' + goal + ' ข้อ');
     $('#homeTodayDone').toggle(reached);
-    $('#homeTodayBar')
-        .css('width', Math.min(100, Math.round(100 * done / goal)) + '%')
-        .toggleClass('is-reached', reached);
     $('#homeTodayStreak').text(getDayStreak() + ' วัน');
 }
 
