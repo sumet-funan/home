@@ -3506,7 +3506,13 @@ input[type=number] {
   min-height: 320px;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  background: var(--card-bg);
+  background: #8ecbef;              /* the scene's sky, so the stage does not flash */
+}
+
+@media (prefers-color-scheme: dark) {
+  .city-stage {
+    background: #0d1b2a;
+  }
 }
 
 @media (max-width: 576px) {
