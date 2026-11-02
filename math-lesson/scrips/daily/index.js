@@ -142,10 +142,13 @@ function adoptDailyActivity(days) {
     writeValue(DAY_STREAK_BEST_KEY, runs.best);
 }
 
-// A failed request leaves this device's numbers alone rather than clearing them.
+// A failed request leaves this device's numbers alone rather than clearing them,
+// and an answer that arrives after the child has signed out is not written here.
 function syncDailyActivity() {
+    let owner = currentUserId;
+
     return fetchDailyActivity().then(function (days) {
-        if (days) {
+        if (days && currentUserId === owner) {
             adoptDailyActivity(days);
         }
         return days;
@@ -167,9 +170,32 @@ supabaseClient.auth.onAuthStateChange(function (event, session) {
         return;
     }
 
+    // The account's numbers were copied here at sign-in; left behind, they would
+    // greet the next child on a shared tablet as their own.
+    if (dailySyncedUser && !user) {
+        [DAILY_DATE_KEY, DAILY_COUNT_KEY, DAILY_GOAL_KEY, DAY_STREAK_KEY, DAY_STREAK_BEST_KEY, DAY_STREAK_LAST_KEY].forEach(function (key) {
+            try {
+                localStorage.removeItem(key);
+            } catch (e) {
+                // nothing to clear
+            }
+        });
+        if (typeof renderHomeToday === 'function') {
+            renderHomeToday();
+        }
+    }
+
     dailySyncedUser = user ? user.id : null;
     if (user) {
-        setTimeout(syncDailyActivity, 0);
+        // the home page shows these numbers too, so it reads them again once the
+        // account's have replaced this device's
+        setTimeout(function () {
+            syncDailyActivity().then(function () {
+                if (typeof renderHomeToday === 'function') {
+                    renderHomeToday();
+                }
+            });
+        }, 0);
     }
 });
 

@@ -3491,6 +3491,82 @@ input[type=number] {
   cursor: pointer;
 }
 
+.home-today {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 56px;
+  margin-bottom: 12px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.home-today-goal {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.home-today-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-today-line .bi-bullseye {
+  color: var(--accent);
+}
+
+.home-today-done {
+  display: none;
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--green);
+}
+
+#homeTodayBar {
+  display: block;
+  background: var(--accent);
+}
+
+#homeTodayBar.is-reached {
+  background: var(--green);
+}
+
+.home-today .progress-bar-track {
+  display: block;
+}
+
+.home-today-streak {
+  flex-shrink: 0;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.home-today-streak .bi-fire {
+  color: var(--orange);
+}
+
+.home-today-streak strong {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+body.sq-running .home-today,
+body.sq-running .home-trophies {
+  display: none !important;
+}
+
 .home-trophies {
   display: flex;
   align-items: center;
