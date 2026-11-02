@@ -352,7 +352,7 @@ function buildCityWorld() {
 // Where the cars, the train and Nang Kwak's arm are `time` seconds in.
 function placeCityLife(time) {
     cityState.vehicles.forEach(function (car) {
-        let u = (car.offset + time * car.speed / car.length) % 1;
+        let u = ((car.offset + time * car.speed / car.length) % 1 + 1) % 1;
         if (car.reverse) {
             u = 1 - u;
         }
@@ -734,7 +734,8 @@ function runCity() {
         if (!cityState.running) {
             return;
         }
-        let seconds = Math.min(0.05, (now - last) / 1000);
+        // a frame's time can be from just before the loop began, so never below zero
+        let seconds = Math.max(0, Math.min(0.05, (now - last) / 1000));
         last = now;
 
         if (!cityStill()) {
