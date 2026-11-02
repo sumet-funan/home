@@ -3491,6 +3491,87 @@ input[type=number] {
   cursor: pointer;
 }
 
+/* ---------- my city ---------- */
+
+.city-summary {
+  margin: 0 0 10px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.city-stage {
+  position: relative;
+  width: 100%;
+  height: min(68vh, 560px);
+  min-height: 320px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+}
+
+@media (max-width: 576px) {
+  .city-stage {
+    height: min(60vh, 440px);
+  }
+}
+
+.city-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.city-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.city-status p {
+  margin: 0;
+}
+
+.city-hint {
+  margin: 8px 0 0;
+  font-size: .875rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.city-selected {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.city-selected-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.city-selected-text span {
+  font-size: .875rem;
+  color: var(--muted);
+}
+
+.city-selected .calc-submit {
+  width: auto;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0 18px;
+}
+
 /* ---------- account recovery ---------- */
 
 .auth-link-btn {
