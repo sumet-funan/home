@@ -279,7 +279,27 @@ function renderProgressQuiz(results) {
     return keys.length;
 }
 
-function renderProgressFinalQuiz(results, speedCount) {
+// Null is a failed request, which must not read as a child who has never sat one.
+function renderProgressMockExam(results) {
+    let exams = results ? Object.keys(MOCK_EXAMS).filter(function (exam) { return results[exam]; }) : [];
+    let empty = results ? 'ยังไม่มีคะแนนสอบเสมือนจริง' : 'โหลดคะแนนสอบเสมือนจริงไม่สำเร็จ';
+
+    $('#progressMockExamList').html(exams.length
+        ? exams.map(function (exam) {
+            let row = results[exam];
+            return '<div class="progress-row progress-row-compact">' +
+                '<span class="progress-row-name">' + MOCK_EXAMS[exam].name + '</span>' +
+                '<span class="progress-row-score">' + mockScoreText(row.score) + '/100 · ดีที่สุด ' +
+                    mockScoreText(row.best.score) + ' · ' + formatProgressDate(row.at) + '</span>' +
+            '</div>';
+        }).join('')
+        : '<p class="progress-empty">' + empty + '</p>');
+
+    return exams.map(function (exam) { return Object.assign({ exam: exam }, results[exam]); })
+        .sort(function (a, b) { return a.at < b.at ? 1 : -1; })[0] || null;
+}
+
+function renderProgressFinalQuiz(results, speedCount, mockLatest) {
     let grades = Object.keys(results).sort();
 
     $('#progressFinalQuizList').html(grades.length
@@ -302,6 +322,9 @@ function renderProgressFinalQuiz(results, speedCount) {
     }
     if (latest) {
         notes.push('แบบทดสอบล่าสุด ' + finalQuizPercent(latest) + '%');
+    }
+    if (mockLatest) {
+        notes.push(MOCK_EXAMS[mockLatest.exam].name + ' ' + mockScoreText(mockLatest.score) + ' คะแนน');
     }
     $('#progressStatsNote').text(notes.join(' · ') || 'ยังไม่มีสถิติ');
 }
@@ -938,9 +961,9 @@ function refreshProgressPage() {
         renderProgressMistakes(results[1]);
     });
 
-    Promise.all([fetchQuizBests(), fetchFinalQuizResults()]).then(function (results) {
+    Promise.all([fetchQuizBests(), fetchFinalQuizResults(), fetchMockExamResults()]).then(function (results) {
         renderProgressTrophies(results[1]);
-        renderProgressFinalQuiz(results[1] || {}, renderProgressQuiz(results[0]));
+        renderProgressFinalQuiz(results[1] || {}, renderProgressQuiz(results[0]), renderProgressMockExam(results[2]));
     });
 
     fetchFixedMistakeCount().then(function (count) {
