@@ -138,7 +138,7 @@ function p3WordProblem() {
             return { text: `${name}มีเงิน ${commaNumber(count * each + extra)} บาท ซื้อสมุด ${count} เล่ม เล่มละ ${each} บาท เหลือเงินกี่บาท`, answer: extra };
         },
         function () {
-            let boxes = randomInt(3, 12), each = randomInt(4, 9) * 10, children = pickOne([2, 4, 5, 8, 10]);
+            let boxes = randomInt(3, 12), each = randomInt(4, 9) * 10, children = pickOne([2, 5, 10]);
             return { text: `มีดินสอ ${boxes} กล่อง กล่องละ ${each} แท่ง แบ่งให้นักเรียน ${children} ห้องเท่า ๆ กัน ได้ห้องละกี่แท่ง`, answer: boxes * each / children };
         },
         function () {

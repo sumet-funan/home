@@ -54,6 +54,10 @@
             aria-controls="content_finalquiz" data-op="progress">
             <i class="bi bi-mortarboard-fill"></i><span>แบบทดสอบ</span>
           </a>
+          <a class="nav-menu-item" id="menu_mockexam" data-bs-toggle="list" href="#content_mockexam" role="tab"
+            aria-controls="content_mockexam" data-op="progress">
+            <i class="bi bi-clipboard2-check-fill"></i><span>สอบเสมือนจริง</span>
+          </a>
         </div>
 
         <div class="nav-group">
@@ -324,7 +328,7 @@
         </div>
 
       </div>
-      <div class="app-sidebar-footer">v4.17.0</div>
+      <div class="app-sidebar-footer">v4.18.0</div>
     </aside>
 
     <main class="app-main" id="appMain">
@@ -429,6 +433,78 @@
                 <div class="side-panel fq-section" id="finalQuizMissedSection">
                   <h3><i class="bi bi-pencil-fill"></i> ข้อที่ควรทบทวน</h3>
                   <div id="finalQuizMissed"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="content_mockexam" role="tabpanel" aria-labelledby="menu_mockexam">
+          <div class="operation-panel" data-op="progress">
+            <div class="panel-header">
+              <h2><i class="bi bi-clipboard2-check-fill"></i> สอบเสมือนจริง</h2>
+              <p>ข้อสอบ NT ป.3 และ O-NET ป.6 ที่จำนวนข้อ คะแนน และเวลาเหมือนการสอบจริง</p>
+            </div>
+            <div class="panel-body">
+              <div id="mockExamSetup">
+                <div class="calc-card fq-resume" id="mockExamResume" style="display: none;">
+                  <strong>มีข้อสอบที่ยังทำไม่เสร็จ</strong>
+                  <p class="fq-last" id="mockExamResumeText"></p>
+                  <button type="button" class="calc-submit" id="mockExamResumeBtn">ทำต่อ <i class="bi bi-play-fill"></i></button>
+                  <button type="button" class="fq-nav-btn" id="mockExamDiscardBtn">ลบข้อสอบชุดนี้</button>
+                </div>
+                <div class="mode-picker" id="mockExamPicker">
+                  <button type="button" class="mode-btn active" data-exam="nt3">NT ป.3</button>
+                  <button type="button" class="mode-btn" data-exam="onet6">O-NET ป.6</button>
+                </div>
+                <div class="calc-card fq-start-card">
+                  <strong class="mock-title" id="mockExamTitle"></strong>
+                  <p class="fq-info" id="mockExamInfo"></p>
+                  <ul class="mock-parts" id="mockExamParts"></ul>
+                  <p class="fq-last" id="mockExamLast"></p>
+                  <button type="button" class="calc-submit" id="mockExamStartBtn">เริ่มทำข้อสอบ <i class="bi bi-play-fill"></i></button>
+                </div>
+                <p class="fq-note">ข้อสอบชุดนี้สร้างใหม่ทุกครั้งตามโครงสร้างที่ประกาศ ไม่ใช่ข้อสอบจริงของปีใด และคะแนนไม่ใช่ผลการสอบจริง ข้อแสดงวิธีทำของ NT ให้กรอกผลของแต่ละขั้นแทนการเขียน ขั้นแรก 4 คะแนน คำตอบสุดท้าย 6 คะแนน ผลการสอบเก็บไว้ในเครื่องนี้</p>
+              </div>
+
+              <div id="mockExamRunning" style="display: none;">
+                <div class="calc-card">
+                  <div class="fq-head">
+                    <span id="mockExamCount"></span>
+                    <span class="fq-clock" id="mockExamClockBox"><i class="bi bi-hourglass-split"></i> <span id="mockExamClock">0:00</span></span>
+                  </div>
+                  <div class="learn-progress fq-progress"><span id="mockExamProgress"></span></div>
+                  <p class="mock-part" id="mockExamPart"></p>
+                  <div class="fq-figure" id="mockExamFigure"></div>
+                  <div class="word-question fq-question" id="mockExamQuestion" aria-live="polite"></div>
+                  <div id="mockExamAnswer"></div>
+                  <div class="fq-nav">
+                    <button type="button" class="fq-nav-btn" id="mockExamBackBtn"><i class="bi bi-chevron-left"></i> ข้อก่อนหน้า</button>
+                    <button type="button" class="fq-nav-btn" id="mockExamNextBtn">ข้อถัดไป <i class="bi bi-chevron-right"></i></button>
+                  </div>
+                </div>
+                <div class="fq-map" id="mockExamMap"></div>
+                <button type="button" class="calc-submit fq-submit" id="mockExamSubmitBtn">ส่งคำตอบ <i class="bi bi-send-fill"></i></button>
+              </div>
+
+              <div id="mockExamResult" style="display: none;">
+                <div class="calc-card fq-result">
+                  <p class="mock-timeup" id="mockExamTimeUp" style="display: none;"><i class="bi bi-hourglass-bottom"></i> หมดเวลาแล้ว ระบบส่งคำตอบให้อัตโนมัติ</p>
+                  <div class="fq-score" id="mockExamScore"></div>
+                  <p class="fq-note">คะแนนจากข้อสอบที่สร้างตามโครงสร้าง ใช้ดูความพร้อม ไม่ใช่การทำนายผลสอบจริง</p>
+                  <button type="button" class="calc-submit" id="mockExamAgainBtn">กลับไปหน้าเลือกข้อสอบ <i class="bi bi-arrow-repeat"></i></button>
+                </div>
+                <div class="side-panel fq-section">
+                  <h3><i class="bi bi-layers-fill"></i> คะแนนแต่ละตอน</h3>
+                  <div class="fq-rows" id="mockExamParts2"></div>
+                </div>
+                <div class="side-panel fq-section">
+                  <h3><i class="bi bi-list-check"></i> ผลแยกตามเรื่อง</h3>
+                  <div class="fq-rows" id="mockExamIndicators"></div>
+                </div>
+                <div class="side-panel fq-section" id="mockExamMissedSection">
+                  <h3><i class="bi bi-pencil-fill"></i> ข้อที่ควรทบทวน</h3>
+                  <div id="mockExamMissed"></div>
                 </div>
               </div>
             </div>
@@ -3176,6 +3252,7 @@
   <script type="text/javascript" src="scrips/lessons/p4.js"></script>
   <script type="text/javascript" src="scrips/lessons/p6.js"></script>
   <script type="text/javascript" src="scrips/finalquiz/index.js"></script>
+  <script type="text/javascript" src="scrips/mockexam/index.js"></script>
   <script type="text/javascript" src="scrips/learn/index.js"></script>
 </body>
 

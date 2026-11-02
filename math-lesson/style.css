@@ -3768,6 +3768,51 @@ input[type=number] {
 .trophy-bronze { color: var(--trophy-bronze); }
 .trophy-none { color: var(--muted); }
 
+.mock-title {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.mock-parts {
+  margin: 0 0 8px;
+  padding-left: 20px;
+  text-align: left;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.mock-part {
+  margin: 0 0 6px;
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.mock-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mock-step {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.fq-clock.is-low {
+  color: var(--minus);
+}
+
+.mock-timeup {
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: var(--minus);
+}
+
 .fq-shelf {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
