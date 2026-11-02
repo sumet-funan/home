@@ -180,22 +180,11 @@ supabaseClient.auth.onAuthStateChange(function (event, session) {
                 // nothing to clear
             }
         });
-        if (typeof renderHomeToday === 'function') {
-            renderHomeToday();
-        }
     }
 
     dailySyncedUser = user ? user.id : null;
     if (user) {
-        // the home page shows these numbers too, so it reads them again once the
-        // account's have replaced this device's
-        setTimeout(function () {
-            syncDailyActivity().then(function () {
-                if (typeof renderHomeToday === 'function') {
-                    renderHomeToday();
-                }
-            });
-        }, 0);
+        setTimeout(syncDailyActivity, 0);
     }
 });
 
