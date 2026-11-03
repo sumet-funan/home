@@ -3662,12 +3662,6 @@ input[type=number] {
   background: #8ecbef;              /* the scene's sky, so the stage does not flash */
 }
 
-@media (prefers-color-scheme: dark) {
-  .city-stage {
-    background: #0d1b2a;
-  }
-}
-
 @media (max-width: 576px) {
   .city-stage {
     height: min(60vh, 440px);
@@ -3694,6 +3688,33 @@ input[type=number] {
   color: #1d1d1f;
   font-size: 1.1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.city-time {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1d1d1f;
+  font-size: .95rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.city-time .bi-sun-fill {
+  color: #f59e0b;
+}
+
+.city-time .bi-moon-stars-fill {
+  color: #5e5ce6;
 }
 
 .city-stage canvas:focus-visible {

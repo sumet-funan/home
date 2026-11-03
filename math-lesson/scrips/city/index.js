@@ -67,6 +67,31 @@ const CITY_FLOCK_SHAPE = [[0, 0], [-1.3, -1.2], [1.3, -1.2], [-2.6, -2.4], [2.6,
 const CITY_BALLOONS = [['#e53935', '#ffd23f'], ['#1e88e5', '#ffffff'], ['#8e24aa', '#ff9500']];
 const CITY_PAN_LIMIT = 30;      // how far from the middle the view can be moved
 
+// The town keeps the device's own time, or the child picks day or night; the
+// choice stays on this device.
+const CITY_TIME_KEY = 'mathLessonCityTime';
+const CITY_TIME_MODES = ['auto', 'day', 'night'];
+const CITY_TIME_LABELS = { auto: 'ตามเวลาจริง', day: 'กลางวัน', night: 'กลางคืน' };
+const CITY_TIME_ICONS = { auto: 'bi-clock', day: 'bi-sun-fill', night: 'bi-moon-stars-fill' };
+
+// The sky through a day: at each hour its colour, the light from the sky and
+// from the sun (or the moon), how bright the windows and signs are, and the
+// clouds' colour. Between two hours everything blends.
+const CITY_NIGHT = { sky: 0x0b1a2e, hemi: 0.35, hemiColour: 0x8fa8d6, sun: 0.3, sunColour: 0x9fb4ff, glow: 1.1, cloud: 0x46546b };
+const CITY_NOON = { sky: 0x8ecbef, hemi: 1.2, hemiColour: 0xfff4e0, sun: 2.2, sunColour: 0xfff1d6, glow: 0, cloud: 0xffffff };
+const CITY_DAY = [
+    Object.assign({ hour: 0 }, CITY_NIGHT),
+    Object.assign({ hour: 5 }, CITY_NIGHT),
+    { hour: 6, sky: 0xf6b38a, hemi: 0.8, hemiColour: 0xffd2b0, sun: 1.2, sunColour: 0xffb070, glow: 0.5, cloud: 0xf7c9b0 },
+    { hour: 7.5, sky: 0xa9d8f5, hemi: 1.1, hemiColour: 0xfff4e0, sun: 2.0, sunColour: 0xfff1d6, glow: 0, cloud: 0xffffff },
+    Object.assign({ hour: 12 }, CITY_NOON),
+    Object.assign({ hour: 17 }, CITY_NOON),
+    { hour: 18.2, sky: 0xf08a5d, hemi: 0.8, hemiColour: 0xffb38a, sun: 1.1, sunColour: 0xff8a50, glow: 0.6, cloud: 0xf5a98a },
+    { hour: 19.3, sky: 0x3a2f5e, hemi: 0.5, hemiColour: 0xa08fd6, sun: 0.4, sunColour: 0xb39ddb, glow: 1.0, cloud: 0x6a5a85 },
+    Object.assign({ hour: 20.5 }, CITY_NIGHT),
+    Object.assign({ hour: 24 }, CITY_NIGHT),
+];
+
 const CITY_SHIRTS = ['#e53935', '#1e88e5', '#43a047', '#fdd835', '#8e24aa', '#fb8c00', '#00acc1', '#f06292', '#f5f5f5', '#5d4037'];
 const CITY_SKINS = ['#f6d2b0', '#e8b98f', '#c98f65', '#8d5a3b'];
 const CITY_HAIRS = ['#1d1d1d', '#3b2a20', '#5d4037', '#2b2b2b'];
@@ -99,6 +124,10 @@ var cityState = {
     drawCalls: 0,
     owner: null,
     counts: null,
+    night: null,          // the stars and the moon
+    skyAt: 0,             // when the sky was last brought up to the hour
+    hourShown: 0,
+    timeFallback: null,
     touched: false,       // once the child has zoomed, a resize keeps their view
 };
 
@@ -106,8 +135,26 @@ function cityColour(name) {
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#888888';
 }
 
-function cityIsDark() {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+function cityTimeMode() {
+    try {
+        let mode = localStorage.getItem(CITY_TIME_KEY);
+        return CITY_TIME_MODES.indexOf(mode) !== -1 ? mode : 'auto';
+    } catch (e) {
+        return cityState.timeFallback || 'auto';
+    }
+}
+
+// The hour the town shows, 0 to 24.
+function cityHour() {
+    let mode = cityTimeMode();
+    if (mode === 'day') {
+        return 12;
+    }
+    if (mode === 'night') {
+        return 22;
+    }
+    let now = new Date();
+    return now.getHours() + now.getMinutes() / 60;
 }
 
 function cityStill() {
@@ -486,7 +533,7 @@ function buildCitySky(world) {
         // streets still sees them over the far side
         clouds.push({ phase: i / CITY_CLOUDS, y: 6 + i * 37 % 9, radius: 58 + (i % 3) * 8, speed: 0.006 + (i % 3) * 0.003, size: 1.8 + (i % 4) * 0.4 });
     }
-    let cloudMesh = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, flatShading: true, transparent: true, opacity: 0.85, depthWrite: false }), CITY_CLOUDS * CITY_PUFFS.length);
+    let cloudMesh = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.45, roughness: 1, flatShading: true, transparent: true, opacity: 0.85, depthWrite: false }), CITY_CLOUDS * CITY_PUFFS.length);
     cloudMesh.frustumCulled = false;
     world.add(cloudMesh);
 
@@ -790,7 +837,7 @@ function setupCityScene() {
 
     let sky = new THREE.HemisphereLight(0xfff4e0, 0x7a6a55, 1.2);
     let sun = new THREE.DirectionalLight(0xfff1d6, 2.2);
-    sun.position.set(40, 60, 25);
+    sun.position.set(40, 60, 25);     // moved with the hour by applyCitySky
     sun.castShadow = true;
     sun.shadow.mapSize.set(coarse ? 1024 : 2048, coarse ? 1024 : 2048);
     sun.shadow.camera.left = -48;
@@ -851,6 +898,7 @@ function setupCityScene() {
         : 'ลากเพื่อเลื่อนดูเมือง · คลิกขวาค้างแล้วลากเพื่อหมุน · ลูกกลิ้งเพื่อซูม · คลิกแลนด์มาร์กเพื่อดูความคืบหน้า');
 
     Object.assign(cityState, { renderer: renderer, scene: scene, camera: camera, controls: controls, selectedRing: ring, lights: { sky: sky, sun: sun } });
+    buildCityNight(scene);
     buildCityWorld();
     applyCitySky();
     sizeCity();
@@ -859,27 +907,108 @@ function setupCityScene() {
     return true;
 }
 
-// Day under a clear sky, or night with the windows, signs and lamps lit.
+// The sky at an hour, blended from the two nearest in CITY_DAY.
+function cityDayAt(hour) {
+    let THREE = cityState.three.THREE;
+    let i = 1;
+    while (i < CITY_DAY.length - 1 && CITY_DAY[i].hour <= hour) {
+        i++;
+    }
+    let a = CITY_DAY[i - 1], b = CITY_DAY[i];
+    let t = (hour - a.hour) / (b.hour - a.hour);
+    let mix = function (key) { return new THREE.Color(a[key]).lerp(new THREE.Color(b[key]), t); };
+    let blend = function (key) { return a[key] + (b[key] - a[key]) * t; };
+
+    return {
+        sky: mix('sky'), hemiColour: mix('hemiColour'), sunColour: mix('sunColour'), cloud: mix('cloud'),
+        hemi: blend('hemi'), sun: blend('sun'), glow: blend('glow'),
+    };
+}
+
+// The town at the hour it shows: the sky's colour, the sun (or the moon) across
+// the sky from east to west, windows, signs and lamps lit as it grows dark, and
+// stars and the moon out at night. Rerun every second or so by the draw loop.
 function applyCitySky() {
     if (!cityState.scene) {
         return;
     }
-    let THREE = cityState.three.THREE;
-    let dark = cityIsDark();
-    let sky = dark ? 0x0d1b2a : 0x8ecbef;
+    let hour = cityHour();
+    let look = cityDayAt(hour);
+    let night = Math.min(1, look.glow / 1.1);
 
-    cityState.scene.background = new THREE.Color(sky);
-    cityState.scene.fog = new THREE.Fog(sky, 150, 320);
-    cityState.lights.sky.intensity = dark ? 0.45 : 1.2;
-    cityState.lights.sky.color.set(dark ? 0x8fa8d6 : 0xfff4e0);
-    cityState.lights.sun.intensity = dark ? 0.35 : 2.2;
-    cityState.materials.glow.emissiveIntensity = dark ? 1.1 : 0;
-    if (cityState.sky) {
-        cityState.sky.cloudMesh.material.color.set(dark ? 0x56647d : 0xffffff);
+    cityState.scene.background = look.sky;
+    if (cityState.scene.fog) {
+        cityState.scene.fog.color.copy(look.sky);
+    } else {
+        cityState.scene.fog = new cityState.three.THREE.Fog(look.sky, 150, 320);
     }
+    cityState.lights.sky.intensity = look.hemi;
+    cityState.lights.sky.color.copy(look.hemiColour);
+    cityState.lights.sun.intensity = look.sun;
+    cityState.lights.sun.color.copy(look.sunColour);
+
+    // the sun crosses from 6:00 to 18:30, the moon through the night
+    let up = hour >= 6 && hour < 18.5;
+    let across = up ? (hour - 6) / 12.5 : ((hour - 18.5 + 24) % 24) / 11.5;
+    cityState.lights.sun.position.set(Math.cos(Math.PI * across) * 60, 18 + Math.sin(Math.PI * across) * 50, 25);
+
+    cityState.materials.glow.emissiveIntensity = look.glow;
     cityState.materials.signs.forEach(function (material) {
-        material.emissiveIntensity = dark ? 0.85 : 0.05;
+        material.emissiveIntensity = 0.05 + look.glow * 0.73;
     });
+    if (cityState.sky) {
+        // they glow a little in their own colour, so a dim sky does not turn them brown
+        cityState.sky.cloudMesh.material.color.copy(look.cloud);
+        cityState.sky.cloudMesh.material.emissive.copy(look.cloud);
+    }
+    if (cityState.night) {
+        cityState.night.stars.material.opacity = night;
+        cityState.night.moon.material.opacity = night;
+        cityState.night.stars.visible = cityState.night.moon.visible = night > 0.02;
+    }
+    cityState.skyAt = performance.now();
+    cityState.hourShown = hour;
+
+    let mode = cityTimeMode();
+    let label = CITY_TIME_LABELS[mode];
+    if (mode === 'auto') {
+        let minutes = Math.floor(hour * 60);
+        label += ' ' + Math.floor(minutes / 60) + ':' + String(minutes % 60).padStart(2, '0');
+    }
+    $('#cityTimeIcon').attr('class', 'bi ' + CITY_TIME_ICONS[mode]);
+    $('#cityTimeText').text(label);
+    $('#cityTimeBtn').attr('aria-label', 'เวลาในเมือง: ' + label + ' แตะเพื่อเปลี่ยน');
+}
+
+// Stars all round the floating town, and a moon kept on the far side of it from
+// the camera, low enough that a camera looking down still sees it.
+function buildCityNight(scene) {
+    let THREE = cityState.three.THREE;
+    let count = 500;
+    let points = new Float32Array(count * 3);
+    let spot = new THREE.Vector3();
+
+    for (let i = 0; i < count; i++) {
+        // spread evenly over a sphere: a golden-angle spiral
+        let y = 1 - (i + 0.5) * 2 / count;
+        let r = Math.sqrt(1 - y * y);
+        let a = i * 2.39996;
+        spot.set(Math.cos(a) * r, y, Math.sin(a) * r).multiplyScalar(300);
+        points.set([spot.x, spot.y, spot.z], i * 3);
+    }
+    let geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(points, 3));
+    let stars = new THREE.Points(geometry, new THREE.PointsMaterial({ color: 0xffffff, size: 1.8, sizeAttenuation: false, transparent: true, opacity: 0, fog: false, depthWrite: false }));
+    let moon = new THREE.Mesh(new THREE.SphereGeometry(6, 20, 14), new THREE.MeshBasicMaterial({ color: 0xfff6d5, transparent: true, opacity: 0, fog: false }));
+
+    scene.add(stars, moon);
+    cityState.night = { stars: stars, moon: moon };
+}
+
+function placeCityMoon() {
+    let target = cityState.controls.target, camera = cityState.camera.position;
+    let far = Math.atan2(target.x - camera.x, target.z - camera.z) + 0.35;
+    cityState.night.moon.position.set(target.x + Math.sin(far) * 150, -15, target.z + Math.cos(far) * 150);
 }
 
 // Back to the view the page opened with, turning slowly again.
@@ -1032,6 +1161,10 @@ function runCity() {
             placeCityLife(cityState.clock);
         }
         cityState.controls.update();
+        placeCityMoon();
+        if (now - cityState.skyAt > 1000) {
+            applyCitySky();
+        }
         stepCityFireworks(now, seconds);
         cityState.renderer.render(cityState.scene, cityState.camera);
         cityState.drawCalls = cityState.renderer.info.render.calls;
@@ -1131,12 +1264,20 @@ document.addEventListener('visibilitychange', function () {
     }
 });
 
-if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyCitySky);
-}
-
 $('#cityRetryBtn').on('click', openCity);
 $('#cityRecenterBtn').on('click', resetCityView);
+
+// auto, then day, then night, then auto again
+$('#cityTimeBtn').on('click', function () {
+    let next = CITY_TIME_MODES[(CITY_TIME_MODES.indexOf(cityTimeMode()) + 1) % CITY_TIME_MODES.length];
+    try {
+        localStorage.setItem(CITY_TIME_KEY, next);
+    } catch (e) {
+        // no storage: the choice lasts until the page is closed
+        cityState.timeFallback = next;
+    }
+    applyCitySky();
+});
 
 $('#citySelectedBtn').on('click', function () {
     let menu = document.getElementById($(this).attr('data-menu-id'));
