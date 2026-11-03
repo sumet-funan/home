@@ -49,6 +49,18 @@ const CITY_LANE_ORDER = [2, 3, 0, 2, 3, 1, 2, 3];
 const CITY_ROBOT_LANE = { half: 33, speed: 1.4 };
 const CITY_MAX_CARS = 24;
 const CITY_MAX_ROBOTS = 6;
+// on the road from the very first visit, before any streak (CITY_CAR_KINDS)
+const CITY_BASE_CARS = [0, 1, 2, 6, 1];
+
+// People on the pavements: two lanes round every block, one each way, and two
+// round the rim of the town.
+const CITY_WALK_OUT = CITY_BLOCK / 2 - 0.2;
+const CITY_WALK_IN = CITY_BLOCK / 2 - 0.5;
+const CITY_WALKERS_PER_LANE = 2;
+const CITY_RIM_WALKERS = 6;
+const CITY_SHIRTS = ['#e53935', '#1e88e5', '#43a047', '#fdd835', '#8e24aa', '#fb8c00', '#00acc1', '#f06292', '#f5f5f5', '#5d4037'];
+const CITY_SKINS = ['#f6d2b0', '#e8b98f', '#c98f65', '#8d5a3b'];
+const CITY_HAIRS = ['#1d1d1d', '#3b2a20', '#5d4037', '#2b2b2b'];
 
 var cityState = {
     three: null,          // { THREE, OrbitControls, merge } once loaded
@@ -277,7 +289,7 @@ function buildCityWorld() {
         b.place(0, 0, 0);
         cityTree(b, spot[0], spot[1], 1, CITY_KERB);
     });
-    [[-6, 7.3], [-3.2, 7.3]].forEach(function (spot) {
+    [[-6, 6.9], [-3.2, 6.9]].forEach(function (spot) {
         b.place(spot[0], 0, spot[1]);
         cityFoodCart(b);
     });
@@ -341,6 +353,8 @@ function buildCityWorld() {
 
     Object.values(shapes).forEach(function (shape) { shape.dispose(); });
 
+    buildCityPeople(world);
+
     cityState.world = world;
     cityState.occluders = [mesh];
     cityState.skytrain = skytrain;
@@ -350,7 +364,108 @@ function buildCityWorld() {
     placeCityLife(0);
 }
 
-// Where the cars, the robots, the train and Nang Kwak's arm are `time` seconds in.
+// People out and about: most walking round the blocks and the rim, a few
+// standing at the noodle carts, at the spirit house or playing in the park.
+// One instanced mesh each for bodies, heads and hair, so the whole crowd costs
+// three draws however many there are.
+function buildCityPeople(world) {
+    let THREE = cityState.three.THREE;
+    let walkers = [];
+    let n = 0;
+    let lane = function (half, radius, cx, cz, count, reverse) {
+        let curve = cityLoop(THREE, half, radius);
+        let length = curve.getLength();
+        for (let k = 0; k < count; k++) {
+            walkers.push({ curve: curve, length: length, cx: cx, cz: cz, offset: (k + n * 0.37) / count % 1, speed: 0.7 + (n % 3) * 0.15, reverse: reverse, size: n % 5 === 0 ? 0.78 : 1, phase: n });
+            n++;
+        }
+    };
+
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            lane(CITY_WALK_OUT, 1.6, i * CITY_SPACING, j * CITY_SPACING, CITY_WALKERS_PER_LANE, false);
+            lane(CITY_WALK_IN, 1.6, i * CITY_SPACING, j * CITY_SPACING, CITY_WALKERS_PER_LANE, true);
+        }
+    }
+    lane(CITY_HALF - 0.3, 5.7, 0, 0, CITY_RIM_WALKERS, false);
+    lane(CITY_HALF - 0.7, 5.3, 0, 0, CITY_RIM_WALKERS, true);
+
+    // [x, z, facing, size, robe]: customers, a monk before the temple, someone
+    // at the spirit house, children playing in the park (they hop)
+    let park = [CITY_PARK_SLOT[0] * CITY_SPACING, CITY_PARK_SLOT[1] * CITY_SPACING];
+    let standers = [
+        { x: -4.85, z: 6.9, angle: -Math.PI / 2, size: 1 },
+        { x: -2.05, z: 6.9, angle: -Math.PI / 2, size: 1 },
+        { x: park[0] + 4.5, z: park[1] + 6.9, angle: Math.PI / 2, size: 1 },
+        { x: 4.9, z: 0.6, angle: Math.PI / 2, size: 1 },
+        { x: -1, z: 4.4, angle: Math.PI, size: 1, robe: '#f39c12' },
+        { x: park[0], z: park[1] + 4.4, angle: 0, size: 0.75, hop: true },
+        { x: park[0] + 1.3, z: park[1] + 4.9, angle: -Math.PI / 2, size: 0.75, hop: true },
+        { x: park[0] - 0.8, z: park[1] + 5, angle: Math.PI / 2, size: 0.75, hop: true },
+    ];
+
+    let total = walkers.length + standers.length;
+    let make = function (geometry) {
+        let mesh = new THREE.InstancedMesh(geometry, new THREE.MeshStandardMaterial({ roughness: 0.8 }), total);
+        mesh.castShadow = true;
+        mesh.frustumCulled = false;     // they move about, so the first box drawn round them would not hold
+        world.add(mesh);
+        return mesh;
+    };
+    let people = {
+        walkers: walkers, standers: standers,
+        bodies: make(new THREE.CylinderGeometry(0.15, 0.2, 0.62, 8)),
+        heads: make(new THREE.SphereGeometry(0.17, 10, 8)),
+        hair: make(new THREE.SphereGeometry(0.18, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2)),
+        base: new THREE.Matrix4(), part: new THREE.Matrix4(),
+        at: new THREE.Vector3(), size: new THREE.Vector3(), turn: new THREE.Quaternion(), up: new THREE.Vector3(0, 1, 0),
+        offsets: {
+            body: new THREE.Matrix4().makeTranslation(0, 0.31, 0),
+            head: new THREE.Matrix4().makeTranslation(0, 0.8, 0),
+            hair: new THREE.Matrix4().makeTranslation(0, 0.83, -0.02),
+        },
+    };
+    let colour = new THREE.Color();
+    for (let i = 0; i < total; i++) {
+        let stander = standers[i - walkers.length];
+        people.bodies.setColorAt(i, colour.set(stander && stander.robe ? stander.robe : CITY_SHIRTS[i * 7 % CITY_SHIRTS.length]));
+        people.heads.setColorAt(i, colour.set(CITY_SKINS[i * 3 % CITY_SKINS.length]));
+        // the monk's head is shaved
+        people.hair.setColorAt(i, colour.set(stander && stander.robe ? CITY_SKINS[i * 3 % CITY_SKINS.length] : CITY_HAIRS[i % CITY_HAIRS.length]));
+    }
+    cityState.people = people;
+}
+
+function placeCityPeople(time) {
+    let people = cityState.people;
+    let place = function (i, x, z, angle, size, lift) {
+        people.turn.setFromAxisAngle(people.up, angle);
+        people.base.compose(people.at.set(x, CITY_KERB + lift, z), people.turn, people.size.setScalar(size));
+        people.bodies.setMatrixAt(i, people.part.multiplyMatrices(people.base, people.offsets.body));
+        people.heads.setMatrixAt(i, people.part.multiplyMatrices(people.base, people.offsets.head));
+        people.hair.setMatrixAt(i, people.part.multiplyMatrices(people.base, people.offsets.hair));
+    };
+
+    people.walkers.forEach(function (walker, i) {
+        let u = ((walker.offset + time * walker.speed / walker.length) % 1 + 1) % 1;
+        if (walker.reverse) {
+            u = 1 - u;
+        }
+        let at = walker.curve.getPointAt(u);
+        let ahead = walker.curve.getTangentAt(u);
+        if (walker.reverse) {
+            ahead.negate();
+        }
+        place(i, walker.cx + at.x, walker.cz + at.z, Math.atan2(ahead.x, ahead.z), walker.size, Math.abs(Math.sin(time * 7 + walker.phase)) * 0.05);
+    });
+    people.standers.forEach(function (stander, k) {
+        place(people.walkers.length + k, stander.x, stander.z, stander.angle, stander.size, stander.hop ? Math.abs(Math.sin(time * 4 + k)) * 0.3 : 0);
+    });
+    [people.bodies, people.heads, people.hair].forEach(function (mesh) { mesh.instanceMatrix.needsUpdate = true; });
+}
+
+// Where the cars, the robots, the people, the train and Nang Kwak's arm are
+// `time` seconds in.
 function placeCityLife(time) {
     cityState.vehicles.forEach(function (mover) {
         let lane = mover.lane;
@@ -368,6 +483,10 @@ function placeCityLife(time) {
         mover.mesh.position.set(at.x, lift, at.z);
         mover.mesh.lookAt(at.x + ahead.x, lift, at.z + ahead.z);
     });
+
+    if (cityState.people) {
+        placeCityPeople(time);
+    }
 
     // the train glides end to end, slowing for each end of the line
     if (cityState.skytrain) {
@@ -476,15 +595,19 @@ function buildCityTown(data) {
     });
     town.add(cityBrushMesh(THREE, merge, b, cityState.materials));
 
-    // the streak: a car for every day in a row, and every seventh day a robot
-    // animal as well, spaced evenly along their lanes
+    // the town's own few cars, then the streak's: a car for every day in a row,
+    // and every seventh day a robot animal as well, spaced evenly along lanes
     let cars = Math.min(data.streak, CITY_MAX_CARS);
     let robots = Math.min(Math.floor(data.streak / 7), CITY_MAX_ROBOTS);
     let lanes = CITY_LANES.map(function () { return []; });
     let vehicles = [];
+    let kinds = CITY_BASE_CARS.map(function (kind) { return CITY_CAR_KINDS[kind]; });
     for (let i = 0; i < cars; i++) {
-        lanes[CITY_LANE_ORDER[i % CITY_LANE_ORDER.length]].push(CITY_CAR_KINDS[i % CITY_CAR_KINDS.length]);
+        kinds.push(CITY_CAR_KINDS[i % CITY_CAR_KINDS.length]);
     }
+    kinds.forEach(function (kind, i) {
+        lanes[CITY_LANE_ORDER[i % CITY_LANE_ORDER.length]].push(kind);
+    });
     lanes.forEach(function (kinds, lane) {
         kinds.forEach(function (kind, k) {
             vehicles.push(cityMover(THREE, merge, shapes, kind, CITY_LANES[lane], k / kinds.length, false));

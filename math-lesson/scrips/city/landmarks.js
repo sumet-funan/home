@@ -95,32 +95,157 @@ function cityFountain(b, x, z) {
     b.put(s.cone, '#bfe8ff', [x, 1.35, z], [0.5, 0.5, 0.5], [Math.PI, 0, 0], 'glow');
 }
 
-function cityFlowers(b, x, z, hex) {
-    b.box('#8b5a3c', x, 0.15, z, 1.6, 0.3, 0.8);
-    for (let i = 0; i < 4; i++) {
-        b.put(b.shapes.ball, i % 2 ? hex : '#ffd23f', [x - 0.6 + i * 0.4, 0.38, z], [0.32, 0.28, 0.32]);
-    }
-}
-
-// What grows round a landmark as its grade fills in. The landmark itself keeps
-// within about 4.8 of the block's centre, so these sit in a ring outside it.
-function cityGrounds(b, tier, paving, tree, flowers) {
+// What grows round a landmark as its grade fills in. The landmark keeps within
+// about 5 of the block's centre and the district's own buildings stand along
+// the back (cityFillers), so these go in front and down the front of each side.
+// A waterfront keeps its front edge clear for the water.
+function cityGrounds(b, tier, paving, tree, waterfront) {
     if (tier >= 1) {
         b.box(paving, 0, 0.02, 0, 13.8, 0.04, 13.8);
     }
-    if (tier >= 2) {
-        [[-6, -6], [6, -6], [-6, 6], [6, 6]].forEach(function (spot) { tree(b, spot[0], spot[1]); });
+    if (tier >= 2 && !waterfront) {
+        tree(b, -6.2, 6.2);
+        tree(b, 6.2, 6.2);
     }
     if (tier >= 3) {
-        [[0, -6.3], [0, 6.3], [-6.3, 0], [6.3, 0]].forEach(function (spot) { cityLamp(b, spot[0], spot[1]); });
-        [[-6, -3], [6, 3], [-3, -6], [3, -6]].forEach(function (spot) { tree(b, spot[0], spot[1]); });
+        cityLamp(b, -6.5, 2.6);
+        cityLamp(b, 6.5, 2.6);
+        tree(b, -6.3, 4.4);
+        tree(b, 6.3, 4.4);
+        if (!waterfront) {
+            cityLamp(b, -2.2, 6.7);
+            cityLamp(b, 2.2, 6.7);
+        }
     }
-    if (tier >= 4) {
-        cityFountain(b, -3, 6);
-        cityFountain(b, 3, 6);
-        cityFlowers(b, -6, 3, flowers);
-        cityFlowers(b, 6, -3, flowers);
+    if (tier >= 4 && !waterfront) {
+        cityFountain(b, -4.2, 6);
+        cityFountain(b, 4.2, 6);
     }
+}
+
+// ---------- the city round each landmark ----------
+
+// Where a district's own buildings stand, along the back and down the back of
+// each side, filled in this order: two from the start, one more for each tier.
+const CITY_FILLER_SLOTS = [[-6.1, -6.3], [6.1, -6.3], [-6.3, -3.4], [6.3, -3.4], [-3.3, -6.3], [3.3, -6.3], [-6.3, -0.9], [6.3, -0.9]];
+
+// Builds them, each about 2 across, and says how tall the tallest is.
+function cityFillers(b, tier, build, slots) {
+    return (slots || CITY_FILLER_SLOTS).slice(0, 2 + tier).reduce(function (tallest, slot, i) {
+        return Math.max(tallest, build(b, slot[0], slot[1], i));
+    }, 0);
+}
+
+// A band of lit windows round a building for each storey.
+function cityWindowBands(b, x, z, w, d, from, to, step, hex) {
+    for (let y = from; y < to; y += step) {
+        b.box(hex || '#5d86a8', x, y, z, w + 0.04, step * 0.4, d + 0.04, 'glow');
+    }
+}
+
+// กรุงเทพฯ: open pavilions with tiered roofs, inside the palace walls.
+const CITY_PALACE_SLOTS = [[-5.6, -5.4], [5.6, -5.4], [-3.4, -5.4], [3.4, -5.4], [-5.6, -3.2], [5.6, -3.2]];
+
+function cityThaiPavilion(b, x, z, i) {
+    let s = b.shapes;
+    b.box('#f4f1ea', x, 0.2, z, 1.8, 0.4, 1.8);
+    [[-0.7, -0.7], [0.7, -0.7], [-0.7, 0.7], [0.7, 0.7]].forEach(function (post) {
+        b.box('#fbf8f2', x + post[0], 1, z + post[1], 0.14, 1.2, 0.14);
+    });
+    b.put(s.prism, i % 2 ? '#2e7d4f' : '#e0662c', [x, 1.6, z], [2.1, 0.8, 2.1]);
+    b.put(s.prism, '#e9772f', [x, 2.1, z], [1.4, 0.7, 1.5]);
+    b.put(s.spire, '#d4af37', [x, 3.1, z], [0.12, 0.6, 0.12], null, 'metal');
+    return 3.4;
+}
+
+// โตเกียว: narrow shops and offices with a red noren and a neon sign.
+function cityTokyoShop(b, x, z, i) {
+    let h = [3.4, 5, 2.8, 4.2, 3.6, 5.6, 3, 4.4][i];
+    let neon = ['#ff2d55', '#5ac8fa', '#ffcc00', '#af52de'][i % 4];
+    b.box(['#e8e4dc', '#cfd8dc', '#f2e6d0', '#d7ccc8'][i % 4], x, h / 2, z, 2, h, 2);
+    cityWindowBands(b, x, z, 2, 2, 1.6, h - 0.3, 0.9);
+    b.box('#c62828', x, 1.0, z + 1.02, 1.5, 0.35, 0.04);
+    b.box(neon, x + 0.75, h - 1.1, z + 1.15, 0.24, 1.4, 0.3, 'glow');
+    b.box('#4b4f54', x, h + 0.1, z, 2.2, 0.2, 2.2);
+    b.box('#d9dde0', x - 0.4, h + 0.4, z - 0.4, 0.6, 0.4, 0.6);
+    return h + 0.6;
+}
+
+// ปารีส: cream stone with black balconies and a slate mansard roof.
+function cityParisBuilding(b, x, z, i) {
+    let h = [3.6, 4.2, 3.9, 4.4, 3.7, 4.0, 3.8, 4.3][i];
+    b.box('#efe4cc', x, h / 2, z, 2, h, 2);
+    cityWindowBands(b, x, z, 2, 2, 1.3, h - 0.2, 0.9, '#7d93a8');
+    for (let y = 1.2; y < h - 0.3; y += 0.9) {
+        b.box('#1d1d1d', x, y, z + 1.08, 1.8, 0.06, 0.18);
+    }
+    b.box('#5d6d7e', x, h + 0.4, z, 1.8, 0.8, 1.8);
+    b.box('#5d6d7e', x, h + 0.85, z, 1.2, 0.1, 1.2);
+    [-0.45, 0.45].forEach(function (dx) { b.box('#efe4cc', x + dx, h + 0.45, z + 0.92, 0.35, 0.45, 0.2); });
+    b.box('#b5653a', x + 0.6, h + 1.0, z - 0.4, 0.25, 0.5, 0.25);
+    return h + 1.25;
+}
+
+// ลอนดอน: brick terraces, white window frames, chimney pots.
+function cityLondonTerrace(b, x, z, i) {
+    let h = [3.2, 3.6, 3.0, 3.8, 3.4, 3.2, 3.6, 3.0][i];
+    b.box(i % 2 ? '#9c4a32' : '#b5653a', x, h / 2, z, 2, h, 2);
+    for (let y = 1.1; y < h - 0.3; y += 1.0) {
+        [-0.5, 0.5].forEach(function (dx) {
+            b.box('#f7f3ea', x + dx, y, z + 1.01, 0.5, 0.65, 0.03);
+            b.box('#5d86a8', x + dx, y, z + 1.03, 0.36, 0.5, 0.03, 'glow');
+        });
+    }
+    b.box(['#1d3557', '#2e7d4f', '#8b1e1e'][i % 3], x, 0.55, z + 1.02, 0.5, 1.1, 0.04);
+    b.put(b.shapes.prism, '#4b4f54', [x, h, z], [2.1, 0.8, 2.1]);
+    b.box('#9c4a32', x + 0.6, h + 0.7, z, 0.3, 0.7, 0.5);
+    return h + 1.05;
+}
+
+// นิวยอร์ก: brick and brownstone towers, wooden water tanks on the roofs.
+function cityNewYorkTower(b, x, z, i) {
+    let s = b.shapes;
+    let h = [6, 9, 5, 11, 7, 8.5, 5.5, 10][i];
+    b.box(['#a0522d', '#8d6e63', '#b0a089', '#c9b79c'][i % 4], x, h / 2, z, 2, h, 2);
+    cityWindowBands(b, x, z, 2, 2, 1.2, h - 0.3, 0.8);
+    b.box('#6d4c3a', x, h + 0.05, z, 2.1, 0.1, 2.1);
+    [[-0.3, -0.3], [0.3, -0.3], [-0.3, 0.3], [0.3, 0.3]].forEach(function (leg) {
+        b.box('#3b4148', x + leg[0], h + 0.35, z + leg[1], 0.06, 0.6, 0.06);
+    });
+    b.put(s.cylinder, '#8b6b4a', [x, h + 1, z], [0.9, 0.8, 0.9]);
+    b.put(s.cone, '#5d4037', [x, h + 1.4, z], [1.0, 0.4, 1.0]);
+    return h + 1.6;
+}
+
+// ดูไบ: sand-coloured blocks with domes, and glass towers.
+function cityDubaiBuilding(b, x, z, i) {
+    let s = b.shapes;
+    let h = [3, 7, 4, 9, 3.5, 6, 3, 8][i];
+    if (i % 2) {
+        b.box('#8fb3c9', x, h / 2, z, 1.9, h, 1.9);
+        cityWindowBands(b, x, z, 1.9, 1.9, 0.6, h, 0.7, '#cfe8ff');
+        b.put(s.spire, '#dfe6ea', [x, h + 0.6, z], [0.2, 1.2, 0.2]);
+        return h + 1.2;
+    }
+    b.box('#e6d2a8', x, h / 2, z, 2, h, 2);
+    [-0.5, 0.5].forEach(function (dx) {
+        b.box('#5c4a3a', x + dx, 1.0, z + 1.01, 0.5, 1.1, 0.03, 'glow');
+        b.put(s.ball, '#5c4a3a', [x + dx, 1.55, z + 1.0], [0.5, 0.5, 0.06], null, 'glow');
+    });
+    b.put(s.ball, '#f3f0e8', [x, h, z], [1.3, 1.1, 1.3]);
+    b.put(s.spire, '#d4af37', [x, h + 0.75, z], [0.1, 0.5, 0.1], null, 'metal');
+    return h + 1;
+}
+
+// ซิดนีย์: bright low modern buildings with roof gardens.
+function citySydneyBuilding(b, x, z, i) {
+    let h = [2.6, 3.6, 4.2, 3, 3.8, 2.8, 4.4, 3.2][i];
+    b.box(['#f6f4ee', '#e7d9c2', '#dfe6ea'][i % 3], x, h / 2, z, 2, h, 2);
+    cityWindowBands(b, x, z, 2, 2, 0.8, h - 0.2, 0.8, '#7fa6c4');
+    b.box('#ffffff', x, h + 0.05, z, 2.1, 0.1, 2.1);
+    b.put(b.shapes.bush, '#4caf50', [x - 0.4, h + 0.3, z - 0.3], [0.8, 0.5, 0.8]);
+    b.put(b.shapes.bush, '#66bb6a', [x + 0.4, h + 0.3, z + 0.3], [0.6, 0.45, 0.6]);
+    return h + 0.6;
 }
 
 // Tier 0: a fenced site with a crane, waiting for the first lesson.
@@ -157,9 +282,10 @@ function cityGrandPalace(b, tier, colour) {
     let s = b.shapes;
     let gold = '#d4af37';
     if (tier === 0) {
-        return cityBuildingSite(b);
+        return Math.max(cityBuildingSite(b), cityFillers(b, 0, cityThaiPavilion, CITY_PALACE_SLOTS));
     }
-    cityGrounds(b, tier, '#efe8da', cityTopiary, '#ff9f1a');
+    cityGrounds(b, tier, '#efe8da', cityTopiary);
+    let around = cityFillers(b, tier, cityThaiPavilion, CITY_PALACE_SLOTS);
 
     // the wall, open at the front for the gate
     let wall = '#f4f1ea';
@@ -225,9 +351,9 @@ function cityGrandPalace(b, tier, colour) {
             });
             b.box(colour, x, 1.15, 5.4, 0.85, 0.12, 0.9);
         });
-        [-6, 6].forEach(function (x) { cityFlag(b, x, 6.8, 4, colour); });
+        [-6.4, 6.4].forEach(function (x) { cityFlag(b, x, 0.9, 4, colour); });
     }
-    return height;
+    return Math.max(height, around);
 }
 
 // ป.2 โตเกียว: Tokyo Tower, red and white, its decks lit, a torii and cherry trees.
@@ -235,9 +361,10 @@ function cityTokyoTower(b, tier, colour) {
     let s = b.shapes;
     let red = '#e2421f', white = '#f3f3f3';
     if (tier === 0) {
-        return cityBuildingSite(b);
+        return Math.max(cityBuildingSite(b), cityFillers(b, 0, cityTokyoShop));
     }
-    cityGrounds(b, tier, '#d9d2c5', citySakura, '#f48fb1');
+    cityGrounds(b, tier, '#d9d2c5', citySakura);
+    let around = cityFillers(b, tier, cityTokyoShop);
 
     cityLattice(b, red, 0, tier >= 2 ? 8 : 4, 9, tier >= 2 ? 4.2 : 6.6, tier >= 2 ? 4 : 2, 0.3, white);
     let height = tier >= 2 ? 8 : 4;
@@ -266,9 +393,9 @@ function cityTokyoTower(b, tier, colour) {
         b.box('#d7261e', 0, 2.95, 5.6, 4, 0.3, 0.4);
         b.box('#1d1d1d', 0, 3.15, 5.6, 4.4, 0.12, 0.5);
         b.box('#d7261e', 0, 2.3, 5.6, 3.2, 0.2, 0.3);
-        cityFlag(b, 6.6, -6.6, 4, colour);
+        cityFlag(b, 6.6, 0.9, 4, colour);
     }
-    return height;
+    return Math.max(height, around);
 }
 
 // ป.3 ปารีส: the Eiffel Tower in bronze, arches at its feet, lights that sparkle.
@@ -276,9 +403,10 @@ function cityEiffelTower(b, tier, colour) {
     let s = b.shapes;
     let iron = '#7a5c3e';
     if (tier === 0) {
-        return cityBuildingSite(b);
+        return Math.max(cityBuildingSite(b), cityFillers(b, 0, cityParisBuilding));
     }
-    cityGrounds(b, tier, '#cdbb94', cityRoundTree, '#e91e63');
+    cityGrounds(b, tier, '#cdbb94', cityRoundTree);
+    let around = cityFillers(b, tier, cityParisBuilding);
 
     cityLattice(b, iron, 0, tier >= 2 ? 6 : 3, 10, tier >= 2 ? 5.6 : 7.8, tier >= 2 ? 3 : 2, 0.36);
     let height = tier >= 2 ? 6 : 3;
@@ -314,14 +442,14 @@ function cityEiffelTower(b, tier, colour) {
         cityLegLights(b, 6.6, 12, 4.8, 2.8, 6, '#ffd27a');
         b.box('#ffe9a8', 0, 21, 0, 0.5, 0.5, 0.5, 'glow');
         // café umbrellas on the lawn
-        [[-4.5, 4.2], [4.5, 4.2]].forEach(function (spot) {
+        [[-1.8, 4.7], [1.8, 4.7]].forEach(function (spot) {
             b.put(s.post, '#555555', [spot[0], 0.7, spot[1]], [0.06, 1.4, 0.06]);
             b.put(s.cone, '#c62828', [spot[0], 1.55, spot[1]], [1.6, 0.45, 1.6]);
             b.put(s.cylinder, '#f3efe6', [spot[0], 0.5, spot[1]], [0.9, 0.06, 0.9]);
         });
-        cityFlag(b, 6.6, -6.6, 4, colour);
+        cityFlag(b, 6.6, 0.9, 4, colour);
     }
-    return height;
+    return Math.max(height, around);
 }
 
 // ป.4 ลอนดอน: Big Ben and the Houses of Parliament, phone boxes and a red bus.
@@ -330,9 +458,10 @@ function cityBigBen(b, tier, colour) {
     let stone = '#d4bd85', rib = '#b89c62', slate = '#55606a';
     let x = 2.8, z = -1.2;
     if (tier === 0) {
-        return cityBuildingSite(b);
+        return Math.max(cityBuildingSite(b), cityFillers(b, 0, cityLondonTerrace));
     }
-    cityGrounds(b, tier, '#d6d2c8', cityRoundTree, '#e53935');
+    cityGrounds(b, tier, '#d6d2c8', cityRoundTree);
+    let around = cityFillers(b, tier, cityLondonTerrace);
 
     b.box(stone, x, 2, z, 3, 4, 3);
     let height = 4;
@@ -365,26 +494,26 @@ function cityBigBen(b, tier, colour) {
         });
         b.put(s.post, '#d4af37', [x, 21.4, z], [0.08, 1.2, 0.08], null, 'metal');
         // Parliament, long and low beside the tower
-        b.box(stone, -2.4, 1.7, z, 6.4, 3.4, 3);
-        b.put(s.prism, slate, [-2.4, 3.4, z], [3, 1, 6.4], [0, Math.PI / 2, 0]);
+        b.box(stone, -2, 1.7, z, 6, 3.4, 3);
+        b.put(s.prism, slate, [-2, 3.4, z], [3, 1, 6], [0, Math.PI / 2, 0]);
         for (let i = 0; i < 6; i++) {
-            b.box('#5d86a8', -5 + i * 1.05, 1.9, z + 1.51, 0.4, 1.6, 0.04, 'glow');
-            b.put(s.spire, rib, [-5.4 + i * 1.2, 3.9, z + 1.3], [0.14, 1, 0.14]);
+            b.box('#5d86a8', -4.6 + i * 1.05, 1.9, z + 1.51, 0.4, 1.6, 0.04, 'glow');
+            b.put(s.spire, rib, [-5 + i * 1.2, 3.9, z + 1.3], [0.14, 1, 0.14]);
         }
         height = 22;
     }
     if (tier >= 5) {
-        [-5.6, -4.6].forEach(function (bx) {
-            b.box('#d0021b', bx, 1.1, 5.6, 0.8, 2.2, 0.8);
-            b.box('#cfe8ff', bx, 1.3, 6.01, 0.55, 1.1, 0.02, 'glow');
+        [-2.6, -1.8].forEach(function (bx) {
+            b.box('#d0021b', bx, 1.1, 5.4, 0.8, 2.2, 0.8);
+            b.box('#cfe8ff', bx, 1.3, 5.81, 0.55, 1.1, 0.02, 'glow');
         });
-        b.box('#d0021b', 1.5, 1.5, 5.8, 3.6, 2.4, 1.3);
-        b.box('#3a4a5a', 1.5, 1.2, 5.8, 3.62, 0.5, 1.32, 'glow');
-        b.box('#3a4a5a', 1.5, 2.2, 5.8, 3.62, 0.5, 1.32, 'glow');
-        [[0.3, 6.45], [2.7, 6.45], [0.3, 5.15], [2.7, 5.15]].forEach(function (w) { cityWheel(b, w[0], w[1], 0.28); });
-        cityFlag(b, -5.4, z - 1.2, 5.6, colour);
+        b.box('#d0021b', 1.5, 1.5, 4.9, 3.6, 2.4, 1.3);
+        b.box('#3a4a5a', 1.5, 1.2, 4.9, 3.62, 0.5, 1.32, 'glow');
+        b.box('#3a4a5a', 1.5, 2.2, 4.9, 3.62, 0.5, 1.32, 'glow');
+        [[0.3, 5.55], [2.7, 5.55], [0.3, 4.25], [2.7, 4.25]].forEach(function (w) { cityWheel(b, w[0], w[1], 0.28); });
+        cityFlag(b, -4.6, z - 1.2, 5.6, colour);
     }
-    return height;
+    return Math.max(height, around);
 }
 
 // ป.5 นิวยอร์ก: the Statue of Liberty on her star fort, and a skyline behind.
@@ -393,9 +522,10 @@ function cityStatueOfLiberty(b, tier, colour) {
     let THREE = b.THREE;
     let copper = '#6fae96', granite = '#cfc7b6';
     if (tier === 0) {
-        return cityBuildingSite(b);
+        return Math.max(cityBuildingSite(b), cityFillers(b, 0, cityNewYorkTower));
     }
-    cityGrounds(b, tier, '#d7d3c9', cityRoundTree, '#ffb300');
+    cityGrounds(b, tier, '#d7d3c9', cityRoundTree);
+    let around = cityFillers(b, tier, cityNewYorkTower);
 
     b.box('#b9b2a4', 0, 0.4, 0, 8.4, 0.8, 8.4);
     b.box('#b9b2a4', 0, 0.4, 0, 8.4, 0.8, 8.4, 'body', [0, Math.PI / 4, 0]);
@@ -435,20 +565,13 @@ function cityStatueOfLiberty(b, tier, colour) {
     }
     if (tier >= 5) {
         b.put(s.cone, '#ffcf4a', at(0.9, 7.9, 0.2), size(0.5, 0.9, 0.5), null, 'glow');
-        // an art deco tower on the skyline behind, and a yellow cab
-        let deco = '#cfc4ad';
-        [[2.4, 10], [1.8, 4], [1.2, 3]].reduce(function (y, step) {
-            b.box(deco, -5.4, y + step[1] / 2, -5.4, step[0], step[1], step[0]);
-            b.box('#5d86a8', -5.4, y + step[1] / 2, -5.4, step[0] + 0.04, step[1] * 0.7, step[0] + 0.04, 'glow');
-            return y + step[1];
-        }, 0);
-        b.put(s.spire, '#d9dde0', [-5.4, 18.5, -5.4], [0.2, 2.6, 0.2]);
-        b.box('#f5c518', 4.5, 0.5, 5.6, 1.1, 0.5, 2.1);
-        b.box('#f5c518', 4.5, 0.9, 5.5, 0.95, 0.4, 1.1);
-        b.box('#3a4a5a', 4.5, 0.92, 5.5, 0.97, 0.26, 0.9, 'glow');
-        cityFlag(b, 6.6, -6.6, 4, colour);
+        // a yellow cab parked along the front
+        b.box('#f5c518', 0, 0.5, 6.6, 2.1, 0.5, 1.1);
+        b.box('#f5c518', -0.1, 0.9, 6.6, 1.1, 0.4, 0.95);
+        b.box('#3a4a5a', -0.1, 0.92, 6.6, 0.9, 0.26, 0.97, 'glow');
+        cityFlag(b, 6.6, 0.9, 4, colour);
     }
-    return Math.max(height, tier >= 5 ? 19.8 : 0);
+    return Math.max(height, around);
 }
 
 // ป.6 ดูไบ: the Burj Khalifa, rising in steps on three wings to its spire, by a
@@ -458,9 +581,10 @@ function cityBurjKhalifa(b, tier, colour) {
     let skin = '#c9d3da', glass = '#7fa6c4';
     let sections = 12, step = 2.2;
     if (tier === 0) {
-        return cityBuildingSite(b);
+        return Math.max(cityBuildingSite(b), cityFillers(b, 0, cityDubaiBuilding));
     }
-    cityGrounds(b, tier, '#e6dcc6', cityPalm, '#ff7043');
+    cityGrounds(b, tier, '#e6dcc6', cityPalm);
+    let around = cityFillers(b, tier, cityDubaiBuilding);
 
     let built = tier >= 4 ? sections : tier * 3;
     for (let k = 0; k < built; k++) {
@@ -489,13 +613,13 @@ function cityBurjKhalifa(b, tier, colour) {
     }
     if (tier >= 5) {
         b.box('#ffffff', 0, height + 0.1, 0, 0.18, 0.18, 0.18, 'glow');
-        b.box('#5fc6f0', 0, 0.06, 5.3, 12, 0.08, 2.6, 'glow');
-        [-4, -1.3, 1.3, 4].forEach(function (x) {
-            b.put(s.post, '#e8f7ff', [x, 0.8, 5.3], [0.1, 1.6, 0.1], null, 'glow');
+        b.box('#5fc6f0', 0, 0.06, 5.2, 6, 0.08, 2.2, 'glow');
+        [-2.2, -0.7, 0.7, 2.2].forEach(function (x) {
+            b.put(s.post, '#e8f7ff', [x, 0.8, 5.2], [0.1, 1.6, 0.1], null, 'glow');
         });
-        cityFlag(b, 6.6, -6.6, 4, colour);
+        cityFlag(b, 6.6, 0.9, 4, colour);
     }
-    return height;
+    return Math.max(height, around);
 }
 
 // A sail of the opera house: a quarter of a sphere, stretched tall and leaning
@@ -520,9 +644,10 @@ function citySydneyOpera(b, tier, colour) {
     let s = b.shapes;
     let THREE = b.THREE;
     if (tier === 0) {
-        return cityBuildingSite(b);
+        return Math.max(cityBuildingSite(b), cityFillers(b, 0, citySydneyBuilding));
     }
-    cityGrounds(b, tier, '#ddd3bf', cityRoundTree, '#ab47bc');
+    cityGrounds(b, tier, '#ddd3bf', cityRoundTree, true);
+    let around = cityFillers(b, tier, citySydneyBuilding);
 
     b.box('#d9c7a6', 0, 0.6, -1.4, 10, 1.2, 5.6);
     b.box('#cdb995', 0, 0.3, 1.8, 4, 0.6, 1);
@@ -536,23 +661,23 @@ function citySydneyOpera(b, tier, colour) {
     });
     if (tier >= 4) {
         // the harbour along the front
-        b.box('#3f8fd0', 0, 0.05, 5.2, 13.6, 0.06, 3, 'metal');
+        b.box('#3f8fd0', 0, 0.05, 5.95, 13.6, 0.06, 1.9, 'metal');
     }
     if (tier >= 5) {
         b.box('#ffe9a8', 0, 1.25, 1.4, 9.6, 0.08, 0.1, 'glow');
         // the bridge's arch over the water
-        let arch = new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(new THREE.Vector3(-6.4, 0.2, 5.8), new THREE.Vector3(0, 8.4, 5.8), new THREE.Vector3(6.4, 0.2, 5.8)), 20, 0.18, 5, false);
+        let arch = new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(new THREE.Vector3(-6.4, 0.2, 5.95), new THREE.Vector3(0, 8.4, 5.95), new THREE.Vector3(6.4, 0.2, 5.95)), 20, 0.18, 5, false);
         b.put(arch, '#7d868c', [0, 0, 0]);
         arch.dispose();
-        b.box('#7d868c', 0, 1.6, 5.8, 13.4, 0.25, 1);
+        b.box('#7d868c', 0, 1.6, 5.95, 13.4, 0.25, 1);
         [-4, -2, 0, 2, 4].forEach(function (hx) {
-            b.box('#7d868c', hx, 1.6 + (4.2 - hx * hx * 0.105) / 2, 5.8, 0.06, 4.2 - hx * hx * 0.105, 0.06);
+            b.box('#7d868c', hx, 1.6 + (4.2 - hx * hx * 0.105) / 2, 5.95, 0.06, 4.2 - hx * hx * 0.105, 0.06);
         });
-        b.box('#2e9d4e', -3, 0.3, 4.6, 1.6, 0.5, 0.7);
-        b.box('#f5c518', -3, 0.65, 4.6, 0.9, 0.3, 0.5);
-        cityFlag(b, 6.6, -6.6, 4, colour);
+        b.box('#2e9d4e', -3, 0.3, 5.95, 1.6, 0.5, 0.7);
+        b.box('#f5c518', -3, 0.65, 5.95, 0.9, 0.3, 0.5);
+        cityFlag(b, 6.6, 0.9, 4, colour);
     }
-    return height;
+    return Math.max(height, around);
 }
 
 // ---------- the streak's cars and robot animals ----------
