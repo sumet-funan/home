@@ -58,12 +58,21 @@ const CITY_WALK_OUT = CITY_BLOCK / 2 - 0.2;
 const CITY_WALK_IN = CITY_BLOCK / 2 - 0.5;
 const CITY_WALKERS_PER_LANE = 2;
 const CITY_RIM_WALKERS = 6;
+// Sky: clouds drifting along the horizon, two flocks of birds circling over
+// the rooftops, hot air balloons round the edge of town.
+const CITY_CLOUDS = 9;
+const CITY_PUFFS = [[0, 0, 0, 2.4], [2.2, -0.3, 0.4, 1.8], [-2.1, -0.4, -0.3, 1.7], [0.9, 0.9, -0.6, 1.5], [-1, 0.6, 0.8, 1.4]];
+const CITY_FLOCKS = [{ radius: 26, height: 27, speed: 0.12 }, { radius: 42, height: 31, speed: -0.09 }];
+const CITY_FLOCK_SHAPE = [[0, 0], [-1.3, -1.2], [1.3, -1.2], [-2.6, -2.4], [2.6, -2.4], [-3.9, -3.6], [3.9, -3.6]];
+const CITY_BALLOONS = [['#e53935', '#ffd23f'], ['#1e88e5', '#ffffff'], ['#8e24aa', '#ff9500']];
+const CITY_PAN_LIMIT = 30;      // how far from the middle the view can be moved
+
 const CITY_SHIRTS = ['#e53935', '#1e88e5', '#43a047', '#fdd835', '#8e24aa', '#fb8c00', '#00acc1', '#f06292', '#f5f5f5', '#5d4037'];
 const CITY_SKINS = ['#f6d2b0', '#e8b98f', '#c98f65', '#8d5a3b'];
 const CITY_HAIRS = ['#1d1d1d', '#3b2a20', '#5d4037', '#2b2b2b'];
 
 var cityState = {
-    three: null,          // { THREE, OrbitControls, merge } once loaded
+    three: null,          // { THREE, MapControls, merge } once loaded
     loading: null,
     renderer: null,
     scene: null,
@@ -77,6 +86,8 @@ var cityState = {
     pickables: [],
     selectedRing: null,
     vehicles: [],
+    boats: [],
+    sky: null,
     skytrain: null,
     nangKwak: null,
     clock: 0,
@@ -107,10 +118,10 @@ function loadCityThree() {
     if (!cityState.loading) {
         cityState.loading = Promise.all([
             import('three'),
-            import('three/addons/controls/OrbitControls.js'),
+            import('three/addons/controls/MapControls.js'),
             import('three/addons/utils/BufferGeometryUtils.js'),
         ]).then(function (modules) {
-            cityState.three = { THREE: modules[0], OrbitControls: modules[1].OrbitControls, merge: modules[2].mergeGeometries };
+            cityState.three = { THREE: modules[0], MapControls: modules[1].MapControls, merge: modules[2].mergeGeometries };
             return cityState.three;
         }).catch(function (error) {
             cityState.loading = null;   // a later open tries again
@@ -354,6 +365,7 @@ function buildCityWorld() {
     Object.values(shapes).forEach(function (shape) { shape.dispose(); });
 
     buildCityPeople(world);
+    buildCitySky(world);
 
     cityState.world = world;
     cityState.occluders = [mesh];
@@ -464,6 +476,101 @@ function placeCityPeople(time) {
     [people.bodies, people.heads, people.hair].forEach(function (mesh) { mesh.instanceMatrix.needsUpdate = true; });
 }
 
+function buildCitySky(world) {
+    let THREE = cityState.three.THREE, merge = cityState.three.merge;
+    let shapes = cityShapes(THREE);
+    let clouds = [];
+
+    for (let i = 0; i < CITY_CLOUDS; i++) {
+        // just beyond the town's edge and low, where a camera looking down on the
+        // streets still sees them over the far side
+        clouds.push({ phase: i / CITY_CLOUDS, y: 6 + i * 37 % 9, radius: 58 + (i % 3) * 8, speed: 0.006 + (i % 3) * 0.003, size: 1.8 + (i % 4) * 0.4 });
+    }
+    let cloudMesh = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, flatShading: true, transparent: true, opacity: 0.85, depthWrite: false }), CITY_CLOUDS * CITY_PUFFS.length);
+    cloudMesh.frustumCulled = false;
+    world.add(cloudMesh);
+
+    // a bird is two wings meeting at its body, each flapping about the middle
+    let left = new THREE.BoxGeometry(0.9, 0.05, 0.4).translate(-0.45, 0, 0);
+    let right = new THREE.BoxGeometry(0.9, 0.05, 0.4).translate(0.45, 0, 0);
+    let birdMaterial = new THREE.MeshStandardMaterial({ color: 0x2b2b2b, roughness: 0.8 });
+    let count = CITY_FLOCKS.length * CITY_FLOCK_SHAPE.length;
+    let wings = [new THREE.InstancedMesh(left, birdMaterial, count), new THREE.InstancedMesh(right, birdMaterial, count)];
+    wings.forEach(function (mesh) {
+        mesh.frustumCulled = false;
+        world.add(mesh);
+    });
+
+    let balloons = CITY_BALLOONS.map(function (colours, i) {
+        let b = cityBrush(THREE, shapes);
+        cityBalloon(b, colours[0], colours[1]);
+        let mesh = cityBrushMesh(THREE, merge, b, cityState.materials);
+        mesh.receiveShadow = false;
+        world.add(mesh);
+        return { mesh: mesh, radius: 36 + i * 6, height: 28 + i * 4, phase: i * 2.1, speed: 0.02 + i * 0.006 };
+    });
+    Object.values(shapes).forEach(function (shape) { shape.dispose(); });
+
+    cityState.sky = {
+        clouds: clouds, cloudMesh: cloudMesh, wings: wings, balloons: balloons,
+        base: new THREE.Matrix4(), part: new THREE.Matrix4(), flap: new THREE.Matrix4(), out: new THREE.Matrix4(),
+        at: new THREE.Vector3(), size: new THREE.Vector3(), turn: new THREE.Quaternion(), up: new THREE.Vector3(0, 1, 0),
+    };
+}
+
+function placeCitySky(time) {
+    let sky = cityState.sky;
+    let k = 0;
+
+    // clouds drift along the horizon beyond the town, on the far side from
+    // wherever the camera is, so they never come between it and the streets;
+    // each wraps round at the edge of the view, out of sight
+    let target = cityState.controls ? cityState.controls.target : sky.at.set(0, 0, 0);
+    let camera = cityState.camera.position;
+    let far = Math.atan2(target.x - camera.x, target.z - camera.z);
+    let tx = target.x, tz = target.z;
+    sky.clouds.forEach(function (cloud) {
+        let along = ((cloud.phase + time * cloud.speed) % 1 + 1) % 1;
+        let angle = far + (along - 0.5) * 2.4;
+        let x = tx + Math.sin(angle) * cloud.radius, z = tz + Math.cos(angle) * cloud.radius;
+        CITY_PUFFS.forEach(function (puff) {
+            sky.base.compose(sky.at.set(x + puff[0] * cloud.size * 1.6, cloud.y + puff[1] * cloud.size, z + puff[2] * cloud.size * 1.6), sky.turn.identity(), sky.size.setScalar(puff[3] * cloud.size));
+            sky.cloudMesh.setMatrixAt(k++, sky.base);
+        });
+    });
+    sky.cloudMesh.instanceMatrix.needsUpdate = true;
+
+    // each flock flies a circle in a V, facing the way it goes
+    let n = 0;
+    CITY_FLOCKS.forEach(function (flock, f) {
+        let angle = time * flock.speed + f * Math.PI;
+        let way = flock.speed > 0 ? 1 : -1;
+        sky.turn.setFromAxisAngle(sky.up, Math.atan2(-Math.sin(angle) * way, Math.cos(angle) * way));
+        sky.base.compose(sky.at.set(Math.cos(angle) * flock.radius, flock.height + Math.sin(time * 0.5 + f) * 1.5, Math.sin(angle) * flock.radius), sky.turn, sky.size.setScalar(1));
+        CITY_FLOCK_SHAPE.forEach(function (spot, i) {
+            let beat = Math.sin(time * 9 + i * 0.7 + f) * 0.6;
+            sky.part.multiplyMatrices(sky.base, sky.out.makeTranslation(spot[0], (i % 2) * 0.3, spot[1]));
+            sky.wings[0].setMatrixAt(n, sky.out.multiplyMatrices(sky.part, sky.flap.makeRotationZ(beat)));
+            sky.wings[1].setMatrixAt(n, sky.out.multiplyMatrices(sky.part, sky.flap.makeRotationZ(-beat)));
+            n++;
+        });
+    });
+    sky.wings.forEach(function (mesh) { mesh.instanceMatrix.needsUpdate = true; });
+
+    sky.balloons.forEach(function (balloon) {
+        let a = time * balloon.speed + balloon.phase;
+        balloon.mesh.position.set(Math.cos(a) * balloon.radius, balloon.height + Math.sin(time * 0.3 + balloon.phase) * 2, Math.sin(a) * balloon.radius);
+        balloon.mesh.rotation.y = time * 0.05 + balloon.phase;
+    });
+
+    // the sailboat tacks to and fro across the harbour
+    cityState.boats.forEach(function (boat) {
+        let swing = time * boat.speed;
+        boat.mesh.position.set(boat.x + Math.sin(swing) * boat.range, CITY_KERB + 0.08 + Math.sin(time * 2) * 0.04, boat.z);
+        boat.mesh.rotation.y = Math.cos(swing) >= 0 ? Math.PI / 2 : -Math.PI / 2;
+    });
+}
+
 // Where the cars, the robots, the people, the train and Nang Kwak's arm are
 // `time` seconds in.
 function placeCityLife(time) {
@@ -486,6 +593,9 @@ function placeCityLife(time) {
 
     if (cityState.people) {
         placeCityPeople(time);
+    }
+    if (cityState.sky) {
+        placeCitySky(time);
     }
 
     // the train glides end to end, slowing for each end of the line
@@ -525,6 +635,7 @@ function disposeCityTown() {
     cityState.town = null;
     cityState.pickables = [];
     cityState.vehicles = [];
+    cityState.boats = [];
 }
 
 // Rebuilt on every open: what a child has done changes between visits.
@@ -626,6 +737,16 @@ function buildCityTown(data) {
     parkSign.userData.ownMaterial = true;
     town.add(parkSign);
 
+    let boats = [];
+    if (counts.tiers.extra >= 4) {
+        let sydney = CITY_SLOTS[CITY_GROUPS.indexOf('extra')];
+        let sail = cityBrush(THREE, shapes);
+        citySailboat(sail);
+        let mesh = cityBrushMesh(THREE, merge, sail, cityState.materials);
+        town.add(mesh);
+        boats.push({ mesh: mesh, x: sydney[0] * CITY_SPACING, z: sydney[1] * CITY_SPACING + 5.45, range: 4.5, speed: 0.25 });
+    }
+
     Object.values(shapes).forEach(function (shape) { shape.dispose(); });
     cup.dispose();
 
@@ -633,6 +754,7 @@ function buildCityTown(data) {
     cityState.town = town;
     cityState.pickables = pickables;
     cityState.vehicles = vehicles;
+    cityState.boats = boats;
     cityState.scene.add(town);
     cityState.counts = Object.assign(counts, { vehicles: vehicles.length, poles: cityState.poles });
     cityState.fireworksOn = data.goalMet;
@@ -695,9 +817,11 @@ function setupCityScene() {
     ring.visible = false;
     scene.add(ring);
 
-    let controls = new cityState.three.OrbitControls(camera, renderer.domElement);
+    // like a map: one finger or the mouse moves the town about, two fingers or
+    // the right button turn it, a pinch or the wheel zooms; arrow keys move it
+    // once the picture has focus
+    let controls = new cityState.three.MapControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.enablePan = false;
     controls.minDistance = 10;
     controls.maxDistance = 170;
     controls.maxPolarAngle = Math.PI / 2.3;
@@ -707,7 +831,24 @@ function setupCityScene() {
     controls.addEventListener('start', function () {
         controls.autoRotate = false;
         cityState.touched = true;
+        $('#cityRecenterBtn').show();
     });
+    // never so far that the town slides out of sight
+    controls.addEventListener('change', function () {
+        let target = controls.target;
+        let x = Math.max(-CITY_PAN_LIMIT, Math.min(CITY_PAN_LIMIT, target.x));
+        let z = Math.max(-CITY_PAN_LIMIT, Math.min(CITY_PAN_LIMIT, target.z));
+        if (x !== target.x || z !== target.z) {
+            camera.position.x += x - target.x;
+            camera.position.z += z - target.z;
+            target.set(x, target.y, z);
+        }
+    });
+    renderer.domElement.tabIndex = 0;
+    controls.listenToKeyEvents(renderer.domElement);
+    $('#cityHint').text(coarse
+        ? 'ลากนิ้วเดียวเพื่อเลื่อนดูเมือง · สองนิ้วเพื่อหมุนและซูม · แตะแลนด์มาร์กเพื่อดูความคืบหน้า'
+        : 'ลากเพื่อเลื่อนดูเมือง · คลิกขวาค้างแล้วลากเพื่อหมุน · ลูกกลิ้งเพื่อซูม · คลิกแลนด์มาร์กเพื่อดูความคืบหน้า');
 
     Object.assign(cityState, { renderer: renderer, scene: scene, camera: camera, controls: controls, selectedRing: ring, lights: { sky: sky, sun: sun } });
     buildCityWorld();
@@ -733,9 +874,26 @@ function applyCitySky() {
     cityState.lights.sky.color.set(dark ? 0x8fa8d6 : 0xfff4e0);
     cityState.lights.sun.intensity = dark ? 0.35 : 2.2;
     cityState.materials.glow.emissiveIntensity = dark ? 1.1 : 0;
+    if (cityState.sky) {
+        cityState.sky.cloudMesh.material.color.set(dark ? 0x56647d : 0xffffff);
+    }
     cityState.materials.signs.forEach(function (material) {
         material.emissiveIntensity = dark ? 0.85 : 0.05;
     });
+}
+
+// Back to the view the page opened with, turning slowly again.
+function resetCityView() {
+    if (!cityState.controls) {
+        return;
+    }
+    cityState.touched = false;
+    cityState.controls.target.set(0, 0, 0);
+    cityState.camera.position.set(30, 36, 40);
+    cityState.controls.autoRotate = !cityStill();
+    sizeCity();
+    cityState.controls.update();
+    $('#cityRecenterBtn').hide();
 }
 
 function sizeCity() {
@@ -978,6 +1136,7 @@ if (window.matchMedia) {
 }
 
 $('#cityRetryBtn').on('click', openCity);
+$('#cityRecenterBtn').on('click', resetCityView);
 
 $('#citySelectedBtn').on('click', function () {
     let menu = document.getElementById($(this).attr('data-menu-id'));

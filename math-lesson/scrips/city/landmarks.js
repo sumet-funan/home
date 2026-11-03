@@ -673,8 +673,8 @@ function citySydneyOpera(b, tier, colour) {
         [-4, -2, 0, 2, 4].forEach(function (hx) {
             b.box('#7d868c', hx, 1.6 + (4.2 - hx * hx * 0.105) / 2, 5.95, 0.06, 4.2 - hx * hx * 0.105, 0.06);
         });
-        b.box('#2e9d4e', -3, 0.3, 5.95, 1.6, 0.5, 0.7);
-        b.box('#f5c518', -3, 0.65, 5.95, 0.9, 0.3, 0.5);
+        b.box('#2e9d4e', -3, 0.3, 6.45, 1.6, 0.5, 0.7);
+        b.box('#f5c518', -3, 0.65, 6.45, 0.9, 0.3, 0.5);
         cityFlag(b, 6.6, 0.9, 4, colour);
     }
     return Math.max(height, around);
@@ -800,3 +800,27 @@ function cityRobotElephant(b) {
 }
 
 const CITY_ROBOT_KINDS = [cityRobotDog, cityRobotCat, cityRobotDino, cityRobotElephant];
+
+// ---------- the sky and the water ----------
+
+// A hot air balloon: a striped envelope, ropes, a basket, the burner's flame.
+function cityBalloon(b, colour, stripe) {
+    let s = b.shapes;
+    b.put(s.ball, colour, [0, 3.2, 0], [3.2, 3.6, 3.2]);
+    b.put(s.cylinder, stripe, [0, 3.2, 0], [3.25, 0.5, 3.25]);
+    b.put(s.cylinder, stripe, [0, 4.4, 0], [2.6, 0.35, 2.6]);
+    b.put(s.cone, colour, [0, 1.25, 0], [1.6, 1.0, 1.6], [Math.PI, 0, 0]);
+    [[-0.35, -0.35], [0.35, -0.35], [-0.35, 0.35], [0.35, 0.35]].forEach(function (c) {
+        cityBeam(b, '#5d4037', [c[0], 0.5, c[1]], [c[0] * 1.6, 1.1, c[1] * 1.6], 0.03);
+    });
+    b.box('#8b6b4a', 0, 0.25, 0, 0.8, 0.5, 0.8);
+    b.put(s.cone, '#ffb347', [0, 0.85, 0], [0.25, 0.4, 0.25], null, 'glow');
+}
+
+// A little sailboat for the harbour. Low enough to pass under the bridge.
+function citySailboat(b) {
+    b.box('#ffffff', 0, 0.15, 0, 0.5, 0.3, 1.3);
+    b.box('#1e88e5', 0, 0.3, 0, 0.52, 0.06, 1.32);
+    b.put(b.shapes.post, '#8b6b4a', [0, 0.8, 0.1], [0.05, 1, 0.05]);
+    b.put(b.shapes.prism, '#fdfdfd', [0, 0.4, 0.2], [0.7, 0.85, 0.04], [0, Math.PI / 2, 0]);
+}
