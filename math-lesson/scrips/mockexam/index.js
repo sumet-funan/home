@@ -2,6 +2,9 @@
 // of answer, the same points and the same time. The questions are written by the
 // lesson builders to the published blueprint; none of them are real past papers.
 //
+// RT ป.1 is the reading test, not maths: its items come from rt.js, which also
+// says how its reading aloud and its sentence from a picture are marked.
+//
 // NT ป.3 follows the 2568 guidance (30 items in three parts, 90 minutes). It names
 // no indicators, so every ป.3 indicator is in the pool. O-NET ป.6 follows the
 // สทศ. Test Blueprint for 2569: 15 items over the indicators it lists, 60 minutes.
@@ -33,6 +36,21 @@ function repeatSlot(count, slot) {
 // A part is filled slot by slot, and each slot takes an indicator the paper has
 // not asked yet where it can, so a paper spreads across its list.
 const MOCK_EXAMS = {
+    rt1: {
+        name: 'RT ป.1',
+        title: 'การประเมินความสามารถด้านการอ่านของผู้เรียน (RT) ป.1',
+        // 45 minutes of reading for meaning, then about 10 reading aloud
+        minutes: 55,
+        build: buildReadingTest,
+        parts: [
+            { name: 'อ่านรู้เรื่อง ตอนที่ 1 คำ', kind: 'choice', points: 1, slots: repeatSlot(10, 'rt') },
+            { name: 'อ่านรู้เรื่อง ตอนที่ 2 เล่าเรื่องจากภาพ', kind: 'order', points: 2, slots: repeatSlot(5, 'rt') },
+            { name: 'อ่านรู้เรื่อง ตอนที่ 3 ประโยค', kind: 'choice', points: 2, slots: repeatSlot(10, 'rt') },
+            { name: 'อ่านรู้เรื่อง ตอนที่ 4 ข้อความ', kind: 'choice', points: 2, slots: repeatSlot(5, 'rt') },
+            { name: 'อ่านออกเสียง ตอนที่ 1 คำ', kind: 'aloud', points: 20, slots: ['rt'], summary: 'อ่านออกเสียง ตอนที่ 1 คำ 20 คำ คำละ 1 คะแนน' },
+            { name: 'อ่านออกเสียง ตอนที่ 2 ข้อความ', kind: 'aloud', points: 30, slots: ['rt'], summary: 'อ่านออกเสียง ตอนที่ 2 ข้อความ 10 ประโยค ประโยคละ 3 คะแนน' },
+        ],
+    },
     nt3: {
         name: 'NT ป.3',
         title: 'การประเมินคุณภาพผู้เรียน (NT) ป.3 ด้านคณิตศาสตร์',
@@ -143,6 +161,10 @@ function mockStepsItem() {
 }
 
 function buildMockExam(examId) {
+    if (MOCK_EXAMS[examId].build) {
+        return MOCK_EXAMS[examId].build();
+    }
+
     let used = [];
     let items = [];
 
@@ -293,7 +315,7 @@ function renderMockExamSetup() {
     let exam = MOCK_EXAMS[mockExamObj.exam];
     let items = exam.parts.reduce(function (sum, part) { return sum + part.slots.length; }, 0);
     let parts = exam.parts.map(function (part) {
-        return `<li>${part.name} ${part.slots.length} ข้อ ข้อละ ${mockScoreText(part.points)} คะแนน</li>`;
+        return `<li>${part.summary || `${part.name} ${part.slots.length} ข้อ ข้อละ ${mockScoreText(part.points)} คะแนน`}</li>`;
     }).join('');
     let owner = mockExamOwner();
     let examId = mockExamObj.exam;
@@ -358,6 +380,42 @@ function mockAnswerHtml(item, answer) {
         }).join('') + '</div>';
     }
 
+    if (item.kind === 'order') {
+        let chosen = answer || [];
+        let line = chosen.length
+            ? chosen.map(function (card, position) {
+                return `<button type="button" class="rt-card rt-chosen" data-position="${position}" aria-label="เอา ${escapeLessonText(item.cards[card])} ออก">${escapeLessonText(item.cards[card])}</button>`;
+            }).join('')
+            : '<span class="rt-line-hint">แตะบัตรคำด้านล่างตามลำดับ</span>';
+
+        return `<div class="rt-order">
+            <div class="rt-line">${line}</div>
+            <div class="rt-pool">${item.cards.map(function (word, card) {
+                return `<button type="button" class="rt-card rt-pick" data-card="${card}"${chosen.indexOf(card) !== -1 ? ' disabled' : ''}>${escapeLessonText(word)}</button>`;
+            }).join('')}</div>
+            ${chosen.length ? '<button type="button" class="fq-nav-btn rt-clear"><i class="bi bi-arrow-counterclockwise"></i> เรียงใหม่</button>' : ''}
+        </div>`;
+    }
+
+    // reading aloud: a grown-up taps what was read right, and again if it was not
+    if (item.kind === 'aloud') {
+        let marks = answer || [];
+        let speak = rtCanSpeak();
+
+        return `<div class="rt-aloud${item.sentences ? ' is-sentences' : ''}">${item.lines.map(function (line, position) {
+            let mark = marks[position];
+            let state = mark === true ? ' is-right' : mark === false ? ' is-wrong' : '';
+            let icon = mark === true ? 'bi-check-circle-fill' : mark === false ? 'bi-x-circle-fill' : 'bi-circle';
+            let said = mark === true ? 'อ่านถูก' : mark === false ? 'อ่านผิด' : 'ยังไม่ตรวจ';
+
+            return `<div class="rt-mark${state}">
+                <button type="button" class="rt-mark-btn" data-line="${position}" aria-label="${escapeLessonText(line)} ${said}"><i class="bi ${icon}" aria-hidden="true"></i><span>${escapeLessonText(line)}</span></button>
+                ${speak ? `<button type="button" class="rt-say" data-line="${position}" aria-label="ฟังเสียง ${escapeLessonText(line)}"><i class="bi bi-volume-up-fill"></i></button>` : ''}
+            </div>`;
+        }).join('')}</div>
+        <button type="button" class="fq-nav-btn rt-all"><i class="bi bi-check2-all"></i> อ่านถูกทุก${item.sentences ? 'ประโยค' : 'คำ'}</button>`;
+    }
+
     if (item.kind === 'number') {
         return `<div class="lesson-single">
             <input type="number" class="calc-input calc-input-result mock-input" data-step="0" placeholder="?" aria-label="คำตอบ" value="${answer === null ? '' : answer}">
@@ -410,6 +468,12 @@ function runMockExam() {
 function startMockExam() {
     mockExamObj.items = buildMockExam(mockExamObj.exam);
     mockExamObj.answers = mockExamObj.items.map(function (item) {
+        if (item.kind === 'aloud') {
+            return item.lines.map(function () { return null; });
+        }
+        if (item.kind === 'order') {
+            return [];
+        }
         return item.kind === 'steps' ? item.steps.map(function () { return null; }) : null;
     });
     mockExamObj.index = 0;
@@ -444,6 +508,12 @@ function pauseMockExam() {
 }
 
 function markMockItem(item, answer) {
+    if (item.kind === 'order') {
+        return markReadingOrder(item, answer);
+    }
+    if (item.kind === 'aloud') {
+        return markReadingAloud(item, answer);
+    }
     if (item.kind === 'choice') {
         return answer === item.correct ? item.points : 0;
     }
@@ -456,7 +526,17 @@ function markMockItem(item, answer) {
     }, 0);
 }
 
+function mockAloudUnit(item) {
+    return item.sentences ? 'ประโยค' : 'คำ';
+}
+
 function mockRightText(item) {
+    if (item.kind === 'order') {
+        return escapeLessonText(item.correct.map(function (card) { return item.cards[card]; }).join(''));
+    }
+    if (item.kind === 'aloud') {
+        return `อ่านถูกทุก${mockAloudUnit(item)}`;
+    }
     if (item.kind === 'choice') {
         return item.html[item.correct];
     }
@@ -468,7 +548,15 @@ function mockRightText(item) {
 
 function mockGivenText(item, answer) {
     if (!isMockAnswered(answer)) {
-        return 'ไม่ได้ตอบ';
+        return item.kind === 'aloud' ? 'ยังไม่ได้ตรวจ' : 'ไม่ได้ตอบ';
+    }
+    if (item.kind === 'order') {
+        return escapeLessonText(answer.map(function (card) { return item.cards[card]; }).join(' '));
+    }
+    if (item.kind === 'aloud') {
+        let missed = item.lines.filter(function (line, position) { return answer[position] !== true; });
+        return `อ่านถูก ${item.lines.length - missed.length} จาก ${item.lines.length} ${mockAloudUnit(item)}` +
+            (missed.length ? `<br>ยังอ่านไม่ถูก: ${missed.map(escapeLessonText).join(' · ')}` : '');
     }
     if (item.kind === 'choice') {
         return item.html[answer];
@@ -517,6 +605,9 @@ function finishMockExam(timeUp) {
 }
 
 function mockIndicatorText(code) {
+    if (RT_INDICATORS[code]) {
+        return RT_INDICATORS[code];
+    }
     let indicator = mockExamIndicator(code);
     return indicator ? indicator.text : '';
 }
@@ -536,7 +627,8 @@ function renderMockExamResult(score, parts, codes, timeUp) {
     $('#mockExamIndicators').html(Object.keys(codes).sort().map(function (code) {
         let row = codes[code];
         let isFull = row.right === row.total;
-        let practice = isFull ? '' : `<button type="button" class="fq-practice" data-lesson="${row.lesson}">ไปฝึก</button>`;
+        // reading has no lesson here to send the child to
+        let practice = isFull || !row.lesson ? '' : `<button type="button" class="fq-practice" data-lesson="${row.lesson}">ไปฝึก</button>`;
 
         return `<div class="fq-row">
             <i class="bi ${isFull ? 'bi-check-circle-fill is-good' : 'bi-exclamation-circle-fill is-weak'}"></i>
@@ -609,6 +701,42 @@ $('#mockExamAnswer').on('input', '.mock-input', function () {
     saveMockExamProgress();
 });
 
+function changeMockAnswer(change) {
+    change(mockExamObj.answers[mockExamObj.index], mockExamObj.items[mockExamObj.index]);
+    renderMockExamQuestion();
+    saveMockExamProgress();
+}
+
+$('#mockExamAnswer').on('click', '.rt-pick', function () {
+    let card = +$(this).data('card');
+    changeMockAnswer(function (answer) { answer.push(card); });
+});
+
+$('#mockExamAnswer').on('click', '.rt-chosen', function () {
+    let position = +$(this).data('position');
+    changeMockAnswer(function (answer) { answer.splice(position, 1); });
+});
+
+$('#mockExamAnswer').on('click', '.rt-clear', function () {
+    changeMockAnswer(function (answer) { answer.length = 0; });
+});
+
+// not marked, read right, read wrong, and round again
+$('#mockExamAnswer').on('click', '.rt-mark-btn', function () {
+    let line = +$(this).data('line');
+    changeMockAnswer(function (answer) {
+        answer[line] = answer[line] === null ? true : answer[line] === true ? false : null;
+    });
+});
+
+$('#mockExamAnswer').on('click', '.rt-all', function () {
+    changeMockAnswer(function (answer) { answer.fill(true); });
+});
+
+$('#mockExamAnswer').on('click', '.rt-say', function () {
+    rtSpeak(mockExamObj.items[mockExamObj.index].lines[+$(this).data('line')]);
+});
+
 function moveMockExam(index) {
     mockExamObj.index = index;
     renderMockExamQuestion();
@@ -649,7 +777,7 @@ document.addEventListener('visibilitychange', function () {
     }
 });
 
-// a ป.6 child starts on O-NET, everyone else on NT
+// a ป.1 child starts on RT, a ป.6 child on O-NET, everyone else on NT
 supabaseClient.auth.onAuthStateChange(function (event, session) {
     let grade = session && session.user.user_metadata && session.user.user_metadata.grade;
 
@@ -657,7 +785,7 @@ supabaseClient.auth.onAuthStateChange(function (event, session) {
         return;
     }
     if (!mockExamObj.examChosen) {
-        mockExamObj.exam = grade === 'p6' ? 'onet6' : 'nt3';
+        mockExamObj.exam = grade === 'p1' ? 'rt1' : grade === 'p6' ? 'onet6' : 'nt3';
     }
     setTimeout(renderMockExamSetup, 0);
 });

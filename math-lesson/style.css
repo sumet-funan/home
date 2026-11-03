@@ -3491,6 +3491,159 @@ input[type=number] {
   cursor: pointer;
 }
 
+/* ---------- RT reading test ---------- */
+
+.rt-emoji {
+  display: inline-block;
+  font-size: 3.2rem;
+  line-height: 1.15;
+}
+
+.fq-option .rt-emoji {
+  font-size: 2.4rem;
+}
+
+.rt-word {
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.fq-figure .rt-word {
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 2.2rem;
+}
+
+.rt-sentence,
+.rt-passage {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  box-shadow: inset 0 0 0 1px var(--border);
+  color: var(--text);
+  font-size: 1.3rem;
+  line-height: 1.9;
+  text-align: left;
+}
+
+.rt-sentence {
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.rt-order {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.rt-line,
+.rt-pool {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.rt-line {
+  align-items: center;
+  min-height: 68px;
+  padding: 10px;
+  border: 2px dashed var(--muted);
+  border-radius: var(--radius-md);
+}
+
+.rt-line-hint {
+  color: var(--muted);
+}
+
+.rt-card {
+  min-width: 64px;
+  min-height: 48px;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--accent, var(--tint));
+  color: var(--on-accent);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.rt-card.rt-chosen {
+  background: var(--green);
+}
+
+.rt-card:disabled {
+  opacity: 0.25;
+}
+
+.rt-aloud {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.rt-aloud.is-sentences {
+  grid-template-columns: 1fr;
+}
+
+.rt-mark {
+  display: flex;
+  align-items: stretch;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--card-bg);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.rt-mark.is-right {
+  border-color: var(--green);
+}
+
+.rt-mark.is-wrong {
+  border-color: var(--red);
+}
+
+.rt-mark-btn {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 6px 12px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-size: 1.3rem;
+  text-align: left;
+}
+
+.rt-mark-btn .bi-circle {
+  color: var(--muted);
+}
+
+.rt-mark.is-right .rt-mark-btn .bi {
+  color: var(--green);
+}
+
+.rt-mark.is-wrong .rt-mark-btn .bi {
+  color: var(--red);
+}
+
+.rt-say {
+  flex-shrink: 0;
+  width: 44px;
+  border: 0;
+  background: none;
+  color: var(--accent, var(--tint));
+  font-size: 1.2rem;
+}
+
 /* ---------- my city ---------- */
 
 .city-summary {
