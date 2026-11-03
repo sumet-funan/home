@@ -1,9 +1,10 @@
-// "เมืองของฉัน": a little Bangkok that grows with the child's learning. Every
-// lesson is a shophouse on one of seven blocks, built up as its stage rises; the
-// trophies stand in the temple square, each day of the streak plants a tree in
-// the park, and a day's goal met sets off fireworks. Tuk-tuks and pink taxis go
-// round, the skytrain runs overhead and Nang Kwak beckons from a shop roof.
-// The pieces are in parts.js.
+// "เมืองของฉัน": a town round the world that grows with the child's learning.
+// Each grade is a district with one of the world's landmarks, built up tier by
+// tier as the grade's lessons grow strong; the trophies stand in the temple
+// square, every day of the streak puts a car on the road and every seventh a
+// robot animal too, and a day's goal met sets off fireworks. The skytrain runs
+// overhead and Nang Kwak beckons from a shop roof. The pieces are in parts.js
+// and landmarks.js.
 //
 // three.js is the one large library here, so it is fetched only when the page is
 // first opened (the import map in index.html names it). The reload guard in the
@@ -22,13 +23,32 @@ const CITY_HALF = 37;              // the base, out to its kerb
 const CITY_ROADS = [-33, -11, 11, 33];
 const CITY_SLOTS = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1]];
 const CITY_PARK_SLOT = [1, 1];
-const CITY_PAVEMENT = 0.6;         // between a shop front and the kerb
-const CITY_LOT_DEPTH = 3;
 const CITY_SKYTRAIN_ROAD = -11;
-const CITY_MAX_TREES = 30;
 const CITY_TAP_SLOP = 6;           // pixels a finger can move and still be a tap
 const CITY_FIT_RADIUS = 36;        // how much of the town has to fit across the stage
-const CITY_SHOP_ID = 'corner-shop';
+
+const CITY_WORLD = {
+    p1: { city: 'กรุงเทพฯ', landmark: 'พระบรมมหาราชวัง', build: cityGrandPalace },
+    p2: { city: 'โตเกียว', landmark: 'โตเกียวทาวเวอร์', build: cityTokyoTower },
+    p3: { city: 'ปารีส', landmark: 'หอไอเฟล', build: cityEiffelTower },
+    p4: { city: 'ลอนดอน', landmark: 'หอนาฬิกาบิ๊กเบน', build: cityBigBen },
+    p5: { city: 'นิวยอร์ก', landmark: 'เทพีเสรีภาพ', build: cityStatueOfLiberty },
+    p6: { city: 'ดูไบ', landmark: 'บุรจญ์เคาะลีฟะฮ์', build: cityBurjKhalifa },
+    extra: { city: 'ซิดนีย์', landmark: 'โอเปร่าเฮาส์', build: citySydneyOpera },
+};
+
+// Cars keep to the lanes either side of a road's centre line, each lane at one
+// speed so nothing overtakes; robot animals walk slowly down the middle of the
+// ring road, where the skytrain has no pillars. The outer lanes are longest, so
+// they take most of the cars.
+const CITY_LANES = [
+    { half: 9.6, speed: 3.2 }, { half: 12.4, speed: 3.2, reverse: true },
+    { half: 31.6, speed: 4.4 }, { half: 34.4, speed: 4.4, reverse: true },
+];
+const CITY_LANE_ORDER = [2, 3, 0, 2, 3, 1, 2, 3];
+const CITY_ROBOT_LANE = { half: 33, speed: 1.4 };
+const CITY_MAX_CARS = 24;
+const CITY_MAX_ROBOTS = 6;
 
 var cityState = {
     three: null,          // { THREE, OrbitControls, merge } once loaded
@@ -98,63 +118,51 @@ function showCityStatus(kind) {
 // Text on a sprite, for the district names and the park's sign.
 function citySign(THREE, text, colour) {
     let canvas = document.createElement('canvas');
-    canvas.width = 256;
+    canvas.width = 512;
     canvas.height = 96;
     let context = canvas.getContext('2d');
 
     context.fillStyle = 'rgba(255, 255, 255, 0.92)';
     context.beginPath();
-    context.roundRect(4, 4, 248, 88, 28);
+    context.roundRect(4, 4, 504, 88, 28);
     context.fill();
     context.fillStyle = colour;
-    context.font = 'bold 52px ' + getComputedStyle(document.body).fontFamily;
+    context.font = 'bold 48px ' + getComputedStyle(document.body).fontFamily;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText(text, 128, 50);
+    context.fillText(text, 256, 50, 480);
 
     let texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     let sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, depthWrite: false }));
-    sprite.scale.set(7.6, 2.85, 1);
+    sprite.scale.set(9.6, 1.8, 1);
     return sprite;
 }
 
-// The twenty plots round a block, clockwise from its north-west corner: a
-// square plot on each corner and four narrow ones along each side, all facing
-// the street.
-function cityLots() {
-    let edge = CITY_BLOCK / 2 - CITY_PAVEMENT;
-    let middle = edge - CITY_LOT_DEPTH / 2;
-    let run = (2 * edge - 2 * CITY_LOT_DEPTH) / 4;
-    let first = -edge + CITY_LOT_DEPTH + run / 2;
-    let lots = [];
-    let side = function (cornerX, cornerZ, turn, place) {
-        lots.push({ x: cornerX, z: cornerZ, turn: turn, w: CITY_LOT_DEPTH });
-        for (let i = 0; i < 4; i++) {
-            let spot = place(first + i * run);
-            lots.push({ x: spot[0], z: spot[1], turn: turn, w: run });
+// How far a landmark is built, 0 to 5, from its grade's lessons: a lesson
+// counts 0 when new, 1 started, 2 practising and 3 strong. Any start at all
+// begins the build; the last tier waits for every lesson to be strong.
+function cityTier(lessons) {
+    let weight = { new: 0, started: 1, practising: 2, strong: 3 };
+    let done = lessons.reduce(function (sum, lesson) { return sum + weight[lesson.stage]; }, 0) / (3 * lessons.length);
+
+    if (lessons.every(function (lesson) { return lesson.stage === 'strong'; })) {
+        return 5;
+    }
+    return done >= 0.75 ? 4 : done >= 0.5 ? 3 : done >= 0.25 ? 2 : done > 0 ? 1 : 0;
+}
+
+// The lesson to send a child to from a landmark: one nearly there first, then
+// one begun, then a new one, in the order of the menu. None once all are strong.
+function cityNextLesson(lessons) {
+    let order = ['practising', 'started', 'new'];
+    for (let i = 0; i < order.length; i++) {
+        let lesson = lessons.find(function (each) { return each.stage === order[i]; });
+        if (lesson) {
+            return lesson;
         }
-    };
-
-    side(-middle, -middle, Math.PI, function (along) { return [along, -middle]; });
-    side(middle, -middle, Math.PI / 2, function (along) { return [middle, along]; });
-    side(middle, middle, 0, function (along) { return [-along, middle]; });
-    side(-middle, middle, -Math.PI / 2, function (along) { return [-middle, -along]; });
-    return lots;
-}
-
-function cityShopFloors(id) {
-    return 3 + cityHash(id) % 2;
-}
-
-function cityLotHeight(lesson) {
-    if (lesson.stage === 'new') {
-        return 1.6;
     }
-    if (lesson.stage === 'started') {
-        return 2.9;
-    }
-    return lesson.stage === 'strong' ? cityTowerHeight(lesson.id) + 0.6 : 2 * CITY_FLOOR + 0.6;
+    return null;
 }
 
 // A closed loop round a square of roads, `half` from the centre, for a car to
@@ -275,10 +283,9 @@ function buildCityWorld() {
     });
 
     // the corner shop Nang Kwak sits on
-    let shop = { id: CITY_SHOP_ID, stage: 'strong', plainRoof: true, shophouse: true };
     let shopSigns = [];
     b.place(5, CITY_KERB, 5);
-    cityShophouse(b, shop, 4, 4, '#c62828', 0, shopSigns);
+    cityCornerShop(b, 4, 4, '#c62828', shopSigns);
 
     // the park's pavilion, benches and a cart
     let park = [CITY_PARK_SLOT[0] * CITY_SPACING, CITY_PARK_SLOT[1] * CITY_SPACING];
@@ -298,6 +305,10 @@ function buildCityWorld() {
     });
     b.place(park[0] + 5.6, 0, park[1] + 6.9);
     cityFoodCart(b);
+    b.place(0, 0, 0);
+    for (let i = 0; i < 12; i++) {
+        cityTree(b, park[0] - 6 + (i % 4) * 4, park[1] - 6 + Math.floor(i / 4) * 3.6, 0.9 + (i * 7 % 5) * 0.06, CITY_KERB);
+    }
 
     let mesh = cityBrushMesh(THREE, merge, b, cityState.materials);
     world.add(mesh);
@@ -310,28 +321,18 @@ function buildCityWorld() {
 
     // Nang Kwak on the shop roof, turned a little towards the street
     let nangKwak = cityNangKwak(THREE);
-    nangKwak.position.set(5, CITY_KERB + cityShopFloors(CITY_SHOP_ID) * CITY_FLOOR + 0.25, 4.8);
+    nangKwak.position.set(5, CITY_KERB + CITY_SHOP_FLOORS * CITY_FLOOR + 0.25, 4.8);
     nangKwak.rotation.y = Math.PI / 7;
     nangKwak.scale.setScalar(0.85);
     world.add(nangKwak);
 
-    // the traffic and the train
-    let vehicles = [
-        { build: function (v) { cityTukTuk(v, '#1f6fd1', '#ffd23f'); }, half: 11 - 1.4, speed: 3.2, reverse: false, offset: 0 },
-        { build: cityTaxi, half: 11 + 1.4, speed: 3.8, reverse: true, offset: 0.4 },
-        { build: cityTaxi, half: 33 - 1.4, speed: 4.5, reverse: false, offset: 0.15 },
-        { build: function (v) { cityTukTuk(v, '#2e9d4e', '#ffd23f'); }, half: 33 + 1.4, speed: 3.4, reverse: true, offset: 0.65 },
-        { build: function (v) { cityTukTuk(v, '#d81b60', '#ffffff'); }, half: 33 - 1.4, speed: 4.5, reverse: false, offset: 0.62 },
-    ];
-    cityState.vehicles = vehicles.map(function (spec) {
-        let v = cityBrush(THREE, shapes);
-        spec.build(v);
-        let car = cityBrushMesh(THREE, merge, v, cityState.materials);
-        let curve = cityLoop(THREE, spec.half, 2.2);
-        world.add(car);
-        return { mesh: car, curve: curve, length: curve.getLength(), speed: spec.speed, reverse: spec.reverse, offset: spec.offset };
+    // the paths the streak's cars and robots follow
+    CITY_LANES.concat([CITY_ROBOT_LANE]).forEach(function (lane) {
+        lane.curve = cityLoop(THREE, lane.half, 2.2);
+        lane.length = lane.curve.getLength();
     });
 
+    // and the train
     let train = cityBrush(THREE, shapes);
     citySkytrain(train);
     let skytrain = cityBrushMesh(THREE, merge, train, cityState.materials);
@@ -349,25 +350,36 @@ function buildCityWorld() {
     placeCityLife(0);
 }
 
-// Where the cars, the train and Nang Kwak's arm are `time` seconds in.
+// Where the cars, the robots, the train and Nang Kwak's arm are `time` seconds in.
 function placeCityLife(time) {
-    cityState.vehicles.forEach(function (car) {
-        let u = ((car.offset + time * car.speed / car.length) % 1 + 1) % 1;
-        if (car.reverse) {
+    cityState.vehicles.forEach(function (mover) {
+        let lane = mover.lane;
+        let u = ((mover.offset + time * lane.speed / lane.length) % 1 + 1) % 1;
+        if (lane.reverse) {
             u = 1 - u;
         }
-        let at = car.curve.getPointAt(u);
-        let ahead = car.curve.getTangentAt(u);
-        if (car.reverse) {
+        let at = lane.curve.getPointAt(u);
+        let ahead = lane.curve.getTangentAt(u);
+        if (lane.reverse) {
             ahead.negate();
         }
-        car.mesh.position.set(at.x, 0, at.z);
-        car.mesh.lookAt(at.x + ahead.x, 0, at.z + ahead.z);
+        // a robot animal bobs as it walks
+        let lift = mover.robot ? Math.abs(Math.sin(time * 6 + mover.offset * 20)) * 0.18 : 0;
+        mover.mesh.position.set(at.x, lift, at.z);
+        mover.mesh.lookAt(at.x + ahead.x, lift, at.z + ahead.z);
     });
 
     // the train glides end to end, slowing for each end of the line
-    cityState.skytrain.position.x = 29 * Math.sin(time * 2 * Math.PI / 36);
-    cityState.nangKwak.userData.arm.rotation.x = -0.35 + Math.sin(time * 3) * 0.35;
+    if (cityState.skytrain) {
+        cityState.skytrain.position.x = 29 * Math.sin(time * 2 * Math.PI / 36);
+        cityState.nangKwak.userData.arm.rotation.x = -0.35 + Math.sin(time * 3) * 0.35;
+    }
+}
+
+function cityMover(THREE, merge, shapes, build, lane, offset, robot) {
+    let v = cityBrush(THREE, shapes);
+    build(v);
+    return { mesh: cityBrushMesh(THREE, merge, v, cityState.materials), lane: lane, offset: offset, robot: robot };
 }
 
 // ---------- each child's own town ----------
@@ -393,6 +405,7 @@ function disposeCityTown() {
     });
     cityState.town = null;
     cityState.pickables = [];
+    cityState.vehicles = [];
 }
 
 // Rebuilt on every open: what a child has done changes between visits.
@@ -401,62 +414,47 @@ function buildCityTown(data) {
     let shapes = cityShapes(THREE);
     let b = cityBrush(THREE, shapes);
     let town = new THREE.Group();
-    let counts = { buildings: 0, new: 0, started: 0, practising: 0, strong: 0, trophies: 0, trees: 0 };
-    let lots = cityLots();
-    let signs = [], names = [], signColours = [];
+    let counts = { landmarks: 0, finished: 0, lessons: 0, new: 0, started: 0, practising: 0, strong: 0, trophies: 0, cars: 0, robots: 0, tiers: {} };
     let proxyShape = new THREE.BoxGeometry(1, 1, 1);
     let proxyMaterial = new THREE.MeshBasicMaterial();
     let pickables = [];
     let cup = new THREE.CylinderGeometry(0.32, 0.14, 0.5, 14);
-
-    cityState.materials.signs = [cityState.shopSign];
 
     CITY_GROUPS.forEach(function (group, index) {
         let cx = CITY_SLOTS[index][0] * CITY_SPACING;
         let cz = CITY_SLOTS[index][1] * CITY_SPACING;
         let colour = cityColour(CITY_DISTRICT_COLOURS[group]);
         let lessons = data.lessons[group];
-        let tallest = 0;
+        let place = CITY_WORLD[group];
+        let tier = cityTier(lessons);
 
-        lots.forEach(function (lot, position) {
-            let x = cx + lot.x, z = cz + lot.z;
-            let lesson = lessons[position];
-
-            if (!lesson) {
-                // a plot with no lesson yet is a patch of green
-                b.place(x, CITY_KERB, z, lot.turn);
-                b.box('#86c06a', 0, 0.03, 0, lot.w - 0.2, 0.06, CITY_LOT_DEPTH - 0.2);
-                cityTree(b, 0, 0, 0.8, 0.05);
-                return;
-            }
-
-            if (lesson.stage === 'strong') {
-                names.push(lesson.name);
-                signColours.push(colour);
-            }
-            b.place(x, CITY_KERB, z, lot.turn);
-            cityShophouse(b, lesson, lot.w, CITY_LOT_DEPTH, colour, names.length - 1, signs);
-
-            // an unseen box round the plot is what a tap finds
-            let height = cityLotHeight(lesson);
-            tallest = Math.max(tallest, height);
-            let proxy = new THREE.Mesh(proxyShape, proxyMaterial);
-            proxy.visible = false;
-            proxy.scale.set(lot.w, height, CITY_LOT_DEPTH);
-            proxy.position.set(x, CITY_KERB + height / 2, z);
-            proxy.rotation.y = lot.turn;
-            proxy.userData.lesson = Object.assign({ group: group }, lesson);
-            proxy.userData.shared = true;
-            town.add(proxy);
-            pickables.push(proxy);
-            counts.buildings++;
+        b.place(cx, CITY_KERB, cz);
+        let height = place.build(b, tier, colour);
+        lessons.forEach(function (lesson) {
             counts[lesson.stage]++;
+            counts.lessons++;
         });
+        counts.tiers[group] = tier;
+        counts.landmarks++;
+        counts.finished += tier === 5 ? 1 : 0;
 
-        b.place(0, 0, 0);
-        cityTree(b, cx, cz, 1.3, CITY_KERB);
-        let sign = citySign(THREE, CITY_DISTRICT_NAMES[group], colour);
-        sign.position.set(cx, Math.max(9.5, tallest + 2.5), cz - CITY_BLOCK / 2 + 1);
+        // an unseen box round the landmark is what a tap finds
+        let proxy = new THREE.Mesh(proxyShape, proxyMaterial);
+        proxy.visible = false;
+        proxy.scale.set(CITY_BLOCK - 2, height + 1, CITY_BLOCK - 2);
+        proxy.position.set(cx, CITY_KERB + (height + 1) / 2, cz);
+        proxy.userData.district = {
+            group: group, city: place.city, landmark: place.landmark, tier: tier, total: lessons.length,
+            strong: lessons.filter(function (lesson) { return lesson.stage === 'strong'; }).length,
+            next: cityNextLesson(lessons),
+        };
+        proxy.userData.shared = true;
+        town.add(proxy);
+        pickables.push(proxy);
+
+        let sign = citySign(THREE, place.city + ' ' + '★'.repeat(tier) + '☆'.repeat(5 - tier), colour);
+        // on the front edge, low, so it names the landmark without hiding it
+        sign.position.set(cx, 3.2, cz + CITY_BLOCK / 2 + 0.4);
         sign.userData.ownMaterial = true;
         town.add(sign);
     });
@@ -476,39 +474,47 @@ function buildCityTown(data) {
         b.put(cup, colour, [0, 1.25, 0], null, null, 'metal');
         counts.trophies++;
     });
+    town.add(cityBrushMesh(THREE, merge, b, cityState.materials));
 
-    // the park: a tree for each day in a row, up to what the park can hold
-    let parkX = CITY_PARK_SLOT[0] * CITY_SPACING, parkZ = CITY_PARK_SLOT[1] * CITY_SPACING;
-    b.place(0, 0, 0);
-    for (let i = 0; i < Math.min(data.streak, CITY_MAX_TREES); i++) {
-        let size = 0.9 + (i * 7 % 5) * 0.06;
-        cityTree(b, parkX - 6 + (i % 6) * 2.4, parkZ - 6 + Math.floor(i / 6) * 2.2, size, CITY_KERB);
-        counts.trees++;
+    // the streak: a car for every day in a row, and every seventh day a robot
+    // animal as well, spaced evenly along their lanes
+    let cars = Math.min(data.streak, CITY_MAX_CARS);
+    let robots = Math.min(Math.floor(data.streak / 7), CITY_MAX_ROBOTS);
+    let lanes = CITY_LANES.map(function () { return []; });
+    let vehicles = [];
+    for (let i = 0; i < cars; i++) {
+        lanes[CITY_LANE_ORDER[i % CITY_LANE_ORDER.length]].push(CITY_CAR_KINDS[i % CITY_CAR_KINDS.length]);
     }
-    let parkSign = citySign(THREE, 'สวน ' + data.streak + ' วัน', cityColour('--green'));
-    parkSign.position.set(parkX, 9.5, parkZ - CITY_BLOCK / 2 + 1);
+    lanes.forEach(function (kinds, lane) {
+        kinds.forEach(function (kind, k) {
+            vehicles.push(cityMover(THREE, merge, shapes, kind, CITY_LANES[lane], k / kinds.length, false));
+        });
+    });
+    for (let i = 0; i < robots; i++) {
+        vehicles.push(cityMover(THREE, merge, shapes, CITY_ROBOT_KINDS[i % CITY_ROBOT_KINDS.length], CITY_ROBOT_LANE, i / robots, true));
+    }
+    vehicles.forEach(function (mover) { town.add(mover.mesh); });
+    counts.cars = cars;
+    counts.robots = robots;
+
+    let parkX = CITY_PARK_SLOT[0] * CITY_SPACING, parkZ = CITY_PARK_SLOT[1] * CITY_SPACING;
+    let parkSign = citySign(THREE, 'ฝึกต่อเนื่อง ' + data.streak + ' วัน', cityColour('--green'));
+    parkSign.position.set(parkX, 3.2, parkZ + CITY_BLOCK / 2 + 0.4);
     parkSign.userData.ownMaterial = true;
     town.add(parkSign);
 
-    town.add(cityBrushMesh(THREE, merge, b, cityState.materials));
-    if (signs.length) {
-        let sheet = citySignSheet(THREE, names, signColours);
-        let signMaterial = new THREE.MeshStandardMaterial({ map: sheet, emissiveMap: sheet, emissive: 0xffffff, emissiveIntensity: 0 });
-        let signMesh = citySignMesh(THREE, merge, signs, signMaterial);
-        signMesh.userData.ownMaterial = true;
-        town.add(signMesh);
-        cityState.materials.signs.push(signMaterial);
-    }
     Object.values(shapes).forEach(function (shape) { shape.dispose(); });
     cup.dispose();
 
     disposeCityTown();
     cityState.town = town;
     cityState.pickables = pickables;
+    cityState.vehicles = vehicles;
     cityState.scene.add(town);
-    cityState.counts = Object.assign(counts, { vehicles: cityState.vehicles.length, poles: cityState.poles });
+    cityState.counts = Object.assign(counts, { vehicles: vehicles.length, poles: cityState.poles });
     cityState.fireworksOn = data.goalMet;
     cityState.selectedRing.visible = false;
+    placeCityLife(cityState.clock);
     applyCitySky();
     $('#citySelected').hide();
 }
@@ -641,7 +647,7 @@ function bindCityTaps(canvas) {
 }
 
 // x and y in normalised device coordinates, -1 to 1. The nearest thing under
-// the finger wins: a plot, or the street or temple in front of one.
+// the finger wins: a landmark, or the street or temple in front of one.
 function pickCityBuilding(x, y) {
     let THREE = cityState.three.THREE;
     let raycaster = new THREE.Raycaster();
@@ -649,23 +655,25 @@ function pickCityBuilding(x, y) {
     raycaster.setFromCamera(new THREE.Vector2(x, y), cityState.camera);
     let hit = raycaster.intersectObjects(cityState.pickables.concat(cityState.occluders), false)[0];
 
-    if (!hit || !hit.object.userData.lesson) {
+    if (!hit || !hit.object.userData.district) {
         cityState.selectedRing.visible = false;
         $('#citySelected').hide();
         return null;
     }
     showCitySelection(hit.object);
-    return hit.object.userData.lesson;
+    return hit.object.userData.district;
 }
 
-function showCitySelection(building) {
-    let lesson = building.userData.lesson;
+function showCitySelection(proxy) {
+    let place = proxy.userData.district;
+    let meta = `${CITY_DISTRICT_NAMES[place.group]} · เก่งแล้ว ${place.strong} จาก ${place.total} บท · ระดับ ${place.tier}/5`;
 
-    cityState.selectedRing.position.set(building.position.x, CITY_KERB + 0.04, building.position.z);
+    cityState.selectedRing.position.set(proxy.position.x, CITY_KERB + 0.06, proxy.position.z);
+    cityState.selectedRing.scale.setScalar(4.3);
     cityState.selectedRing.visible = true;
-    $('#citySelectedName').text(lesson.name);
-    $('#citySelectedMeta').text(CITY_DISTRICT_NAMES[lesson.group] + ' · ' + lessonStageText(lesson.stage, lesson.stats));
-    $('#citySelectedBtn').attr('data-menu-id', lesson.menuId);
+    $('#citySelectedName').text(place.landmark + ' · ' + place.city);
+    $('#citySelectedMeta').text(place.next ? meta + ' · บทต่อไป: ' + place.next.name : meta + ' · ครบทุกบทแล้ว');
+    $('#citySelectedBtn').attr('data-menu-id', place.next ? place.next.menuId : '').toggle(!!place.next);
     $('#citySelected').show();
 }
 
@@ -761,12 +769,15 @@ function cityIsShowing() {
 }
 
 function citySummary(data, counts) {
-    let parts = ['ตึก ' + counts.buildings + ' หลัง', 'เก่งแล้ว ' + counts.strong + ' บท'];
+    let parts = ['เก่งแล้ว ' + counts.strong + ' จาก ' + counts.lessons + ' บท', 'แลนด์มาร์กเสร็จ ' + counts.finished + ' จาก ' + counts.landmarks + ' แห่ง'];
 
     if (data.trophies) {
         parts.push('ถ้วย ' + counts.trophies + ' ใบ');
     }
     parts.push('ฝึกต่อเนื่อง ' + data.streak + ' วัน');
+    if (counts.cars) {
+        parts.push('รถ ' + counts.cars + ' คัน' + (counts.robots ? ' หุ่นยนต์ ' + counts.robots + ' ตัว' : ''));
+    }
     if (data.goalMet) {
         parts.push('ถึงเป้าวันนี้แล้ว');
     }

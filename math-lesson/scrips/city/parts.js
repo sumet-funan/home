@@ -1,17 +1,16 @@
-// The pieces "เมืองของฉัน" is built from: a little Bangkok of shophouses, power
+// The pieces "เมืองของฉัน" is built from: the streets of a little Bangkok, power
 // poles hung with wires, tuk-tuks, pink taxis, a skytrain, a temple and a giant
-// Nang Kwak on a shop roof. Everything is three.js primitives, coloured per
-// vertex and merged, so the whole town draws in a handful of calls (see
-// cityBrush). index.js lays the pieces out and brings them to life.
+// Nang Kwak on a shop roof (the world landmarks are in landmarks.js).
+// Everything is three.js primitives, coloured per vertex and merged, so the
+// whole town draws in a handful of calls (see cityBrush). index.js lays the
+// pieces out and brings them to life.
 //
 // Every builder works in its own frame, facing +z, and is placed with
 // brush.place(); sizes are in the same units as the town plan in index.js.
 
-const CITY_WALLS = ['#f1e4c8', '#cfe5d6', '#f3c9b8', '#f5e3a3', '#dfe3ea', '#ead3e4', '#cde3ec'];
 const CITY_FLOOR = 1.3;            // one storey
 const CITY_KERB = 0.25;            // a pavement's height above the road
-const CITY_TOWER_FLOOR = 0.75;     // a high-rise storey, drawn thinner than a shop's
-const CITY_TOWERS = ['#e8eef2', '#cfd8dc', '#b9cbd8', '#f2e6d0', '#d7e3e8', '#e9dcd3'];
+const CITY_SHOP_FLOORS = 3;
 const CITY_SIGN_COLUMNS = 4;
 const CITY_SIGN_ROWS = 32;
 
@@ -19,6 +18,9 @@ const CITY_SIGN_ROWS = 32;
 function cityShapes(THREE) {
     let prism = new THREE.ExtrudeGeometry(new THREE.Shape([new THREE.Vector2(-0.5, 0), new THREE.Vector2(0.5, 0), new THREE.Vector2(0, 1)]), { depth: 1, bevelEnabled: false });
     prism.translate(0, 0, -0.5);
+    let pyramid = new THREE.ConeGeometry(Math.SQRT1_2, 1, 4);
+    pyramid.rotateY(Math.PI / 4);
+    pyramid.translate(0, 0.5, 0);
 
     return {
         box: new THREE.BoxGeometry(1, 1, 1),
@@ -29,16 +31,9 @@ function cityShapes(THREE) {
         ball: new THREE.SphereGeometry(0.5, 12, 8),
         bush: new THREE.IcosahedronGeometry(0.5, 1),
         prism: prism,           // a gable: 1 wide, 1 high, 1 long, base at y = 0
+        pyramid: pyramid,       // square, 1 across, base at y = 0
         plane: new THREE.PlaneGeometry(1, 1),
     };
-}
-
-function cityHash(text) {
-    let hash = 7;
-    for (let i = 0; i < text.length; i++) {
-        hash = (hash * 31 + text.charCodeAt(i)) >>> 0;
-    }
-    return hash;
 }
 
 // Collects coloured pieces by material, to be merged into one mesh. A piece is
@@ -55,6 +50,7 @@ function cityBrush(THREE, shapes) {
     let colour = new THREE.Color();
 
     let brush = {
+        THREE: THREE,
         shapes: shapes,
         lists: lists,
         place: function (x, y, z, angle) {
@@ -141,219 +137,52 @@ function citySlab(THREE, shape, depth) {
     return geometry;
 }
 
-// ---------- shophouses ----------
+// ---------- the corner shop ----------
 
-// How tall a finished lesson's tower stands: 8 to 20 storeys over its shop.
-function cityTowerFloors(id) {
-    return 8 + cityHash(id) % 13;
-}
-
-function cityTowerHeight(id) {
-    return CITY_FLOOR + cityTowerFloors(id) * CITY_TOWER_FLOOR;
-}
-
-// One lesson's plot, `w` wide and `d` deep, its front on the street at +z.
-// signCell is where its name sits in the sign sheet, for a finished shop.
-function cityShophouse(b, lesson, w, d, colour, signCell, signs) {
+// The shop on the temple square Nang Kwak sits on: shutters up and lights on,
+// a striped awning, a sign, a balcony of plants, and the roof left clear for
+// her. `w` wide and `d` deep, its front on the street at +z.
+function cityCornerShop(b, w, d, colour, signs) {
     let s = b.shapes;
-    let hash = cityHash(lesson.id);
     let front = d / 2;
-
-    if (lesson.stage === 'new') {
-        // an empty lot behind a blue tin fence
-        b.box('#b5653a', 0, 0.03, 0, w - 0.1, 0.06, d - 0.1);
-        b.box('#4a86c8', 0, 0.45, front - 0.08, w - 0.1, 0.9, 0.05);
-        b.box('#4a86c8', -w / 2 + 0.08, 0.45, 0, 0.05, 0.9, d - 0.1);
-        b.box('#4a86c8', w / 2 - 0.08, 0.45, 0, 0.05, 0.9, d - 0.1);
-        for (let i = 1; i < 4; i++) {
-            b.box('#6aa0d6', -w / 2 + i * w / 4, 0.45, front - 0.05, 0.06, 0.9, 0.04);
-        }
-        b.box('#8a6a4a', 0.3, 0.75, front - 0.6, 0.06, 1.5, 0.06);
-        b.box('#ffffff', 0.3, 1.35, front - 0.56, 0.8, 0.42, 0.04);
-        b.box(colour, 0.3, 1.2, front - 0.53, 0.8, 0.1, 0.03);
-        [[-0.5, -0.6], [0.4, 0.5], [-0.2, 0.9]].forEach(function (spot) {
-            b.put(s.bush, '#5f9e3c', [spot[0] * w / 2, 0.12, spot[1]], [0.45, 0.3, 0.45]);
-        });
-        return;
-    }
-
-    if (lesson.stage === 'started') {
-        // concrete frame going up, wrapped in green safety net, cones out front
-        for (let level = 0; level < 3; level++) {
-            b.box('#b9b5ad', 0, level * CITY_FLOOR + 0.06, 0, w - 0.1, 0.12, d - 0.1);
-        }
-        [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (corner) {
-            let x = corner[0] * (w / 2 - 0.15), z = corner[1] * (d / 2 - 0.15);
-            b.box('#a7a29a', x, CITY_FLOOR, z, 0.16, CITY_FLOOR * 2, 0.16);
-            b.box('#7a4b32', x, CITY_FLOOR * 2 + 0.3, z, 0.04, 0.5, 0.04);
-        });
-        b.box('#2e9d4e', 0, CITY_FLOOR + 0.05, front - 0.02, w - 0.04, CITY_FLOOR * 2 - 0.1, 0.03, 'net');
-        b.box('#2e9d4e', w / 2 - 0.02, CITY_FLOOR + 0.05, 0, 0.03, CITY_FLOOR * 2 - 0.1, d - 0.1, 'net');
-        [-1, 1].forEach(function (side) {
-            b.box('#c8a15a', side * (w / 2 - 0.1), 1.45, front + 0.15, 0.06, 2.9, 0.06);
-        });
-        [1, 2].forEach(function (level) {
-            b.box('#c8a15a', 0, level * 1.0, front + 0.15, w - 0.1, 0.05, 0.05);
-        });
-        b.box('#c0603c', -0.3, 0.2, -0.4, 0.6, 0.28, 0.4);
-        b.box('#c0603c', -0.2, 0.45, -0.4, 0.4, 0.22, 0.35);
-        [-0.5, 0.5].forEach(function (x) {
-            b.put(s.cone, '#ff7a1a', [x, 0.22, front + 0.42], [0.22, 0.44, 0.22]);
-            b.put(s.cylinder, '#ffffff', [x, 0.25, front + 0.42], [0.15, 0.06, 0.15]);
-        });
-        if (hash % 2 === 0) {
-            // a tower crane: what is going up here will be tall
-            b.box('#f2b705', -w / 4, 5, -d / 4, 0.3, 10, 0.3);
-            b.box('#f2b705', -w / 4 + 1.6, 10.1, -d / 4, 5.6, 0.25, 0.3);
-            b.box('#8a8f94', -w / 4 - 1.2, 9.85, -d / 4, 0.8, 0.5, 0.5);
-            b.box('#c0392b', -w / 4, 10.5, -d / 4, 0.4, 0.5, 0.4);
-            b.box('#555555', -w / 4 + 3.6, 8.6, -d / 4, 0.03, 3, 0.03);
-        }
-        return;
-    }
-
-    // a finished lesson is a high-rise over its shop; the corner shop stays low
-    let strong = lesson.stage === 'strong';
-    if (strong && !lesson.shophouse) {
-        cityTower(b, lesson, w, d, colour, signCell, signs);
-        return;
-    }
-
-    // a shophouse: two storeys while practising, three or four for the corner shop
-    let floors = strong ? 3 + hash % 2 : 2;
-    let height = floors * CITY_FLOOR;
-    let wall = CITY_WALLS[hash % CITY_WALLS.length];
+    let height = CITY_SHOP_FLOORS * CITY_FLOOR;
     let trim = '#f7f3ea';
 
-    b.box(wall, 0, height / 2, 0, w - 0.06, height, d - 0.1);
-    for (let f = 1; f < floors; f++) {
+    b.box('#f5e3a3', 0, height / 2, 0, w - 0.06, height, d - 0.1);
+    for (let f = 1; f < CITY_SHOP_FLOORS; f++) {
         b.box(trim, 0, f * CITY_FLOOR, 0, w, 0.08, d - 0.04);
     }
     b.box(trim, 0, height + 0.12, 0, w, 0.25, d);
 
-    // the shop front: shutters down, or open with the lights on inside
-    if (strong) {
-        b.box('#5c4a3a', 0, 0.55, front - 0.03, w * 0.78, 0.95, 0.04, 'glow');
-        b.box('#b7bec4', 0, 1.1, front - 0.02, w * 0.8, 0.16, 0.05);
-        b.box('#8b5a3c', 0, 0.3, front + 0.12, w * 0.6, 0.45, 0.3);
-    } else {
-        for (let i = 0; i < 4; i++) {
-            b.box(i % 2 ? '#9aa3ab' : '#b7bec4', 0, 0.24 + i * 0.25, front - 0.03, w * 0.78, 0.25, 0.04);
-        }
-    }
-
-    // a striped awning in the district's colour
+    b.box('#5c4a3a', 0, 0.55, front - 0.03, w * 0.78, 0.95, 0.04, 'glow');
+    b.box('#b7bec4', 0, 1.1, front - 0.02, w * 0.8, 0.16, 0.05);
+    b.box('#8b5a3c', 0, 0.3, front + 0.12, w * 0.6, 0.45, 0.3);
     for (let i = 0; i < 4; i++) {
         b.box(i % 2 ? '#ffffff' : colour, -w / 2 + w / 8 + i * w / 4, 1.2, front + 0.3, w / 4, 0.05, 0.75, 'body', [0.35, 0, 0]);
     }
 
-    // windows upstairs, lit at night
-    for (let f = 1; f < floors; f++) {
+    for (let f = 1; f < CITY_SHOP_FLOORS; f++) {
         let y = f * CITY_FLOOR + 0.78;
         b.box('#ffffff', 0, y, front - 0.03, w * 0.6, 0.62, 0.05);
         b.box('#4f6f86', 0, y, front - 0.01, w * 0.5, 0.52, 0.05, 'glow');
-        if (!strong) {
-            for (let i = -1; i <= 1; i++) {
-                b.box('#e8e1d0', 0, y + i * 0.15, front + 0.02, w * 0.5, 0.04, 0.03);
-            }
-        } else if ((hash + f) % 2 === 0) {
-            // an air conditioner hung on the wall
-            b.box('#f4f4f4', w / 2 - 0.32, f * CITY_FLOOR + 0.28, front + 0.12, 0.42, 0.3, 0.26);
-            b.box('#7c8287', w / 2 - 0.32, f * CITY_FLOOR + 0.28, front + 0.26, 0.28, 0.2, 0.02);
-        }
+        b.box('#f4f4f4', w / 2 - 0.32, f * CITY_FLOOR + 0.28, front + 0.12, 0.42, 0.3, 0.26);
+        b.box('#7c8287', w / 2 - 0.32, f * CITY_FLOOR + 0.28, front + 0.26, 0.28, 0.2, 0.02);
     }
 
-    if (!strong) {
-        b.box(colour, 0, 1.52, front + 0.01, w * 0.6, 0.3, 0.05);
-        if (hash % 2) {
-            let roof = b.shapes.prism;
-            b.put(roof, '#9aa7ad', [0, height + 0.25, -0.3], [w * 0.7, 0.5, d * 0.5]);
-        }
-        return;
-    }
-
-    // a finished shop: its name on a sign, a balcony of plants, a tank on the roof
     b.box('#2b2b2b', 0, 1.55, front + 0.03, w * 0.94, 0.46, 0.06);
-    signs.push({ cell: signCell, x: 0, y: 1.55, z: front + 0.065, w: w * 0.9, h: 0.42, frame: b.frame() });
+    signs.push({ cell: 0, x: 0, y: 1.55, z: front + 0.065, w: w * 0.9, h: 0.42, frame: b.frame() });
 
-    if (floors > 2) {
-        let y = 2 * CITY_FLOOR;
-        b.box(trim, 0, y + 0.04, front + 0.22, w * 0.9, 0.08, 0.45);
-        b.box('#5b6770', 0, y + 0.25, front + 0.43, w * 0.9, 0.35, 0.03);
-        [-0.3, 0.05, 0.35].forEach(function (x) {
-            b.put(s.cylinder, '#c0603c', [x * w, y + 0.17, front + 0.25], [0.18, 0.18, 0.18]);
-            b.put(s.bush, '#3f9b4a', [x * w, y + 0.36, front + 0.25], [0.32, 0.3, 0.32]);
-        });
-    }
-
-    // the corner shop keeps its roof clear for Nang Kwak
-    if (lesson.plainRoof) {
-        return;
-    }
-    let top = height + 0.25;
-    b.box('#8a8f94', -w / 4, top + 0.15, -d / 4, 0.6, 0.3, 0.6);
-    b.put(s.cylinder, hash % 3 ? '#d9dde0' : '#3f7fbf', [-w / 4, top + 0.6, -d / 4], [0.6, 0.65, 0.6]);
-    if (hash % 3 === 0) {
-        // a little room on the roof under a red gable
-        b.box(wall, w / 5, top + 0.4, d / 6, w * 0.45, 0.8, 1.0);
-        b.put(s.prism, '#c8432b', [w / 5, top + 0.8, d / 6], [w * 0.55, 0.45, 1.1]);
-    } else if (hash % 3 === 1) {
-        [-0.2, 0.15].forEach(function (x) {
-            b.box('#8b5a3c', x * w + w / 5, top + 0.12, d / 4, 0.4, 0.24, 0.3);
-            b.put(s.bush, '#4caf50', [x * w + w / 5, top + 0.35, d / 4], [0.45, 0.35, 0.4]);
-        });
-    } else {
-        b.box('#555555', w / 4, top + 0.6, 0, 0.04, 1.2, 0.04);
-        b.box('#555555', w / 4, top + 1.0, 0, 0.6, 0.03, 0.03);
-    }
+    let y = 2 * CITY_FLOOR;
+    b.box(trim, 0, y + 0.04, front + 0.22, w * 0.9, 0.08, 0.45);
+    b.box('#5b6770', 0, y + 0.25, front + 0.43, w * 0.9, 0.35, 0.03);
+    [-0.3, 0.05, 0.35].forEach(function (x) {
+        b.put(s.cylinder, '#c0603c', [x * w, y + 0.17, front + 0.25], [0.18, 0.18, 0.18]);
+        b.put(s.bush, '#3f9b4a', [x * w, y + 0.36, front + 0.25], [0.32, 0.3, 0.32]);
+    });
 }
 
-// A condo or office tower on a shop: the ground floor keeps its awning and its
-// sign with the lesson's name, glass bands climb above, and the top is one of
-// a setback, a spire or a helipad.
-function cityTower(b, lesson, w, d, colour, signCell, signs) {
-    let s = b.shapes;
-    let hash = cityHash(lesson.id);
-    let front = d / 2;
-    let floors = cityTowerFloors(lesson.id);
-    let base = CITY_FLOOR;
-    let bw = w - 0.3, bd = d - 0.3;
-    let skin = CITY_TOWERS[hash % CITY_TOWERS.length];
-    let top = base + floors * CITY_TOWER_FLOOR;
-    let setback = hash % 3 === 0 ? Math.floor(floors * 0.7) : floors;
-
-    // the shop at the foot
-    b.box('#f7f3ea', 0, base / 2, 0, w - 0.06, base, d - 0.1);
-    b.box('#5c4a3a', 0, 0.55, front - 0.03, w * 0.78, 0.95, 0.04, 'glow');
-    for (let i = 0; i < 4; i++) {
-        b.box(i % 2 ? '#ffffff' : colour, -w / 2 + w / 8 + i * w / 4, 1.2, front + 0.3, w / 4, 0.05, 0.75, 'body', [0.35, 0, 0]);
-    }
-    b.box('#2b2b2b', 0, 1.55, front + 0.03, w * 0.94, 0.46, 0.06);
-    signs.push({ cell: signCell, x: 0, y: 1.55, z: front + 0.065, w: w * 0.9, h: 0.42, frame: b.frame() });
-
-    // the tower, a band of windows for every storey, some of them dark at night
-    for (let f = 0; f < floors; f++) {
-        let narrow = f >= setback ? 0.7 : 1;
-        let y = base + f * CITY_TOWER_FLOOR;
-        b.box(skin, 0, y + CITY_TOWER_FLOOR / 2, 0, bw * narrow, CITY_TOWER_FLOOR, bd * narrow);
-        b.box('#5d86a8', 0, y + 0.42, 0, bw * narrow + 0.04, 0.4, bd * narrow + 0.04, (hash + f) % 4 ? 'glow' : 'body');
-    }
-    b.box(colour, 0, base + 0.08, 0, bw + 0.1, 0.16, bd + 0.1);
-    b.box(skin, 0, top + 0.12, 0, bw * (setback < floors ? 0.7 : 1) + 0.06, 0.25, bd * (setback < floors ? 0.7 : 1) + 0.06);
-
-    if (hash % 3 === 1) {
-        b.box('#d9dde0', 0, top + 0.6, 0, bw * 0.5, 0.8, bd * 0.5);
-        b.put(s.spire, '#cfd6db', [0, top + 2.0, 0], [0.18, 2.2, 0.18]);
-        b.box('#e53935', 0, top + 3.15, 0, 0.12, 0.12, 0.12, 'glow');
-    } else if (hash % 3 === 2) {
-        b.put(s.cylinder, '#6b7378', [0, top + 0.3, 0], [Math.min(bw, bd) * 0.9, 0.08, Math.min(bw, bd) * 0.9]);
-        b.put(s.cylinder, '#f2b705', [0, top + 0.35, 0], [Math.min(bw, bd) * 0.6, 0.02, Math.min(bw, bd) * 0.6]);
-    } else {
-        b.put(s.cylinder, '#d9dde0', [bw * 0.15, top + 0.6, 0], [0.5, 0.6, 0.5]);
-    }
-}
-
-// Lesson names, one cell each, on a sheet the finished shops' signs share.
+// The shop's sign, its name on a sheet of cells (one here, but signs share the
+// layout).
 function citySignSheet(THREE, names, colours) {
     let canvas = document.createElement('canvas');
     let cellW = 256, cellH = 64;
@@ -450,11 +279,6 @@ function cityWires(THREE, b, from, to, count) {
         b.put(tube, '#1f1f22', [0, 0, 0]);
         tube.dispose();
     }
-}
-
-function cityCone(b, x, z) {
-    b.put(b.shapes.cone, '#ff7a1a', [x, CITY_KERB + 0.22, z], [0.22, 0.44, 0.22]);
-    b.put(b.shapes.cylinder, '#ffffff', [x, CITY_KERB + 0.25, z], [0.15, 0.06, 0.15]);
 }
 
 // A noodle cart under a striped umbrella.
