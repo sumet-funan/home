@@ -3514,6 +3514,33 @@ input[type=number] {
   font-size: 2.2rem;
 }
 
+/* the picture sheet of ตอนที่ 1: twelve lettered tiles */
+.fq-options.rt-bank {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.rt-bank .fq-option {
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 84px;
+  padding: 6px;
+}
+
+.rt-bank .rt-emoji {
+  font-size: 2.1rem;
+}
+
+.rt-sign .rt-emoji {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 3px solid var(--red);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+}
+
 .rt-sentence,
 .rt-passage {
   padding: 14px 16px;

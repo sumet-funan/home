@@ -1,13 +1,17 @@
-// RT ป.1, the reading test, laid out as the 2568 guidance sets it: reading for
-// meaning (words 10 items, a sentence from a picture 5, sentences 10, a passage
-// 5, 50 points) and reading aloud (20 words, then a passage of ten sentences, 50
-// points). Every item is written here from word lists; none is a real paper.
+// RT ป.1, the reading test, laid out as the 2568 papers are: reading for
+// meaning in three parts, 50 points in 45 minutes (ตอนที่ 1 words, 10 items;
+// ตอนที่ 2 telling a picture in a sentence, 5 items, then sentences, 10 items;
+// ตอนที่ 3 short passages, 5 items), and reading aloud (20 words, then a passage
+// marked in ten parts, 50 points). Questions have three choices, as the test's
+// do. Every item is written here from word lists; none is from a real paper.
 //
 // Two parts cannot be marked by a page the way the test marks them. Reading
-// aloud is heard by a grown-up, who taps each word or sentence the child read
+// aloud is heard by a grown-up, who taps each word or part the child read
 // right, as the examiner does. The sentence from a picture is written in the
-// test; here the child puts word cards in order, so a ป.1 child need not type.
-// mockexam/index.js runs the paper like the others.
+// test; here the child puts word cards in order, so a ป.1 child need not type,
+// and it is marked to the test's rule: 2 for the whole sentence, 1 for one that
+// gets the picture across only in part. mockexam/index.js runs the paper like
+// the others.
 
 // Things a ป.1 child reads, each with a picture that needs no download.
 const RT_PICTURES = [
@@ -21,6 +25,10 @@ const RT_PICTURES = [
     ['ประตู', '🚪'], ['เตียง', '🛏️'], ['เก้าอี้', '🪑'], ['ดอกไม้', '🌸'], ['ต้นไม้', '🌳'], ['ดาว', '⭐'],
     ['ดวงจันทร์', '🌙'], ['ภูเขา', '⛰️'], ['ไฟ', '🔥'], ['ลูกบอล', '⚽'], ['หมวก', '👒'], ['รองเท้า', '👟'],
     ['เสื้อ', '👕'], ['มือ', '✋'], ['ฟัน', '🦷'], ['หู', '👂'],
+    // and things done, and longer words, as the test asks for too
+    ['ปลาวาฬ', '🐳'], ['ยีราฟ', '🦒'], ['เพนกวิน', '🐧'], ['ม้าลาย', '🦓'], ['ว่ายน้ำ', '🏊'], ['นอนหลับ', '😴'],
+    ['เค้ก', '🎂'], ['ลูกโป่ง', '🎈'], ['รุ้งกินน้ำ', '🌈'], ['ไอศกรีม', '🍦'], ['ช้อน', '🥄'], ['จรวด', '🚀'],
+    ['หุ่นยนต์', '🤖'], ['เต็นท์', '⛺'], ['ตำรวจ', '👮'], ['ไข่ดาว', '🍳'], ['ขี่จักรยาน', '🚴'], ['ปลูกต้นไม้', '🌱'],
 ];
 
 // More everyday words, for reading aloud.
@@ -32,19 +40,24 @@ const RT_NAMES = ['มะลิ', 'ภูผา', 'ใบบัว', 'นที'
 const RT_COLOURS = ['ขาว', 'ดำ', 'แดง', 'เหลือง', 'เขียว', 'ฟ้า'];
 const RT_COUNTS = ['สอง', 'สาม', 'สี่', 'ห้า', 'หก'];
 
+// The pictures in ตอนที่ 1 are lettered like the test's: twelve of them, two
+// more than there are words, so the last answer is not left to guess.
+const RT_BANK_LETTERS = ['ก', 'ข', 'ค', 'ง', 'จ', 'ฉ', 'ช', 'ซ', 'ฌ', 'ญ', 'ฎ', 'ฏ'];
+const RT_CHOICE_LABELS = ['๑', '๒', '๓'];
+
 // The Thai curriculum's reading and writing indicators the parts test.
 const RT_INDICATORS = {
     'ท 1.1 ป.1/1': 'อ่านออกเสียงคำ คำคล้องจอง และข้อความสั้น ๆ',
     'ท 1.1 ป.1/2': 'บอกความหมายของคำ และข้อความที่อ่าน',
     'ท 1.1 ป.1/3': 'ตอบคำถามเกี่ยวกับเรื่องที่อ่าน',
     'ท 1.1 ป.1/5': 'คาดคะเนเหตุการณ์จากเรื่องที่อ่าน',
+    'ท 1.1 ป.1/7': 'บอกความหมายของเครื่องหมาย หรือสัญลักษณ์สำคัญที่มักพบเห็นในชีวิตประจำวัน',
     'ท 2.1 ป.1/2': 'เขียนสื่อสารด้วยคำและประโยคง่าย ๆ',
 };
 
-// Our split of marks where the guidance gives only a part's total.
-const RT_ORDER_POINTS = 2;              // a sentence put in order: 2, or 1 if it starts right
+const RT_ORDER_POINTS = 2;
 const RT_ALOUD_WORD_POINTS = 1;
-const RT_ALOUD_SENTENCE_POINTS = 3;     // ten sentences, 30 points
+const RT_ALOUD_SENTENCE_POINTS = 3;     // the passage is marked in ten parts, 30 points
 
 function rtPicture(emoji) {
     return `<span class="rt-emoji" aria-hidden="true">${emoji}</span>`;
@@ -54,19 +67,7 @@ function rtWord(word) {
     return `<span class="rt-word">${escapeLessonText(word)}</span>`;
 }
 
-// Wrong words that look like the right one, so the child has to read it: the
-// ones sharing the most letters come first.
-function rtLookAlikes(word, count) {
-    let others = RT_PICTURES.filter(function (pair) { return pair[0] !== word; });
-    let score = function (other) {
-        return other.split('').filter(function (letter) { return word.indexOf(letter) !== -1; }).length + Math.random();
-    };
-    return others.map(function (pair) { return { pair: pair, score: score(pair[0]) }; })
-        .sort(function (a, b) { return b.score - a.score; })
-        .slice(0, count)
-        .map(function (entry) { return entry.pair; });
-}
-
+// A question with three choices numbered ๑ ๒ ๓, as the test's are.
 function rtChoice(text, figure, right, wrong, show) {
     let options = shuffleList([right].concat(wrong));
     return {
@@ -74,21 +75,37 @@ function rtChoice(text, figure, right, wrong, show) {
         figure: figure,
         options: options.map(function (option) { return option[0]; }),
         html: options.map(show),
+        labels: RT_CHOICE_LABELS,
         correct: options.indexOf(right),
     };
 }
 
-// ตอนที่ 1: a word and its picture, asked both ways round.
-function rtWordItem(pair, pictureFirst) {
-    let wrong = rtLookAlikes(pair[0], 3);
-
-    if (pictureFirst) {
-        return rtChoice('ภาพนี้คือคำใด', rtPicture(pair[1]), pair, wrong, function (option) { return rtWord(option[0]); });
-    }
-    return rtChoice('คำนี้ตรงกับภาพใด', rtWord(pair[0]), pair, wrong, function (option) { return rtPicture(option[1]); });
+function rtWords(text, figure, right, wrong) {
+    return rtChoice(text, figure, [right], wrong.map(function (word) { return [word]; }), function (option) { return rtWord(option[0]); });
 }
 
-// ตอนที่ 2: what the picture shows, as cards to put in order.
+function rtOthers(list, right, count) {
+    return shuffleList(list.filter(function (item) { return item !== right; })).slice(0, count);
+}
+
+// ตอนที่ 1: ten words to match to a sheet of twelve lettered pictures, the
+// same sheet for every word.
+function rtWordBank() {
+    let bank = shuffleList(RT_PICTURES).slice(0, 12);
+    return shuffleList(bank.slice()).slice(0, 10).map(function (pair) {
+        return {
+            text: 'คำนี้ตรงกับภาพใด',
+            figure: rtWord(pair[0]),
+            options: bank.map(function (each) { return each[0]; }),
+            html: bank.map(function (each) { return rtPicture(each[1]); }),
+            labels: RT_BANK_LETTERS,
+            compact: true,
+            correct: bank.indexOf(pair),
+        };
+    });
+}
+
+// ตอนที่ 2, first half: what the picture shows, as cards to put in order.
 const RT_SCENES = [
     ['🐱 🐟', ['แมว', 'กิน', 'ปลา']],
     ['🐦 ☁️', ['นก', 'บิน', 'บน', 'ฟ้า']],
@@ -123,39 +140,58 @@ function rtOrderItem(scene) {
     };
 }
 
-// ตอนที่ 3: one sentence, one question about it.
+// ตอนที่ 2, second half: a sentence and a question on it. Some ask what it
+// says; some ask what it shows about the child in it, as the test does; and
+// some are signs to read.
 function rtSentenceItem(kind) {
     let name = pickOne(RT_NAMES);
-    let others = function (list, right, count) {
-        return shuffleList(list.filter(function (item) { return item !== right; })).slice(0, count || 3);
-    };
-    let words = function (sentence, question, right, wrong) {
-        return rtChoice(question, `<div class="rt-sentence">${escapeLessonText(sentence)}</div>`, [right], wrong.map(function (word) { return [word]; }), function (option) { return rtWord(option[0]); });
-    };
+    let sentence = function (text) { return `<div class="rt-sentence">${escapeLessonText(text)}</div>`; };
 
     if (kind === 'eat') {
         let pair = pickOne([['ลิง', 'กล้วย'], ['แมว', 'ปลา'], ['กระต่าย', 'แครอท'], ['วัว', 'หญ้า'], ['หมา', 'กระดูก'], ['ไก่', 'ข้าวโพด']]);
-        return words(`${pair[0]}ชอบกิน${pair[1]}`, `${pair[0]}ชอบกินอะไร`, pair[1], others(['กล้วย', 'ปลา', 'แครอท', 'หญ้า', 'กระดูก', 'ข้าวโพด'], pair[1]));
+        return rtWords(`${pair[0]}ชอบกินอะไร`, sentence(`${pair[0]}ชอบกิน${pair[1]}`), pair[1], rtOthers(['กล้วย', 'ปลา', 'แครอท', 'หญ้า', 'กระดูก', 'ข้าวโพด'], pair[1], 2));
     }
     if (kind === 'ride') {
-        let way = pickOne(['จักรยาน', 'รถไฟ', 'เรือ', 'รถเมล์']);
-        return words(`${name}ไปโรงเรียนด้วย${way}`, `${name}ไปโรงเรียนด้วยอะไร`, way, others(['จักรยาน', 'รถไฟ', 'เรือ', 'รถเมล์'], way));
+        let ways = ['จักรยาน', 'รถไฟ', 'เรือ', 'รถเมล์'], way = pickOne(ways);
+        return rtWords(`${name}ไปโรงเรียนด้วยอะไร`, sentence(`${name}ไปโรงเรียนด้วย${way}`), way, rtOthers(ways, way, 2));
     }
     if (kind === 'colour') {
         let pet = pickOne(['แมว', 'หมา', 'กระต่าย', 'นก']), colour = pickOne(RT_COLOURS);
-        return words(`${name}มี${pet}สี${colour}`, `${pet}ของ${name}สีอะไร`, 'สี' + colour, others(RT_COLOURS, colour).map(function (other) { return 'สี' + other; }));
+        return rtWords(`${pet}ของ${name}สีอะไร`, sentence(`${name}มี${pet}สี${colour}`), 'สี' + colour, rtOthers(RT_COLOURS, colour, 2).map(function (other) { return 'สี' + other; }));
     }
     if (kind === 'count') {
         let fruit = pickOne(['ส้ม', 'แตงโม', 'มะม่วง']), count = pickOne(RT_COUNTS);
-        return words(`แม่ซื้อ${fruit}มา${count}ลูก`, `แม่ซื้อ${fruit}มากี่ลูก`, count + 'ลูก', others(RT_COUNTS, count).map(function (other) { return other + 'ลูก'; }));
-    }
-    if (kind === 'place') {
-        let place = pickOne(['สนาม', 'ห้องเรียน', 'ชายหาด', 'สวนหลังบ้าน']);
-        return words(`${name}กับเพื่อนเล่นกันอยู่ที่${place}`, `${name}เล่นอยู่ที่ไหน`, place, others(['สนาม', 'ห้องเรียน', 'ชายหาด', 'สวนหลังบ้าน'], place));
+        return rtWords(`แม่ซื้อ${fruit}มากี่ลูก`, sentence(`แม่ซื้อ${fruit}มา${count}ลูก`), count + 'ลูก', rtOthers(RT_COUNTS, count, 2).map(function (other) { return other + 'ลูก'; }));
     }
     if (kind === 'who') {
         let friends = shuffleList(RT_NAMES);
-        return words(`${friends[0]}ให้ดินสอแก่${friends[1]}`, 'ใครเป็นคนให้ดินสอ', friends[0], [friends[1], friends[2], friends[3]]);
+        return rtWords('ใครเป็นคนให้ดินสอ', sentence(`${friends[0]}ให้ดินสอแก่${friends[1]}`), friends[0], [friends[1], friends[2]]);
+    }
+    if (kind === 'value') {
+        // [what the child does, the question, what it shows, two that it does not]
+        let value = pickOne([
+            ['ทำการบ้านเสร็จก่อนไปเล่นทุกวัน', 'เป็นเด็กอย่างไร', 'มีความรับผิดชอบ', ['ประหยัด', 'ซื่อสัตย์']],
+            ['เก็บกระเป๋าเงินได้ แล้วนำไปคืนครู', 'เป็นเด็กอย่างไร', 'ซื่อสัตย์', ['ประหยัด', 'ตรงต่อเวลา']],
+            ['แบ่งขนมให้เพื่อนที่ไม่ได้นำขนมมา', 'เป็นเด็กอย่างไร', 'มีน้ำใจ', ['ตรงต่อเวลา', 'ประหยัด']],
+            ['หยอดเงินค่าขนมที่เหลือลงกระปุกออมสินทุกวัน', 'เป็นเด็กอย่างไร', 'ประหยัด', ['มีน้ำใจ', 'ตรงต่อเวลา']],
+            ['ไปถึงโรงเรียนก่อนเข้าแถวทุกวัน', 'เป็นเด็กอย่างไร', 'ตรงต่อเวลา', ['ประหยัด', 'ซื่อสัตย์']],
+            ['นอนดึกจนตื่นสาย ไปโรงเรียนไม่ทันเข้าแถว', 'ควรฝึกเรื่องใด', 'ความตรงต่อเวลา', ['ความประหยัด', 'ความมีน้ำใจ']],
+            ['เล่นของเล่นแล้วไม่เก็บเข้าที่ แม่ต้องเก็บให้ทุกวัน', 'ควรฝึกเรื่องใด', 'ความรับผิดชอบ', ['ความประหยัด', 'ความซื่อสัตย์']],
+        ]);
+        let item = rtWords(name + value[1], sentence(name + value[0]), value[2], value[3]);
+        item.code = 'ท 1.1 ป.1/2';
+        return item;
+    }
+    if (kind === 'sign') {
+        let signs = [
+            ['🚭', 'ไม่สูบบุหรี่ที่นี่'], ['🚯', 'ไม่ทิ้งขยะที่นี่'], ['🚳', 'ไม่ขี่จักรยานที่นี่'],
+            ['📵', 'ไม่ใช้โทรศัพท์ที่นี่'], ['🔇', 'ไม่ส่งเสียงดังที่นี่'], ['🚷', 'ไม่เดินผ่านทางนี้'], ['🚱', 'ไม่ดื่มน้ำนี้'],
+        ];
+        let sign = pickOne(signs);
+        let item = rtWords('เมื่อเห็นป้ายนี้ ควรทำอย่างไร', `<span class="rt-sign">${rtPicture(sign[0])}</span>`, sign[1],
+            rtOthers(signs, sign, 2).map(function (other) { return other[1]; }));
+        item.code = 'ท 1.1 ป.1/7';
+        return item;
     }
 
     // which sentence the picture shows: the right one beside ones with the
@@ -164,70 +200,36 @@ function rtSentenceItem(kind) {
     let places = [['เตียง', '🛏️'], ['เก้าอี้', '🪑'], ['ต้นไม้', '🌳']];
     let animal = pickOne(animals), place = pickOne(places);
     let otherAnimal = pickOne(animals.filter(function (a) { return a !== animal; }));
-    let otherPlaces = shuffleList(places.filter(function (p) { return p !== place; }));
-    let sentence = function (a, p) { return [`${a[0]}อยู่บน${p[0]}`]; };
-    let right = sentence(animal, place);
+    let otherPlace = pickOne(places.filter(function (p) { return p !== place; }));
+    let says = function (a, p) { return `${a[0]}อยู่บน${p[0]}`; };
 
-    return rtChoice('ข้อใดตรงกับภาพ', rtPicture(animal[1] + ' ' + place[1]), right,
-        [sentence(otherAnimal, place), sentence(animal, otherPlaces[0]), sentence(otherAnimal, otherPlaces[1])],
-        function (option) { return rtWord(option[0]); });
+    return rtWords('ข้อใดตรงกับภาพ', rtPicture(animal[1] + ' ' + place[1]), says(animal, place), [says(otherAnimal, place), says(animal, otherPlace)]);
 }
 
-const RT_SENTENCE_KINDS = ['eat', 'ride', 'colour', 'count', 'place', 'who', 'picture'];
+// Ten sentence items: what sentences say, what they show about a child, signs.
+const RT_SENTENCE_MIX = ['value', 'value', 'sign', 'sign'];
+const RT_SENTENCE_KINDS = ['eat', 'ride', 'colour', 'count', 'who', 'picture'];
 
-// ตอนที่ 4: a short story and five questions on it. Each story fills its own
-// names and things, so no two papers read the same.
-function rtStory() {
+// ตอนที่ 3: short passages, each with a picture and its own question; most ask
+// what will happen next, some why. [picture, passage, question, answer, two
+// wrong, indicator]
+function rtPassages() {
     let name = pickOne(RT_NAMES);
-    let pickOther = function (list, right) { return shuffleList(list.filter(function (item) { return item !== right; })).slice(0, 3); };
-    let stories = [
-        function () {
-            let day = pickOne(['วันเสาร์', 'วันอาทิตย์']), who = pickOne(['แม่', 'ยาย']);
-            let fruit = pickOne(['ส้ม', 'มะม่วง', 'แตงโม']), count = pickOne(RT_COUNTS);
-            let animal = pickOne(['แมว', 'หมา', 'ไก่']);
-            return {
-                text: `${day} ${name}ไปตลาดกับ${who} ${who}ซื้อ${fruit}${count}ลูก และซื้อขนมหนึ่งถุง ${name}ช่วย${who}ถือตะกร้า ตอนเดินกลับบ้าน ${name}เห็น${animal}นอนอยู่ใต้ต้นไม้ ${name}ยิ้มแล้วโบกมือให้${animal}`,
-                questions: [
-                    [`${name}ไปตลาดกับใคร`, who, pickOther(['แม่', 'ยาย', 'พ่อ', 'พี่'], who), 'ท 1.1 ป.1/3'],
-                    [`${name}ไปตลาดวันอะไร`, day, pickOther(['วันจันทร์', 'วันพุธ', 'วันเสาร์', 'วันอาทิตย์'], day), 'ท 1.1 ป.1/3'],
-                    [`${who}ซื้อ${fruit}กี่ลูก`, count + 'ลูก', pickOther(RT_COUNTS, count).map(function (c) { return c + 'ลูก'; }), 'ท 1.1 ป.1/3'],
-                    [`${name}ช่วย${who}ทำอะไร`, 'ถือตะกร้า', ['หุงข้าว', 'ล้างจาน', 'กวาดบ้าน'], 'ท 1.1 ป.1/3'],
-                    [`${name}เห็นอะไรนอนอยู่ใต้ต้นไม้`, animal, pickOther(['แมว', 'หมา', 'ไก่', 'เป็ด'], animal), 'ท 1.1 ป.1/3'],
-                ],
-            };
-        },
-        function () {
-            let colour = pickOne(RT_COLOURS), thing = pickOne(['ดอกไม้', 'ต้นไม้', 'บ้าน', 'ปลา']);
-            return {
-                text: `เช้าวันนี้ฝนตก ${name}กางร่มสี${colour}ไปโรงเรียน ที่โรงเรียน คุณครูให้นักเรียนวาดรูป${thing} ${name}ตั้งใจวาดแล้วระบายสีอย่างสวยงาม เพื่อน ๆ ชมว่ารูปของ${name}สวยมาก ${name}ดีใจที่สุด`,
-                questions: [
-                    ['เช้าวันนี้อากาศเป็นอย่างไร', 'ฝนตก', ['แดดออก', 'อากาศหนาว', 'ลมพัดแรง'], 'ท 1.1 ป.1/3'],
-                    [`ร่มของ${name}สีอะไร`, 'สี' + colour, pickOther(RT_COLOURS, colour).map(function (c) { return 'สี' + c; }), 'ท 1.1 ป.1/3'],
-                    ['คุณครูให้นักเรียนทำอะไร', 'วาดรูป' + thing, ['ร้องเพลง', 'อ่านหนังสือ', 'เล่นฟุตบอล'], 'ท 1.1 ป.1/3'],
-                    [`เพื่อน ๆ ชมว่าอะไร`, 'รูปสวยมาก', ['ร้องเพลงเพราะ', 'วิ่งเร็วมาก', 'ร่มสวยมาก'], 'ท 1.1 ป.1/3'],
-                    [`${name}รู้สึกอย่างไร`, 'ดีใจ', ['เสียใจ', 'โกรธ', 'กลัว'], 'ท 1.1 ป.1/3'],
-                ],
-            };
-        },
-        function () {
-            let pair = pickOne([['แมว', 'ปลา'], ['หมา', 'กระดูก'], ['กระต่าย', 'แครอท']]);
-            let pet = pickOne(['ปุยฝ้าย', 'ถุงเงิน', 'มะขาม']), colour = pickOne(RT_COLOURS);
-            return {
-                text: `${name}มี${pair[0]}ตัวหนึ่งชื่อ${pet} ${pet}ตัวสี${colour} ชอบกิน${pair[1]} ทุกเย็น ${name}พา${pet}ไปเดินเล่นที่สวน วันนี้${pet}วิ่งเร็วมากจนหกล้ม ${name}จึงรีบอุ้ม${pet}กลับบ้าน`,
-                questions: [
-                    [`${pet}เป็นสัตว์อะไร`, pair[0], pickOther(['แมว', 'หมา', 'กระต่าย', 'นก'], pair[0]), 'ท 1.1 ป.1/3'],
-                    [`${pet}ชอบกินอะไร`, pair[1], pickOther(['ปลา', 'กระดูก', 'แครอท', 'ข้าวโพด'], pair[1]), 'ท 1.1 ป.1/3'],
-                    [`${name}พา${pet}ไปเดินเล่นเมื่อไร`, 'ตอนเย็น', ['ตอนเช้า', 'ตอนกลางวัน', 'ตอนกลางคืน'], 'ท 1.1 ป.1/3'],
-                    [`วันนี้เกิดอะไรขึ้นกับ${pet}`, 'วิ่งจนหกล้ม', ['นอนหลับ', 'ว่ายน้ำ', 'หายไป'], 'ท 1.1 ป.1/3'],
-                    [`ถ้า${pet}เจ็บขา ${name}ควรทำอย่างไร`, 'พาไปหาหมอ', ['ให้วิ่งต่อ', 'ทิ้งไว้ที่สวน', 'ดุว่า' + pet], 'ท 1.1 ป.1/5'],
-                ],
-            };
-        },
+    return [
+        ['🥛', `${name}เทน้ำใส่แก้วจนเต็มแล้ว แต่ยังเทต่อไปอีก`, 'จะเกิดอะไรขึ้นต่อไป', 'น้ำล้นแก้ว', ['แก้วแตก', 'น้ำหายไป'], 'ท 1.1 ป.1/5'],
+        ['🌧️ 👕', `ฝนตกหนัก ${name}ลืมเก็บเสื้อที่ตากไว้หน้าบ้าน`, 'จะเกิดอะไรขึ้นกับเสื้อ', 'เสื้อเปียก', ['เสื้อแห้ง', 'เสื้อขาด'], 'ท 1.1 ป.1/5'],
+        ['💧 🏃', `${name}วิ่งเล่นบนพื้นที่เปียกน้ำโดยไม่ระวัง`, 'จะเกิดอะไรขึ้นกับ' + name, 'อาจลื่นหกล้ม', ['ได้รางวัล', 'ตัวแห้ง'], 'ท 1.1 ป.1/5'],
+        ['🦷 🍬', `${name}ชอบกินขนมหวาน แต่ไม่แปรงฟันก่อนนอน`, 'จะเกิดอะไรขึ้นกับ' + name, 'ฟันผุ', ['ตัวสูงขึ้น', 'ผมยาวขึ้น'], 'ท 1.1 ป.1/5'],
+        ['🌱 💧', `${name}ปลูกต้นไม้ไว้ข้างบ้าน และรดน้ำให้ทุกวัน`, 'ต้นไม้จะเป็นอย่างไร', 'ต้นไม้เติบโตงอกงาม', ['ต้นไม้เหี่ยวตาย', 'ต้นไม้หายไป'], 'ท 1.1 ป.1/5'],
+        ['🐜 🍪', `${name}ลืมปิดกล่องขนมไว้บนโต๊ะ มีมดเดินมาเป็นแถว`, 'จะเกิดอะไรขึ้นต่อไป', 'มดมากินขนม', ['ขนมมากขึ้น', 'มดหนีไป'], 'ท 1.1 ป.1/5'],
+        ['📖 ✏️', `${name}ตั้งใจอ่านหนังสือทบทวนทุกวันก่อนสอบ`, 'จะเกิดอะไรขึ้นกับ' + name, 'สอบได้คะแนนดี', ['สอบไม่ผ่าน', 'ลืมไปสอบ'], 'ท 1.1 ป.1/5'],
+        ['🎈 😢', `${name}ปล่อยเชือกลูกโป่งหลุดมือ ลูกโป่งลอยขึ้นไปบนฟ้า ${name}จึงร้องไห้`, name + 'ร้องไห้เพราะอะไร', 'ลูกโป่งลอยหายไป', ['หกล้ม', 'หิวข้าว'], 'ท 1.1 ป.1/3'],
+        ['🐶 🌧️', `ฝนตกหนัก ${name}เห็นลูกหมาตัวสั่นอยู่หน้าบ้าน จึงนำผ้ามาเช็ดตัวให้`, name + 'นำผ้ามาทำอะไร', 'เช็ดตัวให้ลูกหมา', ['ห่มให้ตัวเอง', 'เช็ดโต๊ะ'], 'ท 1.1 ป.1/3'],
     ];
-    return pickOne(stories)();
 }
 
-// Reading aloud, the second part: ten short sentences about one day.
+// Reading aloud, the second part: a passage of ten short sentences, each one of
+// the ten parts the examiner marks.
 function rtAloudStory() {
     let name = pickOne(RT_NAMES);
     let stories = [
@@ -269,46 +271,50 @@ function rtSpeak(text) {
 function buildReadingTest() {
     let items = [];
     let add = function (part, kind, points, code, item) {
-        items.push(Object.assign(item, { part: part, kind: kind, points: points, code: code }));
+        items.push(Object.assign({ code: code }, item, { part: part, kind: kind, points: points }));
     };
 
-    shuffleList(RT_PICTURES).slice(0, 10).forEach(function (pair, i) {
-        add(0, 'choice', 1, 'ท 1.1 ป.1/2', rtWordItem(pair, i % 2 === 0));
+    rtWordBank().forEach(function (item) {
+        add(0, 'choice', 1, 'ท 1.1 ป.1/2', item);
     });
     shuffleList(RT_SCENES).slice(0, 5).forEach(function (scene) {
         add(1, 'order', RT_ORDER_POINTS, 'ท 2.1 ป.1/2', rtOrderItem(scene));
     });
-    let kinds = shuffleList(RT_SENTENCE_KINDS.concat(RT_SENTENCE_KINDS)).slice(0, 10);
+    let kinds = shuffleList(RT_SENTENCE_MIX.concat(shuffleList(RT_SENTENCE_KINDS).slice(0, 10 - RT_SENTENCE_MIX.length)));
     kinds.forEach(function (kind) {
         add(2, 'choice', 2, 'ท 1.1 ป.1/2', rtSentenceItem(kind));
     });
-    let story = rtStory();
-    story.questions.forEach(function (question) {
-        let item = rtChoice(question[0], `<div class="rt-passage">${escapeLessonText(story.text)}</div>`, [question[1]],
-            question[2].map(function (word) { return [word]; }), function (option) { return rtWord(option[0]); });
-        add(3, 'choice', 2, question[3], item);
+    shuffleList(rtPassages()).slice(0, 5).forEach(function (passage) {
+        let figure = `${rtPicture(passage[0])}<div class="rt-passage">${escapeLessonText(passage[1])}</div>`;
+        add(3, 'choice', 2, passage[5], rtWords(passage[2], figure, passage[3], passage[4]));
     });
 
     let words = shuffleList(RT_PICTURES.map(function (pair) { return pair[0]; }).concat(RT_WORDS)).slice(0, 20);
     add(4, 'aloud', 20, 'ท 1.1 ป.1/1', {
-        text: 'ให้นักเรียนอ่านออกเสียงทีละคำ ผู้ปกครองหรือครูแตะคำที่อ่านถูก แตะอีกครั้งถ้าอ่านผิด',
+        text: 'ให้นักเรียนอ่านออกเสียงทีละคำ อ่านทั้งคำโดยไม่สะกด ผู้ปกครองหรือครูแตะคำที่อ่านถูก แตะอีกครั้งถ้าอ่านผิด อ่านทวนได้อีก 1 ครั้ง',
         figure: '', lines: words, each: RT_ALOUD_WORD_POINTS,
     });
     add(5, 'aloud', 30, 'ท 1.1 ป.1/1', {
-        text: 'ให้นักเรียนอ่านออกเสียงทีละประโยค ผู้ปกครองหรือครูแตะประโยคที่อ่านถูก แตะอีกครั้งถ้าอ่านผิด',
+        text: 'ให้นักเรียนอ่านออกเสียงทีละประโยค ประโยคที่อ่านถูกทุกคำต่อเนื่องโดยไม่สะกดให้แตะว่าถูก แตะอีกครั้งถ้าอ่านผิด อ่านทวนได้อีก 1 ครั้ง',
         figure: '', lines: rtAloudStory(), each: RT_ALOUD_SENTENCE_POINTS, sentences: true,
     });
     return items;
 }
 
+// The test gives 2 for a sentence that tells the picture in full, and 1 for one
+// that gets it across only in part, like "ว่ายน้ำ" for "ฉันว่ายน้ำ": here, the
+// cards after the sentence's first word laid down together and in order.
 function markReadingOrder(item, answer) {
-    if (!answer || answer.length !== item.correct.length) {
+    if (!answer || !answer.length) {
         return 0;
     }
-    if (answer.every(function (card, position) { return card === item.correct[position]; })) {
+    let whole = item.correct;
+    if (answer.length === whole.length && answer.every(function (card, position) { return card === whole[position]; })) {
         return item.points;
     }
-    return answer[0] === item.correct[0] ? 1 : 0;
+    let rest = whole.slice(1);
+    let from = answer.indexOf(rest[0]);
+    return from !== -1 && rest.every(function (card, k) { return answer[from + k] === card; }) ? 1 : 0;
 }
 
 function markReadingAloud(item, answer) {

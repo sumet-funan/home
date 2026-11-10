@@ -45,10 +45,10 @@ const MOCK_EXAMS = {
         parts: [
             { name: 'อ่านรู้เรื่อง ตอนที่ 1 คำ', kind: 'choice', points: 1, slots: repeatSlot(10, 'rt') },
             { name: 'อ่านรู้เรื่อง ตอนที่ 2 เล่าเรื่องจากภาพ', kind: 'order', points: 2, slots: repeatSlot(5, 'rt') },
-            { name: 'อ่านรู้เรื่อง ตอนที่ 3 ประโยค', kind: 'choice', points: 2, slots: repeatSlot(10, 'rt') },
-            { name: 'อ่านรู้เรื่อง ตอนที่ 4 ข้อความ', kind: 'choice', points: 2, slots: repeatSlot(5, 'rt') },
+            { name: 'อ่านรู้เรื่อง ตอนที่ 2 ประโยค', kind: 'choice', points: 2, slots: repeatSlot(10, 'rt') },
+            { name: 'อ่านรู้เรื่อง ตอนที่ 3 ข้อความ', kind: 'choice', points: 2, slots: repeatSlot(5, 'rt') },
             { name: 'อ่านออกเสียง ตอนที่ 1 คำ', kind: 'aloud', points: 20, slots: ['rt'], summary: 'อ่านออกเสียง ตอนที่ 1 คำ 20 คำ คำละ 1 คะแนน' },
-            { name: 'อ่านออกเสียง ตอนที่ 2 ข้อความ', kind: 'aloud', points: 30, slots: ['rt'], summary: 'อ่านออกเสียง ตอนที่ 2 ข้อความ 10 ประโยค ประโยคละ 3 คะแนน' },
+            { name: 'อ่านออกเสียง ตอนที่ 2 ข้อความ', kind: 'aloud', points: 30, slots: ['rt'], summary: 'อ่านออกเสียง ตอนที่ 2 ข้อความ 10 ส่วน ส่วนละ 3 คะแนน' },
         ],
     },
     nt3: {
@@ -372,9 +372,10 @@ function renderMockExamClock() {
 
 function mockAnswerHtml(item, answer) {
     if (item.kind === 'choice') {
-        return '<div class="fq-options">' + item.html.map(function (html, position) {
-            return `<button type="button" class="fq-option mock-option${answer === position ? ' selected' : ''}" data-option="${position}" aria-pressed="${answer === position}">
-                <span class="fq-letter">${FINAL_QUIZ_LETTERS[position]}</span>
+        let labels = item.labels || FINAL_QUIZ_LETTERS;
+        return `<div class="fq-options${item.compact ? ' rt-bank' : ''}">` + item.html.map(function (html, position) {
+            return `<button type="button" class="fq-option mock-option${answer === position ? ' selected' : ''}" data-option="${position}" aria-pressed="${answer === position}" aria-label="${labels[position]} ${escapeLessonText(item.options[position])}">
+                <span class="fq-letter">${labels[position]}</span>
                 <span class="fq-option-text">${html}</span>
             </button>`;
         }).join('') + '</div>';
