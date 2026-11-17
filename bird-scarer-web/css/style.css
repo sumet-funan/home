@@ -463,6 +463,24 @@ tbody tr:last-child td { border-bottom: none; }
 .dg .m-panel-side { fill: none; stroke: var(--dv-panel); stroke-width: 6; stroke-linecap: round; }
 .dg .m-inset { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; }
 
+/* soldering */
+.split-solder .diagram { max-width: 460px; width: 100%; justify-self: center; }
+@media (min-width: 860px) { .split-solder { grid-template-columns: 460px 1fr; } }
+.joints { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (min-width: 860px) { .joints { grid-template-columns: repeat(4, 1fr); } }
+.joint { margin: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 10px 12px; }
+.joint-good { border-color: var(--ok); }
+.joint figcaption { font-size: 0.92rem; line-height: 1.5; }
+.dg .s-board { fill: color-mix(in srgb, var(--ok) 22%, var(--d-box)); stroke: var(--d-stroke); stroke-width: 1; }
+.dg .s-pad { fill: #c8803c; }
+.dg .s-lead { fill: #9aa5ad; stroke: var(--d-stroke); stroke-width: 1; }
+.dg .s-joint { fill: #d9dee2; stroke: #8b959c; stroke-width: 1.2; }
+.dg .s-joint-bad { fill: #a9a59a; stroke: #7d786c; stroke-width: 1.2; }
+.dg .s-heat { fill: color-mix(in srgb, var(--w-pos) 16%, transparent); }
+.dg .s-iron-handle { fill: var(--accent); }
+.dg .s-iron-tip { fill: #8b959c; stroke: var(--d-stroke); stroke-width: 1; }
+.dg .s-wire { fill: none; stroke: #b8bec3; stroke-width: 4; stroke-linecap: round; }
+
 /* hero device */
 .dv-panel-face { fill: var(--dv-panel); stroke: var(--d-stroke); stroke-width: 1.5; }
 .dv-panel-line { fill: none; stroke: var(--dv-panel-line); stroke-width: 1.2; }

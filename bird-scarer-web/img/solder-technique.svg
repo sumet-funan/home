@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" class="dg dg-solder" role="img" aria-labelledby="sol-title sol-desc">
+  <title id="sol-title">ท่าบัดกรีที่ถูกต้อง</title>
+  <desc id="sol-desc">ปลายหัวแร้งแตะแผ่นทองแดงและขาอุปกรณ์พร้อมกันจากด้านหนึ่ง แล้วป้อนเส้นตะกั่วเข้าที่จุดต่อจากอีกด้าน ไม่ป้อนที่ปลายหัวแร้ง</desc>
+
+  <!-- board, pad, lead -->
+  <rect class="s-board" x="40" y="176" width="320" height="22" rx="3"/>
+  <rect class="s-pad" x="166" y="169" width="68" height="7" rx="2"/>
+  <rect class="s-lead" x="197" y="96" width="6" height="118" rx="2"/>
+  <path class="s-joint" d="M172 169Q192 166 197 146H203Q208 166 228 169Z"/>
+
+  <!-- heat glow -->
+  <circle class="s-heat" cx="200" cy="164" r="26"/>
+
+  <!-- iron -->
+  <path class="s-iron-handle" d="M8 44L24 30L84 84L68 98Z"/>
+  <path class="s-iron-tip" d="M68 98L84 84L192 162L186 168Z"/>
+
+  <!-- solder wire -->
+  <path class="s-wire" d="M392 76C330 90 250 118 212 160"/>
+
+  <!-- labels -->
+  <text class="t-pin m-strong" x="96" y="20">① หัวแร้งแตะทั้งแผ่น</text>
+  <text class="t-pin m-strong" x="96" y="38">ทองแดงและขาพร้อมกัน</text>
+  <text class="t-tiny" x="96" y="54">ค้างไว้ 1–2 วินาที</text>
+
+  <text class="t-pin m-strong" x="392" y="20" text-anchor="end">② ป้อนตะกั่วที่จุดต่อ</text>
+  <text class="t-pin m-strong" x="392" y="38" text-anchor="end">ฝั่งตรงข้ามหัวแร้ง</text>
+  <text class="t-tiny" x="392" y="54" text-anchor="end">ไม่ป้อนที่ปลายหัวแร้ง</text>
+
+  <text class="t-tiny" x="212" y="92">ขาอุปกรณ์</text>
+  <text class="t-tiny" x="70" y="216">แผ่นปริ้น</text>
+  <text class="t-tiny" x="200" y="230" text-anchor="middle">แผ่นทองแดง (pad)</text>
+  <text class="t-pin m-strong" x="200" y="248" text-anchor="middle">③ ถอนตะกั่วก่อน แล้วถอนหัวแร้ง</text>
+</svg>

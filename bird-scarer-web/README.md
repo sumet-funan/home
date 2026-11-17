@@ -19,6 +19,7 @@ img/device.svg             ภาพเครื่องในส่วนห�
 img/system.svg             แผนภาพบล็อกระบบ
 img/install.svg            ภาพจำลองหลังติดตั้ง (ตามสัดส่วน 1 ม. = 160 px)
 img/enclosure.svg          ภาพจำลองการจัดวางในกล่อง (ตามสัดส่วน 1 มม. = 2 px)
+img/solder-technique.svg   ภาพท่าบัดกรี (หัวข้อวิธีบัดกรีเบื้องต้น)
 img/wiring.svg             ผังต่อสาย
 img/favicon.svg            ไอคอนแท็บ
 staticwebapp.config.json   ตั้งค่า MIME ของไฟล์ .ino สำหรับ Azure Static Web Apps

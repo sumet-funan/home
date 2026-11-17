@@ -32,10 +32,11 @@
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-  /* tiny inline markup: `code` and **bold** (input is escaped first) */
+  /* tiny inline markup: `code`, **bold** and [text](#in-page-anchor) (input is escaped first) */
   const inline = (s) => esc(s)
     .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\((#[\w-]+)\)/g, '<a href="$2">$1</a>');
 
   async function fetchText(url) {
     const res = await fetch(url, { cache: 'no-cache' });

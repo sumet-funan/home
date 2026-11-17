@@ -28,6 +28,7 @@
         <li><a href="#bom">อุปกรณ์</a></li>
         <li><a href="#eco">ชุดประหยัด</a></li>
         <li><a href="#steps">ขั้นตอน</a></li>
+        <li><a href="#solder">บัดกรี</a></li>
         <li><a href="#wiring">ผังต่อสาย</a></li>
         <li><a href="#firmware">เฟิร์มแวร์</a></li>
         <li><a href="#radar">ตั้งค่าเรดาร์</a></li>
@@ -229,6 +230,37 @@
       <p><strong>แก้โค้ด 1 จุด:</strong> ตั้ง <code>VBAT_LOW = 0.0</code> ในส่วนตั้งค่า เพราะไม่มีแบตให้วัด ถ้าไม่แก้ โค้ดจะเข้าใจว่าแบตต่ำและไม่ยอมไล่นก</p>
       <p>ขั้นตอนที่ต่างจากชุดมาตรฐาน: ข้ามขั้นที่ 7 (ชุดโซลาร์) และขั้นที่ 8 (วัดแบต) · ขั้นที่ 12 ใช้กล่องเล็ก · ขั้นที่ 13 ไม่ต้องติดแผง เดินสาย VCT จากปลั๊กมาที่กล่องแทน</p>
       <p class="callout callout-warn">⚠️ <strong>นำออกนอกบ้านเฉพาะไฟ 12V DC</strong> ห้ามเดินไฟ 220V ไปที่กล่อง ใช้อะแดปเตอร์ที่มี มอก. วางในที่แห้ง และเสียบปลั๊กที่มีเบรกเกอร์กันไฟดูดถ้ามี</p>
+
+      <h3 id="eco-upgrade">อัปเกรดชุดไฟบ้านเป็นโซลาร์ภายหลัง</h3>
+      <p><strong>ทำได้</strong> ส่วนตรวจจับ ส่วนเสียง และโค้ดเหมือนกันทุกอย่าง เพิ่มแค่ชุดไฟเลี้ยงกับตัววัดแบต ของเดิมใช้ต่อได้ทั้งหมด ยกเว้นอะแดปเตอร์กับกล่องเล็ก</p>
+      <div class="table-wrap">
+        <table class="pins">
+          <caption class="sr-only">ของที่ต้องซื้อเพิ่มเพื่ออัปเกรดเป็นโซลาร์</caption>
+          <thead><tr><th scope="col">ซื้อเพิ่ม</th><th scope="col" class="c-num">ราคาประมาณ</th></tr></thead>
+          <tbody>
+            <tr><td>แผงโซลาร์ 20W 18V (Mono)</td><td class="c-num">500</td></tr>
+            <tr><td>โซลาร์ชาร์จเจอร์ PWM 10A รองรับ LiFePO4</td><td class="c-num">280</td></tr>
+            <tr><td>แบต LiFePO4 แพ็ค 4S 32700 (12.8V 6Ah) พร้อม BMS</td><td class="c-num">650</td></tr>
+            <tr><td>กระบอกฟิวส์ + ฟิวส์ 5A (ใกล้ขั้วแบต)</td><td class="c-num">30</td></tr>
+            <tr><td>ตัวต้านทาน 100kΩ, 22kΩ และตัวเก็บประจุ 100nF</td><td class="c-num">40</td></tr>
+            <tr><td>กล่องกันน้ำ IP65 ~280×190×130 มม.</td><td class="c-num">350</td></tr>
+            <tr><td>เคเบิลแกลนด์เพิ่ม 1 ตัว (สายแผง)</td><td class="c-num">10</td></tr>
+            <tr><td>ขายึดแผงทำเอง (เหล็กฉากรู + น็อต)</td><td class="c-num">60</td></tr>
+            <tr><td><strong>รวม</strong></td><td class="c-num"><strong>1,920 บาท</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ol class="plain-steps">
+        <li>ต่อชุดโซลาร์ตาม<strong>ขั้นที่ 7</strong>: แบต → ฟิวส์ 5A → ชาร์จเจอร์ แล้วจึงต่อแผง ตั้งโหมด LiFePO4</li>
+        <li>ย้ายแผ่นวงจร แอมป์ และ MP1584 จากกล่องเล็กไปกล่องใหญ่ ตามภาพการจัดวางในหัวข้อภาพจำลอง</li>
+        <li>สาย 12V+ ที่เคยมาจากอะแดปเตอร์ ให้ย้ายไปต่อที่ขั้ว <strong>LOAD+</strong> (ผ่านฟิวส์ 2A ตัวเดิม) และย้าย GND ไปต่อที่ <strong>LOAD−</strong></li>
+        <li>ต่อตัวแบ่งแรงดันวัดแบตเข้า GPIO 34 ตาม<strong>ขั้นที่ 8</strong></li>
+        <li>แก้โค้ดกลับเป็น <code>VBAT_LOW = 12.4</code> อัปโหลดใหม่ แล้วคาลิเบรต <code>VBAT_CAL</code></li>
+        <li>ทดสอบรวม 24 ชั่วโมงตาม<strong>ขั้นที่ 10</strong> ก่อนนำขึ้นติดตั้ง</li>
+      </ol>
+      <p>ทำชุดไฟบ้านก่อนแล้วอัปเกรดทีหลัง รวมแล้วราว 3,500 บาท แพงกว่าทำชุดประหยัด (โซลาร์) ตั้งแต่แรกประมาณ 300 บาท ส่วนต่างคือค่าอะแดปเตอร์กับกล่องเล็กที่ไม่ได้ใช้ต่อ</p>
+      <p class="callout callout-tip">💡 ถ้าคิดว่าจะอัปเกรดแน่นอน ตอนทำชุดไฟบ้านให้บัดกรีตัวแบ่งแรงดัน 100kΩ/22kΩ ไว้บนแผ่นปริ้นเลย ต่อกับไฟ 12V จากอะแดปเตอร์ได้โดยไม่มีผลเสีย และตอนอัปเกรดจะไม่ต้องบัดกรีเพิ่ม</p>
+      <p class="callout callout-warn">⚠️ ห้ามต่ออะแดปเตอร์ 12V เข้าแบต LiFePO4 โดยตรงเพื่อชาร์จ แบตต้องชาร์จที่ราว 14.4V ผ่านชาร์จเจอร์เท่านั้น</p>
     </section>
 
     <!-- 4. Steps -->
@@ -244,9 +276,106 @@
       <ol class="steps" id="stepsList"></ol>
     </section>
 
+    <!-- Soldering basics -->
+    <section id="solder" aria-labelledby="solder-title">
+      <h2 id="solder-title"><span class="sec-no">6</span>วิธีบัดกรีเบื้องต้น</h2>
+      <p>งานนี้ต้องบัดกรีตอน<strong>ต่อสายเข้า MP1584</strong> (โมดูลมีแค่รู ไม่มีขั้วขันน็อต) ตอน<strong>ทำแผ่นปริ้น</strong>ในขั้นที่ 9 และตอน<strong>ต่อสายยาว</strong> เช่นสายฮอร์น เครื่องอยู่กลางแจ้งทั้งร้อน ชื้น และสั่นตามลม จุดบัดกรีที่ดีจึงทนกว่าสายเสียบมาก</p>
+
+      <div class="split split-solder">
+        <figure class="diagram" data-svg="img/solder-technique.svg"></figure>
+        <div class="prose">
+          <h3>เตรียมก่อนเริ่ม</h3>
+          <ul>
+            <li>หัวแร้งปรับอุณหภูมิ ตั้งไว้ <strong>330–350°C</strong></li>
+            <li>ตะกั่วชนิดมีฟลักซ์ในตัว เส้น <strong>0.8 มม.</strong> แบบ 63/37 หรือ 60/40 ละลายง่าย เหมาะกับมือใหม่</li>
+            <li>ฟองน้ำชุบน้ำบิดหมาด หรือฝอยทองเหลือง สำหรับเช็ดปลายหัวแร้ง</li>
+            <li>แท่นวางหัวแร้ง และโต๊ะที่รองด้วยไม้หรือกระเบื้อง</li>
+            <li>ที่อากาศถ่ายเท เปิดหน้าต่างหรือพัดลมเป่าควันออกด้านข้าง</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>บัดกรี 1 จุด</h3>
+      <ol class="plain-steps">
+        <li><strong>เคลือบปลายหัวแร้ง</strong> เช็ดปลายกับฟองน้ำ แล้วแตะตะกั่วให้ละลายเคลือบปลายเล็กน้อย ปลายที่ดีต้องเงา ไม่ดำ</li>
+        <li><strong>ให้ความร้อน</strong> แตะปลายหัวแร้งให้โดนทั้งแผ่นทองแดงและขาอุปกรณ์พร้อมกัน ค้างไว้ 1–2 วินาที</li>
+        <li><strong>ป้อนตะกั่ว</strong> แตะเส้นตะกั่วที่จุดต่อฝั่งตรงข้ามหัวแร้ง ตะกั่วจะไหลรอบขาเอง ใช้ยาวประมาณ 3–5 มม. ต่อจุด</li>
+        <li><strong>ถอนออก</strong> ดึงเส้นตะกั่วออกก่อน แล้วค่อยยกหัวแร้ง ทั้งหมดไม่ควรเกิน 3–4 วินาที</li>
+        <li><strong>อย่าขยับ</strong> ถือชิ้นงานนิ่งๆ 2–3 วินาทีจนตะกั่วแข็ง ถ้าขยับระหว่างนั้นจุดจะด้านและร้าวง่าย</li>
+        <li><strong>ตัดขาส่วนเกิน</strong> ด้วยคีมตัด ให้เหลือเหนือจุดบัดกรีราว 1 มม. หันขาออกจากหน้าเวลาตัด</li>
+      </ol>
+
+      <h3>ดูจุดบัดกรีดีหรือไม่ดี</h3>
+      <div class="joints">
+        <figure class="joint joint-good">
+          <svg viewBox="0 0 160 116" class="dg" aria-hidden="true">
+            <rect class="s-board" x="10" y="92" width="140" height="14" rx="2"/>
+            <rect class="s-pad" x="50" y="86" width="60" height="6" rx="2"/>
+            <rect class="s-lead" x="77" y="22" width="6" height="92" rx="2"/>
+            <path class="s-joint" d="M52 86Q74 83 77 56H83Q86 83 108 86Z"/>
+          </svg>
+          <figcaption><strong>✓ ดี</strong> เงา ทรงกรวยเว้า คลุมแผ่นทองแดงทั้งแผ่น เห็นรูปขาชัด</figcaption>
+        </figure>
+        <figure class="joint">
+          <svg viewBox="0 0 160 116" class="dg" aria-hidden="true">
+            <rect class="s-board" x="10" y="92" width="140" height="14" rx="2"/>
+            <rect class="s-pad" x="50" y="86" width="60" height="6" rx="2"/>
+            <rect class="s-lead" x="77" y="22" width="6" height="92" rx="2"/>
+            <path class="s-joint" d="M66 86Q76 85 77 74H83Q84 85 94 86Z"/>
+          </svg>
+          <figcaption><strong>✗ ตะกั่วน้อยไป</strong> แผ่นทองแดงโผล่ ยึดไม่แน่น ให้ความร้อนแล้วเติมตะกั่วอีกนิด</figcaption>
+        </figure>
+        <figure class="joint">
+          <svg viewBox="0 0 160 116" class="dg" aria-hidden="true">
+            <rect class="s-board" x="10" y="92" width="140" height="14" rx="2"/>
+            <rect class="s-pad" x="50" y="86" width="60" height="6" rx="2"/>
+            <rect class="s-lead" x="77" y="22" width="6" height="92" rx="2"/>
+            <ellipse class="s-joint-bad" cx="80" cy="64" rx="25" ry="22"/>
+          </svg>
+          <figcaption><strong>✗ ก้อนกลม ผิวด้าน</strong> ความร้อนไม่พอหรือขยับตอนแข็ง ตะกั่วไม่เกาะแผ่น ให้ความร้อนใหม่จนไหลเป็นกรวย</figcaption>
+        </figure>
+        <figure class="joint">
+          <svg viewBox="0 0 160 116" class="dg" aria-hidden="true">
+            <rect class="s-board" x="10" y="92" width="140" height="14" rx="2"/>
+            <rect class="s-pad" x="34" y="86" width="40" height="6" rx="2"/>
+            <rect class="s-pad" x="86" y="86" width="40" height="6" rx="2"/>
+            <rect class="s-lead" x="51" y="22" width="6" height="92" rx="2"/>
+            <rect class="s-lead" x="103" y="22" width="6" height="92" rx="2"/>
+            <path class="s-joint-bad" d="M36 86Q40 62 56 58Q80 52 104 58Q120 62 124 86Z"/>
+          </svg>
+          <figcaption><strong>✗ ลัดวงจร</strong> ตะกั่วเชื่อมขาที่อยู่ติดกัน ต้องแก้ก่อนจ่ายไฟทุกครั้ง</figcaption>
+        </figure>
+      </div>
+
+      <h3>เทคนิคสำหรับงานนี้</h3>
+      <ul class="plain-steps">
+        <li><strong>ก้างปลาตัวเมีย</strong> เสียบโมดูล (ESP32, DFPlayer) ลงก้างปลาไว้ก่อนบัดกรี ขาจะได้ตรงระยะ บัดกรีขาหัวกับขาท้ายก่อน ตรวจว่าแนบแผ่นและตั้งตรง แล้วจึงบัดกรีขาที่เหลือ</li>
+        <li><strong>สายเข้า MP1584</strong> ปอกสายยาว 3–4 มม. บิดเกลียวให้แน่น แล้วเคลือบตะกั่วที่ปลายสายก่อน จากนั้นสอดเข้ารูแล้วบัดกรี จะติดง่ายและไม่มีฝอยสายหลุดไปลัดขาข้างๆ</li>
+        <li><strong>ต่อสายยาว</strong> (สายฮอร์น สายแผง) <strong>สวมท่อหดเข้าไปในสายก่อน</strong> แล้วบิดสายสองเส้นเข้าหากัน บัดกรี เลื่อนท่อหดมาคลุม แล้วเป่าลมร้อนหรือใช้ไฟแช็กลนห่างๆ</li>
+        <li><strong>เดินเส้นบนแผ่นปริ้นอเนกประสงค์</strong> ใช้ขาตัวต้านทานที่ตัดทิ้งหรือสายแข็งเส้นเล็ก วางตามแนวรูแล้วบัดกรีทุก 2–3 รู เส้น GND และ 12V ใช้สายเส้นใหญ่กว่าเส้นสัญญาณ</li>
+      </ul>
+
+      <h3>หลังบัดกรีเสร็จ</h3>
+      <ul class="plain-steps">
+        <li>ส่องทุกจุดด้วยกล้องมือถือซูมหรือแว่นขยาย หาจุดก้อนกลมและตะกั่วที่เชื่อมขาติดกัน</li>
+        <li>ใช้มัลติมิเตอร์โหมดวัดความต่อเนื่อง (เสียงปี๊บ) ไล่ตรวจทุกเส้นตามตารางต่อสาย และตรวจว่า <strong>12V และ 5V ไม่ปี๊บกับ GND</strong> ก่อนจ่ายไฟครั้งแรก</li>
+        <li>ล้างคราบฟลักซ์ด้วยแอลกอฮอล์ IPA กับแปรงสีฟันเก่า รอให้แห้งก่อนพ่นเคลือบ (ขั้นที่ 11)</li>
+      </ul>
+
+      <h3>ถ้าพลาด</h3>
+      <ul class="plain-steps">
+        <li><strong>ตะกั่วเชื่อมขาติดกัน</strong> เช็ดปลายหัวแร้งให้สะอาด แล้วลากผ่านช่องระหว่างขา หรือใช้ลวดซับตะกั่ว (solder wick) วางทับแล้วกดหัวแร้งลงไป</li>
+        <li><strong>จุดก้อนกลม ผิวด้าน</strong> ให้ความร้อนใหม่ เติมตะกั่วนิดเดียวเพื่อให้ได้ฟลักซ์ใหม่ จนตะกั่วไหลเป็นกรวย</li>
+        <li><strong>แผ่นทองแดงหลุด</strong> เกิดจากร้อนนานเกินไป ใช้รูข้างเคียงแทนแล้วเดินสายเชื่อม และลดเวลาจี้ลง</li>
+      </ul>
+
+      <p class="callout callout-warn">⚠️ <strong>ความปลอดภัย</strong> ปลายหัวแร้งร้อนราว 350°C วางบนแท่นทุกครั้ง และถอดปลั๊กเมื่อเลิกใช้ ตะกั่วชนิดผสมมีสารตะกั่ว ล้างมือก่อนกินอาหาร และเก็บให้พ้นมือเด็ก ควันฟลักซ์ระคายเคือง อย่าก้มหน้าสูดควันตรงๆ ควรใส่แว่นตาเวลาตัดขาอุปกรณ์</p>
+      <p class="callout callout-tip">💡 ถ้าไม่เคยบัดกรี ให้ฝึกกับแผ่นปริ้นอเนกประสงค์แผ่นเปล่า (แผ่นละราว 15 บาท) สัก 20–30 จุดก่อนลงงานจริง ของที่ช่วยได้แต่ไม่อยู่ในรายการ: ท่อหด, คีมตัด/คีมปอกสาย, ลวดซับตะกั่ว</p>
+    </section>
+
     <!-- 5. Wiring -->
     <section id="wiring" aria-labelledby="wiring-title">
-      <h2 id="wiring-title"><span class="sec-no">6</span>ผังต่อสาย</h2>
+      <h2 id="wiring-title"><span class="sec-no">7</span>ผังต่อสาย</h2>
       <p class="hint no-print">ลากเพื่อเลื่อนดู ใช้สองนิ้วถ่าง ปุ่ม + / − หรือ Ctrl + ล้อเมาส์เพื่อซูม กด "พอดีจอ" เพื่อดูทั้งผัง</p>
       <div class="zoom" id="wiringZoom">
         <div class="zoom-tools no-print" role="group" aria-label="ซูมผังต่อสาย">
@@ -288,7 +417,7 @@
 
     <!-- 6. Firmware -->
     <section id="firmware" aria-labelledby="firmware-title">
-      <h2 id="firmware-title"><span class="sec-no">7</span>เฟิร์มแวร์</h2>
+      <h2 id="firmware-title"><span class="sec-no">8</span>เฟิร์มแวร์</h2>
       <p>ไฟล์ <code>firmware/bird_scarer_solar.ino</code> ต้องการบอร์ด ESP32 core 2.x ขึ้นไป และไลบรารี <strong>DFRobotDFPlayerMini</strong></p>
       <div class="code-tools no-print">
         <button type="button" class="btn btn-small" id="fwCopy" disabled>คัดลอกโค้ด</button>
@@ -312,7 +441,7 @@
 
     <!-- 7. Radar -->
     <section id="radar" aria-labelledby="radar-title">
-      <h2 id="radar-title"><span class="sec-no">8</span>ตั้งค่าเรดาร์ LD2410C</h2>
+      <h2 id="radar-title"><span class="sec-no">9</span>ตั้งค่าเรดาร์ LD2410C</h2>
       <ol class="plain-steps">
         <li>ติดตั้งแอป <strong>HLKRadarTool</strong> จาก Google Play หรือ App Store (ผู้พัฒนา Hi-Link) และเปิด Bluetooth กับ Location บนมือถือ</li>
         <li>จ่ายไฟ 5V ให้ LD2410C เปิดแอป จะเห็นอุปกรณ์ชื่อขึ้นต้นด้วย <code>HLK-LD2410</code> แตะเพื่อเชื่อมต่อ (ถ้าถามรหัส ค่าเริ่มต้นคือ <code>HiLink</code>)</li>
@@ -347,7 +476,7 @@
 
     <!-- 8. Troubleshooting -->
     <section id="troubleshoot" aria-labelledby="ts-title">
-      <h2 id="ts-title"><span class="sec-no">9</span>ทดสอบและแก้ปัญหา</h2>
+      <h2 id="ts-title"><span class="sec-no">10</span>ทดสอบและแก้ปัญหา</h2>
       <div class="accordion">
         <details>
           <summary>Serial ขึ้น "DFPlayer not found"</summary>
@@ -417,7 +546,7 @@
 
     <!-- 9. Safety -->
     <section id="safety" aria-labelledby="safety-title">
-      <h2 id="safety-title"><span class="sec-no">10</span>ข้อควรระวังด้านความปลอดภัยและเพื่อนบ้าน</h2>
+      <h2 id="safety-title"><span class="sec-no">11</span>ข้อควรระวังด้านความปลอดภัยและเพื่อนบ้าน</h2>
       <div class="safety">
         <ul>
           <li><span class="safety-icon" aria-hidden="true">🔋</span><div><strong>อย่าลัดวงจรแบต LiFePO4</strong> ใส่ฟิวส์ใกล้ขั้วแบตเสมอ และถอดฟิวส์ทุกครั้งที่แก้ไขสายไฟ</div></li>
