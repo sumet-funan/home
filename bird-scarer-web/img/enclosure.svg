@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 530" class="dg dg-model" role="img" aria-labelledby="enc-title enc-desc">
+  <title id="enc-title">ภาพจำลองการจัดวางในกล่อง (เปิดฝา มองจากด้านหน้า)</title>
+  <desc id="enc-desc">กล่องกันน้ำขนาด 280 x 190 x 130 มม. ชาร์จเจอร์ 133 x 70 มม. อยู่มุมซ้ายบน แบต LiFePO4 151 x 65 x 94 มม. วางตั้งบนพื้นกล่องด้านซ้ายล่าง ด้านขวามีแผ่นปริ้น 70 x 50 มม. ที่มี ESP32 และ DFPlayer แอมป์ PAM8610 46 x 30 มม. MP1584 22 x 17 มม. ฟิวส์ และซิลิกาเจล เรดาร์ LD2410C ติดผนังขวาด้านใน เคเบิลแกลนด์และวาล์วระบายอากาศอยู่ที่ผนังด้านล่าง</desc>
+
+  <!-- dimension lines -->
+  <g class="m-dim">
+    <path d="M70 34V48M630 34V48M70 41H630"/>
+    <path d="M34 60H48M34 440H48M41 60V440"/>
+  </g>
+  <text class="t-sub" x="350" y="30" text-anchor="middle">280 มม.</text>
+  <text class="t-sub" x="28" y="250" text-anchor="middle" transform="rotate(-90 28 250)">190 มม.</text>
+
+  <!-- box -->
+  <rect class="m-shell" x="70" y="60" width="560" height="380" rx="14"/>
+  <rect class="m-inner" x="80" y="70" width="540" height="360" rx="8"/>
+
+  <!-- charger 133x70 -->
+  <rect class="box box-power" x="94" y="84" width="266" height="140" rx="6"/>
+  <rect class="m-lcd" x="110" y="100" width="88" height="48" rx="4"/>
+  <text class="t-pin m-lcd-text" x="154" y="130" text-anchor="middle">13.2V</text>
+  <g class="m-term">
+    <rect x="220" y="196" width="16" height="14" rx="2"/><rect x="242" y="196" width="16" height="14" rx="2"/>
+    <rect x="264" y="196" width="16" height="14" rx="2"/><rect x="286" y="196" width="16" height="14" rx="2"/>
+    <rect x="308" y="196" width="16" height="14" rx="2"/><rect x="330" y="196" width="16" height="14" rx="2"/>
+  </g>
+  <text class="t-title" x="280" y="132" text-anchor="middle">ชาร์จเจอร์</text>
+  <text class="t-pin" x="280" y="152" text-anchor="middle">133×70×35 มม.</text>
+
+  <!-- battery 151x94 (upright) -->
+  <rect class="m-term-pos" x="112" y="229" width="22" height="9" rx="2"/>
+  <rect class="m-term-neg" x="352" y="229" width="22" height="9" rx="2"/>
+  <rect class="box box-power" x="94" y="238" width="302" height="188" rx="6"/>
+  <path class="m-strap" d="M94 300H396M94 370H396"/>
+  <text class="t-title" x="245" y="326" text-anchor="middle">แบต LiFePO4 12V 6Ah</text>
+  <text class="t-pin" x="245" y="348" text-anchor="middle">151×65×94 มม. · วางตั้งบนพื้นกล่อง</text>
+  <text class="t-pin" x="245" y="396" text-anchor="middle">รัดด้วยเคเบิลไทร์</text>
+
+  <!-- PCB 70x50 with ESP32 + DFPlayer -->
+  <rect class="m-pcb" x="434" y="84" width="140" height="100" rx="4"/>
+  <rect class="box box-logic" x="438" y="92" width="94" height="56" rx="3"/>
+  <text class="t-pin m-strong" x="485" y="118" text-anchor="middle">ESP32</text>
+  <text class="t-pin" x="485" y="135" text-anchor="middle">51×28</text>
+  <rect class="box box-audio" x="536" y="96" width="36" height="40" rx="3"/>
+  <text class="t-tiny" x="554" y="114" text-anchor="middle">DF</text>
+  <text class="t-tiny" x="554" y="126" text-anchor="middle">Player</text>
+  <g class="m-res"><rect x="446" y="156" width="20" height="7" rx="2"/><rect x="474" y="156" width="20" height="7" rx="2"/><rect x="502" y="156" width="20" height="7" rx="2"/></g>
+  <text class="t-tiny" x="504" y="178" text-anchor="middle">แผ่นปริ้น 70×50 มม.</text>
+
+  <!-- PAM8610 46x30 -->
+  <rect class="box box-audio" x="434" y="204" width="92" height="60" rx="4"/>
+  <text class="t-pin m-strong" x="480" y="230" text-anchor="middle">PAM8610</text>
+  <text class="t-pin" x="480" y="248" text-anchor="middle">46×30</text>
+
+  <!-- MP1584 22x17 -->
+  <rect class="box box-power" x="540" y="214" width="44" height="34" rx="3"/>
+  <text class="t-tiny" x="562" y="229" text-anchor="middle">MP1584</text>
+  <text class="t-tiny" x="562" y="241" text-anchor="middle">22×17</text>
+
+  <!-- fuses -->
+  <rect class="m-fuse" x="434" y="284" width="64" height="16" rx="8"/>
+  <rect class="m-fuse" x="512" y="284" width="64" height="16" rx="8"/>
+  <text class="t-tiny" x="466" y="316" text-anchor="middle">ฟิวส์ 5A</text>
+  <text class="t-tiny" x="544" y="316" text-anchor="middle">ฟิวส์ 2A</text>
+
+  <!-- silica gel -->
+  <rect class="m-silica" x="470" y="336" width="90" height="56" rx="6"/>
+  <text class="t-tiny" x="515" y="368" text-anchor="middle">ซิลิกาเจล</text>
+
+  <!-- radar on right inner wall (edge-on) -->
+  <rect class="box box-logic" x="604" y="300" width="14" height="44" rx="2"/>
+  <path class="m-leader" d="M618 322H650"/>
+  <text class="t-pin m-strong" x="656" y="300">เรดาร์ LD2410C</text>
+  <text class="t-pin" x="656" y="318">22×16 มม.</text>
+  <text class="t-pin" x="656" y="336">ติดผนังด้านใน</text>
+  <text class="t-pin" x="656" y="354">หันไปทางขอบบัว</text>
+
+  <text class="t-pin m-strong" x="656" y="90">ลึก 130 มม.</text>
+  <text class="t-pin" x="656" y="108">ภาพนี้มองตอนเปิดฝา</text>
+  <text class="t-pin" x="656" y="126">ผนังด้านล่าง = ด้าน</text>
+  <text class="t-pin" x="656" y="144">ที่หันลงพื้น</text>
+
+  <!-- bottom wall: glands and vent -->
+  <g class="m-gland">
+    <rect x="142" y="440" width="18" height="14" rx="2"/>
+    <rect x="252" y="440" width="18" height="14" rx="2"/>
+    <rect x="362" y="440" width="18" height="14" rx="2"/>
+  </g>
+  <circle class="m-vent" cx="480" cy="447" r="8"/>
+  <text class="t-tiny" x="151" y="472" text-anchor="middle">สายแผงโซลาร์</text>
+  <text class="t-tiny" x="261" y="472" text-anchor="middle">สายฮอร์น</text>
+  <text class="t-tiny" x="371" y="472" text-anchor="middle">สำรอง</text>
+  <text class="t-tiny" x="480" y="472" text-anchor="middle">วาล์วระบายอากาศ</text>
+
+  <!-- scale bar: 50 mm = 100 px -->
+  <path class="m-dim" d="M510 504H610M510 498V510M610 498V510"/>
+  <text class="t-tiny" x="560" y="524" text-anchor="middle">50 มม.</text>
+  <text class="t-tiny" x="70" y="504">วาดตามสัดส่วนขนาดจริงโดยประมาณ</text>
+  <text class="t-tiny" x="70" y="520">ตรวจขนาดของจริงที่ซื้อมาก่อนเลือกกล่อง</text>
+</svg>

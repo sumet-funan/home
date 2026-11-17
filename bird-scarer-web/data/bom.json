@@ -20,7 +20,7 @@
   { "name": "สายจัมเปอร์ เมีย-เมีย", "qty": 1, "price": 30, "category": "ชิ้นส่วนเล็ก", "searchKeyword": "สายจัมเปอร์", "note": "" },
   { "name": "Breadboard", "qty": 1, "price": 40, "category": "ชิ้นส่วนเล็ก", "searchKeyword": "breadboard 830", "note": "ทดลองก่อนบัดกรี" },
 
-  { "name": "กล่องกันน้ำ IP67 ~150x110x70 มม.", "qty": 1, "price": 200, "category": "กล่อง/ติดตั้ง", "searchKeyword": "กล่องกันน้ำ IP67", "note": "สีขาว/สีอ่อน" },
+  { "name": "กล่องกันน้ำ IP67 ~280x190x130 มม.", "qty": 1, "price": 450, "category": "กล่อง/ติดตั้ง", "searchKeyword": "กล่องกันน้ำ IP67 280x190x130", "note": "ต้องใส่แบต 151x65x94 มม. และชาร์จเจอร์ได้ (กล่อง 150x110x70 เล็กเกินไป) สีขาว/สีอ่อน" },
   { "name": "เคเบิลแกลนด์ PG7/PG9", "qty": 4, "price": 10, "category": "กล่อง/ติดตั้ง", "searchKeyword": "เคเบิ้ลแกลนด์ PG7", "note": "" },
   { "name": "วาล์วระบายอากาศกันน้ำ M12", "qty": 1, "price": 50, "category": "กล่อง/ติดตั้ง", "searchKeyword": "breather vent M12", "note": "" },
   { "name": "ซองซิลิกาเจล", "qty": 1, "price": 20, "category": "กล่อง/ติดตั้ง", "searchKeyword": "ซิลิก้าเจล", "note": "" },

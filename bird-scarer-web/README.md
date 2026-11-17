@@ -9,12 +9,16 @@
 ```
 index.html                 หน้าเว็บ (ทุก section)
 css/style.css              สไตล์ทั้งหมด รวม dark mode และ print stylesheet
-js/app.js                  ตาราง BOM, ขั้นตอน, ซูมผังต่อสาย, แสดงโค้ด
-data/bom.json              รายการอุปกรณ์ (แก้ราคา/เพิ่มรายการได้ที่นี่)
+js/app.js                  ตาราง BOM + สลับชุด, ขั้นตอน, ซูมภาพ, แสดงโค้ด
+data/bom.json              รายการอุปกรณ์ชุดมาตรฐาน (แก้ราคา/เพิ่มรายการได้ที่นี่)
+data/bom-eco-solar.json    รายการอุปกรณ์ชุดประหยัด (โซลาร์)
+data/bom-eco-ac.json       รายการอุปกรณ์ชุดประหยัดสุด (ไฟบ้าน)
 data/steps.json            ขั้นตอนการประกอบ 14 ขั้น
-firmware/bird_scarer_solar.ino   โค้ด ESP32 (ต้องวางเอง ดูด้านล่าง)
+firmware/bird_scarer_solar.ino   โค้ด ESP32
 img/device.svg             ภาพเครื่องในส่วนหัว
 img/system.svg             แผนภาพบล็อกระบบ
+img/install.svg            ภาพจำลองหลังติดตั้ง (ตามสัดส่วน 1 ม. = 160 px)
+img/enclosure.svg          ภาพจำลองการจัดวางในกล่อง (ตามสัดส่วน 1 มม. = 2 px)
 img/wiring.svg             ผังต่อสาย
 img/favicon.svg            ไอคอนแท็บ
 staticwebapp.config.json   ตั้งค่า MIME ของไฟล์ .ino สำหรับ Azure Static Web Apps

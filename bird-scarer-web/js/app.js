@@ -92,7 +92,57 @@
   }
 
   /* ---------- BOM ---------- */
-  const bom = { items: [], bought: {}, filter: 'ทั้งหมด' };
+  const KITS = [
+    { id: 'standard', label: 'มาตรฐาน (โซลาร์)', file: 'data/bom.json',
+      desc: 'ชุดเต็มตามคู่มือ: แผง 20W + แบต LiFePO4 กล่อง ABS กล่อง IP67 และมีของสำรอง' },
+    { id: 'eco-solar', label: 'ประหยัด (โซลาร์)', file: 'data/bom-eco-solar.json',
+      desc: 'ยังใช้โซลาร์และเรดาร์ตัวเดิม เปลี่ยนเป็นแบตแพ็ค 32700 ฮอร์น 15W กล่อง IP65 และตัดของสำรอง (ดูหัวข้อชุดประหยัด)' },
+    { id: 'eco-ac', label: 'ประหยัดสุด (ไฟบ้าน)', file: 'data/bom-eco-ac.json',
+      desc: 'ใช้อะแดปเตอร์ 12V แทนชุดโซลาร์ ต้องมีปลั๊กใกล้จุดติดตั้ง และแก้โค้ด VBAT_LOW = 0.0 (ดูหัวข้อชุดประหยัด)' }
+  ];
+  const KEY_KIT = 'birdScarer.kit.v1';
+  const kitCache = {};
+  const bom = { kit: 'standard', items: [], bought: {}, filter: 'ทั้งหมด' };
+
+  async function loadKit(id) {
+    if (!kitCache[id]) kitCache[id] = await fetchJson(KITS.find((k) => k.id === id).file);
+    return kitCache[id];
+  }
+
+  function noToolsTotal(items) {
+    return items.filter((it) => it.category !== TOOLS_CATEGORY).reduce((s, it) => s + lineTotal(it), 0);
+  }
+
+  function renderKits() {
+    $('#bomKits').innerHTML = KITS.map((k) =>
+      `<button type="button" class="kit" data-kit="${k.id}" aria-pressed="${k.id === bom.kit}">${esc(k.label)}</button>`
+    ).join('');
+    $('#bomKitDesc').textContent = KITS.find((k) => k.id === bom.kit).desc;
+  }
+
+  async function setKit(id) {
+    if (!KITS.some((k) => k.id === id)) id = 'standard';
+    bom.items = await loadKit(id);
+    bom.kit = id;
+    bom.filter = 'ทั้งหมด';
+    store.set(KEY_KIT, id);
+    renderKits();
+    renderBomFilters();
+    renderBom();
+  }
+
+  /* fill every price that is quoted elsewhere on the page from the kit data */
+  async function fillKitPrices() {
+    await Promise.all(KITS.map(async (k) => {
+      let items;
+      try { items = await loadKit(k.id); } catch { return; }
+      const t = noToolsTotal(items);
+      $$(`[data-kit-total="${k.id}"]`).forEach((el) => { el.textContent = baht(t); });
+      $$(`[data-kit-approx="${k.id}"]`).forEach((el) => {
+        el.textContent = `~${(Math.round(t / 100) * 100).toLocaleString('th-TH')} บาท`;
+      });
+    }));
+  }
 
   function itemKey(item) { return item.name; }
   function lineTotal(item) { return item.qty * item.price; }
@@ -169,12 +219,13 @@
     ]);
     const total = bom.items.reduce((s, it) => s + lineTotal(it), 0);
     rows.push(['', 'รวมทั้งหมด', '', '', total, '', '', '']);
-    const csv = [head, ...rows].map((r) => r.map(q).join(',')).join('\r\n');
+    const kitLabel = KITS.find((k) => k.id === bom.kit).label;
+    const csv = [['ชุด', kitLabel], head, ...rows].map((r) => r.map(q).join(',')).join('\r\n');
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'bird-scarer-bom.csv';
+    a.download = `bird-scarer-bom-${bom.kit}.csv`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -182,15 +233,23 @@
   }
 
   async function initBom() {
+    bom.bought = store.get(KEY_BOM, {});
     try {
-      bom.items = await fetchJson('data/bom.json');
+      await setKit(store.get(KEY_KIT, 'standard'));
     } catch {
       loadError($('#bomTable').parentElement, 'รายการอุปกรณ์');
       return;
     }
-    bom.bought = store.get(KEY_BOM, {});
-    renderBomFilters();
-    renderBom();
+    fillKitPrices();
+
+    $('#bomKits').addEventListener('click', (e) => {
+      const b = e.target.closest('.kit');
+      if (b) setKit(b.dataset.kit).catch(() => {});
+    });
+    $$('[data-show-kit]').forEach((b) => b.addEventListener('click', async () => {
+      try { await setKit(b.dataset.showKit); } catch { return; }
+      $('#bom').scrollIntoView();
+    }));
 
     $('#bomTable').addEventListener('change', (e) => {
       if (!e.target.matches('input[type="checkbox"]')) return;
@@ -303,8 +362,7 @@
   }
 
   /* ---------- Wiring zoom / pan ---------- */
-  function initZoom() {
-    const wrap = $('#wiringZoom');
+  function initZoom(wrap) {
     const stage = $('.zoom-stage', wrap);
     const svg = $('svg', stage);
     if (!svg) return;
@@ -409,7 +467,7 @@
       }
     });
     document.addEventListener('fullscreenchange', () => {
-      fullBtn.textContent = document.fullscreenElement ? 'ออกเต็มจอ' : 'เต็มจอ';
+      fullBtn.textContent = document.fullscreenElement === wrap ? 'ออกเต็มจอ' : 'เต็มจอ';
       reset();
     });
     window.addEventListener('beforeprint', reset);
@@ -583,6 +641,6 @@
     initBom();
     initSteps();
     initFirmware();
-    inlineSvgs().then(initZoom);
+    inlineSvgs().then(() => $$('.zoom').forEach(initZoom));
   });
 })();

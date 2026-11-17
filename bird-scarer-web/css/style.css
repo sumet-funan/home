@@ -45,7 +45,7 @@
   --code-type: #0b6e99;
   --code-str: #0a7a2f;
   --code-num: #9a4b00;
-  --code-com: #6a737d;
+  --code-com: #57606a;
   --code-pre: #6f42c1;
 
   --radius: 14px;
@@ -227,6 +227,17 @@ section + section { border-top: 1px solid var(--border); }
 .total-due { background: var(--due-soft); }
 @media (min-width: 760px) { .totals { grid-template-columns: repeat(4, 1fr); } }
 
+.kits { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0.5rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; width: fit-content; max-width: 100%; }
+.kit {
+  min-height: 44px; padding: 8px 16px; border: none; border-right: 1px solid var(--border);
+  background: var(--surface); color: var(--ink); font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; flex: 1 1 auto;
+}
+.kit:last-child { border-right: none; }
+.kit[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.kit-desc { color: var(--muted); font-size: 0.95rem; margin: 0 0 1rem; }
+.kit-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 0.5rem 0 1rem; }
+.callout ul { margin: 0.3rem 0 0; padding-left: 1.2rem; }
+.callout p { margin: 0; }
 .toolbar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
 .toolbar-actions { display: flex; gap: 8px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -329,6 +340,9 @@ tbody tr:last-child td { border-bottom: none; }
 .zbtn-text { font-size: 0.9rem; padding: 0 10px; }
 .zoom:fullscreen { border-radius: 0; display: flex; flex-direction: column; }
 .zoom:fullscreen .zoom-stage { height: 100%; flex: 1; }
+@media (min-width: 760px) {
+  .zoom-stage-model { height: auto; aspect-ratio: 800 / 525; max-height: 80vh; min-height: 0; }
+}
 .power-list { padding-left: 1.2rem; }
 .power-list li { margin-bottom: 0.35rem; }
 .arrow { color: var(--accent); font-weight: 700; }
@@ -414,6 +428,40 @@ tbody tr:last-child td { border-bottom: none; }
 .dg .part rect { fill: var(--d-box); stroke: var(--d-text); stroke-width: 2; }
 .dg .panel-grid { fill: var(--dv-panel); stroke: var(--dv-panel-line); stroke-width: 1.5; }
 .dg .horn rect, .dg .horn path { fill: var(--d-box-audio); stroke: var(--d-stroke); stroke-width: 2; }
+
+/* scale models */
+.dg .t-tiny { font-size: 11px; font-weight: 500; fill: var(--d-sub); }
+.dg .m-strong { font-weight: 700; fill: var(--d-text); }
+.dg .m-dim { fill: none; stroke: var(--d-sub); stroke-width: 1.5; }
+.dg .m-shell { fill: var(--surface-2); stroke: var(--d-stroke); stroke-width: 2.5; }
+.dg .m-inner { fill: var(--d-box); stroke: var(--d-stroke); stroke-width: 1; stroke-dasharray: 4 4; }
+.dg .m-lcd { fill: var(--dv-panel); }
+.dg .m-lcd-text { fill: #bdf4e8; font-family: var(--mono); }
+.dg .m-term rect { fill: var(--d-box); stroke: var(--d-stroke); stroke-width: 1.2; }
+.dg .m-term-pos { fill: var(--w-pos); }
+.dg .m-term-neg { fill: var(--w-neg); }
+.dg .m-strap { fill: none; stroke: var(--d-sub); stroke-width: 2; stroke-dasharray: 3 4; }
+.dg .m-pcb { fill: color-mix(in srgb, var(--ok) 18%, var(--d-box)); stroke: var(--ok); stroke-width: 1.5; }
+.dg .m-res rect { fill: #d6b98c; stroke: var(--d-stroke); }
+.dg .m-fuse { fill: var(--d-box); stroke: var(--w-pos); stroke-width: 2; }
+.dg .m-silica { fill: var(--surface-2); stroke: var(--d-sub); stroke-dasharray: 4 3; }
+.dg .m-leader { fill: none; stroke: var(--d-sub); stroke-width: 1.2; }
+.dg .m-gland rect { fill: var(--d-sub); }
+.dg .m-vent { fill: var(--d-box); stroke: var(--d-sub); stroke-width: 3; }
+.dg .m-wall { fill: color-mix(in srgb, var(--surface-2) 70%, var(--bg)); }
+.dg .m-shadow { fill: color-mix(in srgb, var(--ink) 8%, transparent); }
+.dg .m-roof { fill: #b45f3c; }
+.dg .m-roof-line { fill: none; stroke: #8e4329; stroke-width: 1.5; }
+.dg .m-fascia { fill: var(--d-stroke); }
+.dg .m-ledge { fill: var(--d-box); stroke: var(--d-stroke); stroke-width: 1.5; }
+.dg .m-ledge-under { fill: color-mix(in srgb, var(--ink) 15%, transparent); }
+.dg .m-cone { fill: color-mix(in srgb, var(--accent) 16%, transparent); stroke: var(--accent); stroke-width: 1.5; }
+.dg .m-arc { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.dg .m-cone-text { fill: var(--accent); font-weight: 700; }
+.dg .m-cable { fill: none; stroke: var(--w-neg); stroke-width: 2; stroke-dasharray: 6 4; }
+.dg .m-panel-line { fill: none; stroke: var(--dv-panel-line); stroke-width: 1.2; }
+.dg .m-panel-side { fill: none; stroke: var(--dv-panel); stroke-width: 6; stroke-linecap: round; }
+.dg .m-inset { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; }
 
 /* hero device */
 .dv-panel-face { fill: var(--dv-panel); stroke: var(--d-stroke); stroke-width: 1.5; }

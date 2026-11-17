@@ -24,7 +24,9 @@
       </a>
       <ul class="nav-list">
         <li><a href="#overview">ภาพรวม</a></li>
+        <li><a href="#model">ภาพจำลอง</a></li>
         <li><a href="#bom">อุปกรณ์</a></li>
+        <li><a href="#eco">ชุดประหยัด</a></li>
         <li><a href="#steps">ขั้นตอน</a></li>
         <li><a href="#wiring">ผังต่อสาย</a></li>
         <li><a href="#firmware">เฟิร์มแวร์</a></li>
@@ -44,7 +46,7 @@
         <h1 id="hero-title">สร้างเครื่องไล่นกพิราบ พลังงานโซลาร์</h1>
         <p class="hero-lede">ESP32 + เรดาร์ LD2410C + ลำโพงฮอร์น ตรวจจับเมื่อนกมาเกาะแล้วเปิดเสียงไล่ ใช้ไฟจากแผงโซลาร์ ไม่ต้องเดินสายไฟบ้าน</p>
         <ul class="hero-facts">
-          <li><span class="fact-label">งบประมาณ</span><span class="fact-value">~3,900 บาท</span><span class="fact-note">ไม่รวมเครื่องมือ</span></li>
+          <li><span class="fact-label">งบประมาณ</span><span class="fact-value" data-kit-approx="standard">~4,100 บาท</span><span class="fact-note">ไม่รวมเครื่องมือ · <a href="#eco">ชุดประหยัด</a>เริ่ม <span data-kit-approx="eco-ac">~1,600 บาท</span></span></li>
           <li><span class="fact-label">เวลาประกอบ</span><span class="fact-value">~1 วัน</span><span class="fact-note">ไม่รวมรอสเปรย์แห้ง/ทดสอบ 24 ชม.</span></li>
           <li><span class="fact-label">ความยาก</span><span class="fact-value">ปานกลาง</span><span class="fact-note">ต้องบัดกรีเป็น</span></li>
         </ul>
@@ -76,9 +78,62 @@
       </div>
     </section>
 
+    <!-- Model and dimensions -->
+    <section id="model" aria-labelledby="model-title">
+      <h2 id="model-title"><span class="sec-no">2</span>ภาพจำลองและขนาด</h2>
+      <p>ภาพวาดตามสัดส่วนจริงโดยประมาณ ใช้ดูว่าเครื่องเมื่อประกอบและติดตั้งแล้วมีขนาดเท่าไร และต้องเว้นพื้นที่ตรงไหน</p>
+
+      <h3>หลังติดตั้ง</h3>
+      <div class="zoom" data-zoom-label="ภาพจำลองหลังติดตั้ง">
+        <div class="zoom-tools no-print" role="group" aria-label="ซูมภาพจำลองหลังติดตั้ง">
+          <button type="button" class="zbtn" data-zoom="in" aria-label="ซูมเข้า">+</button>
+          <button type="button" class="zbtn" data-zoom="out" aria-label="ซูมออก">−</button>
+          <button type="button" class="zbtn zbtn-text" data-zoom="reset">พอดีจอ</button>
+          <button type="button" class="zbtn zbtn-text" data-zoom="full">เต็มจอ</button>
+        </div>
+        <div class="zoom-stage zoom-stage-model" data-svg="img/install.svg"></div>
+      </div>
+      <p class="hint">ระยะเรดาร์แบ่งเป็น gate ละ 0.75 ม. ตั้ง max gate = 2–3 จะตรวจจับได้ไกลสุด 1.5–2.25 ม. จึงควรติดกล่องให้ขอบบัวอยู่ในระยะนี้</p>
+
+      <h3>การจัดวางในกล่อง (ชุดมาตรฐาน)</h3>
+      <div class="zoom" data-zoom-label="ภาพจำลองการจัดวางในกล่อง">
+        <div class="zoom-tools no-print" role="group" aria-label="ซูมภาพการจัดวางในกล่อง">
+          <button type="button" class="zbtn" data-zoom="in" aria-label="ซูมเข้า">+</button>
+          <button type="button" class="zbtn" data-zoom="out" aria-label="ซูมออก">−</button>
+          <button type="button" class="zbtn zbtn-text" data-zoom="reset">พอดีจอ</button>
+          <button type="button" class="zbtn zbtn-text" data-zoom="full">เต็มจอ</button>
+        </div>
+        <div class="zoom-stage zoom-stage-model" data-svg="img/enclosure.svg"></div>
+      </div>
+      <p class="callout callout-warn"><strong>กล่องต้องใหญ่พอใส่แบต</strong> แบต LiFePO4 12V 6Ah แบบกล่อง ABS มีขนาดราว 151×65×94 มม. ใส่กล่อง 150×110×70 มม. ไม่ได้ ชุดมาตรฐานจึงใช้กล่อง 280×190×130 มม. ซึ่งเหลือที่ให้ชาร์จเจอร์ แผ่นวงจร และอากาศถ่ายเท</p>
+
+      <h3>ขนาดและน้ำหนักชิ้นส่วนหลัก</h3>
+      <div class="table-wrap">
+        <table class="pins">
+          <caption class="sr-only">ขนาดและน้ำหนักโดยประมาณของชิ้นส่วนหลัก</caption>
+          <thead><tr><th scope="col">ชิ้นส่วน</th><th scope="col">ขนาดโดยประมาณ</th><th scope="col">น้ำหนัก</th></tr></thead>
+          <tbody>
+            <tr><td>แผงโซลาร์ 20W (Mono)</td><td>425 × 340 × 25 มม.</td><td>~1.8 กก.</td></tr>
+            <tr><td>กล่องกันน้ำ (ชุดโซลาร์)</td><td>280 × 190 × 130 มม.</td><td>~0.8 กก. (เปล่า)</td></tr>
+            <tr><td>กล่องกันน้ำ (ชุดไฟบ้าน)</td><td>150 × 110 × 70 มม.</td><td>~0.3 กก. (เปล่า)</td></tr>
+            <tr><td>แบต LiFePO4 12V 6Ah (กล่อง ABS)</td><td>151 × 65 × 94 มม.</td><td>~0.8 กก.</td></tr>
+            <tr><td>แบต LiFePO4 แพ็ค 4S 32700 6Ah</td><td>~132 × 33 × 70 มม.</td><td>~0.7 กก.</td></tr>
+            <tr><td>ชาร์จเจอร์ PWM 10A</td><td>133 × 70 × 35 มม.</td><td>~0.15 กก.</td></tr>
+            <tr><td>ลำโพงฮอร์น 15–25W</td><td>ปาก Ø150–200 มม. ยาว ~200 มม.</td><td>0.6–1.0 กก.</td></tr>
+            <tr><td>แผ่นปริ้น 5×7 ซม. + ESP32 + DFPlayer</td><td>70 × 50 × 25 มม.</td><td>~50 ก.</td></tr>
+            <tr><td>PAM8610 / MP1584</td><td>46 × 30 มม. / 22 × 17 มม.</td><td>–</td></tr>
+            <tr><td>เรดาร์ LD2410C</td><td>22 × 16 มม.</td><td>–</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">กล่องที่ประกอบเสร็จ (ชุดโซลาร์) หนักราว 2 กก. ยึดผนังด้วยสกรูและพุกอย่างน้อย 4 จุด ขนาดของจริงต่างกันตามยี่ห้อ ให้วัดของที่ซื้อมาก่อนเจาะกล่อง</p>
+    </section>
+
     <!-- 3. BOM -->
     <section id="bom" aria-labelledby="bom-title">
-      <h2 id="bom-title"><span class="sec-no">2</span>รายการอุปกรณ์</h2>
+      <h2 id="bom-title"><span class="sec-no">3</span>รายการอุปกรณ์</h2>
+      <div class="kits no-print" role="group" aria-label="เลือกชุด" id="bomKits"></div>
+      <p class="kit-desc" id="bomKitDesc"></p>
       <div class="totals" aria-live="polite">
         <div class="total"><span class="total-label">รวมทั้งหมด</span><span class="total-value" id="totAll">–</span></div>
         <div class="total"><span class="total-label">ไม่รวมเครื่องมือ</span><span class="total-value" id="totNoTools">–</span></div>
@@ -113,9 +168,72 @@
       <noscript><p class="callout callout-warn">ต้องเปิด JavaScript เพื่อแสดงรายการอุปกรณ์ ดูข้อมูลดิบได้ที่ <a href="data/bom.json">data/bom.json</a></p></noscript>
     </section>
 
+    <!-- Budget kits -->
+    <section id="eco" aria-labelledby="eco-title">
+      <h2 id="eco-title"><span class="sec-no">4</span>ชุดประหยัด: ถูกลงแต่ยังได้คุณภาพ</h2>
+      <p>ลดราคาโดย<strong>ไม่ลดสิ่งที่ทำให้เครื่องไล่นกได้ผลและทนแดดฝน</strong> (เรดาร์ แผงโซลาร์ ชนิดแบต ฟิวส์ การกันน้ำ) ตัดเฉพาะของสำรอง ของที่สเปกเกินจำเป็น และของที่ทำเองได้ วงจรและโค้ดเหมือนชุดมาตรฐาน</p>
+
+      <div class="table-wrap">
+        <table class="pins kit-compare">
+          <caption class="sr-only">เปรียบเทียบสามชุด</caption>
+          <thead><tr><th scope="col">ชุด</th><th scope="col">ไฟเลี้ยง</th><th scope="col" class="c-num">ราคา*</th><th scope="col">ไม่มีแดด/ไฟดับ</th><th scope="col">เหมาะกับ</th></tr></thead>
+          <tbody>
+            <tr><td><strong>มาตรฐาน</strong></td><td>แผง 20W + LiFePO4 6Ah (กล่อง ABS)</td><td class="c-num" data-kit-total="standard">–</td><td>อยู่ได้ ~2–3 วัน</td><td>จุดที่ไม่มีปลั๊ก อยากได้ของสำรองครบ</td></tr>
+            <tr><td><strong>ประหยัด (โซลาร์)</strong></td><td>แผง 20W + แพ็ค LiFePO4 32700 6Ah</td><td class="c-num" data-kit-total="eco-solar">–</td><td>อยู่ได้ ~2–3 วัน</td><td>จุดที่ไม่มีปลั๊ก</td></tr>
+            <tr><td><strong>ประหยัดสุด (ไฟบ้าน)</strong></td><td>อะแดปเตอร์ 12V 2A</td><td class="c-num" data-kit-total="eco-ac">–</td><td>หยุดทำงานเมื่อไฟดับ</td><td>มีปลั๊กในบ้านห่างไม่เกิน ~10 ม.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">* ไม่รวมเครื่องมือ (หัวแร้ง มัลติมิเตอร์ สาย USB) คำนวณจากรายการของแต่ละชุด เครื่องที่ทำงานตลอดวันใช้ไฟราว 20–25 Wh/วัน</p>
+      <div class="kit-buttons no-print">
+        <button type="button" class="btn btn-small" data-show-kit="eco-solar">ดูรายการชุดประหยัด (โซลาร์)</button>
+        <button type="button" class="btn btn-small" data-show-kit="eco-ac">ดูรายการชุดประหยัดสุด (ไฟบ้าน)</button>
+      </div>
+
+      <h3>ประหยัด (โซลาร์): ลดตรงไหน และทำไมยังดี</h3>
+      <div class="table-wrap">
+        <table class="pins">
+          <caption class="sr-only">สิ่งที่เปลี่ยนในชุดประหยัด (โซลาร์)</caption>
+          <thead><tr><th scope="col">ชุดมาตรฐาน</th><th scope="col">ชุดประหยัด</th><th scope="col" class="c-num">ประหยัด</th><th scope="col">ทำไมยังใช้ได้ดี</th></tr></thead>
+          <tbody>
+            <tr><td>แบต LiFePO4 6Ah กล่อง ABS</td><td>แพ็ค 4S 32700 6Ah + BMS</td><td class="c-num">350</td><td>เซลล์ชนิดเดียวกัน ความจุเท่ากัน แค่ไม่มีกล่องแข็ง ต้องห่อหดและรัดให้แน่น</td></tr>
+            <tr><td>ฮอร์น 25W</td><td>ฮอร์น 15W 8Ω</td><td class="c-num">80</td><td>PAM8610 ที่ 12V จ่ายได้ราว 10W อยู่แล้ว ฮอร์น 25W ใช้ไม่เต็มกำลัง</td></tr>
+            <tr><td>กล่อง IP67</td><td>กล่อง IP65 ขนาดเดียวกัน</td><td class="c-num">100</td><td>ใต้ชายคาไม่โดนน้ำแรงหรือจมน้ำ IP65 กันฝนสาดได้</td></tr>
+            <tr><td>สเปรย์เคลือบแผ่นวงจร</td><td>สเปรย์แลคเกอร์อะคริลิกใส</td><td class="c-num">130</td><td>เป็นสารเคลือบอะคริลิกเหมือนกัน พ่นบางๆ 2–3 รอบ</td></tr>
+            <tr><td>ขายึดแผงสำเร็จรูป</td><td>เหล็กฉากรู + น็อต ทาสีกันสนิม</td><td class="c-num">90</td><td>แผง 20W หนักไม่ถึง 2 กก. เหล็กฉากรับได้สบาย</td></tr>
+            <tr><td>DFPlayer และ MP1584 ตัวสำรอง</td><td>ไม่ซื้อสำรอง</td><td class="c-num">80</td><td>ไม่มีผลกับการใช้งาน ถ้าเสียค่อยซื้อเพิ่ม</td></tr>
+            <tr><td>วาล์วระบายอากาศ M12</td><td>รูระบายน้ำ 3 มม. ที่มุมล่างสุด + ซิลิกาเจล</td><td class="c-num">50</td><td>ไอน้ำที่ควบแน่นไหลออกได้ ปิดรูด้วยตาข่ายกันแมลง</td></tr>
+            <tr><td>Breadboard และแผ่นปริ้นแผ่นที่ 2</td><td>ไม่ใช้</td><td class="c-num">55</td><td>ต่อทดลองด้วยสายจัมเปอร์ตรงๆ ESP32 กับ DFPlayer ลงแผ่นเดียวได้</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-info">
+        <p><strong>สิ่งที่ไม่ควรลด</strong></p>
+        <ul>
+          <li><strong>เรดาร์ LD2410C</strong> เซนเซอร์ PIR ถูกกว่าแต่หลอกง่ายเมื่อผนังโดนแดดหรือมีลมร้อน</li>
+          <li><strong>แผงโซลาร์ 20W</strong> หน้าฝนแดดน้อย แผง 10W ชาร์จไม่ทันการใช้ไฟ</li>
+          <li><strong>ชาร์จเจอร์ที่มีโหมด LiFePO4</strong> และ<strong>แบต LiFePO4</strong> อย่าเปลี่ยนเป็นแบตตะกั่วหรือลิเธียมไอออนทั่วไป ใต้ชายคาร้อนมาก</li>
+          <li><strong>ฟิวส์ เคเบิลแกลนด์ และซิลิกาเจล</strong> ราคาไม่กี่สิบบาท แต่กันไฟไหม้และวงจรเสียจากความชื้น</li>
+        </ul>
+      </div>
+      <p>ขั้นตอนที่ต่างจากชุดมาตรฐาน: ขั้นที่ 4 ต่อทดลองด้วยสายจัมเปอร์แทน breadboard · ขั้นที่ 11 ใช้แลคเกอร์อะคริลิกแทนสเปรย์เคลือบ · ขั้นที่ 12 เจาะรูระบายน้ำ 3 มม. แทนวาล์ว และห่อแพ็คแบตด้วยท่อหดหรือเทปผ้า แล้วรัดกับพื้นกล่อง</p>
+
+      <h3>ประหยัดสุด (ไฟบ้าน): ใช้อะแดปเตอร์แทนชุดโซลาร์</h3>
+      <p>ถ้ามีปลั๊กในบ้านหรือระเบียงใกล้จุดติดตั้ง ตัดแผง ชาร์จเจอร์ และแบตออกได้ทั้งชุด กล่องก็เล็กลงเหลือ 150×110×70 มม. ส่วนตรวจจับและเสียงยังเหมือนชุดมาตรฐานทุกอย่าง</p>
+      <ul class="power-list">
+        <li>อะแดปเตอร์ 12V 2A (ในบ้าน) <span class="arrow">→</span> แจ็ค DC <span class="arrow">→</span> สาย VCT <span class="arrow">→</span> กล่อง <span class="arrow">→</span> <strong>ฟิวส์ 2A</strong> <span class="arrow">→</span> (1) PAM8610 ขา 12V &nbsp;(2) MP1584 IN</li>
+        <li>ขั้วลบของอะแดปเตอร์ = <strong>GND ร่วม</strong> ของวงจรทั้งหมด</li>
+        <li>ไม่ต้องต่อตัวแบ่งแรงดันวัดแบตที่ GPIO 34</li>
+      </ul>
+      <p><strong>แก้โค้ด 1 จุด:</strong> ตั้ง <code>VBAT_LOW = 0.0</code> ในส่วนตั้งค่า เพราะไม่มีแบตให้วัด ถ้าไม่แก้ โค้ดจะเข้าใจว่าแบตต่ำและไม่ยอมไล่นก</p>
+      <p>ขั้นตอนที่ต่างจากชุดมาตรฐาน: ข้ามขั้นที่ 7 (ชุดโซลาร์) และขั้นที่ 8 (วัดแบต) · ขั้นที่ 12 ใช้กล่องเล็ก · ขั้นที่ 13 ไม่ต้องติดแผง เดินสาย VCT จากปลั๊กมาที่กล่องแทน</p>
+      <p class="callout callout-warn">⚠️ <strong>นำออกนอกบ้านเฉพาะไฟ 12V DC</strong> ห้ามเดินไฟ 220V ไปที่กล่อง ใช้อะแดปเตอร์ที่มี มอก. วางในที่แห้ง และเสียบปลั๊กที่มีเบรกเกอร์กันไฟดูดถ้ามี</p>
+    </section>
+
     <!-- 4. Steps -->
     <section id="steps" aria-labelledby="steps-title">
-      <h2 id="steps-title"><span class="sec-no">3</span>ขั้นตอนการประกอบ</h2>
+      <h2 id="steps-title"><span class="sec-no">5</span>ขั้นตอนการประกอบ</h2>
       <div class="progress-box">
         <div class="progress-head">
           <span id="stepsCount">0 / 0 ขั้น</span>
@@ -128,7 +246,7 @@
 
     <!-- 5. Wiring -->
     <section id="wiring" aria-labelledby="wiring-title">
-      <h2 id="wiring-title"><span class="sec-no">4</span>ผังต่อสาย</h2>
+      <h2 id="wiring-title"><span class="sec-no">6</span>ผังต่อสาย</h2>
       <p class="hint no-print">ลากเพื่อเลื่อนดู ใช้สองนิ้วถ่าง ปุ่ม + / − หรือ Ctrl + ล้อเมาส์เพื่อซูม กด "พอดีจอ" เพื่อดูทั้งผัง</p>
       <div class="zoom" id="wiringZoom">
         <div class="zoom-tools no-print" role="group" aria-label="ซูมผังต่อสาย">
@@ -170,7 +288,7 @@
 
     <!-- 6. Firmware -->
     <section id="firmware" aria-labelledby="firmware-title">
-      <h2 id="firmware-title"><span class="sec-no">5</span>เฟิร์มแวร์</h2>
+      <h2 id="firmware-title"><span class="sec-no">7</span>เฟิร์มแวร์</h2>
       <p>ไฟล์ <code>firmware/bird_scarer_solar.ino</code> ต้องการบอร์ด ESP32 core 2.x ขึ้นไป และไลบรารี <strong>DFRobotDFPlayerMini</strong></p>
       <div class="code-tools no-print">
         <button type="button" class="btn btn-small" id="fwCopy" disabled>คัดลอกโค้ด</button>
@@ -194,7 +312,7 @@
 
     <!-- 7. Radar -->
     <section id="radar" aria-labelledby="radar-title">
-      <h2 id="radar-title"><span class="sec-no">6</span>ตั้งค่าเรดาร์ LD2410C</h2>
+      <h2 id="radar-title"><span class="sec-no">8</span>ตั้งค่าเรดาร์ LD2410C</h2>
       <ol class="plain-steps">
         <li>ติดตั้งแอป <strong>HLKRadarTool</strong> จาก Google Play หรือ App Store (ผู้พัฒนา Hi-Link) และเปิด Bluetooth กับ Location บนมือถือ</li>
         <li>จ่ายไฟ 5V ให้ LD2410C เปิดแอป จะเห็นอุปกรณ์ชื่อขึ้นต้นด้วย <code>HLK-LD2410</code> แตะเพื่อเชื่อมต่อ (ถ้าถามรหัส ค่าเริ่มต้นคือ <code>HiLink</code>)</li>
@@ -229,7 +347,7 @@
 
     <!-- 8. Troubleshooting -->
     <section id="troubleshoot" aria-labelledby="ts-title">
-      <h2 id="ts-title"><span class="sec-no">7</span>ทดสอบและแก้ปัญหา</h2>
+      <h2 id="ts-title"><span class="sec-no">9</span>ทดสอบและแก้ปัญหา</h2>
       <div class="accordion">
         <details>
           <summary>Serial ขึ้น "DFPlayer not found"</summary>
@@ -299,7 +417,7 @@
 
     <!-- 9. Safety -->
     <section id="safety" aria-labelledby="safety-title">
-      <h2 id="safety-title"><span class="sec-no">8</span>ข้อควรระวังด้านความปลอดภัยและเพื่อนบ้าน</h2>
+      <h2 id="safety-title"><span class="sec-no">10</span>ข้อควรระวังด้านความปลอดภัยและเพื่อนบ้าน</h2>
       <div class="safety">
         <ul>
           <li><span class="safety-icon" aria-hidden="true">🔋</span><div><strong>อย่าลัดวงจรแบต LiFePO4</strong> ใส่ฟิวส์ใกล้ขั้วแบตเสมอ และถอดฟิวส์ทุกครั้งที่แก้ไขสายไฟ</div></li>

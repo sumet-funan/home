@@ -1,0 +1,33 @@
+[
+  { "name": "ESP32 DevKit V1 (ESP32-WROOM-32E)", "qty": 1, "price": 180, "category": "อุปกรณ์หลัก", "searchKeyword": "ESP32 DevKit WROOM-32E", "note": "ตัวเดียวกับชุดมาตรฐาน ใช้โค้ดเดิมได้ทันที" },
+  { "name": "เรดาร์ HLK-LD2410C", "qty": 1, "price": 200, "category": "อุปกรณ์หลัก", "searchKeyword": "LD2410C", "note": "ไม่ลดสเปก เป็นหัวใจของการตรวจจับ" },
+  { "name": "DFPlayer Mini", "qty": 1, "price": 50, "category": "อุปกรณ์หลัก", "searchKeyword": "DFPlayer Mini", "note": "ไม่ซื้อตัวสำรอง" },
+  { "name": "การ์ด microSD 8GB", "qty": 1, "price": 80, "category": "อุปกรณ์หลัก", "searchKeyword": "Micro SD 8GB", "note": "ใช้การ์ดเก่าที่มีอยู่ได้ (ไม่เกิน 32GB, FAT32)" },
+  { "name": "แอมป์ PAM8610 2x10W", "qty": 1, "price": 80, "category": "อุปกรณ์หลัก", "searchKeyword": "PAM8610", "note": "ไฟ 12V ต้องมีขา SD" },
+  { "name": "ลำโพงฮอร์นกันน้ำ 15W 8Ω", "qty": 1, "price": 220, "category": "อุปกรณ์หลัก", "searchKeyword": "ลำโพงฮอร์น 15W 8 โอห์ม", "note": "PAM8610 ที่ 12V จ่ายได้ราว 10W ฮอร์น 15W จึงเพียงพอ" },
+
+  { "name": "แผงโซลาร์ 20W 18V (Mono)", "qty": 1, "price": 500, "category": "ไฟเลี้ยง", "searchKeyword": "แผงโซล่าเซลล์ 20W mono", "note": "ไม่ลดขนาด หน้าฝนแดดน้อย แผงเล็กกว่านี้ชาร์จไม่ทัน" },
+  { "name": "โซลาร์ชาร์จเจอร์ PWM 10A รองรับ LiFePO4", "qty": 1, "price": 280, "category": "ไฟเลี้ยง", "searchKeyword": "solar charge controller 10A LiFePO4", "note": "ต้องมีโหมด LiFePO4 และขั้ว LOAD" },
+  { "name": "แบต LiFePO4 แพ็ค 4S 32700 (12.8V 6Ah) พร้อม BMS", "qty": 1, "price": 650, "category": "ไฟเลี้ยง", "searchKeyword": "แพ็คแบต LiFePO4 32700 4S 6Ah BMS", "note": "BMS 4S LiFePO4 มีบาลานซ์ รับกระแส ≥5A ห่อหดมิดชิด" },
+  { "name": "Step-down MP1584 (12V→5V)", "qty": 1, "price": 30, "category": "ไฟเลี้ยง", "searchKeyword": "MP1584 step down", "note": "ไม่ซื้อตัวสำรอง" },
+  { "name": "กระบอกฟิวส์ + ฟิวส์ 5A และ 2A", "qty": 2, "price": 30, "category": "ไฟเลี้ยง", "searchKeyword": "กระบอกฟิวส์", "note": "ห้ามตัด: 5A ใกล้แบต, 2A ที่ LOAD" },
+
+  { "name": "ตัวต้านทาน 1kΩ / 22kΩ / 100kΩ", "qty": 1, "price": 30, "category": "ชิ้นส่วนเล็ก", "searchKeyword": "ตัวต้านทาน 1/4W", "note": "อย่างละ 1 ตัว" },
+  { "name": "ตัวเก็บประจุเซรามิก 100nF", "qty": 1, "price": 10, "category": "ชิ้นส่วนเล็ก", "searchKeyword": "ตัวเก็บประจุ 104", "note": "" },
+  { "name": "แผ่นปริ้นอเนกประสงค์ 5x7 ซม.", "qty": 1, "price": 15, "category": "ชิ้นส่วนเล็ก", "searchKeyword": "PCB อเนกประสงค์ 5x7", "note": "" },
+  { "name": "ก้างปลาตัวเมีย 2.54mm", "qty": 2, "price": 10, "category": "ชิ้นส่วนเล็ก", "searchKeyword": "female header 2.54", "note": "" },
+  { "name": "เทอร์มินอลบล็อก 2 ขา", "qty": 5, "price": 5, "category": "ชิ้นส่วนเล็ก", "searchKeyword": "terminal block 2 pin", "note": "" },
+  { "name": "สายจัมเปอร์ เมีย-เมีย", "qty": 1, "price": 30, "category": "ชิ้นส่วนเล็ก", "searchKeyword": "สายจัมเปอร์", "note": "ใช้ต่อทดลองตรงๆ แทน breadboard" },
+
+  { "name": "กล่องกันน้ำ IP65 ~280x190x130 มม.", "qty": 1, "price": 350, "category": "กล่อง/ติดตั้ง", "searchKeyword": "กล่องกันน้ำ IP65 280x190x130", "note": "IP65 พอสำหรับติดใต้ชายคา สีขาว/สีอ่อน" },
+  { "name": "เคเบิลแกลนด์ PG7/PG9", "qty": 4, "price": 10, "category": "กล่อง/ติดตั้ง", "searchKeyword": "เคเบิ้ลแกลนด์ PG7", "note": "" },
+  { "name": "ซองซิลิกาเจล", "qty": 1, "price": 20, "category": "กล่อง/ติดตั้ง", "searchKeyword": "ซิลิก้าเจล", "note": "ใช้แทนวาล์วระบายอากาศ คู่กับรูระบายน้ำ 3 มม." },
+  { "name": "สเปรย์แลคเกอร์อะคริลิกใส", "qty": 1, "price": 70, "category": "กล่อง/ติดตั้ง", "searchKeyword": "สเปรย์แลคเกอร์ใส อะคริลิก", "note": "ใช้แทนสเปรย์เคลือบแผ่นวงจร พ่นบางๆ 2–3 รอบ" },
+  { "name": "สายไฟ VCT 2x1.0 (เมตร)", "qty": 10, "price": 15, "category": "กล่อง/ติดตั้ง", "searchKeyword": "สายไฟ VCT 2x1", "note": "" },
+  { "name": "ขายึดแผงทำเอง (เหล็กฉากรู + น็อต)", "qty": 1, "price": 60, "category": "กล่อง/ติดตั้ง", "searchKeyword": "เหล็กฉากรู", "note": "ทาสีกันสนิม หรือใช้อะลูมิเนียมฉาก" },
+  { "name": "สกรู พุก เคเบิลไทร์", "qty": 1, "price": 50, "category": "กล่อง/ติดตั้ง", "searchKeyword": "", "note": "เคเบิลไทร์ชนิดกัน UV (สีดำ)" },
+
+  { "name": "หัวแร้ง + ตะกั่ว", "qty": 1, "price": 300, "category": "เครื่องมือ", "searchKeyword": "หัวแร้งปรับอุณหภูมิ", "note": "ถ้ายังไม่มี" },
+  { "name": "มัลติมิเตอร์", "qty": 1, "price": 300, "category": "เครื่องมือ", "searchKeyword": "มัลติมิเตอร์ดิจิตอล", "note": "จำเป็นสำหรับปรับ MP1584" },
+  { "name": "สาย USB data", "qty": 1, "price": 50, "category": "เครื่องมือ", "searchKeyword": "สาย USB-C data", "note": "ต้องส่งข้อมูลได้" }
+]
