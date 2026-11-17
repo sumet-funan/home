@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 760" class="dg dg-wiring" role="img" aria-labelledby="wg-title wg-desc">
+  <title id="wg-title">ผังต่อสายเครื่องไล่นกพิราบ</title>
+  <desc id="wg-desc">แผงโซลาร์ต่อเข้าชาร์จเจอร์ แบตต่อผ่านฟิวส์ 5A ขั้ว LOAD ผ่านฟิวส์ 2A ไปเลี้ยงแอมป์ PAM8610 และ MP1584 ซึ่งแปลงเป็น 5V ไปเลี้ยง ESP32, LD2410C และ DFPlayer สัญญาณ: LD2410C OUT ไป GPIO27, DFPlayer TX ไป GPIO16, GPIO17 ผ่าน 1k ไป DFPlayer RX, BUSY ไป GPIO26, DAC_R ไปขา IN ของแอมป์, GPIO25 ไปขา SD ของแอมป์ และตัวแบ่งแรงดัน 100k/22k ไป GPIO34</desc>
+
+  <!-- ===== wires: power ===== -->
+  <g class="w w-pos">
+    <path d="M200 60H300"/>
+    <path d="M200 235H245M305 235H380V180"/>
+    <path d="M550 60H585M645 60H740"/>
+    <path d="M680 60V215H540V245H560"/>
+  </g>
+  <g class="w w-neg">
+    <path d="M200 100H300"/>
+    <path d="M200 280H460V180"/>
+    <path d="M550 100H570"/>
+    <path d="M740 95H720"/>
+    <path d="M560 285H540"/>
+    <path d="M720 285H735"/>
+    <path d="M210 515H230"/>
+    <path d="M360 700H340"/>
+    <path d="M720 590H700"/>
+  </g>
+  <path class="w-gnd" transform="translate(570 100)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/>
+  <path class="w-gnd" transform="translate(720 95)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/>
+  <path class="w-gnd" transform="translate(540 285)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/>
+  <path class="w-gnd" transform="translate(735 285)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/>
+  <path class="w-gnd" transform="translate(230 515)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/>
+  <path class="w-gnd" transform="translate(340 700)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/>
+  <path class="w-gnd" transform="translate(700 590)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/>
+  <path class="w-gnd" transform="translate(150 705)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/>
+  <path class="w-gnd" transform="translate(260 683)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/>
+
+  <g class="w w-5v">
+    <path d="M720 245H750V420"/>
+    <path d="M250 340H750"/>
+    <path d="M250 340V445H210"/>
+    <path d="M320 340V420H360"/>
+  </g>
+  <text class="t-net t-5v" x="500" y="330" text-anchor="middle">+5V (จาก MP1584 OUT+)</text>
+  <text class="t-net t-pos" x="705" y="50" text-anchor="middle">12V</text>
+
+  <!-- ===== wires: signals ===== -->
+  <g class="w w-sig">
+    <path d="M210 480H360"/>
+    <path d="M580 470H720"/>
+    <path d="M580 500H615M675 500H720"/>
+    <path d="M580 530H720"/>
+    <path d="M580 660H950V240H860V190"/>
+    <path d="M150 584V595M150 635V665M150 650H360"/>
+    <path d="M260 650V675"/>
+  </g>
+  <g class="w w-aud">
+    <path d="M800 420V190"/>
+    <path d="M920 70H965M920 110H965"/>
+  </g>
+
+  <!-- junction dots -->
+  <g class="dot">
+    <circle cx="680" cy="60" r="5"/>
+    <circle cx="250" cy="340" r="5"/>
+    <circle cx="320" cy="340" r="5"/>
+    <circle cx="750" cy="340" r="5"/>
+    <circle cx="150" cy="650" r="5"/>
+    <circle cx="260" cy="650" r="5"/>
+  </g>
+
+  <!-- fuses, resistors, capacitor -->
+  <g class="part">
+    <rect x="245" y="225" width="60" height="20" rx="10"/>
+    <rect x="585" y="50" width="60" height="20" rx="10"/>
+    <rect x="615" y="492" width="60" height="16" rx="3"/>
+    <rect x="142" y="595" width="16" height="40" rx="3"/>
+    <rect x="142" y="665" width="16" height="40" rx="3"/>
+  </g>
+  <path class="w w-sig" d="M246 675H274M246 683H274"/>
+  <text class="t-pin" x="275" y="216" text-anchor="middle">ฟิวส์ 5A</text>
+  <text class="t-pin" x="615" y="41" text-anchor="middle">ฟิวส์ 2A</text>
+  <text class="t-pin" x="645" y="486" text-anchor="middle">1kΩ</text>
+  <text class="t-pin" x="166" y="620">100kΩ</text>
+  <text class="t-pin" x="166" y="690">22kΩ</text>
+  <text class="t-pin" x="282" y="684">100nF</text>
+  <rect class="flag" x="86" y="560" width="128" height="24" rx="12"/>
+  <text class="t-pin t-pos" x="150" y="577" text-anchor="middle">LOAD+ หลังฟิวส์</text>
+
+  <!-- ===== components ===== -->
+  <!-- solar panel -->
+  <rect class="box box-power" x="30" y="30" width="170" height="100" rx="8"/>
+  <path class="panel-grid" d="M45 45H120V115H45ZM70 45V115M95 45V115M45 68H120M45 92H120"/>
+  <text class="t-title" x="160" y="76" text-anchor="middle">แผง</text>
+  <text class="t-sub" x="160" y="98" text-anchor="middle">20W</text>
+  <text class="t-pin" x="190" y="56" text-anchor="end">+</text>
+  <text class="t-pin" x="190" y="96" text-anchor="end">−</text>
+
+  <!-- charger -->
+  <rect class="box box-power" x="300" y="30" width="250" height="150" rx="8"/>
+  <text class="t-title" x="425" y="96" text-anchor="middle">โซลาร์ชาร์จเจอร์</text>
+  <text class="t-sub" x="425" y="120" text-anchor="middle">PWM 10A · โหมด LiFePO4</text>
+  <text class="t-pin" x="310" y="64">PV+</text>
+  <text class="t-pin" x="310" y="104">PV−</text>
+  <text class="t-pin" x="540" y="64" text-anchor="end">LOAD+</text>
+  <text class="t-pin" x="540" y="104" text-anchor="end">LOAD−</text>
+  <text class="t-pin" x="380" y="168" text-anchor="middle">BAT+</text>
+  <text class="t-pin" x="460" y="168" text-anchor="middle">BAT−</text>
+
+  <!-- battery -->
+  <rect class="box box-power" x="30" y="210" width="170" height="90" rx="8"/>
+  <text class="t-title" x="110" y="250" text-anchor="middle">แบต LiFePO4</text>
+  <text class="t-sub" x="110" y="274" text-anchor="middle">12V 6Ah</text>
+  <text class="t-pin" x="190" y="240" text-anchor="end">+</text>
+  <text class="t-pin" x="190" y="285" text-anchor="end">−</text>
+
+  <!-- amplifier -->
+  <rect class="box box-audio" x="740" y="30" width="180" height="160" rx="8"/>
+  <text class="t-title" x="830" y="120" text-anchor="middle">PAM8610</text>
+  <text class="t-sub" x="830" y="142" text-anchor="middle">แอมป์ 12V</text>
+  <text class="t-pin" x="750" y="64">12V</text>
+  <text class="t-pin" x="750" y="99">GND</text>
+  <text class="t-pin" x="910" y="74" text-anchor="end">OUT+</text>
+  <text class="t-pin" x="910" y="114" text-anchor="end">OUT−</text>
+  <text class="t-pin" x="800" y="180" text-anchor="middle">IN</text>
+  <text class="t-pin" x="860" y="180" text-anchor="middle">SD</text>
+
+  <!-- horn -->
+  <g class="horn">
+    <rect x="965" y="60" width="24" height="60" rx="3"/>
+    <path d="M989 72L1040 40V140L989 108Z"/>
+  </g>
+  <text class="t-sub" x="1005" y="166" text-anchor="middle">ฮอร์น</text>
+  <text class="t-pin" x="1005" y="186" text-anchor="middle">25W 8Ω</text>
+
+  <!-- MP1584 -->
+  <rect class="box box-power" x="560" y="225" width="160" height="75" rx="8"/>
+  <text class="t-title" x="640" y="262" text-anchor="middle">MP1584</text>
+  <text class="t-sub" x="640" y="285" text-anchor="middle">→ 5.0V</text>
+  <text class="t-pin" x="566" y="249">IN+</text>
+  <text class="t-pin" x="566" y="289">IN−</text>
+  <text class="t-pin" x="714" y="249" text-anchor="end">OUT+</text>
+  <text class="t-pin" x="714" y="289" text-anchor="end">OUT−</text>
+
+  <!-- LD2410C -->
+  <rect class="box box-logic" x="40" y="420" width="170" height="120" rx="8"/>
+  <text class="t-title" x="95" y="476" text-anchor="middle">LD2410C</text>
+  <text class="t-sub" x="95" y="498" text-anchor="middle">เรดาร์</text>
+  <text class="t-pin" x="200" y="449" text-anchor="end">VCC</text>
+  <text class="t-pin" x="200" y="484" text-anchor="end">OUT</text>
+  <text class="t-pin" x="200" y="519" text-anchor="end">GND</text>
+
+  <!-- ESP32 -->
+  <rect class="box box-logic" x="360" y="390" width="220" height="330" rx="8"/>
+  <text class="t-title" x="470" y="566" text-anchor="middle">ESP32</text>
+  <text class="t-sub" x="470" y="590" text-anchor="middle">DevKit V1</text>
+  <text class="t-pin" x="370" y="424">VIN</text>
+  <text class="t-pin" x="370" y="484">GPIO27</text>
+  <text class="t-pin" x="370" y="654">GPIO34</text>
+  <text class="t-pin" x="370" y="704">GND</text>
+  <text class="t-pin" x="570" y="474" text-anchor="end">GPIO16</text>
+  <text class="t-pin" x="570" y="504" text-anchor="end">GPIO17</text>
+  <text class="t-pin" x="570" y="534" text-anchor="end">GPIO26</text>
+  <text class="t-pin" x="570" y="664" text-anchor="end">GPIO25</text>
+
+  <!-- DFPlayer -->
+  <rect class="box box-audio" x="720" y="420" width="170" height="200" rx="8"/>
+  <text class="t-title" x="835" y="510" text-anchor="middle">DFPlayer</text>
+  <text class="t-sub" x="835" y="532" text-anchor="middle">Mini + SD</text>
+  <text class="t-pin" x="750" y="442" text-anchor="middle">VCC</text>
+  <text class="t-pin" x="808" y="442" text-anchor="middle">DAC_R</text>
+  <text class="t-pin" x="730" y="474">TX</text>
+  <text class="t-pin" x="730" y="504">RX</text>
+  <text class="t-pin" x="730" y="534">BUSY</text>
+  <text class="t-pin" x="730" y="594">GND</text>
+
+  <!-- pins -->
+  <g class="pin">
+    <circle cx="200" cy="60" r="4"/><circle cx="200" cy="100" r="4"/>
+    <circle cx="300" cy="60" r="4"/><circle cx="300" cy="100" r="4"/>
+    <circle cx="550" cy="60" r="4"/><circle cx="550" cy="100" r="4"/>
+    <circle cx="380" cy="180" r="4"/><circle cx="460" cy="180" r="4"/>
+    <circle cx="200" cy="235" r="4"/><circle cx="200" cy="280" r="4"/>
+    <circle cx="740" cy="60" r="4"/><circle cx="740" cy="95" r="4"/>
+    <circle cx="920" cy="70" r="4"/><circle cx="920" cy="110" r="4"/>
+    <circle cx="800" cy="190" r="4"/><circle cx="860" cy="190" r="4"/>
+    <circle cx="560" cy="245" r="4"/><circle cx="560" cy="285" r="4"/>
+    <circle cx="720" cy="245" r="4"/><circle cx="720" cy="285" r="4"/>
+    <circle cx="210" cy="445" r="4"/><circle cx="210" cy="480" r="4"/><circle cx="210" cy="515" r="4"/>
+    <circle cx="360" cy="420" r="4"/><circle cx="360" cy="480" r="4"/><circle cx="360" cy="650" r="4"/><circle cx="360" cy="700" r="4"/>
+    <circle cx="580" cy="470" r="4"/><circle cx="580" cy="500" r="4"/><circle cx="580" cy="530" r="4"/><circle cx="580" cy="660" r="4"/>
+    <circle cx="750" cy="420" r="4"/><circle cx="800" cy="420" r="4"/>
+    <circle cx="720" cy="470" r="4"/><circle cx="720" cy="500" r="4"/><circle cx="720" cy="530" r="4"/><circle cx="720" cy="590" r="4"/>
+  </g>
+
+  <!-- legend -->
+  <g class="legend">
+    <path class="w w-pos" d="M600 712H630"/><text class="t-pin" x="638" y="716">ไฟบวก 12–18V</text>
+    <path class="w w-5v" d="M770 712H800"/><text class="t-pin" x="808" y="716">5V</text>
+    <path class="w w-neg" d="M860 712H890"/><text class="t-pin" x="898" y="716">ขั้วลบ / GND</text>
+    <path class="w w-sig" d="M600 742H630"/><text class="t-pin" x="638" y="746">สัญญาณ</text>
+    <path class="w w-aud" d="M770 742H800"/><text class="t-pin" x="808" y="746">เสียง</text>
+    <path class="w-gnd" transform="translate(875 726)" d="M0 0V9M-10 9H10M-6 14H6M-2 19H2"/><text class="t-pin" x="898" y="746">GND ร่วม (= LOAD−)</text>
+  </g>
+</svg>

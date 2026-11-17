@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 660" class="dg dg-system" role="img" aria-labelledby="sys-title sys-desc">
+  <title id="sys-title">แผนภาพบล็อกของระบบ</title>
+  <desc id="sys-desc">แผงโซลาร์ชาร์จแบต LiFePO4 ผ่านชาร์จเจอร์ ขั้ว LOAD ผ่านฟิวส์ 2A แยกไปที่แอมป์ PAM8610 ซึ่งใช้ไฟ 12V และ MP1584 ซึ่งแปลงเป็น 5V เลี้ยง ESP32 เรดาร์ LD2410C และ DFPlayer เรดาร์ส่งสัญญาณให้ ESP32 สั่ง DFPlayer เล่นเสียง ส่งเสียงเข้าแอมป์ ออกลำโพงฮอร์น</desc>
+  <defs>
+    <marker id="sys-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="arr-head" d="M0 0L10 5L0 10Z"/>
+    </marker>
+    <marker id="sys-arr-sig" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="arr-head-sig" d="M0 0L10 5L0 10Z"/>
+    </marker>
+  </defs>
+
+  <!-- power arrows -->
+  <g class="w w-pos" marker-end="url(#sys-arr)">
+    <path d="M200 56V86"/>
+    <path d="M200 136V166"/>
+    <path d="M95 225V246"/>
+    <path d="M305 225V246"/>
+    <path d="M305 298V326"/>
+  </g>
+  <path class="w w-pos" d="M200 206V225M95 225H305"/>
+  <path class="w w-pos" d="M282 113H296" marker-start="url(#sys-arr)" marker-end="url(#sys-arr)"/>
+  <text class="t-pin" x="289" y="146" text-anchor="middle">ฟิวส์ 5A</text>
+
+  <!-- signal arrows -->
+  <g class="w w-sig dash" marker-end="url(#sys-arr-sig)">
+    <path d="M300 404V424"/>
+    <path d="M300 472V492"/>
+    <path d="M220 516H196V284H184"/>
+  </g>
+  <path class="w w-aud" d="M95 298V582" marker-end="url(#sys-arr)"/>
+
+  <!-- boxes -->
+  <g>
+    <rect class="box box-power" x="120" y="10" width="160" height="46" rx="10"/>
+    <text class="t-title" x="200" y="39" text-anchor="middle">แผงโซลาร์ 20W</text>
+
+    <rect class="box box-power" x="120" y="90" width="160" height="46" rx="10"/>
+    <text class="t-title" x="200" y="119" text-anchor="middle">ชาร์จเจอร์ PWM</text>
+
+    <rect class="box box-power" x="298" y="90" width="96" height="46" rx="10"/>
+    <text class="t-sub" x="346" y="110" text-anchor="middle">แบต</text>
+    <text class="t-pin" x="346" y="127" text-anchor="middle">LiFePO4</text>
+
+    <rect class="box box-power" x="130" y="170" width="140" height="36" rx="10"/>
+    <text class="t-sub" x="200" y="193" text-anchor="middle">LOAD → ฟิวส์ 2A</text>
+
+    <rect class="box box-audio" x="10" y="250" width="170" height="48" rx="10"/>
+    <text class="t-title" x="95" y="272" text-anchor="middle">แอมป์ PAM8610</text>
+    <text class="t-pin" x="95" y="290" text-anchor="middle">ใช้ไฟ 12V</text>
+
+    <rect class="box box-power" x="220" y="250" width="170" height="48" rx="10"/>
+    <text class="t-title" x="305" y="272" text-anchor="middle">MP1584</text>
+    <text class="t-pin" x="305" y="290" text-anchor="middle">12V → 5V</text>
+
+    <rect class="frame" x="208" y="330" width="188" height="226" rx="12"/>
+    <text class="t-pin t-5v" x="384" y="348" text-anchor="end">ไฟ 5V</text>
+
+    <rect class="box box-logic" x="220" y="356" width="160" height="46" rx="10"/>
+    <text class="t-title" x="300" y="385" text-anchor="middle">เรดาร์ LD2410C</text>
+
+    <rect class="box box-logic" x="220" y="426" width="160" height="46" rx="10"/>
+    <text class="t-title" x="300" y="455" text-anchor="middle">ESP32 (สมอง)</text>
+
+    <rect class="box box-audio" x="220" y="494" width="160" height="46" rx="10"/>
+    <text class="t-title" x="300" y="523" text-anchor="middle">DFPlayer + SD</text>
+
+    <rect class="box box-audio" x="10" y="586" width="170" height="48" rx="10"/>
+    <text class="t-title" x="95" y="615" text-anchor="middle">ลำโพงฮอร์น</text>
+  </g>
+
+  <!-- legend -->
+  <path class="w w-pos" d="M220 590H250"/><text class="t-pin" x="258" y="594">ไฟเลี้ยง</text>
+  <path class="w w-sig dash" d="M220 614H250"/><text class="t-pin" x="258" y="618">สัญญาณ</text>
+  <path class="w w-aud" d="M220 638H250"/><text class="t-pin" x="258" y="642">เสียง</text>
+</svg>

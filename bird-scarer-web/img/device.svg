@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" class="dg dg-device" role="img" aria-label="ภาพเครื่องไล่นก: แผงโซลาร์ กล่องอุปกรณ์พร้อมเรดาร์ และลำโพงฮอร์น">
+  <!-- solar panel -->
+  <g class="dv-panel">
+    <path class="dv-panel-face" d="M28 22L112 14L120 64L36 72Z"/>
+    <path class="dv-panel-line" d="M56 19.5L63 69.5M84 17L92 67M32 47L116 39"/>
+    <path class="dv-pole" d="M76 70V104"/>
+  </g>
+  <!-- sun -->
+  <circle class="dv-sun" cx="196" cy="28" r="12"/>
+  <path class="dv-sun-ray" d="M196 8V2M196 54V48M176 28H170M222 28H216M182 14L178 10M214 46L210 42M182 42L178 46M214 10L210 14"/>
+  <!-- box -->
+  <rect class="dv-box" x="44" y="100" width="76" height="58" rx="8"/>
+  <circle class="dv-led" cx="58" cy="114" r="3.5"/>
+  <path class="dv-wave" d="M128 116Q136 129 128 142M138 108Q150 129 138 150M148 100Q164 129 148 158"/>
+  <!-- horn -->
+  <g class="dv-horn">
+    <rect x="22" y="128" width="14" height="22" rx="2"/>
+    <path d="M22 132L4 120V158L22 146Z"/>
+  </g>
+  <!-- bird -->
+  <path class="dv-bird" d="M184 112q8 -10 18 -4q6 -8 16 -6q-8 2 -10 10q2 10 -10 14q-12 2 -20 -6q-4 -4 6 -8z"/>
+  <circle class="dv-bird-eye" cx="208" cy="106" r="1.6"/>
+</svg>

@@ -1,0 +1,7 @@
+{
+  "mimeTypes": {
+    ".ino": "text/plain",
+    ".json": "application/json",
+    ".svg": "image/svg+xml"
+  }
+}

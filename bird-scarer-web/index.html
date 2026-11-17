@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>เครื่องไล่นกพิราบ พลังงานโซลาร์ – คู่มือประกอบ</title>
+  <meta name="description" content="คู่มือประกอบเครื่องไล่นกพิราบพลังงานโซลาร์ ด้วย ESP32 เรดาร์ LD2410C และลำโพงฮอร์น แบบทีละขั้นตอน ภาษาไทย">
+  <meta name="theme-color" content="#0f766e" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b1416" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">ข้ามไปเนื้อหา</a>
+
+  <header class="topbar">
+    <nav class="nav" aria-label="สารบัญ">
+      <a class="nav-brand" href="#top" aria-label="ไล่นกโซลาร์ กลับขึ้นด้านบน">
+        <img src="img/favicon.svg" alt="" width="28" height="28">
+        <span>ไล่นกโซลาร์</span>
+      </a>
+      <ul class="nav-list">
+        <li><a href="#overview">ภาพรวม</a></li>
+        <li><a href="#bom">อุปกรณ์</a></li>
+        <li><a href="#steps">ขั้นตอน</a></li>
+        <li><a href="#wiring">ผังต่อสาย</a></li>
+        <li><a href="#firmware">เฟิร์มแวร์</a></li>
+        <li><a href="#radar">ตั้งค่าเรดาร์</a></li>
+        <li><a href="#troubleshoot">แก้ปัญหา</a></li>
+        <li><a href="#safety">ข้อควรระวัง</a></li>
+      </ul>
+    </nav>
+    <div class="nav-progress" aria-hidden="true"><span id="navProgress"></span></div>
+  </header>
+
+  <main id="main">
+    <!-- 1. Hero -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-text">
+        <p class="eyebrow">คู่มือ DIY ทีละขั้นตอน</p>
+        <h1 id="hero-title">สร้างเครื่องไล่นกพิราบ พลังงานโซลาร์</h1>
+        <p class="hero-lede">ESP32 + เรดาร์ LD2410C + ลำโพงฮอร์น ตรวจจับเมื่อนกมาเกาะแล้วเปิดเสียงไล่ ใช้ไฟจากแผงโซลาร์ ไม่ต้องเดินสายไฟบ้าน</p>
+        <ul class="hero-facts">
+          <li><span class="fact-label">งบประมาณ</span><span class="fact-value">~3,900 บาท</span><span class="fact-note">ไม่รวมเครื่องมือ</span></li>
+          <li><span class="fact-label">เวลาประกอบ</span><span class="fact-value">~1 วัน</span><span class="fact-note">ไม่รวมรอสเปรย์แห้ง/ทดสอบ 24 ชม.</span></li>
+          <li><span class="fact-label">ความยาก</span><span class="fact-value">ปานกลาง</span><span class="fact-note">ต้องบัดกรีเป็น</span></li>
+        </ul>
+        <div class="hero-actions no-print">
+          <a class="btn btn-primary" href="#steps">เริ่มทำตามขั้นตอน</a>
+          <a class="btn" href="#bom">ดูรายการของที่ต้องซื้อ</a>
+        </div>
+      </div>
+      <div class="hero-art" data-svg="img/device.svg"></div>
+    </section>
+
+    <!-- 2. Overview -->
+    <section id="overview" aria-labelledby="overview-title">
+      <h2 id="overview-title"><span class="sec-no">1</span>ภาพรวมระบบ</h2>
+      <div class="split">
+        <figure class="diagram diagram-system" data-svg="img/system.svg"></figure>
+        <div class="prose">
+          <h3>ทำงานอย่างไร</h3>
+          <ol>
+            <li><strong>เรดาร์ LD2410C</strong> ตรวจจับสิ่งเคลื่อนไหวในระยะ 1.5–2 ม. รอบจุดที่นกชอบเกาะ</li>
+            <li><strong>ESP32</strong> ยืนยันว่าเจอจริง ตรวจช่วงเวลาทำงานและแรงดันแบต แล้วเปิดแอมป์</li>
+            <li><strong>DFPlayer</strong> สุ่มเล่นเสียงเหยี่ยว/นกตกใจจากการ์ด SD ส่งเข้า<strong>แอมป์ PAM8610</strong> ออก<strong>ลำโพงฮอร์น</strong></li>
+            <li>เล่นจบ ESP32 ปิดแอมป์เพื่อประหยัดไฟ</li>
+          </ol>
+          <h3>ระบบไฟ</h3>
+          <p>แผงโซลาร์ 20W ชาร์จแบต LiFePO4 12V ผ่านชาร์จเจอร์ ขั้ว <strong>LOAD</strong> ของชาร์จเจอร์จ่ายไฟให้วงจร (และตัดไฟเองเมื่อแบตต่ำ) แอมป์ใช้ 12V โดยตรง ส่วน ESP32 เรดาร์ และ DFPlayer ใช้ 5V จาก MP1584</p>
+          <p class="callout callout-info"><strong>GND ของวงจรทั้งหมดต่อจากขั้ว LOAD−</strong> ของชาร์จเจอร์ ไม่ต่อจากขั้วลบแบตโดยตรง</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. BOM -->
+    <section id="bom" aria-labelledby="bom-title">
+      <h2 id="bom-title"><span class="sec-no">2</span>รายการอุปกรณ์</h2>
+      <div class="totals" aria-live="polite">
+        <div class="total"><span class="total-label">รวมทั้งหมด</span><span class="total-value" id="totAll">–</span></div>
+        <div class="total"><span class="total-label">ไม่รวมเครื่องมือ</span><span class="total-value" id="totNoTools">–</span></div>
+        <div class="total total-ok"><span class="total-label">ซื้อแล้ว</span><span class="total-value" id="totBought">–</span></div>
+        <div class="total total-due"><span class="total-label">เหลือต้องซื้อ</span><span class="total-value" id="totLeft">–</span></div>
+      </div>
+      <div class="toolbar no-print">
+        <div class="chips" role="group" aria-label="กรองตามหมวด" id="bomFilters"></div>
+        <div class="toolbar-actions">
+          <button type="button" class="btn btn-small" id="bomCsv">ดาวน์โหลด CSV</button>
+          <button type="button" class="btn btn-small btn-ghost" id="bomReset">ล้างติ๊ก</button>
+        </div>
+      </div>
+      <p class="filter-sum" id="bomFilterSum" aria-live="polite"></p>
+      <div class="table-wrap">
+        <table class="bom" id="bomTable">
+          <caption class="sr-only">รายการอุปกรณ์ จำนวน ราคา และคำค้น</caption>
+          <thead>
+            <tr>
+              <th scope="col" class="c-check">ซื้อแล้ว</th>
+              <th scope="col">รายการ</th>
+              <th scope="col" class="c-num">จำนวน</th>
+              <th scope="col" class="c-num">ราคา/ชิ้น</th>
+              <th scope="col" class="c-num">รวม</th>
+              <th scope="col">คำค้น</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="note">ราคาเป็นราคาประมาณการใน Shopee/Lazada อาจต่างไปตามร้านและช่วงเวลา</p>
+      <noscript><p class="callout callout-warn">ต้องเปิด JavaScript เพื่อแสดงรายการอุปกรณ์ ดูข้อมูลดิบได้ที่ <a href="data/bom.json">data/bom.json</a></p></noscript>
+    </section>
+
+    <!-- 4. Steps -->
+    <section id="steps" aria-labelledby="steps-title">
+      <h2 id="steps-title"><span class="sec-no">3</span>ขั้นตอนการประกอบ</h2>
+      <div class="progress-box">
+        <div class="progress-head">
+          <span id="stepsCount">0 / 0 ขั้น</span>
+          <button type="button" class="btn btn-small btn-ghost no-print" id="stepsReset">เริ่มใหม่</button>
+        </div>
+        <div class="progress" role="progressbar" aria-label="ความคืบหน้า" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="stepsBar"><span></span></div>
+      </div>
+      <ol class="steps" id="stepsList"></ol>
+    </section>
+
+    <!-- 5. Wiring -->
+    <section id="wiring" aria-labelledby="wiring-title">
+      <h2 id="wiring-title"><span class="sec-no">4</span>ผังต่อสาย</h2>
+      <p class="hint no-print">ลากเพื่อเลื่อนดู ใช้สองนิ้วถ่าง ปุ่ม + / − หรือ Ctrl + ล้อเมาส์เพื่อซูม กด "พอดีจอ" เพื่อดูทั้งผัง</p>
+      <div class="zoom" id="wiringZoom">
+        <div class="zoom-tools no-print" role="group" aria-label="ซูมผังต่อสาย">
+          <button type="button" class="zbtn" data-zoom="in" aria-label="ซูมเข้า">+</button>
+          <button type="button" class="zbtn" data-zoom="out" aria-label="ซูมออก">−</button>
+          <button type="button" class="zbtn zbtn-text" data-zoom="reset">พอดีจอ</button>
+          <button type="button" class="zbtn zbtn-text" data-zoom="full">เต็มจอ</button>
+        </div>
+        <div class="zoom-stage" data-svg="img/wiring.svg"></div>
+      </div>
+
+      <h3>ไฟเลี้ยง</h3>
+      <ul class="power-list">
+        <li>แผงโซลาร์ <span class="arrow">→</span> ขั้ว <strong>PV</strong> ของชาร์จเจอร์</li>
+        <li>แบต LiFePO4 <span class="arrow">→</span> <strong>ฟิวส์ 5A</strong> <span class="arrow">→</span> ขั้ว <strong>BAT</strong> ของชาร์จเจอร์</li>
+        <li>ขั้ว <strong>LOAD</strong> <span class="arrow">→</span> <strong>ฟิวส์ 2A</strong> <span class="arrow">→</span> (1) แอมป์ PAM8610 ขา 12V &nbsp;(2) MP1584 IN</li>
+        <li>MP1584 OUT <strong>5.0V</strong> <span class="arrow">→</span> ESP32 VIN, LD2410C VCC, DFPlayer VCC</li>
+        <li><strong>GND ทุกตัวต่อร่วมกัน</strong> (ที่ขั้ว LOAD−)</li>
+      </ul>
+
+      <h3>สัญญาณ</h3>
+      <div class="table-wrap">
+        <table class="pins">
+          <caption class="sr-only">ตารางต่อสายสัญญาณ</caption>
+          <thead><tr><th scope="col">จาก</th><th scope="col">ไป</th><th scope="col">หมายเหตุ</th></tr></thead>
+          <tbody>
+            <tr><td>LD2410C OUT</td><td>ESP32 GPIO 27</td><td></td></tr>
+            <tr><td>DFPlayer TX</td><td>ESP32 GPIO 16</td><td></td></tr>
+            <tr><td>DFPlayer RX</td><td>ตัวต้านทาน 1kΩ → ESP32 GPIO 17</td><td></td></tr>
+            <tr><td>DFPlayer BUSY</td><td>ESP32 GPIO 26</td><td>LOW = กำลังเล่น</td></tr>
+            <tr><td>DFPlayer DAC_R</td><td>PAM8610 IN</td><td>ต่อ GND ของ DFPlayer กับแอมป์ร่วมกัน</td></tr>
+            <tr><td>PAM8610 SD</td><td>ESP32 GPIO 25</td><td>LOW = ปิดแอมป์ (บางโมดูลกลับขั้ว)</td></tr>
+            <tr><td>PAM8610 OUT</td><td>ลำโพงฮอร์น</td><td>ห้ามต่อขา OUT− ลง GND</td></tr>
+            <tr><td>LOAD+</td><td>100kΩ → GPIO 34 → 22kΩ → GND</td><td>ตัวแบ่งแรงดันวัดแบต + 100nF คร่อม GPIO34–GND</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6. Firmware -->
+    <section id="firmware" aria-labelledby="firmware-title">
+      <h2 id="firmware-title"><span class="sec-no">5</span>เฟิร์มแวร์</h2>
+      <p>ไฟล์ <code>firmware/bird_scarer_solar.ino</code> ต้องการบอร์ด ESP32 core 2.x ขึ้นไป และไลบรารี <strong>DFRobotDFPlayerMini</strong></p>
+      <div class="code-tools no-print">
+        <button type="button" class="btn btn-small" id="fwCopy" disabled>คัดลอกโค้ด</button>
+        <a class="btn btn-small" id="fwDownload" href="firmware/bird_scarer_solar.ino" download>ดาวน์โหลด .ino</a>
+        <span class="code-status" id="fwStatus" role="status"></span>
+      </div>
+      <h3>ค่าที่ปรับได้</h3>
+      <p class="hint">ค่าเหล่านี้อยู่ในส่วน <code>ตั้งค่า</code> ด้านบนของโค้ด แก้แล้วอัปโหลดใหม่</p>
+      <div class="table-wrap">
+        <table class="settings" id="fwSettings">
+          <caption class="sr-only">ค่าที่ปรับได้ในเฟิร์มแวร์</caption>
+          <thead><tr><th scope="col">ชื่อ</th><th scope="col">ค่าในโค้ด</th><th scope="col">ความหมาย / วิธีปรับ</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <details class="code-details" id="fwDetails" open>
+        <summary>ดูโค้ดทั้งหมด</summary>
+        <pre class="code" tabindex="0" aria-label="โค้ดเฟิร์มแวร์"><code id="fwCode">กำลังโหลด…</code></pre>
+      </details>
+    </section>
+
+    <!-- 7. Radar -->
+    <section id="radar" aria-labelledby="radar-title">
+      <h2 id="radar-title"><span class="sec-no">6</span>ตั้งค่าเรดาร์ LD2410C</h2>
+      <ol class="plain-steps">
+        <li>ติดตั้งแอป <strong>HLKRadarTool</strong> จาก Google Play หรือ App Store (ผู้พัฒนา Hi-Link) และเปิด Bluetooth กับ Location บนมือถือ</li>
+        <li>จ่ายไฟ 5V ให้ LD2410C เปิดแอป จะเห็นอุปกรณ์ชื่อขึ้นต้นด้วย <code>HLK-LD2410</code> แตะเพื่อเชื่อมต่อ (ถ้าถามรหัส ค่าเริ่มต้นคือ <code>HiLink</code>)</li>
+        <li>หน้าแรกจะเห็นสถานะ <em>Moving / Stationary / None</em> และระยะเป้าหมาย ลองโบกมือดูว่าค่าเปลี่ยน</li>
+        <li>เข้าหน้าตั้งค่า (Parameter settings) กำหนด:
+          <ul>
+            <li><strong>Max motion gate</strong> = 2–3</li>
+            <li><strong>Max static gate</strong> = 2–3</li>
+            <li><strong>Unmanned duration</strong> = 1 วินาที</li>
+          </ul>
+          กด <em>Save / Send</em> ทุกครั้งหลังแก้
+        </li>
+        <li>เปิด <strong>Engineering mode</strong> เพื่อดูกราฟพลังงานของแต่ละ gate แบบ realtime ตอนที่<strong>ไม่มีอะไรเคลื่อนไหว</strong>จดค่าพลังงานพื้นหลังของแต่ละ gate</li>
+        <li>ตั้งค่าเกณฑ์ (threshold) ของแต่ละ gate ให้สูงกว่าพลังงานพื้นหลังประมาณ 10–15 <strong>ค่าเกณฑ์ยิ่งต่ำ ยิ่งไว</strong> gate ที่ไกลกว่าระยะที่ต้องการให้ตั้งเป็น 100 (ปิด)</li>
+        <li>ปิด Engineering mode แล้วทดสอบ: โยนผ้าหรือของเล็กๆ ผ่านจุดที่นกเกาะ เรดาร์ควรตรวจจับ แต่ไม่ควรตรวจจับใบไม้หรือรถที่อยู่ไกลออกไป</li>
+        <li>เมื่อตั้งค่าเสร็จ ปิด Bluetooth ของโมดูลในแอปได้ (ถ้าต้องการ) เพื่อไม่ให้คนอื่นเชื่อมต่อ</li>
+      </ol>
+      <div class="table-wrap">
+        <table class="pins">
+          <caption>ระยะของแต่ละ gate (ความละเอียด 0.75 ม.)</caption>
+          <thead><tr><th scope="col">Gate</th><th scope="col">ระยะ</th><th scope="col">ใช้กับ</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>0 – 0.75 ม.</td><td>นกเกาะชิดกล่อง</td></tr>
+            <tr><td>1</td><td>0.75 – 1.5 ม.</td><td>ขอบบัวใกล้</td></tr>
+            <tr><td>2</td><td>1.5 – 2.25 ม.</td><td>ขอบบัว/มุมหลังคา (ค่าแนะนำสูงสุด)</td></tr>
+            <tr><td>3</td><td>2.25 – 3.0 ม.</td><td>ใช้เมื่อติดตั้งไกลจากจุดเกาะ</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="callout callout-tip">💡 ขา <strong>OUT</strong> ของ LD2410C จะเป็น HIGH เมื่อตรวจเจอ และกลับเป็น LOW หลังจากไม่มีอะไรเคลื่อนไหวนานเท่ากับ Unmanned duration</p>
+    </section>
+
+    <!-- 8. Troubleshooting -->
+    <section id="troubleshoot" aria-labelledby="ts-title">
+      <h2 id="ts-title"><span class="sec-no">7</span>ทดสอบและแก้ปัญหา</h2>
+      <div class="accordion">
+        <details>
+          <summary>Serial ขึ้น "DFPlayer not found"</summary>
+          <ul>
+            <li>โค้ดจะลองเชื่อมต่อ 5 ครั้ง ถ้าไม่สำเร็จจะรีสตาร์ตเองแล้วลองใหม่ ถ้าเห็นข้อความนี้วนซ้ำ แปลว่ามีปัญหาจริง ให้ตรวจตามข้อด้านล่าง</li>
+            <li>สลับสาย TX/RX: DFPlayer <strong>TX → GPIO 16</strong>, GPIO 17 → 1kΩ → DFPlayer <strong>RX</strong></li>
+            <li>ตรวจว่ามีตัวต้านทาน 1kΩ และค่าถูกต้อง (น้ำตาล-ดำ-แดง)</li>
+            <li>การ์ด SD ต้องฟอร์แมตเป็น <strong>FAT32</strong> และเสียบแน่น</li>
+            <li>ชื่อไฟล์ต้องเป็น <code>0001.mp3</code>, <code>0002.mp3</code> … อยู่ที่ root ของการ์ด</li>
+            <li>ลองเปลี่ยนเป็น DFPlayer ตัวสำรอง (บางล็อตมีชิปต่างรุ่น)</li>
+          </ul>
+        </details>
+        <details>
+          <summary>เล่นได้ (Serial แจ้งว่าเล่น) แต่ไม่มีเสียงออกฮอร์น</summary>
+          <ul>
+            <li>ขา <strong>SD</strong> ของแอมป์: ลองสลับค่า <code>AMP_ON_LEVEL</code> เป็นค่าตรงข้าม</li>
+            <li>GND ของ DFPlayer กับ GND ของแอมป์ต้องต่อร่วมกัน</li>
+            <li>หมุนปุ่มวอลุ่มบนแอมป์ขึ้น (บางรุ่นหมุนสุดซ้ายคือเงียบ)</li>
+            <li>วัดไฟที่ขา 12V ของแอมป์ ต้องได้ 12–14V</li>
+            <li>ตรวจว่าต่อ IN และ OUT เป็นช่องเดียวกัน (L กับ L หรือ R กับ R)</li>
+          </ul>
+        </details>
+        <details>
+          <summary>ดังเองบ่อยโดยไม่มีนก</summary>
+          <ul>
+            <li>ลด max gate หรือเพิ่มค่าเกณฑ์ (ลดความไว) ในแอป HLKRadarTool</li>
+            <li>หันเรดาร์หนีใบไม้ กิ่งไม้ ผ้าที่ตากไว้ และถนน</li>
+            <li>เพิ่มค่า <code>RADAR_CONFIRM_MS</code> ทีละ 200–500 ms ให้ต้องเจอนานขึ้นก่อนเล่นเสียง</li>
+            <li>ตรวจว่ากล่องยึดแน่น ไม่สั่นตามลม</li>
+          </ul>
+        </details>
+        <details>
+          <summary>ไม่ตรวจจับนก</summary>
+          <ul>
+            <li>เพิ่มความไว (ลดค่าเกณฑ์) ของ gate 0–2</li>
+            <li>ย้ายจุดติดตั้งให้ใกล้จุดที่นกเกาะมากขึ้น (ไม่เกิน 2 ม.)</li>
+            <li>ตรวจว่าไม่มีโลหะ ฟอยล์ หรือแบตบังด้านหน้าเรดาร์ในกล่อง</li>
+            <li>ดูใน Engineering mode ว่าตอนนกเกาะ พลังงาน gate ไหนขึ้น แล้วตั้งเกณฑ์ gate นั้นให้ต่ำลง</li>
+          </ul>
+        </details>
+        <details>
+          <summary>แบตลดลงเรื่อยๆ</summary>
+          <ul>
+            <li>ตรวจว่าแผงไม่โดนเงา (แม้เงาแค่บางส่วนก็ทำให้ชาร์จลดลงมาก) และเช็ดฝุ่นบนแผง</li>
+            <li>ชาร์จเจอร์ต้องตั้งเป็นโหมด <strong>LiFePO4</strong></li>
+            <li>ลดระดับเสียง (<code>VOL_MAX</code>) หรือความถี่ในการเล่น และย่นช่วงเวลาทำงาน</li>
+            <li>ตรวจว่าแอมป์ปิดเมื่อไม่ได้เล่น (ขา SD ทำงาน)</li>
+          </ul>
+        </details>
+        <details>
+          <summary>มีเสียงป๊อปตอนเปิดแอมป์</summary>
+          <ul>
+            <li>เพิ่มค่า delay ในฟังก์ชัน <code>ampOn()</code> ให้แอมป์นิ่งก่อนเริ่มเล่นเสียง</li>
+            <li>ตรวจว่า GND ร่วมกันดี และสายสัญญาณ DAC_R สั้น</li>
+          </ul>
+        </details>
+        <details>
+          <summary>นกเริ่มชิน กลับมาเกาะอีก</summary>
+          <ul>
+            <li>เพิ่มไฟล์เสียงใหม่ๆ และสลับชุดเสียงทุก 2–4 สัปดาห์</li>
+            <li>ใช้ร่วมกับหนามกันนกหรือตาข่ายในจุดที่นกชอบเกาะ</li>
+            <li>ทำความสะอาดคราบมูลนกในจุดเดิม เพราะนกจะกลับมาที่ที่มีร่องรอยเดิม</li>
+          </ul>
+        </details>
+      </div>
+    </section>
+
+    <!-- 9. Safety -->
+    <section id="safety" aria-labelledby="safety-title">
+      <h2 id="safety-title"><span class="sec-no">8</span>ข้อควรระวังด้านความปลอดภัยและเพื่อนบ้าน</h2>
+      <div class="safety">
+        <ul>
+          <li><span class="safety-icon" aria-hidden="true">🔋</span><div><strong>อย่าลัดวงจรแบต LiFePO4</strong> ใส่ฟิวส์ใกล้ขั้วแบตเสมอ และถอดฟิวส์ทุกครั้งที่แก้ไขสายไฟ</div></li>
+          <li><span class="safety-icon" aria-hidden="true">🪜</span><div><strong>งานบนหลังคาหรือที่สูง</strong> ให้มีคนช่วยจับบันได หรือจ้างช่าง</div></li>
+          <li><span class="safety-icon" aria-hidden="true">🔊</span><div><strong>ลำโพง 25W ดังมาก</strong> ตั้งให้ทำงานเฉพาะกลางวัน ตั้งระดับเสียงให้พอดี และคุยกับเพื่อนบ้านก่อนติดตั้ง</div></li>
+          <li><span class="safety-icon" aria-hidden="true">🕊️</span><div><strong>ไม่ใช้วิธีทำร้ายนก</strong> เช่น ยาเบื่อ หรือกาวดัก เครื่องนี้มีไว้ไล่ ไม่ใช่ทำร้าย</div></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>คู่มือนี้จัดทำเพื่อการทำเองใช้เอง ตรวจสอบสเปกอุปกรณ์จริงที่ซื้อมาทุกครั้งก่อนต่อไฟ</p>
+  </footer>
+
+  <button type="button" class="to-top no-print" id="toTop" aria-label="กลับขึ้นด้านบน">↑</button>
+
+  <template id="stepTpl">
+    <li class="step">
+      <article>
+        <header class="step-head">
+          <span class="step-no"></span>
+          <div class="step-titles">
+            <h3 class="step-title"></h3>
+            <p class="step-time"></p>
+          </div>
+          <label class="step-done"><input type="checkbox"><span>เสร็จแล้ว</span></label>
+        </header>
+        <p class="step-summary"></p>
+        <p class="step-needs"></p>
+        <ol class="step-items"></ol>
+        <div class="step-boxes"></div>
+      </article>
+    </li>
+  </template>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>
