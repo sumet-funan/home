@@ -2,6 +2,10 @@
 
 A small collection of personal projects.
 
+## Home page
+
+`index.html` at the repo root is a Thai-language menu page that links to every app below. It is live at https://sumet-funan.github.io/home/. It is one HTML file with no build step. To add a new app, add an entry to the `apps` array in its `<script>` (`href`, `icon`, `name`, `desc`, `tag`, and `accent` as a `[light, dark]` colour pair). For an app with a build step, point `href` at the built folder, as `greenhouse/app/` does.
+
 ## Math Lesson
 
 A Thai-language math practice web app for kids, covering addition, subtraction, multiplication, and division. Built with vanilla HTML/JS, jQuery, Bootstrap 5, and SweetAlert2 — no build step required, just open `math-lesson/index.html` in a browser.
