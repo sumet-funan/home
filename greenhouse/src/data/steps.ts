@@ -64,6 +64,8 @@ export const CAMERAS = {
   cover: { pos: [-5200, 3600, 5400], target: [lastX / 2, 1300, -D.HALF] },
   curtain: offset([lastX / 2, 900, 0], [0, 900, 4600]),
   saran: { pos: [lastX / 2 + 300, 1150, -300], target: [lastX / 2, 2050, -D.HALF] },
+  // มองจากด้านเหนือ (ม่านฝั่งเหนือม้วนขึ้น) เห็นพื้นทั้งแปลง
+  floorSide: { pos: [lastX / 2 - 900, 4300, 3300], target: [lastX / 2, 0, -D.HALF] },
   floor: { pos: [lastX + 2400, 2600, -D.HALF + 400], target: [lastX / 2, 200, -D.HALF] },
 } satisfies Record<string, CameraView>;
 export type CameraName = keyof typeof CAMERAS;
@@ -771,7 +773,7 @@ export const STEPS: Step[] = [
     n: 1,
     title: 'ปูพลาสติกคลุมวัชพืช',
     text: 'ปูทั้งพื้น ทับรอยต่อ 20 ซม. ทับขอบด้วยก้อนอิฐ',
-    camera: 'floor',
+    camera: 'floorSide',
     add: ['weed-cover'],
     anim: 'weedCover',
   },
@@ -781,7 +783,7 @@ export const STEPS: Step[] = [
     n: 2,
     title: 'ตำแหน่งแถว',
     text: 'วัดจากแนวเสาด้านเหนือ: เว้น 0.60 ม. → แถวเดี่ยว 0.45 ม. → ทางเดิน 0.60 ม. → แถวคู่ 0.90 ม. → เหลือถึงแนวเสาใต้ 0.45 ม. ทางเดินอยู่ที่ 1.05–1.65 ม. ตรงกับช่องประตูพอดี',
-    camera: 'floor',
+    camera: 'floorSide',
     add: ['row-marks'],
     anim: 'rows',
   },
@@ -791,7 +793,7 @@ export const STEPS: Step[] = [
     n: 3,
     title: 'ตั้งสตั๊กบล็อก 15 จุด',
     text: 'แนวละ 5 จุด ห่างกัน 1.35 ม. จุดแรกห่างแนวโครง 1 เข้ามา 0.30 ม. จุดละ 5 ก้อน วางนอนซ้อนกัน สูงประมาณ 35 ซม. ด้านยาว 39 ซม. ขวางแถว ตั้งสตั๊ก 1 แนวตรงกลางแถวกล่องแต่ละแถว (3 แถว)',
-    camera: 'floor',
+    camera: 'floorSide',
     add: ['stacks'],
     anim: 'stacks',
   },

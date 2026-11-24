@@ -3,6 +3,8 @@ import { JOINTS, RAILS } from '../data/geometry';
 import { STEPS } from '../data/steps';
 import { CALLOUTS, DIMS, HOSES, SPRINGS, TAG_DIMS } from './notes';
 import { NUDGE } from './config';
+import { PARTS } from '../data/parts';
+import { PART_STEPS } from '../data/usage';
 import { ANIM } from './state';
 import { FINAL, boltsAt, enteringAt, leavingAt, poseChangesAt, sceneAt } from './sceneState';
 import { buildTimeline } from './timeline';
@@ -89,6 +91,11 @@ describe('แอนิเมชัน', () => {
       .map((x) => x.frame);
     tl.kill();
     expect(starts).toEqual(['5', '2', '3', '4']);
+  });
+
+  it('การ์ดชิ้นส่วน: ทุกชิ้นในตารางมีขั้นที่ใช้', () => {
+    const unused = Object.keys(PARTS).filter((p) => !PART_STEPS[p]?.length);
+    expect(unused).toEqual([]);
   });
 
   it('ระยะ 4: ตั้งโครงทั้ง 5 จากท่านอน', () => {

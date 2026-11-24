@@ -110,4 +110,5 @@ export const MAT_X = {
   plate: xray(MAT.plate, true),
   soil: xray(MAT.soil, true),
   concrete: xray(MAT.concrete, true),
+  wood: xray(MAT.wood, true),
 };

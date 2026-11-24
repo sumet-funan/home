@@ -11,7 +11,7 @@ import { JOINTS, RAILS, frameMatrix, groundY, type FramePose, type V3 } from '..
 import { SPEC } from '../data/spec';
 import { MIX_AT, STEPS } from '../data/steps';
 import { ANIM, easeInOut, easeOut, enterOf, seg } from '../anim/state';
-import { CALLOUTS, DIMS, HOSES, PLUMB, SPRINGS, TAG_DIMS, TAG_MARKS, TAPE_BANDS, type Dim, type Hose } from '../anim/notes';
+import { CALLOUTS, DIMS, FRAME_DIMS, HOSES, LAYOUT_DIMS, PLUMB, SPRINGS, TAG_DIMS, TAG_MARKS, TAPE_BANDS, type Dim, type Hose } from '../anim/notes';
 import { jointPoint } from '../anim/sceneState';
 import { boxMatrix, UNIT_BOX } from './geom3';
 import { COLORS, MAT } from './materials';
@@ -19,12 +19,13 @@ import { Enter, itemT } from './Enter';
 
 const JOINT_BY_ID = new Map(JOINTS.map((j) => [j.id, j]));
 
-export function Specials({ stepIdx, visible, poses }: { stepIdx: number; visible: Set<string>; poses: Record<number, FramePose> }) {
+export function Specials({ stepIdx, visible, poses, showDims }: { stepIdx: number; visible: Set<string>; poses: Record<number, FramePose>; showDims: boolean }) {
   const step = STEPS[stepIdx];
   const id = step?.id ?? '';
   const tagDims = Object.entries(TAG_DIMS).filter(([tag]) => visible.has(tag));
   const tagMarks = Object.entries(TAG_MARKS).filter(([tag]) => visible.has(tag));
   const lastZoom = step?.zoom?.[step.zoom.length - 1];
+  const mainDims = !showDims ? [] : poses[1]?.kind === 'up' && visible.has('f1:posts') ? FRAME_DIMS : visible.has('pin-D') ? LAYOUT_DIMS : [];
   return (
     <>
       {(CALLOUTS[id] ?? []).map((c, i) => (
@@ -32,6 +33,9 @@ export function Specials({ stepIdx, visible, poses }: { stepIdx: number; visible
       ))}
       {(DIMS[id] ?? []).map((d, i) => (
         <DimLine key={`${id}.d${i}`} d={d} progress={() => seg(ANIM.callout, 0, 1)} />
+      ))}
+      {mainDims.map((d, i) => (
+        <DimLine key={`main.${mainDims.length}.${i}`} d={d} progress={() => 1} />
       ))}
       {tagDims.flatMap(([tag, dims]) => dims.map((d, i) => <DimLine key={`${tag}.${i}`} d={d} progress={() => enterOf(tag)} />))}
       {tagMarks.flatMap(([tag, pts]) =>
@@ -266,7 +270,7 @@ function Plumb() {
       const b = bubbles.current[i];
       // ฟองอากาศแกว่งแล้วนิ่งตรงกลาง
       const s = seg(w, 0.15, 0.85);
-      if (b) b.position.x = 18 * (1 - easeOut(s)) * Math.cos(s * Math.PI * 5);
+      if (b) b.position.x = 30 * (1 - easeOut(s)) * Math.cos(s * Math.PI * 5);
     });
   });
   return (
@@ -282,10 +286,10 @@ function Plumb() {
               <mesh material={MAT.level} scale={[LEVEL.width, LEVEL.length, LEVEL.thick]} geometry={UNIT_BOX} />
               {/* หลอดฟองแนวนอนที่หัวระดับ */}
               <mesh material={MAT.hose} position={[0, LEVEL.length / 2 - 60, LEVEL.thick / 2 + 6]} rotation={[0, 0, Math.PI / 2]}>
-                <cylinderGeometry args={[9, 9, 60, 10]} />
+                <cylinderGeometry args={[14, 14, 90, 12]} />
               </mesh>
               <mesh ref={(el) => (bubbles.current[i] = el)} material={MAT.bubble} position={[0, LEVEL.length / 2 - 60, LEVEL.thick / 2 + 8]}>
-                <sphereGeometry args={[6, 10, 8]} />
+                <sphereGeometry args={[11, 12, 10]} />
               </mesh>
             </group>
             <FloatText

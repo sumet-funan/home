@@ -19,6 +19,8 @@ export interface SceneProps {
   selected: string | null;
   showSkins: boolean;
   showLabels: boolean;
+  /** เส้นวัดขนาดหลัก */
+  showDims: boolean;
   xray: boolean;
   /** index ของขั้นที่กำลังแสดง */
   stepIdx: number;
@@ -52,6 +54,10 @@ export function Scene(p: SceneProps) {
       camera={{ position: [c.px, c.py, c.pz], fov: 45, near: 0.05, far: 200 }}
       onPointerMissed={() => p.onSelect(null)}
       gl={{ antialias: !isMobile }}
+      onCreated={({ gl }) => {
+        // ตอนพัฒนา: window.__gl.info.render.calls = จำนวน draw call ต่อเฟรม
+        if (import.meta.env.DEV) (window as unknown as { __gl: unknown }).__gl = gl;
+      }}
     >
       <color attach="background" args={['#cfe3ee']} />
       <fog attach="fog" args={['#cfe3ee', 30, 90]} />
@@ -75,7 +81,7 @@ export function Scene(p: SceneProps) {
           <Covers visible={p.visible} showSkins={p.showSkins} highlight={p.highlight} onSelect={(id) => p.onSelect(id)} />
           <Floor visible={p.visible} />
           <FrameMarks visible={p.visible} poses={p.poses} />
-          <Specials stepIdx={p.stepIdx} visible={p.visible} poses={p.poses} />
+          <Specials stepIdx={p.stepIdx} visible={p.visible} poses={p.poses} showDims={p.showDims} />
           <PinLetters visible={p.visible} />
           {p.showLabels && (
             <>
@@ -118,16 +124,32 @@ function CameraRig({ controls, inset, onUserOrbit }: { controls: React.RefObject
     cam.updateProjectionMatrix();
   }, [camera, size.width, size.height, inset.right, inset.bottom]);
 
+  // แตะเฉย ๆ (เช่น แตะเลือกชิ้นส่วน) ไม่นับ ต้องลากเกิน 6 px หรือหมุนล้อซูม จึงเข้าโหมดหมุนดูเอง
+  const el = useThree((st) => st.gl.domElement);
   useEffect(() => {
-    const c = controls.current;
-    if (!c) return;
-    const start = () => {
+    let from: [number, number] | null = null;
+    const free = () => {
+      if (!ANIM.camDriven) return;
       ANIM.camDriven = false;
       cb.current();
     };
-    c.addEventListener('start', start);
-    return () => c.removeEventListener('start', start);
-  });
+    const down = (e: PointerEvent) => (from = [e.clientX, e.clientY]);
+    const move = (e: PointerEvent) => {
+      if (from && Math.hypot(e.clientX - from[0], e.clientY - from[1]) > 6) free();
+    };
+    const up = () => (from = null);
+    el.addEventListener('pointerdown', down);
+    el.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    el.addEventListener('wheel', free, { passive: true });
+    return () => {
+      el.removeEventListener('pointerdown', down);
+      el.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      el.removeEventListener('wheel', free);
+    };
+  }, [el]);
+
 
   useFrame(() => {
     const c = controls.current;

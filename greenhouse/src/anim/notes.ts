@@ -264,3 +264,19 @@ export const TAPE_BANDS: { frame: number | null; piece: BoxPiece }[] = (() => {
   }
   return out;
 })();
+
+// ─────────────────────────── เส้นวัดหลัก (สวิตช์ "ระยะ") ───────────────────────────
+const out = 300; // ระยะที่เส้นวัดยื่นออกนอกโรงเรือน (ภาพประกอบ)
+/** ขนาดหลักของโรงเรือน — แสดงเมื่อโครง 1 ตั้งแล้ว */
+export const FRAME_DIMS: Dim[] = [
+  { from: [-out, 150, 0], to: [-out, 150, -W], label: 'กว้าง ' + m2(W) },
+  { from: [0, 150, out], to: [LAST, 150, out], label: 'ยาว ' + m2(LAST) },
+  { from: [-out, 0, out], to: [-out, D.H, out], label: 'เสา ' + m2(D.H) },
+  { from: [-out, 0, -HALF], to: [-out, L.ridgeHeight, -HALF], label: 'ยอด ' + m2(L.ridgeHeight) },
+  { from: [0, D.H + 200, out], to: [L.bay, D.H + 200, out], label: 'ช่อง ' + m2(L.bay) },
+];
+/** ผังหมุด — แสดงเมื่อตอกหมุด D แล้ว แต่ยังไม่มีโครงตั้ง */
+export const LAYOUT_DIMS: Dim[] = [
+  { from: lift(LAYOUT_POINTS.A, 60), to: lift(LAYOUT_POINTS.B, 60), label: m2(W) },
+  { from: lift(LAYOUT_POINTS.A, 60), to: lift(LAYOUT_POINTS.D, 60), label: m2(LAST) },
+];

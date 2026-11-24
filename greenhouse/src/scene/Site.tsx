@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
 import { ASSEMBLY_SLAB, D, MARKERS, PITS, ROPES, TEMP_BRACES, groundY, frameMatrix, type FramePose, type Pit, type Rope, type V2 } from '../data/geometry';
 import { ASSUMED, SPEC } from '../data/spec';
-import { enterOf } from '../anim/state';
+import { ANIM, enterOf } from '../anim/state';
 import { COLORS, MAT, MAT_X } from './materials';
 import { boxMatrix, UNIT_BOX } from './geom3';
 import { Enter, itemT } from './Enter';
@@ -158,6 +158,16 @@ function PitView({ p, o, k, n }: { p: Pit; o: SiteOpts; k: number; n: number }) 
   );
 }
 
+/** ลานและไม้หนุนโปร่งชั่วคราวตอนซูมน็อตใต้โครง (ANIM.autoXray) */
+function SeeThrough({ normal, see, ...rest }: { normal: THREE.Material; see: THREE.Material } & JSX.IntrinsicElements['mesh']) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame(() => {
+    const want = ANIM.autoXray ? see : normal;
+    if (ref.current && ref.current.material !== want) ref.current.material = want;
+  });
+  return <mesh ref={ref} material={normal} {...rest} />;
+}
+
 /** ไม้หนุน 5 ท่อน วางขวางใต้โครง: ใต้ปลายเสา กลางเสา มุมไหล่ คานรัด และใกล้สัน (y ในพิกัดโครง) */
 const SUPPORT_Y = [100, 900, 1450, 2000, 2400];
 
@@ -168,7 +178,7 @@ function AssemblySlab({ poses, supports }: { poses: Record<number, FramePose>; s
   return (
     <group>
       <Enter tag="slab" mode="pop" center={[s.cx, s.top, s.cz]}>
-        <mesh geometry={UNIT_BOX} material={MAT.concrete} position={[s.cx, (g + s.top) / 2 - 20, s.cz]} scale={[s.sizeX, s.top - g + 40, s.sizeZ]} receiveShadow />
+        <SeeThrough normal={MAT.concrete} see={MAT_X.concrete} geometry={UNIT_BOX} position={[s.cx, (g + s.top) / 2 - 20, s.cz]} scale={[s.sizeX, s.top - g + 40, s.sizeZ]} receiveShadow />
       </Enter>
       {supports &&
         flatFrames > 0 &&
@@ -176,9 +186,10 @@ function AssemblySlab({ poses, supports }: { poses: Record<number, FramePose>; s
           const x = new THREE.Vector3(0, y, 0).applyMatrix4(frameMatrix(1, { kind: 'flat', stack: 0 })).x;
           return (
             <Enter key={y} tag="supports" k={i} n={SUPPORT_Y.length}>
-              <mesh
+              <SeeThrough
+                normal={MAT.wood}
+                see={MAT_X.wood}
                 geometry={UNIT_BOX}
-                material={MAT.wood}
                 position={[x, s.top + ASSUMED.assemblySupport / 2, s.cz]}
                 scale={[90, ASSUMED.assemblySupport, D.W + 400]}
                 castShadow

@@ -23,6 +23,19 @@ export interface ViewOpts {
   onSelect: (id: string) => void;
 }
 
+/** ซูมน็อตบนลานประกอบ: เหล็กที่ไม่ใช่ชิ้นใหม่โปร่งชั่วคราว (ANIM.autoXray) */
+function useAutoXray(m: Member, o: ViewOpts) {
+  const ref = useRef<THREE.Mesh[]>([]);
+  const normal = materialFor(m, o);
+  const see = m.material === 'steel' ? MAT_X.steel : MAT_X.plate;
+  const keep = o.selected === m.piece || o.highlight.has(m.tag);
+  useFrame(() => {
+    const want = ANIM.autoXray && !keep ? see : normal;
+    for (const mesh of ref.current) if (mesh && mesh.material !== want) mesh.material = want;
+  });
+  return { ref, normal };
+}
+
 function materialFor(m: Member, o: ViewOpts) {
   if (o.selected === m.piece) return MAT.selected;
   if (o.highlight.has(m.tag)) return MAT.highlight;
@@ -37,16 +50,17 @@ const click = (o: ViewOpts, m: Member) => (e: ThreeEvent<MouseEvent>) => {
 
 function PlaneMesh({ m, o }: { m: PlaneMember; o: ViewOpts }) {
   const g = useMemo(() => planeGeometry(m), [m]);
-  return <mesh geometry={g} material={materialFor(m, o)} castShadow receiveShadow onClick={click(o, m)} userData={{ piece: m.piece }} />;
+  const { ref, normal } = useAutoXray(m, o);
+  return <mesh ref={(el) => (ref.current[0] = el!)} geometry={g} material={normal} castShadow receiveShadow onClick={click(o, m)} userData={{ piece: m.piece }} />;
 }
 
 function BoxMesh({ m, o }: { m: BoxMember; o: ViewOpts }) {
   const mats = useMemo(() => m.boxes.map(boxMatrix), [m]);
-  const mat = materialFor(m, o);
+  const { ref, normal } = useAutoXray(m, o);
   return (
     <>
       {mats.map((mx, i) => (
-        <mesh key={i} geometry={UNIT_BOX} material={mat} matrix={mx} matrixAutoUpdate={false} castShadow receiveShadow onClick={click(o, m)} />
+        <mesh key={i} ref={(el) => (ref.current[i] = el!)} geometry={UNIT_BOX} material={normal} matrix={mx} matrixAutoUpdate={false} castShadow receiveShadow onClick={click(o, m)} />
       ))}
     </>
   );

@@ -192,7 +192,14 @@ export function buildTimeline(idx: number): gsap.core.Timeline {
   const tightenIds = new Set(tightenAt(idx));
   const stops = zoomStops(step?.zoom ?? [], poses);
   const done = new Set<string>();
+  // ซูมน็อตของโครงที่นอนบนลาน: ตัวเมียอยู่ใต้โครง → ทำเหล็กและลานโปร่งชั่วคราว
+  const underSlab = (stop: { joints: Joint[] }) => stop.joints.some((j) => j.space.kind === 'frame' && poses[j.space.frame]?.kind === 'flat');
+  let xrayOn = false;
   stops.forEach((stop, si) => {
+    if (underSlab(stop) !== xrayOn) {
+      xrayOn = !xrayOn;
+      tl.set(ANIM, { autoXray: xrayOn ? 1 : 0 }, t + TIMING.zoom * 0.6);
+    }
     tl.to(ANIM.cam, { ...zoomView(stop.center, base), duration: TIMING.zoom, ease: 'power2.inOut' }, t);
     t += TIMING.zoom;
     if (special?.at === 'lastStop' && si === stops.length - 1) {
@@ -221,6 +228,7 @@ export function buildTimeline(idx: number): gsap.core.Timeline {
     ANIM.bolts[j.id] = 0;
     tl.to(ANIM.bolts, { [j.id]: 1, duration: TIMING.boltQuick, ease: 'none' }, t + (k / Math.max(1, rest.length)) * TIMING.boltQuick);
   });
+  if (xrayOn) tl.set(ANIM, { autoXray: 0 }, t + TIMING.zoom * 0.4);
   if (stops.length) tl.to(ANIM.cam, { ...viewOf(base), duration: TIMING.zoom, ease: 'power2.inOut' }, t);
   if (stops.length || rest.length) t += Math.max(stops.length ? TIMING.zoom : 0, rest.length ? TIMING.boltQuick * 2 : 0);
 

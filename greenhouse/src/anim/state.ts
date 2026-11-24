@@ -31,6 +31,8 @@ export const ANIM = {
   nudgeK: 0,
   /** ชนิดแอนิเมชันพิเศษของขั้นที่กำลังเล่น */
   stepAnim: '' as string,
+  /** 1 = ทำเหล็กและลานโปร่งชั่วคราว ให้เห็นตัวเมียใต้โครงตอนซูมน็อตบนลานประกอบ */
+  autoXray: 0,
   /** แอนิเมชันพิเศษของขั้น 0..1 */
   special: 0,
   /** ป้ายชี้จุด (callout) 0..1 */
@@ -57,6 +59,7 @@ export function resetAnim() {
   ANIM.nudge = {};
   ANIM.nudgeK = 0;
   ANIM.stepAnim = '';
+  ANIM.autoXray = 0;
   ANIM.special = 0;
   ANIM.callout = 0;
 }

@@ -7,6 +7,7 @@ import { Scene } from './scene/Scene';
 import { PHASES, STEPS, stepIndexById } from './data/steps';
 import { PARTS, type PartId } from './data/parts';
 import { MEMBER_BY_ID } from './data/geometry';
+import { PART_STEPS } from './data/usage';
 import { TIMING } from './anim/config';
 import { ANIM } from './anim/state';
 import { buildTimeline, stepCamera, viewOf } from './anim/timeline';
@@ -40,6 +41,7 @@ export default function App() {
   const [skins, setSkins] = useState(true);
   const [labels, setLabels] = useState(true);
   const [xray, setXray] = useState(false);
+  const [dims, setDims] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
   const [checks, setChecks] = useState<Checks>(() => loadChecks());
   const [inset, setInset] = useState({ right: 0, bottom: 0 });
@@ -193,6 +195,7 @@ export default function App() {
         selected={selected}
         showSkins={skins}
         showLabels={labels}
+        showDims={dims}
         xray={xray}
         stepIdx={idx}
         animBolts={animBolts}
@@ -210,6 +213,7 @@ export default function App() {
         <div className="pointer-events-auto flex flex-wrap gap-1.5 rounded-xl bg-slate-900/85 px-2 py-1.5 text-xs shadow-lg ring-1 ring-white/10">
           <Toggle on={skins} set={setSkins} text="พลาสติก-มุ้ง" />
           <Toggle on={labels} set={setLabels} text="ป้ายชื่อ" />
+          <Toggle on={dims} set={setDims} text="ระยะ" />
           <Toggle on={xray} set={setXray} text="X-ray" />
         </div>
         {freeCam && (
@@ -260,6 +264,23 @@ export default function App() {
             {part.ends && <Row k="ปลาย" v={part.ends} />}
             {part.note && <Row k="หมายเหตุ" v={part.note} />}
           </dl>
+          {partId && PART_STEPS[partId] && (
+            <div className="mt-2">
+              <p className="text-xs text-slate-500">ใช้ในขั้น (กดเพื่อไปดู)</p>
+              <div className="mt-1 flex flex-wrap gap-1">
+                {PART_STEPS[partId].map((i) => (
+                  <button
+                    key={i}
+                    onClick={() => go(i)}
+                    title={STEPS[i]?.title ?? 'หน้าสรุป'}
+                    className={'rounded-md px-2 py-0.5 text-xs font-medium ' + (i === idx ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-700 hover:bg-orange-100')}
+                  >
+                    {i >= FINAL ? 'สรุป' : `${STEPS[i].phase}-${STEPS[i].n}`}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
