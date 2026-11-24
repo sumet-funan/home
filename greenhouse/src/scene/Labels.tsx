@@ -40,7 +40,8 @@ interface Lbl {
 }
 
 /** ป้ายชื่อชิ้นส่วน — ติดบนโครง 3 (โครงกลาง) หรือโครง 1 และชิ้นตัวอย่างอื่น ๆ */
-export function PartLabels({ visible, poses }: { visible: Set<string>; poses: Record<number, FramePose> }) {
+/** only = แสดงเฉพาะป้ายของชิ้นเหล่านี้ (ชิ้นที่ปรากฏใหม่ในขั้นนี้) · ไม่ส่ง = แสดงทั้งหมด */
+export function PartLabels({ visible, poses, only }: { visible: Set<string>; poses: Record<number, FramePose>; only?: Set<string> }) {
   const f = poses[3] ? 3 : 1;
   const pose = poses[f];
   const vis = (t: string) => visible.has(t);
@@ -82,7 +83,7 @@ export function PartLabels({ visible, poses }: { visible: Set<string>; poses: Re
   w('slab', [ASSEMBLY_SLAB.cx, ASSEMBLY_SLAB.top + 30, ASSEMBLY_SLAB.cz + ASSEMBLY_SLAB.sizeZ / 2 - 150], 'ลานประกอบ');
   return (
     <>
-      {out.map((l) => (
+      {out.filter((l) => !only || only.has(l.tag)).map((l) => (
         <Tag key={l.text} at={l.at} text={l.text} tag={l.tag} frame={l.frame} />
       ))}
     </>

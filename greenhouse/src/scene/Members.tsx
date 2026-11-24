@@ -5,10 +5,12 @@ import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { MEMBERS, JOINTS, SCREWS, frameMatrix, type BoxMember, type FramePose, type Joint, type Member, type PlaneMember, type Screw, type V3 } from '../data/geometry';
 import { SPEC } from '../data/spec';
 import { ANIM, easeInOut } from '../anim/state';
+import { FLY_AS_ONE, enterMode, memberGroup } from '../anim/config';
 import { MAT, MAT_X } from './materials';
 import { boxMatrix, planeGeometry, UNIT_BOX } from './geom3';
 import { AnimatedBolts, BoltSet, ScrewSet } from './Bolts';
 import { Enter } from './Enter';
+import { CurtainPipe, DoorSwing } from './Motions';
 
 export interface ViewOpts {
   visible: Set<string>;
@@ -52,6 +54,16 @@ function BoxMesh({ m, o }: { m: BoxMember; o: ViewOpts }) {
 
 const MemberMesh = ({ m, o }: { m: Member; o: ViewOpts }) => (m.kind === 'plane' ? <PlaneMesh m={m} o={o} /> : <BoxMesh m={m} o={o} />);
 
+/** ชิ้นบางชิ้นมีการเคลื่อนไหวเฉพาะ (ท่อม้วนม่านเลื่อนตามม่าน) */
+const MemberWithMotion = ({ m, o }: { m: Member; o: ViewOpts }) =>
+  m.id === 'rollPipe.n' ? (
+    <CurtainPipe>
+      <MemberMesh m={m} o={o} />
+    </CurtainPipe>
+  ) : (
+    <MemberMesh m={m} o={o} />
+  );
+
 /** จุดกลางของชิ้นทั้งหมดในป้ายเดียวกัน (พิกัดกลุ่มแม่) — ใช้เป็นจุดอ้างอิงตอนลอยเข้า */
 function centerOf(members: Member[], joints: Joint[], screws: Screw[]): V3 {
   const pts: THREE.Vector3[] = [];
@@ -75,32 +87,56 @@ function TagGroups({ members, joints, screws, parent, o }: { members: Member[]; 
   return (
     <>
       {tags.map((tag) => {
-        const ms = members.filter((m) => m.tag === tag);
-        const js = joints.filter((j) => j.tag === tag);
-        const ss = screws.filter((s) => s.tag === tag);
-        return (
-          <TagGroup key={tag} tag={tag} ms={ms} js={js} ss={ss} parent={parent} o={o}>
-            {ms.map((m) => (
-              <MemberMesh key={m.id} m={m} o={o} />
-            ))}
-            <BoltSet joints={js} />
-            <ScrewSet screws={ss} />
-          </TagGroup>
-        );
+        const body = <TagGroup tag={tag} ms={members.filter((m) => m.tag === tag)} js={joints.filter((j) => j.tag === tag)} ss={screws.filter((s) => s.tag === tag)} parent={parent} o={o} />;
+        return tag === 'door' ? <DoorSwing key={tag}>{body}</DoorSwing> : <group key={tag}>{body}</group>;
       })}
     </>
   );
 }
 
-function TagGroup({ tag, ms, js, ss, parent, children }: { tag: string; ms: Member[]; js: Joint[]; ss: Screw[]; parent?: THREE.Matrix4; o: ViewOpts; children: ReactNode }) {
-  // จุดกลางคิดใหม่เมื่อรายการชิ้นเปลี่ยน
-  const key = `${ms.length}.${js.length}.${ss.length}`;
+/**
+ * ป้ายเดียว: ถ้ามีหลายชุด (เช่น ท่อแนวยาว 24 ท่อน) ให้ทยอยลอยเข้าทีละชุด
+ * น็อตและสกรูของป้ายปรากฏตอนท้าย
+ */
+function TagGroup({ tag, ms, js, ss, parent, o }: { tag: string; ms: Member[]; js: Joint[]; ss: Screw[]; parent?: THREE.Matrix4; o: ViewOpts }) {
+  const key = `${ms.map((m) => m.id).join()}|${js.length}|${ss.length}`;
+  const groups = useMemo(() => {
+    const map = new Map<string, Member[]>();
+    for (const m of ms) {
+      const g = FLY_AS_ONE(tag) ? tag : memberGroup(m.id);
+      map.set(g, [...(map.get(g) ?? []), m]);
+    }
+    return [...map.values()].map((list) => ({ list, center: centerOf(list, [], []) }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tag, key]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const center = useMemo(() => centerOf(ms, js, ss), [tag, key]);
+  const staggered = groups.length > 1 && enterMode(tag) === 'fly';
+  if (!staggered)
+    return (
+      <Enter tag={tag} center={center} parent={parent}>
+        {ms.map((m) => (
+          <MemberWithMotion key={m.id} m={m} o={o} />
+        ))}
+        <BoltSet joints={js} />
+        <ScrewSet screws={ss} />
+      </Enter>
+    );
+  const n = groups.length + 1;
   return (
-    <Enter tag={tag} center={center} parent={parent}>
-      {children}
-    </Enter>
+    <>
+      {groups.map((g, k) => (
+        <Enter key={g.list[0].id} tag={tag} center={g.center} parent={parent} k={k} n={n}>
+          {g.list.map((m) => (
+            <MemberWithMotion key={m.id} m={m} o={o} />
+          ))}
+        </Enter>
+      ))}
+      <Enter tag={tag} mode="pop" center={center} k={n - 1} n={n}>
+        <BoltSet joints={js} />
+        <ScrewSet screws={ss} />
+      </Enter>
+    </>
   );
 }
 
@@ -111,8 +147,13 @@ const pb = new THREE.Vector3();
 const qa = new THREE.Quaternion();
 const qb = new THREE.Quaternion();
 const sc = new THREE.Vector3();
+const shift = new THREE.Matrix4();
 
-/** กลุ่มโครงหนึ่งชุด — ถ้ากำลังเปลี่ยนท่า (ยกจากลานไปตั้ง) จะไล่ตำแหน่งระหว่างท่าเดิมกับท่าใหม่ */
+/**
+ * กลุ่มโครงหนึ่งชุด
+ * - กำลังเปลี่ยนท่า (ยกจากลานไปตั้ง): ไล่ตำแหน่งระหว่างท่าเดิมกับท่าใหม่ ยกโค้งขึ้นกลางทาง
+ * - ถูกเลื่อนชั่วคราว (ANIM.nudge): เช่น นั่งบนฐานก่อนสอดอิฐ หรือระยะคลาดก่อนใส่ท่อสัน
+ */
 function FrameGroup({ f, pose, children }: { f: number; pose: FramePose; children: ReactNode }) {
   const ref = useRef<THREE.Group>(null);
   const target = useMemo(() => frameMatrix(f, pose), [f, pose]);
@@ -121,20 +162,18 @@ function FrameGroup({ f, pose, children }: { f: number; pose: FramePose; childre
     if (!g) return;
     const t = ANIM.pose[f];
     const from = ANIM.poseFrom[f];
-    if (t === undefined || t >= 1 || !from) {
-      if (!g.matrix.equals(target)) {
-        g.matrix.copy(target);
-        g.matrixWorldNeedsUpdate = true;
-      }
-      return;
+    if (t === undefined || t >= 1 || !from) g.matrix.copy(target);
+    else {
+      const e = easeInOut(t);
+      frameMatrix(f, from).decompose(pa, qa, sc);
+      target.decompose(pb, qb, sc);
+      pa.lerp(pb, e);
+      pa.y += Math.sin(Math.PI * e) * 1200;
+      qa.slerp(qb, e);
+      g.matrix.compose(pa, qa, sc.set(1, 1, 1));
     }
-    const e = easeInOut(t);
-    frameMatrix(f, from).decompose(pa, qa, sc);
-    target.decompose(pb, qb, sc);
-    pa.lerp(pb, e);
-    pa.y += Math.sin(Math.PI * e) * 1200;
-    qa.slerp(qb, e);
-    g.matrix.compose(pa, qa, sc.set(1, 1, 1));
+    const nd = ANIM.nudge[f];
+    if (nd && ANIM.nudgeK) g.matrix.premultiply(shift.makeTranslation(nd[0] * ANIM.nudgeK, nd[1] * ANIM.nudgeK, nd[2] * ANIM.nudgeK));
     g.matrixWorldNeedsUpdate = true;
   });
   return (

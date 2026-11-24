@@ -22,6 +22,8 @@ export interface SceneProps {
   xray: boolean;
   /** index ของขั้นที่กำลังแสดง */
   stepIdx: number;
+  /** ป้ายชื่อที่แสดง (ชิ้นใหม่ของขั้น) · ไม่ส่ง = ทุกป้าย */
+  labelTags?: Set<string>;
   /** น็อตที่เล่นแอนิเมชันในขั้นนี้ */
   animBolts: Set<string>;
   /** พื้นที่ที่แผงข้อความบังอยู่ (px) — กล้องจะจัดภาพให้อยู่กลางส่วนที่เหลือ */
@@ -70,14 +72,14 @@ export function Scene(p: SceneProps) {
         <group scale={MM}>
           <Site o={{ visible: p.visible, poses: p.poses, xray: p.xray }} />
           <Members o={viewOpts} />
-          <Covers visible={p.visible} showSkins={p.showSkins} onSelect={(id) => p.onSelect(id)} />
+          <Covers visible={p.visible} showSkins={p.showSkins} highlight={p.highlight} onSelect={(id) => p.onSelect(id)} />
           <Floor visible={p.visible} />
           <FrameMarks visible={p.visible} poses={p.poses} />
           <Specials stepIdx={p.stepIdx} visible={p.visible} poses={p.poses} />
           <PinLetters visible={p.visible} />
           {p.showLabels && (
             <>
-              <PartLabels visible={p.visible} poses={p.poses} />
+              <PartLabels visible={p.visible} poses={p.poses} only={p.labelTags} />
               <FrameNumbers poses={p.poses} />
             </>
           )}

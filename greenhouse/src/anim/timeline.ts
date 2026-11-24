@@ -2,10 +2,10 @@
  * สร้างไทม์ไลน์ GSAP ของแต่ละขั้นจากข้อมูลใน steps.ts
  *
  * ลำดับในหนึ่งขั้น:
- *   1. กล้องเลื่อนไปมุมของขั้น
- *   2. โครงเปลี่ยนท่า (ถ้ามี)
- *   3. ชิ้นใหม่ปรากฏ (ลอยจากกองวัสดุ / หล่น / ขุด / ลากเส้น) ทีละกลุ่ม
- *   4. แอนิเมชันพิเศษของขั้น (ถ้ามี)
+ *   1. กล้องเลื่อนไปมุมของขั้น · ของที่ไม่ใช้แล้วค่อย ๆ หายไป
+ *   2. โครงเปลี่ยนท่า (ยกตั้ง) ทีละโครง ตามด้วยไม้ค้ำ/อิฐของโครงนั้น
+ *   3. ชิ้นใหม่ปรากฏ (ลอยจากกองวัสดุ / หล่น / ขุด / เท / คลี่ / ลากเส้น) ทีละกลุ่ม
+ *   4. โครงเลื่อนเข้าตำแหน่งจริง (ถ้ามี) · แอนิเมชันพิเศษของขั้น
  *   5. ซูมเข้าน็อตทีละจุด → เสียบน็อต ใส่แหวน ขันตัวเมีย
  *   6. ถอยกล้องกลับ → ป้ายชี้จุดและเส้นวัดระยะ → ค้างภาพให้อ่าน
  */
@@ -13,21 +13,38 @@ import gsap from 'gsap';
 import * as THREE from 'three';
 import { JOINTS, MEMBERS, SCREWS, type FramePose, type Joint, type V3 } from '../data/geometry';
 import { CAMERAS, STEPS, type CameraView } from '../data/steps';
-import { TIMING, ZOOM_CLUSTER, ZOOM_DISTANCE, enterMode } from './config';
+import { LEAVE, NUDGE, NUDGE_DURATION, TIMING, ZOOM_CLUSTER, ZOOM_DISTANCE, enterMode } from './config';
 import { ANIM, resetAnim, type CamProxy } from './state';
 import { CALLOUTS, DIMS } from './notes';
-import { boltsAt, enteringAt, jointCenter, poseChangesAt, sceneAt, tightenAt } from './sceneState';
+import { FINAL, boltsAt, enteringAt, jointCenter, leavingAt, poseChangesAt, sceneAt, tightenAt } from './sceneState';
 
 const JOINT_BY_ID = new Map(JOINTS.map((j) => [j.id, j]));
 const SOLID_TAGS = new Set([...MEMBERS.map((m) => m.tag), ...SCREWS.map((s) => s.tag)]);
 
-/** ระยะเวลาของแอนิเมชันพิเศษ (วินาที) */
-export const SPECIAL: Partial<Record<string, { duration: number; at: 'afterEnter' | 'lastStop'; after?: string[] }>> = {
+/**
+ * แอนิเมชันพิเศษ (วินาที)
+ * - at: เล่นหลังชิ้นใหม่ปรากฏ หรือก่อนใส่น็อตจุดสุดท้าย
+ * - after: ป้ายที่รอให้แอนิเมชันพิเศษจบก่อนจึงปรากฏ
+ * - leaveAfter: ของที่หายไปในขั้นนี้ รอให้แอนิเมชันพิเศษจบก่อน
+ */
+export const SPECIAL: Partial<Record<string, { duration: number; at: 'afterEnter' | 'lastStop'; after?: string[]; leaveAfter?: boolean }>> = {
   // ขีดระดับขึ้นหลังน้ำในสายยางนิ่งแล้ว
   waterLevel: { duration: 5.5, at: 'afterEnter', after: ['level-marks'] },
   markDrill: { duration: 2.6, at: 'lastStop' },
+  gablePost: { duration: 2.6, at: 'lastStop' },
+  shimLevel: { duration: 5, at: 'afterEnter' },
+  plumb: { duration: 5, at: 'afterEnter' },
+  mixConcrete: { duration: 5.5, at: 'afterEnter' },
+  // ถอดไม้ค้ำหลังบ่มครบ 3 วัน
+  cure: { duration: 6, at: 'afterEnter', leaveAfter: true },
+  door: { duration: 3.5, at: 'afterEnter' },
+  springLock: { duration: 3.5, at: 'afterEnter' },
+  roofPlastic: { duration: 3.5, at: 'afterEnter' },
+  rollCurtain: { duration: 5, at: 'afterEnter' },
 };
 const TIGHTEN_DURATION = 2.6;
+/** หน้าสรุป: หมุนกล้องรอบโรงเรือน 1 รอบ */
+const ORBIT_DURATION = 16;
 
 /** จอแนวตั้งถอยกล้องออกให้เห็นทั้งภาพ */
 const distanceFactor = () => Math.min(2, Math.max(1, Math.sqrt(1.5 / ANIM.aspect)));
@@ -76,7 +93,10 @@ function groupTags(tags: string[], byFrame: boolean): string[][] {
 
 const enterDuration = (tag: string) => {
   const mode = enterMode(tag);
-  return mode === 'fly' ? TIMING.fly : mode === 'none' ? 0.01 : TIMING.fly + TIMING.groupSpread * 0.5;
+  if (mode === 'none') return 0.01;
+  if (mode === 'pour') return TIMING.fly + TIMING.groupSpread * 1.5;
+  if (mode === 'unroll') return TIMING.fly * 1.3;
+  return mode === 'fly' ? TIMING.fly : TIMING.fly + TIMING.groupSpread * 0.5;
 };
 
 export function buildTimeline(idx: number): gsap.core.Timeline {
@@ -85,26 +105,55 @@ export function buildTimeline(idx: number): gsap.core.Timeline {
   const step = STEPS[idx];
   const poses = sceneAt(idx).poses;
   const base = stepCamera(idx);
+  const special = step?.anim ? SPECIAL[step.anim] : undefined;
   ANIM.camDriven = true;
+  ANIM.stepAnim = step?.anim ?? (idx >= FINAL ? 'final' : '');
   tl.to(ANIM.cam, { ...viewOf(base), duration: TIMING.cam, ease: 'power2.inOut' }, 0);
   let t = TIMING.cam * 0.6;
 
-  // 2. โครงเปลี่ยนท่า
-  const changes = poseChangesAt(idx);
+  // 1. ของที่ไม่ใช้แล้วหายไป
+  const leaving = leavingAt(idx);
+  leaving.forEach((tag) => (ANIM.leave[tag] = 0));
+  const playLeave = (at: number) => leaving.forEach((tag, k) => tl.to(ANIM.leave, { [tag]: 1, duration: LEAVE.duration, ease: 'none' }, at + k * 0.08));
+  if (!special?.leaveAfter) playLeave(LEAVE.start);
+
+  // ชิ้นที่เลื่อนจากตำแหน่งจริงชั่วคราว
+  const nudge = step ? NUDGE[step.id] : undefined;
+  if (nudge) {
+    ANIM.nudge = nudge.frames;
+    ANIM.nudgeK = 1;
+  }
+
+  // 2. โครงเปลี่ยนท่า ตามลำดับในสเปก (ลำดับไม้ค้ำใน add) แล้วไม้ค้ำ/อิฐของโครงนั้นตามมา
+  const entering = enteringAt(idx);
+  const order = (f: number) => {
+    const i = step?.add?.indexOf(`temp-${f}`) ?? -1;
+    return i < 0 ? 100 + f : i;
+  };
+  const changes = poseChangesAt(idx).sort((a, b) => order(a.frame) - order(b.frame));
+  const withFrame = new Set<string>();
+  const poseGap = TIMING.pose * 0.7;
   changes.forEach(({ frame, from }, k) => {
+    const start = t + k * poseGap;
     ANIM.pose[frame] = 0;
     ANIM.poseFrom[frame] = from;
-    tl.to(ANIM.pose, { [frame]: 1, duration: TIMING.pose, ease: 'none' }, t + k * TIMING.poseStagger);
+    tl.to(ANIM.pose, { [frame]: 1, duration: TIMING.pose, ease: 'none' }, start);
+    for (const tag of [`temp-${frame}`, `bricks-${frame}`]) {
+      if (!entering.includes(tag)) continue;
+      withFrame.add(tag);
+      ANIM.enter[tag] = 0;
+      tl.to(ANIM.enter, { [tag]: 1, duration: TIMING.fly * 0.8, ease: 'none' }, start + TIMING.pose * 0.85);
+    }
   });
-  if (changes.length) t += TIMING.pose + (changes.length - 1) * TIMING.poseStagger;
+  if (changes.length) t += (changes.length - 1) * poseGap + TIMING.pose + (withFrame.size ? TIMING.fly * 0.7 : 0);
 
   // 3. ชิ้นใหม่ปรากฏ
-  const special = step?.anim ? SPECIAL[step.anim] : undefined;
   const later = new Set(special?.after ?? []);
   const hasBoltAnim = !!step?.zoom;
-  const enteringAll = enteringAt(idx);
-  const entering = enteringAll.filter((tag) => !later.has(tag)).filter((tag) => !(hasBoltAnim && !SOLID_TAGS.has(tag) && JOINTS.some((j) => j.tag === tag)));
-  const groups = groupTags(entering, step?.anim === 'repeatFrames');
+  const main = entering
+    .filter((tag) => !later.has(tag) && !withFrame.has(tag))
+    .filter((tag) => !(hasBoltAnim && !SOLID_TAGS.has(tag) && JOINTS.some((j) => j.tag === tag)));
+  const groups = groupTags(main, step?.anim === 'repeatFrames');
   let enterEnd = t;
   groups.forEach((g, k) => {
     const start = t + k * TIMING.flyStagger;
@@ -117,17 +166,25 @@ export function buildTimeline(idx: number): gsap.core.Timeline {
   });
   t = enterEnd;
 
-  // 4. แอนิเมชันพิเศษหลังชิ้นปรากฏ
+  // 4. โครงเลื่อนเข้าตำแหน่งจริง แล้วแอนิเมชันพิเศษ
+  if (nudge?.mode === 'settle') {
+    tl.to(ANIM, { nudgeK: 0, duration: NUDGE_DURATION, ease: 'power2.inOut' }, t);
+    t += NUDGE_DURATION;
+  }
   if (special?.at === 'afterEnter') {
     tl.to(ANIM, { special: 1, duration: special.duration, ease: 'none' }, t);
     t += special.duration;
   }
-  const deferred = enteringAll.filter((tag) => later.has(tag));
+  const deferred = entering.filter((tag) => later.has(tag));
   deferred.forEach((tag) => {
     ANIM.enter[tag] = 0;
     tl.to(ANIM.enter, { [tag]: 1, duration: enterDuration(tag), ease: 'none' }, t - 0.6);
   });
   if (deferred.length) t += enterDuration(deferred[0]) - 0.6;
+  if (special?.leaveAfter && leaving.length) {
+    playLeave(t);
+    t += LEAVE.duration + leaving.length * 0.08;
+  }
 
   // 5. ซูมน็อต
   const bolts = boltsAt(idx);
@@ -173,6 +230,30 @@ export function buildTimeline(idx: number): gsap.core.Timeline {
     tl.to(ANIM, { callout: 1, duration: 0.9, ease: 'none' }, t);
     t += TIMING.callout;
   } else ANIM.callout = 1;
+
+  // หน้าสรุป: หมุนรอบโรงเรือน 1 รอบ
+  if (idx >= FINAL) {
+    const v = viewOf(base);
+    const orbit = { a: 0 };
+    const dx = v.px - v.tx;
+    const dz = v.pz - v.tz;
+    tl.to(
+      orbit,
+      {
+        a: Math.PI * 2,
+        duration: ORBIT_DURATION,
+        ease: 'none',
+        onUpdate: () => {
+          const c = Math.cos(orbit.a);
+          const s = Math.sin(orbit.a);
+          ANIM.cam.px = v.tx + dx * c - dz * s;
+          ANIM.cam.pz = v.tz + dx * s + dz * c;
+        },
+      },
+      t,
+    );
+    t += ORBIT_DURATION;
+  }
 
   tl.to({}, { duration: TIMING.hold }, t);
   return tl;

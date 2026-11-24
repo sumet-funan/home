@@ -10,10 +10,13 @@ import { MEMBER_BY_ID } from './data/geometry';
 import { TIMING } from './anim/config';
 import { ANIM } from './anim/state';
 import { buildTimeline, stepCamera, viewOf } from './anim/timeline';
-import { FINAL, boltsAt, sceneAt, tightenAt } from './anim/sceneState';
+import { FINAL, boltsAt, displayAt, enteringAt, tightenAt } from './anim/sceneState';
 import { StepPanel } from './ui/StepPanel';
 import { CheckCard, phaseCardTitle } from './ui/PhaseCard';
 import { loadChecks, saveChecks, type Checks } from './ui/storage';
+
+/** ป้ายชื่อที่แสดงในหน้าสรุป */
+const SUMMARY_LABELS = ['roof-plastic', 'curtains', 'door', 'gable-posts', 'shelf-beams', 'foam-boxes'];
 
 const reducedMotion = typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
@@ -46,9 +49,12 @@ export default function App() {
   const speedRef = useRef(speed);
   const timer = useRef<number>();
 
-  const state = useMemo(() => sceneAt(idx), [idx]);
+  // ฉากระหว่างเล่นขั้น = หลังขั้นนี้ + ของที่กำลังหายไป
+  const state = useMemo(() => displayAt(idx), [idx]);
   const step = idx < FINAL ? STEPS[idx] : null;
   const highlight = useMemo(() => new Set(step?.add ?? []), [step]);
+  // ป้ายชื่อเฉพาะชิ้นที่ปรากฏใหม่ในขั้นนี้ (หน้าสรุปแสดงเฉพาะป้ายภาพรวม)
+  const labelTags = useMemo(() => new Set(idx >= FINAL ? SUMMARY_LABELS : enteringAt(idx)), [idx]);
   const animBolts = useMemo(() => new Set([...boltsAt(idx).map((j) => j.id), ...tightenAt(idx)]), [idx]);
 
   const go = useCallback((i: number) => {
@@ -190,6 +196,7 @@ export default function App() {
         xray={xray}
         stepIdx={idx}
         animBolts={animBolts}
+        labelTags={labelTags}
         inset={inset}
         onSelect={setSelected}
         onUserOrbit={() => setFreeCam(true)}
@@ -212,7 +219,7 @@ export default function App() {
         )}
       </div>
 
-      <StepPanel ref={panel} idx={idx} paused={paused} speed={speed} tl={tl} onGo={go} onTogglePlay={togglePlay} onReplay={() => setReplay((r) => r + 1)} onSpeed={changeSpeed} />
+      <StepPanel ref={panel} idx={idx} paused={paused} speed={speed} tl={tl} onGo={go} onTogglePlay={togglePlay} onReplay={() => setReplay((r) => r + 1)} onSpeed={changeSpeed} checks={checks} onCheck={toggleCheck} />
 
       {cardPhase && (
         <div className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center bg-slate-950/40 p-3 lg:pr-[420px]">

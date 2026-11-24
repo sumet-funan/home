@@ -52,6 +52,9 @@ export const MAT = {
   // น็อตที่กำลังใส่ (เหลือง ให้ต่างจากชิ้นใหม่สีส้ม)
   boltNew: std('#fde047', 0.4, 0.35, { emissive: '#facc15', emissiveIntensity: 0.35 }),
   drill: std('#1e293b', 0.3, 0.5),
+  level: std('#facc15', 0.1, 0.5),
+  bubble: new THREE.MeshBasicMaterial({ color: '#22c55e' }),
+  tape: std('#1f2937', 0, 0.8),
   plastic: new THREE.MeshStandardMaterial({
     color: COLORS.plastic,
     transparent: true,
@@ -80,6 +83,17 @@ export const MAT = {
     return new THREE.MeshStandardMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false, roughness: 0.9 });
   })(),
 };
+
+/** แผ่นที่ปรากฏใหม่ในขั้น: ย้อมสีส้มให้เห็นชัดขึ้น */
+export const MAT_NEW_SHEET = {
+  plastic: Object.assign(MAT.plastic.clone(), { opacity: 0.45 }),
+  mesh: MAT.mesh.clone(),
+  saran: MAT.saran.clone(),
+  weed: MAT.weed,
+};
+MAT_NEW_SHEET.plastic.color.set('#fdba74');
+MAT_NEW_SHEET.mesh.color.set('#fb923c');
+MAT_NEW_SHEET.saran.color.set('#7c2d12');
 
 export function xray<T extends THREE.Material>(m: T, on: boolean): T {
   if (!on) return m;

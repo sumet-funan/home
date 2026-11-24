@@ -24,6 +24,13 @@ export const ANIM = {
   pose: {} as Record<number, number>,
   /** ท่าเดิมของโครงที่กำลังเปลี่ยนท่า */
   poseFrom: {} as Record<number, FramePose>,
+  /** ป้ายที่กำลังหายไป → ความคืบหน้า 0..1 (1 = หายแล้ว) */
+  leave: {} as Record<string, number>,
+  /** โครงที่ถูกเลื่อนจากตำแหน่งจริงชั่วคราว (มม.) × nudgeK — เช่น โครงนั่งบนฐานก่อนสอดอิฐ / ระยะโครงก่อนใส่ท่อสัน */
+  nudge: {} as Record<number, [number, number, number]>,
+  nudgeK: 0,
+  /** ชนิดแอนิเมชันพิเศษของขั้นที่กำลังเล่น */
+  stepAnim: '' as string,
   /** แอนิเมชันพิเศษของขั้น 0..1 */
   special: 0,
   /** ป้ายชี้จุด (callout) 0..1 */
@@ -36,7 +43,8 @@ export const ANIM = {
   aspect: 1.6,
 };
 
-export const enterOf = (tag: string) => ANIM.enter[tag] ?? 1;
+/** ชิ้นของป้ายนี้ "อยู่" แค่ไหน: 0 = ยังไม่มา/หายไปแล้ว · 1 = อยู่ครบ */
+export const enterOf = (tag: string) => (tag in ANIM.leave ? 1 - ANIM.leave[tag] : (ANIM.enter[tag] ?? 1));
 export const boltOf = (id: string) => ANIM.bolts[id] ?? 1;
 
 export function resetAnim() {
@@ -45,6 +53,10 @@ export function resetAnim() {
   ANIM.tighten = {};
   ANIM.pose = {};
   ANIM.poseFrom = {};
+  ANIM.leave = {};
+  ANIM.nudge = {};
+  ANIM.nudgeK = 0;
+  ANIM.stepAnim = '';
   ANIM.special = 0;
   ANIM.callout = 0;
 }

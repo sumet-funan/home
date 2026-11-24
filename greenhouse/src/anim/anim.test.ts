@@ -1,8 +1,10 @@
 /** ตรวจข้อมูลแอนิเมชันให้ตรงกับขั้นตอน (กันพิมพ์ id ผิดตอนแก้ไฟล์) */
-import { JOINTS } from '../data/geometry';
+import { JOINTS, RAILS } from '../data/geometry';
 import { STEPS } from '../data/steps';
-import { CALLOUTS, DIMS, TAG_DIMS } from './notes';
-import { FINAL, boltsAt, enteringAt, poseChangesAt, sceneAt } from './sceneState';
+import { CALLOUTS, DIMS, HOSES, SPRINGS, TAG_DIMS } from './notes';
+import { NUDGE } from './config';
+import { ANIM } from './state';
+import { FINAL, boltsAt, enteringAt, leavingAt, poseChangesAt, sceneAt } from './sceneState';
 import { buildTimeline } from './timeline';
 
 const stepIds = new Set(STEPS.map((s) => s.id));
@@ -56,6 +58,37 @@ describe('แอนิเมชัน', () => {
       if (s.add?.length) expect(enteringAt(i).length, s.id).toBeGreaterThan(0);
       expect(poseChangesAt(i), s.id).toEqual([]);
     });
+  });
+
+  it('ข้อมูลแอนิเมชันระยะ 4–7 อ้างขั้นและรางที่มีจริง', () => {
+    for (const id of [...Object.keys(HOSES), ...Object.keys(SPRINGS), ...Object.keys(NUDGE)]) expect(stepIds.has(id), id).toBe(true);
+    const rails = new Set(RAILS.map((r) => r.id));
+    for (const ids of Object.values(SPRINGS)) {
+      expect(ids.length).toBeGreaterThan(0);
+      for (const r of ids) expect(rails.has(r), r).toBe(true);
+    }
+  });
+
+  it('ขั้นที่หายไปเล่นแอนิเมชันออก และไม่หายซ้ำในขั้นถัดไป', () => {
+    for (let i = 1; i <= FINAL; i++) {
+      const leaving = leavingAt(i);
+      const before = sceneAt(i - 1).visible;
+      for (const t of leaving) expect(before.has(t), `${STEPS[i]?.id} ${t}`).toBe(true);
+      for (const t of leavingAt(i + 1)) expect(leaving.includes(t), t).toBe(false);
+    }
+  });
+
+  it('ระยะ 4: โครง 5 ตั้งก่อนโครง 2, 3, 4', () => {
+    const i = STEPS.findIndex((s) => s.id === 'step-4-5');
+    const tl = buildTimeline(i);
+    const starts = tl
+      .getChildren()
+      .filter((c) => (c as gsap.core.Tween).targets?.()[0] === ANIM.pose)
+      .map((c) => ({ frame: Object.keys((c as gsap.core.Tween).vars).find((k) => /^\d$/.test(k)), at: c.startTime() }))
+      .sort((a, b) => a.at - b.at)
+      .map((x) => x.frame);
+    tl.kill();
+    expect(starts).toEqual(['5', '2', '3', '4']);
   });
 
   it('ระยะ 4: ตั้งโครงทั้ง 5 จากท่านอน', () => {

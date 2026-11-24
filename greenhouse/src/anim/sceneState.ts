@@ -67,3 +67,17 @@ export function jointPoint(j: Joint, poses: Record<number, FramePose>, along = 0
 
 /** จุดกลางน็อต (กึ่งกลางความหนาที่หนีบ) */
 export const jointCenter = (j: Joint, poses: Record<number, FramePose>) => jointPoint(j, poses, j.grip / 2);
+
+/** ป้ายที่หายไปในขั้นนี้ (มีก่อนหน้า แต่ไม่มีหลังขั้นนี้) — เล่นแอนิเมชันออกก่อนหาย */
+export function leavingAt(idx: number): string[] {
+  const now = sceneAt(idx).visible;
+  return [...sceneAt(idx - 1).visible].filter((t) => !now.has(t));
+}
+
+/** สิ่งที่ฉากต้องวาดระหว่างเล่นขั้น = สถานะหลังขั้น + ของที่กำลังหายไป (ท่าของโครงใช้ของเดิมถ้าโครงนั้นกำลังหาย) */
+export function displayAt(idx: number): SceneState {
+  const now = sceneAt(idx);
+  const before = sceneAt(idx - 1);
+  const visible = new Set([...now.visible, ...leavingAt(idx)]);
+  return { visible, poses: { ...before.poses, ...now.poses } };
+}

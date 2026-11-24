@@ -8,7 +8,7 @@
  * วิธีเพิ่มขั้น: เพิ่ม object ใน STEPS ตามลำดับ id "step-<ระยะ>-<ข้อ>" ต้องไม่ซ้ำ
  * ป้าย (tag) ต้องตรงกับที่ geometry.ts หรือฉากใช้ — test จะฟ้องถ้าใช้ป้ายที่ไม่มีจริง
  */
-import { frameMatrix, D, SHAPES, planeToLocal, ASSEMBLY_SLAB, DOOR, type FramePose, type V3 } from './geometry';
+import { frameMatrix, D, SHAPES, planeToLocal, ASSEMBLY_SLAB, DOOR, groundY, type FramePose, type V3 } from './geometry';
 import { Vector3 } from 'three';
 import { SPEC } from './spec';
 
@@ -33,6 +33,9 @@ const tieLocal: V3 = planeToLocal([D.HALF, D.tieY], 25);
 const braceMid = SHAPES.braceHoles[0].map((v, i) => (v + SHAPES.braceHoles[1][i]) / 2) as [number, number];
 const braceLocal: V3 = planeToLocal(braceMid, 25);
 
+/** กองผสมคอนกรีต (ขั้น 4-9) วางนอกแปลงด้านตะวันออก ใกล้หลุมโครง 1 */
+export const MIX_AT: V3 = [-1100, groundY(-1100, 700), 700];
+
 export const CAMERAS = {
   overview: { pos: [-6500, 5200, 6500], target: [lastX / 2, 900, -D.HALF] },
   pile: offset([-2600, 200, 2400], [-3200, 2600, 3800]),
@@ -48,6 +51,8 @@ export const CAMERAS = {
   slabBrace: offset(onSlab(braceLocal), [-700, 1000, 800]),
   frame1: offset([0, 1300, -D.HALF], [-4200, 1500, 4200]),
   postBase: offset([0, 100, 0], [-1300, 700, 1500]),
+  plumb: offset([0, 950, 0], [-1250, 450, 1350]),
+  mix: offset(MIX_AT, [-1300, 1500, 1900]),
   framesAll: offset(mid, [-6000, 3200, 4500]),
   ridgeTube: offset([D.frameX(2), SPEC.layout.ridgeHeight, -D.HALF], [1300, 900, 2600]),
   longTubes: { pos: [3300, 1500, -2300], target: [1500, 800, 0] },
@@ -554,7 +559,7 @@ export const STEPS: Step[] = [
     title: 'ปรับความสูงปลายเสา 1.50 ม.',
     text: 'สอดอิฐหรือหินแบนใต้ก้นเสาจนปลายบนเสาสูงจากระดับอ้างอิง 1.50 ม. เช็กด้วยสายยางระดับ',
     note: 'เสาฝังลึกไม่เท่ากันได้ แต่ปลายบนทุกต้นต้องเท่ากัน คลาดไม่เกิน 1 ซม.',
-    camera: 'postBase',
+    camera: 'frame1',
     add: ['bricks-1'],
     anim: 'shimLevel',
   },
@@ -564,7 +569,7 @@ export const STEPS: Step[] = [
     n: 4,
     title: 'ปรับดิ่ง',
     text: 'ทาบระดับน้ำแบบลูกน้ำกับเสา 2 ด้าน (ด้านกว้างและด้านแคบ) ให้ฟองอากาศอยู่กลางทั้งสองด้าน',
-    camera: 'frame1',
+    camera: 'plumb',
     anim: 'plumb',
   },
   {
@@ -621,7 +626,7 @@ export const STEPS: Step[] = [
     title: 'ผสมคอนกรีต 1 : 2 : 3',
     text: 'ปูน 1 ถัง : ทราย 2 ถัง : หิน 3 ถัง (ใช้ถังใบเดียวกันตวง) คลุกแห้งให้เข้ากันก่อน แล้วค่อย ๆ เติมน้ำทีละนิดจนข้นเหมือนโจ๊กข้น กำแล้วไม่ไหลหนี ปูน 1 ถุงเทได้ราว 2–3 หลุม',
     warn: 'อย่าเทปูนตอนดินเป็นโคลน',
-    camera: 'concrete',
+    camera: 'mix',
     anim: 'mixConcrete',
   },
   {

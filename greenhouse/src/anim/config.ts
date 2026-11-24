@@ -1,3 +1,6 @@
+import { SPEC } from '../data/spec';
+import { D } from '../data/geometry';
+
 /**
  * ตั้งค่าแอนิเมชัน — แก้ความเร็ว ลำดับ และวิธีที่ชิ้นส่วนปรากฏได้ที่ไฟล์นี้ไฟล์เดียว
  *
@@ -42,11 +45,13 @@ export const ZOOM_CLUSTER = 450;
  * - fly: ลอยจากกองวัสดุเข้าที่ (ค่าเริ่มต้นของชิ้นเหล็ก)
  * - drop: หล่นลงจากด้านบน (หมุด หลักไม้ ของวางบนพื้น)
  * - grow: โตจากผิวดินลงไป/ขึ้นมา (หลุม ฐานปูน)
+ * - pour: เทปูนครึ่งหลุม หยุดกระทุ้ง แล้วเทจนเต็ม
+ * - unroll: คลี่แผ่นออกจากขอบหนึ่ง (พลาสติก มุ้ง สแลน ผ้าคลุม)
  * - draw: ลากเส้นจากต้นไปปลาย (เชือก เทปวัด)
  * - pop: ค่อย ๆ ขยายขึ้นจากจุดเดียว (เครื่องหมาย)
  * - none: ปรากฏทันที
  */
-export type EnterMode = 'fly' | 'drop' | 'grow' | 'draw' | 'pop' | 'none';
+export type EnterMode = 'fly' | 'drop' | 'grow' | 'pour' | 'draw' | 'pop' | 'unroll' | 'none';
 
 const EXACT: Record<string, EnterMode> = {
   ground: 'none',
@@ -57,8 +62,8 @@ const EXACT: Record<string, EnterMode> = {
   'pits-main': 'grow',
   'gable-pits': 'grow',
   'pads-main': 'grow',
-  'concrete-main': 'grow',
-  'gable-concrete': 'grow',
+  'concrete-main': 'pour',
+  'gable-concrete': 'pour',
   'pit-depth': 'draw',
   'pit-covers': 'drop',
   slab: 'drop',
@@ -74,12 +79,13 @@ const EXACT: Record<string, EnterMode> = {
   'tape-diag': 'draw',
   'roof-ropes': 'draw',
   'row-marks': 'pop',
-  'weed-cover': 'pop',
-  'mesh-side': 'drop',
-  'mesh-gable': 'drop',
-  'roof-plastic': 'drop',
-  curtains: 'drop',
-  saran: 'drop',
+  'weed-cover': 'unroll',
+  tape: 'pop',
+  'mesh-side': 'unroll',
+  'mesh-gable': 'unroll',
+  'roof-plastic': 'unroll',
+  curtains: 'unroll',
+  saran: 'unroll',
   stacks: 'drop',
   'foam-boxes': 'drop',
 };
@@ -96,3 +102,39 @@ export function enterMode(tag: string): EnterMode {
 export const DROP_HEIGHT = 1800;
 /** ความสูงโค้งตอนลอยจากกองวัสดุ (มม.) */
 export const FLY_ARC = 2200;
+
+/** ของที่หายไปในขั้น: เริ่มหลังกล้องเริ่มเลื่อน ใช้เวลาเท่านี้ */
+export const LEAVE = { start: 0.5, duration: 1.1 };
+
+/**
+ * เลื่อนโครงจากตำแหน่งจริงชั่วคราว (มม. ในพิกัดโลก) เพื่อเล่าเรื่องให้เห็นภาพ
+ * - hold: ค้างไว้ทั้งขั้น
+ * - settle: เริ่มที่ค่าที่กำหนด แล้วเลื่อนกลับตำแหน่งจริงหลังชิ้นใหม่เข้าที่
+ * ค่าเลื่อนเป็นภาพประกอบเท่านั้น ไม่ใช่ตัวเลขจากสเปก
+ */
+/** ก้นเสาวางบนคอนกรีตรองก้นหลุมก่อนสอดอิฐ: ต่ำกว่าตำแหน่งจริงเท่าความสูงอิฐ */
+const brick = D.postBottom - (-SPEC.footing.depthBase + SPEC.footing.pad);
+/** ระยะโครงคลาดเล็กน้อยก่อนใส่ท่อสัน (ภาพประกอบ) */
+const loose: Record<number, [number, number, number]> = { 2: [40, 0, 0], 3: [-30, 0, 0], 4: [35, 0, 0], 5: [-45, 0, 0] };
+export const NUDGE: Record<string, { mode: 'hold' | 'settle'; frames: Record<number, [number, number, number]> }> = {
+  'step-4-2': { mode: 'hold', frames: { 1: [0, -brick, 0] } },
+  'step-4-3': { mode: 'settle', frames: { 1: [0, -brick, 0] } },
+  'step-4-5': { mode: 'hold', frames: loose },
+  'step-4-6': { mode: 'settle', frames: loose },
+};
+export const NUDGE_DURATION = 1.6;
+
+/**
+ * ชิ้นในป้ายเดียวกันที่ลอยเข้าพร้อมกันเป็นชุด (เช่น ท่อแนวยาวกับฉาก L ที่ยึดไว้ที่ปลาย)
+ * ป้ายที่มีหลายชุด ชุดจะทยอยลอยเข้าทีละชุด
+ */
+export function memberGroup(id: string): string {
+  // ฉาก L.{ชนิด}.{ฝั่ง}.{ช่อง}.{ปลาย} ไปกับ long.{ชนิด}.{ฝั่ง}.{ช่อง}
+  const L = /^L\.(\w+)\.(\w+)\.(\d+)\./.exec(id);
+  if (L) return `long.${L[1]}.${L[2]}.${L[3]}`;
+  // ฉาก L บานประตูไปกับบาน
+  if (id.startsWith('door')) return 'door';
+  return id;
+}
+/** ป้ายที่ลอยเข้าทั้งก้อน ไม่แยกชุด */
+export const FLY_AS_ONE = (tag: string) => /^f\d:/.test(tag) || tag === 'door';

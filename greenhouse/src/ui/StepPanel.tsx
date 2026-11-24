@@ -3,7 +3,8 @@
  * เส้นเวลาระยะ 0–7 · ข้อความขั้น · ⚠️ คำเตือน · ปุ่มเล่น ย้อน ถัดไป เล่นซ้ำ ความเร็ว
  */
 import { forwardRef, useEffect, useRef } from 'react';
-import { PHASES, STEPS, type Step } from '../data/steps';
+import { FINAL_CHECKLIST, PHASES, STEPS, STORM_WARNING, type Step } from '../data/steps';
+import { checkKey, type Checks } from './storage';
 import { FINAL } from '../anim/sceneState';
 
 export interface StepPanelProps {
@@ -15,6 +16,8 @@ export interface StepPanelProps {
   onTogglePlay: () => void;
   onReplay: () => void;
   onSpeed: (s: number) => void;
+  checks: Checks;
+  onCheck: (key: string, on: boolean) => void;
 }
 
 const SPEEDS = [0.5, 1, 2];
@@ -107,8 +110,25 @@ export const StepPanel = forwardRef<HTMLDivElement, StepPanelProps>(function Ste
           </>
         ) : (
           <>
-            <h2 className="text-lg font-semibold">เสร็จสมบูรณ์</h2>
-            <p className="mt-1 text-sm text-slate-300">โรงเรือนพร้อมกล่องโฟมบนชั้นวาง ลากหมุนดูรอบ ๆ ได้</p>
+            <h2 className="text-lg font-semibold">เสร็จสมบูรณ์ · เช็กลิสต์สุดท้าย</h2>
+            <p className="mt-1 text-sm text-slate-300">โรงเรือนพร้อมกล่องโฟมบนชั้นวาง กล้องหมุนรอบ 1 รอบ ลากหมุนดูเองได้</p>
+            <ul className="mt-3 flex flex-col gap-1.5">
+              {FINAL_CHECKLIST.map((t, i) => {
+                const k = checkKey('final', i);
+                return (
+                  <li key={k}>
+                    <label className="flex cursor-pointer items-start gap-2.5 rounded-lg bg-slate-800/70 px-3 py-2 text-sm leading-relaxed hover:bg-slate-800">
+                      <input type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-orange-500" checked={!!p.checks[k]} onChange={(e) => p.onCheck(k, e.target.checked)} />
+                      <span>{t}</span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-2 text-xs text-slate-400">
+              ติ๊กแล้ว {FINAL_CHECKLIST.filter((_, i) => p.checks[checkKey('final', i)]).length}/{FINAL_CHECKLIST.length} ข้อ (จำไว้ในเครื่องนี้)
+            </p>
+            <Box tone="warn">⚠️ {STORM_WARNING}</Box>
           </>
         )}
       </div>
