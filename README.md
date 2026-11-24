@@ -9,3 +9,7 @@ A Thai-language math practice web app for kids, covering addition, subtraction, 
 ## Bird Scarer
 
 A Thai-language, step-by-step build guide for a solar-powered pigeon scarer (ESP32 + HLK-LD2410C radar + DFPlayer + horn speaker): parts list with running totals, assembly steps with saved progress, wiring diagram, firmware and troubleshooting. Plain HTML/CSS/JS with no build step; serve the `bird-scarer-web` folder over HTTP (for example `npx serve bird-scarer-web`), since the page loads its data and diagrams with `fetch`.
+
+## Greenhouse
+
+A Thai-language, step-by-step 3D build guide for a 3×6 m gable salad greenhouse made of galvanized box steel and M8 bolts: every step from site layout to shelving is animated (new parts fly in from the material pile, bolts are shown going in from the right side), with end-of-phase checklists saved in the browser. Vite + React + TypeScript with three.js (react-three-fiber) and GSAP; all numbers come from `greenhouse/docs/greenhouse-spec.md` and are checked by tests. Run `npm i && npm run dev` inside `greenhouse/`; see `greenhouse/README.md` for build and GitHub Pages deployment.
