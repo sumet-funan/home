@@ -47,7 +47,25 @@ npm run dev
 
 `vite.config.ts` ตั้ง `base: './'` ไว้แล้ว เว็บจึงทำงานได้ทั้งที่โดเมนหลักและในโฟลเดอร์ย่อย
 
-### GitHub Pages (อัตโนมัติด้วย GitHub Actions)
+### GitHub Pages (วิธีที่ใช้อยู่ตอนนี้)
+
+เว็บออนไลน์อยู่ที่ **https://sumet-funan.github.io/home/greenhouse/app/**
+GitHub Pages ของ repo นี้เสิร์ฟไฟล์จาก branch `main` ตรง ๆ จึงต้อง commit ไฟล์ที่ build แล้วไว้ในโฟลเดอร์ `app/`
+
+ทุกครั้งที่แก้เว็บแล้วอยากให้ขึ้นออนไลน์:
+
+```
+npm test
+npm run build:pages
+```
+
+แล้ว commit ทั้งโค้ดและโฟลเดอร์ `app/` แล้ว push ขึ้น `main` ประมาณ 1 นาทีเว็บจะอัปเดต
+(ถ้าลืม `npm run build:pages` เว็บออนไลน์จะยังเป็นเวอร์ชันเก่า)
+
+### GitHub Pages (อัตโนมัติด้วย GitHub Actions — ทางเลือก)
+
+ถ้าไม่อยากเก็บไฟล์ build ใน repo ให้ใช้ workflow แทน แต่ต้องเปลี่ยน Pages เป็นโหมด GitHub Actions
+ซึ่ง workflow ต้องเผยแพร่โปรเจกต์อื่นใน repo (Math Lesson, Bird Scarer) ด้วย ไม่อย่างนั้นโปรเจกต์เหล่านั้นจะหายจากเว็บ
 
 โปรเจกต์นี้อยู่ในโฟลเดอร์ `greenhouse/` ของ repo ไฟล์ workflow ต้นแบบอยู่ที่ [docs/greenhouse-pages.yml](docs/greenhouse-pages.yml)
 
