@@ -44,6 +44,14 @@ export const MAT = {
   foam: std(COLORS.foam, 0, 0.9),
   pin: std(COLORS.pin, 0.1, 0.6),
   weed: std(COLORS.weed, 0, 0.95, { side: THREE.DoubleSide }),
+  // แอนิเมชัน: เส้นวัด สายยาง น้ำ จุดขีด สว่าน
+  dim: new THREE.MeshBasicMaterial({ color: '#e11d48', depthTest: false }),
+  hose: new THREE.MeshStandardMaterial({ color: '#bae6fd', transparent: true, opacity: 0.6, roughness: 0.2, depthWrite: false }),
+  water: std('#2563eb', 0, 0.2, { emissive: '#1d4ed8', emissiveIntensity: 0.4 }),
+  markRed: new THREE.MeshBasicMaterial({ color: '#dc2626' }),
+  // น็อตที่กำลังใส่ (เหลือง ให้ต่างจากชิ้นใหม่สีส้ม)
+  boltNew: std('#fde047', 0.4, 0.35, { emissive: '#facc15', emissiveIntensity: 0.35 }),
+  drill: std('#1e293b', 0.3, 0.5),
   plastic: new THREE.MeshStandardMaterial({
     color: COLORS.plastic,
     transparent: true,

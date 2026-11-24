@@ -1,9 +1,12 @@
 /** พลาสติก มุ้ง ม่าน สแลน ผ้าคลุม รางล็อก + พื้นและชั้นวาง */
 import { useMemo } from 'react';
 import { FLOOR, RAILS, SHEETS, groundY, type Sheet } from '../data/geometry';
-import { SPEC } from '../data/spec';
+import { ASSUMED, SPEC } from '../data/spec';
+
+const D_HALF = SPEC.layout.width / 2;
 import { MAT } from './materials';
 import { boxMatrix, sheetGeometry, UNIT_BOX } from './geom3';
+import { Enter } from './Enter';
 
 const lookMat = { plastic: MAT.plastic, mesh: MAT.mesh, saran: MAT.saran, weed: MAT.weed } as const;
 
@@ -28,11 +31,15 @@ export function Covers({ visible, showSkins, onSelect }: { visible: Set<string>;
   const skin = (s: Sheet) => s.look === 'weed' || showSkins;
   return (
     <group>
-      {SHEETS.filter((s) => visible.has(s.tag) && skin(s)).map((s) =>
-        s.look === 'weed' ? <WeedCover key={s.id} s={s} /> : <SheetMesh key={s.id} s={s} onSelect={onSelect} />,
-      )}
+      {SHEETS.filter((s) => visible.has(s.tag) && skin(s)).map((s) => (
+        <Enter key={s.id} tag={s.tag}>
+          {s.look === 'weed' ? <WeedCover s={s} /> : <SheetMesh s={s} onSelect={onSelect} />}
+        </Enter>
+      ))}
       {RAILS.filter((r) => visible.has(r.tag)).map((r) => (
-        <mesh key={r.id} geometry={UNIT_BOX} material={MAT.rail} matrix={boxMatrix(r.piece)} matrixAutoUpdate={false} />
+        <Enter key={r.id} tag={r.tag} center={r.piece.center}>
+          <mesh geometry={UNIT_BOX} material={MAT.rail} matrix={boxMatrix(r.piece)} matrixAutoUpdate={false} />
+        </Enter>
       ))}
     </group>
   );
@@ -56,12 +63,16 @@ export function Floor({ visible }: { visible: Set<string> }) {
   const bt = FLOOR.blockT;
   return (
     <group>
-      {visible.has('row-marks') &&
-        FLOOR.boxRows.map((r, i) => (
+      {visible.has('row-marks') && (
+        <Enter tag="row-marks" center={[3000, 0, -D_HALF]}>
+          {FLOOR.boxRows.map((r, i) => (
           <mesh key={`rm${i}`} geometry={UNIT_BOX} material={MAT.pin} position={[3000, groundY(3000, -(r.u0 + r.u1) / 2) + 8, -(r.u0 + r.u1) / 2]} scale={[5800, 4, r.u1 - r.u0 - 20]} />
-        ))}
-      {visible.has('stacks') &&
-        FLOOR.stacks.flatMap((s) =>
+          ))}
+        </Enter>
+      )}
+      {visible.has('stacks') && (
+        <Enter tag="stacks">
+          {FLOOR.stacks.flatMap((s) =>
           Array.from({ length: fl.stacks.blocks }, (_, k) => (
             <mesh
               key={`${s.id}.${k}`}
@@ -73,9 +84,12 @@ export function Floor({ visible }: { visible: Set<string> }) {
               receiveShadow
             />
           )),
-        )}
-      {visible.has('shelf-beams') &&
-        FLOOR.beams.map((b) => {
+          )}
+        </Enter>
+      )}
+      {visible.has('shelf-beams') && (
+        <Enter tag="shelf-beams" center={[3000, 400, -D_HALF]}>
+          {FLOOR.beams.map((b) => {
           const y = FLOOR.stacks[0].ground + fl.stacks.blocks * bt + SPEC.section.rect.wide / 2;
           return (
             <mesh
@@ -87,15 +101,20 @@ export function Floor({ visible }: { visible: Set<string> }) {
               castShadow
             />
           );
-        })}
-      {visible.has('foam-boxes') &&
-        FLOOR.foam.map((f) => {
-          const h = 300;
+          })}
+        </Enter>
+      )}
+      {visible.has('foam-boxes') && (
+        <Enter tag="foam-boxes">
+          {FLOOR.foam.map((f) => {
+          const h = ASSUMED.foamBoxHeight;
           const y = FLOOR.stacks[0].ground + FLOOR.beamTop + h / 2;
           return (
             <mesh key={f.id} geometry={UNIT_BOX} material={MAT.foam} position={[f.x, y, -f.u]} scale={[fl.foamBox.length - 10, h, fl.foamBox.width - 10]} castShadow receiveShadow />
           );
-        })}
+          })}
+        </Enter>
+      )}
     </group>
   );
 }

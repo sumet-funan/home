@@ -1,17 +1,16 @@
 /** ฉาก 3 มิติทั้งหมด — หน่วยข้อมูลเป็น มม. ย่อทั้งฉากเป็นเมตรด้วย scale 0.001 */
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Suspense, useEffect, useMemo, useRef } from 'react';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import { D, frameMatrix, planeToLocal, type FramePose } from '../data/geometry';
-import { SPEC } from '../data/spec';
-import { CAMERAS, type CameraName } from '../data/steps';
+import * as THREE from 'three';
+import type { FramePose } from '../data/geometry';
+import { ANIM } from '../anim/state';
 import { Members } from './Members';
 import { Site } from './Site';
 import { Covers, Floor } from './Covers';
-import { Compass, FrameNumbers, PartLabels } from './Labels';
-import { Html } from '@react-three/drei';
-import * as THREE from 'three';
+import { Compass, FrameMarks, FrameNumbers, PartLabels, PinLetters } from './Labels';
+import { Specials } from './Specials';
 
 export interface SceneProps {
   visible: Set<string>;
@@ -21,28 +20,34 @@ export interface SceneProps {
   showSkins: boolean;
   showLabels: boolean;
   xray: boolean;
-  camera: CameraName;
+  /** index ของขั้นที่กำลังแสดง */
+  stepIdx: number;
+  /** น็อตที่เล่นแอนิเมชันในขั้นนี้ */
+  animBolts: Set<string>;
+  /** พื้นที่ที่แผงข้อความบังอยู่ (px) — กล้องจะจัดภาพให้อยู่กลางส่วนที่เหลือ */
+  inset: { right: number; bottom: number };
   onSelect: (id: string | null) => void;
+  /** ผู้ใช้เริ่มหมุนกล้องเอง */
+  onUserOrbit: () => void;
 }
 
 const MM = 0.001;
-const toM = (v: readonly number[]) => v.map((x) => x * MM) as [number, number, number];
 
-const isMobile = typeof window !== 'undefined' && (window.matchMedia?.('(pointer: coarse)').matches || window.innerWidth < 768);
+export const isMobile = typeof window !== 'undefined' && (window.matchMedia?.('(pointer: coarse)').matches || window.innerWidth < 768);
 
 export function Scene(p: SceneProps) {
   const controls = useRef<OrbitControlsImpl>(null);
-  const cam = CAMERAS.overview;
   const viewOpts = useMemo(
-    () => ({ visible: p.visible, poses: p.poses, highlight: p.highlight, selected: p.selected, xray: p.xray, onSelect: (id: string) => p.onSelect(id) }),
+    () => ({ visible: p.visible, poses: p.poses, highlight: p.highlight, selected: p.selected, xray: p.xray, animBolts: p.animBolts, onSelect: (id: string) => p.onSelect(id) }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [p.visible, p.poses, p.highlight, p.selected, p.xray],
+    [p.visible, p.poses, p.highlight, p.selected, p.xray, p.animBolts],
   );
+  const c = ANIM.cam;
   return (
     <Canvas
       shadows={!isMobile}
       dpr={isMobile ? [1, 1.5] : [1, 2]}
-      camera={{ position: toM(cam.pos), fov: 45, near: 0.05, far: 200 }}
+      camera={{ position: [c.px, c.py, c.pz], fov: 45, near: 0.05, far: 200 }}
       onPointerMissed={() => p.onSelect(null)}
       gl={{ antialias: !isMobile }}
     >
@@ -68,6 +73,8 @@ export function Scene(p: SceneProps) {
           <Covers visible={p.visible} showSkins={p.showSkins} onSelect={(id) => p.onSelect(id)} />
           <Floor visible={p.visible} />
           <FrameMarks visible={p.visible} poses={p.poses} />
+          <Specials stepIdx={p.stepIdx} visible={p.visible} poses={p.poses} />
+          <PinLetters visible={p.visible} />
           {p.showLabels && (
             <>
               <PartLabels visible={p.visible} poses={p.poses} />
@@ -78,48 +85,64 @@ export function Scene(p: SceneProps) {
         </group>
       </Suspense>
       <OrbitControls ref={controls} makeDefault maxPolarAngle={Math.PI * 0.495} minDistance={0.3} maxDistance={40} enableDamping />
-      <CameraRig name={p.camera} controls={controls} />
+      <CameraRig controls={controls} inset={p.inset} onUserOrbit={p.onUserOrbit} />
     </Canvas>
   );
 }
 
 /**
- * ย้ายกล้องไปมุมของขั้นนั้น (ไม่สร้าง Canvas ใหม่)
- * จอแนวตั้งถอยกล้องออกให้เห็นทั้งโรงเรือน
+ * กล้อง: ระหว่างเล่นขั้นตอน ไทม์ไลน์คุมกล้องผ่าน ANIM.cam
+ * ถ้าผู้ใช้ลากหมุนเอง จะปล่อยให้หมุนอิสระ (โหมดหมุนดูเอง) จนกดกลับมุมแนะนำหรือเปลี่ยนขั้น
+ * แผงข้อความบังจอส่วนไหน ภาพจะเลื่อนไปอยู่กลางส่วนที่เหลือ (setViewOffset)
  */
-function CameraRig({ name, controls }: { name: CameraName; controls: React.RefObject<OrbitControlsImpl> }) {
+function CameraRig({ controls, inset, onUserOrbit }: { controls: React.RefObject<OrbitControlsImpl>; inset: { right: number; bottom: number }; onUserOrbit: () => void }) {
   const { camera, size } = useThree();
-  useEffect(() => {
-    const cam = CAMERAS[name];
-    const t = new THREE.Vector3(...toM(cam.target));
-    const p = new THREE.Vector3(...toM(cam.pos));
-    const aspect = size.width / size.height;
-    const k = Math.min(2, Math.max(1, Math.sqrt(1.5 / aspect)));
-    camera.position.copy(t.clone().add(p.sub(t).multiplyScalar(k)));
-    controls.current?.target.copy(t);
-    controls.current?.update();
-  }, [name, camera, controls, size.width, size.height]);
-  return null;
-}
+  const cb = useRef(onUserOrbit);
+  cb.current = onUserOrbit;
 
-/** เลขโครงและคำว่า "ใน" ที่เขียนด้วยปากกาเคมีบนเสา (ระยะ 3 ข้อ 10) */
-function FrameMarks({ visible, poses }: { visible: Set<string>; poses: Record<number, FramePose> }) {
-  const out: { key: string; at: [number, number, number]; text: string }[] = [];
-  for (let f = 1; f <= SPEC.layout.frameCount; f++) {
-    const pose = poses[f];
-    if (!pose || !visible.has(`f${f}:marks`)) continue;
-    for (const u of [0, D.W]) {
-      const v = new THREE.Vector3(...planeToLocal([u, 500], 14)).applyMatrix4(frameMatrix(f, pose));
-      out.push({ key: `${f}.${u}`, at: [v.x, v.y, v.z], text: `${f} ใน` });
+  useEffect(() => {
+    const cam = camera as THREE.PerspectiveCamera;
+    const w = size.width;
+    const h = size.height;
+    const r = Math.min(inset.right, w * 0.6);
+    const b = Math.min(inset.bottom, h * 0.6);
+    const fw = w - r;
+    const fh = Math.max(1, h - b);
+    ANIM.aspect = fw / fh;
+    // มุมกล้อง 45° ครอบเฉพาะส่วนที่มองเห็น ภาพที่เลยไปใต้แผงยังวาดต่อ
+    cam.aspect = fw / fh;
+    if (r > 0 || b > 0) cam.setViewOffset(fw, fh, 0, 0, w, h);
+    else cam.clearViewOffset();
+    cam.updateProjectionMatrix();
+  }, [camera, size.width, size.height, inset.right, inset.bottom]);
+
+  useEffect(() => {
+    const c = controls.current;
+    if (!c) return;
+    const start = () => {
+      ANIM.camDriven = false;
+      cb.current();
+    };
+    c.addEventListener('start', start);
+    return () => c.removeEventListener('start', start);
+  });
+
+  useFrame(() => {
+    const c = controls.current;
+    if (!c) return;
+    const a = ANIM.cam;
+    if (ANIM.camDriven) {
+      camera.position.set(a.px, a.py, a.pz);
+      c.target.set(a.tx, a.ty, a.tz);
+      camera.lookAt(c.target);
+    } else {
+      a.px = camera.position.x;
+      a.py = camera.position.y;
+      a.pz = camera.position.z;
+      a.tx = c.target.x;
+      a.ty = c.target.y;
+      a.tz = c.target.z;
     }
-  }
-  return (
-    <>
-      {out.map((m) => (
-        <Html key={m.key} position={m.at} zIndexRange={[10, 0]} style={{ pointerEvents: 'none' }}>
-          <div style={{ color: '#111827', background: 'rgba(255,255,255,.85)', padding: '0 4px', borderRadius: 3, fontWeight: 700, fontSize: 11, transform: 'translate(-50%,-50%)' }}>{m.text}</div>
-        </Html>
-      ))}
-    </>
-  );
+  });
+  return null;
 }

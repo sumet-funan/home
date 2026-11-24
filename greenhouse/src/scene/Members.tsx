@@ -1,12 +1,14 @@
 /** ชิ้นเหล็กทั้งหมด (เสา จันทัน แผ่นประกับ ท่อ ฉาก ...) และน็อต */
-import { useMemo } from 'react';
+import { useMemo, useRef, type ReactNode } from 'react';
 import * as THREE from 'three';
-import type { ThreeEvent } from '@react-three/fiber';
-import { MEMBERS, JOINTS, SCREWS, frameMatrix, type BoxMember, type FramePose, type Member, type PlaneMember } from '../data/geometry';
+import { useFrame, type ThreeEvent } from '@react-three/fiber';
+import { MEMBERS, JOINTS, SCREWS, frameMatrix, type BoxMember, type FramePose, type Joint, type Member, type PlaneMember, type Screw, type V3 } from '../data/geometry';
 import { SPEC } from '../data/spec';
+import { ANIM, easeInOut } from '../anim/state';
 import { MAT, MAT_X } from './materials';
 import { boxMatrix, planeGeometry, UNIT_BOX } from './geom3';
-import { BoltSet, ScrewSet } from './Bolts';
+import { AnimatedBolts, BoltSet, ScrewSet } from './Bolts';
+import { Enter } from './Enter';
 
 export interface ViewOpts {
   visible: Set<string>;
@@ -14,6 +16,8 @@ export interface ViewOpts {
   highlight: Set<string>;
   selected: string | null;
   xray: boolean;
+  /** น็อตที่เล่นแอนิเมชันใส่/ขันในขั้นนี้ */
+  animBolts: Set<string>;
   onSelect: (id: string) => void;
 }
 
@@ -46,54 +50,141 @@ function BoxMesh({ m, o }: { m: BoxMember; o: ViewOpts }) {
   );
 }
 
+const MemberMesh = ({ m, o }: { m: Member; o: ViewOpts }) => (m.kind === 'plane' ? <PlaneMesh m={m} o={o} /> : <BoxMesh m={m} o={o} />);
+
+/** จุดกลางของชิ้นทั้งหมดในป้ายเดียวกัน (พิกัดกลุ่มแม่) — ใช้เป็นจุดอ้างอิงตอนลอยเข้า */
+function centerOf(members: Member[], joints: Joint[], screws: Screw[]): V3 {
+  const pts: THREE.Vector3[] = [];
+  for (const m of members) {
+    if (m.kind === 'plane') {
+      const g = planeGeometry(m);
+      if (!g.boundingBox) g.computeBoundingBox();
+      pts.push(g.boundingBox!.getCenter(new THREE.Vector3()));
+    } else m.boxes.forEach((b) => pts.push(new THREE.Vector3(...b.center)));
+  }
+  joints.forEach((j) => pts.push(new THREE.Vector3(...j.at)));
+  screws.forEach((s) => pts.push(new THREE.Vector3(...s.at)));
+  if (pts.length === 0) return [0, 0, 0];
+  const c = pts.reduce((a, b) => a.add(b), new THREE.Vector3()).multiplyScalar(1 / pts.length);
+  return [c.x, c.y, c.z];
+}
+
+/** แยกชิ้นตามป้าย แล้วห่อแต่ละป้ายด้วย Enter */
+function TagGroups({ members, joints, screws, parent, o }: { members: Member[]; joints: Joint[]; screws: Screw[]; parent?: THREE.Matrix4; o: ViewOpts }) {
+  const tags = [...new Set([...members.map((m) => m.tag), ...joints.map((j) => j.tag), ...screws.map((s) => s.tag)])];
+  return (
+    <>
+      {tags.map((tag) => {
+        const ms = members.filter((m) => m.tag === tag);
+        const js = joints.filter((j) => j.tag === tag);
+        const ss = screws.filter((s) => s.tag === tag);
+        return (
+          <TagGroup key={tag} tag={tag} ms={ms} js={js} ss={ss} parent={parent} o={o}>
+            {ms.map((m) => (
+              <MemberMesh key={m.id} m={m} o={o} />
+            ))}
+            <BoltSet joints={js} />
+            <ScrewSet screws={ss} />
+          </TagGroup>
+        );
+      })}
+    </>
+  );
+}
+
+function TagGroup({ tag, ms, js, ss, parent, children }: { tag: string; ms: Member[]; js: Joint[]; ss: Screw[]; parent?: THREE.Matrix4; o: ViewOpts; children: ReactNode }) {
+  // จุดกลางคิดใหม่เมื่อรายการชิ้นเปลี่ยน
+  const key = `${ms.length}.${js.length}.${ss.length}`;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const center = useMemo(() => centerOf(ms, js, ss), [tag, key]);
+  return (
+    <Enter tag={tag} center={center} parent={parent}>
+      {children}
+    </Enter>
+  );
+}
+
 const FRAMES = Array.from({ length: SPEC.layout.frameCount }, (_, i) => i + 1);
+
+const pa = new THREE.Vector3();
+const pb = new THREE.Vector3();
+const qa = new THREE.Quaternion();
+const qb = new THREE.Quaternion();
+const sc = new THREE.Vector3();
+
+/** กลุ่มโครงหนึ่งชุด — ถ้ากำลังเปลี่ยนท่า (ยกจากลานไปตั้ง) จะไล่ตำแหน่งระหว่างท่าเดิมกับท่าใหม่ */
+function FrameGroup({ f, pose, children }: { f: number; pose: FramePose; children: ReactNode }) {
+  const ref = useRef<THREE.Group>(null);
+  const target = useMemo(() => frameMatrix(f, pose), [f, pose]);
+  useFrame(() => {
+    const g = ref.current;
+    if (!g) return;
+    const t = ANIM.pose[f];
+    const from = ANIM.poseFrom[f];
+    if (t === undefined || t >= 1 || !from) {
+      if (!g.matrix.equals(target)) {
+        g.matrix.copy(target);
+        g.matrixWorldNeedsUpdate = true;
+      }
+      return;
+    }
+    const e = easeInOut(t);
+    frameMatrix(f, from).decompose(pa, qa, sc);
+    target.decompose(pb, qb, sc);
+    pa.lerp(pb, e);
+    pa.y += Math.sin(Math.PI * e) * 1200;
+    qa.slerp(qb, e);
+    g.matrix.compose(pa, qa, sc.set(1, 1, 1));
+    g.matrixWorldNeedsUpdate = true;
+  });
+  return (
+    <group ref={ref} matrix={target} matrixAutoUpdate={false}>
+      {children}
+    </group>
+  );
+}
 
 export function Members({ o }: { o: ViewOpts }) {
   const vis = (tag: string) => o.visible.has(tag);
   const shown = MEMBERS.filter((m) => vis(m.tag));
+  const isAnim = (j: Joint) => o.animBolts.has(j.id);
   const frameJoints = (f: number) => JOINTS.filter((j) => j.space.kind === 'frame' && j.space.frame === f && vis(j.tag));
   const worldJoints = JOINTS.filter((j) => j.space.kind === 'world' && vis(j.tag));
+  const frameScrews = (f: number) => SCREWS.filter((s) => s.space.kind === 'frame' && s.space.frame === f && vis(s.tag));
+  const worldScrews = SCREWS.filter((s) => s.space.kind === 'world' && vis(s.tag));
 
   return (
     <>
       {FRAMES.map((f) => {
         const pose = o.poses[f];
-        const moving = shown.filter((m): m is PlaneMember => m.kind === 'plane' && m.frame === f && m.moves);
-        const local = shown.filter((m): m is BoxMember => m.kind === 'box' && m.space.kind === 'frame' && m.space.frame === f);
-        if (!pose || (moving.length === 0 && local.length === 0)) return null;
+        const moving = shown.filter((m) => (m.kind === 'plane' ? m.frame === f && m.moves : m.space.kind === 'frame' && m.space.frame === f));
+        const js = frameJoints(f);
+        if (!pose || (moving.length === 0 && js.length === 0)) return null;
         return (
-          <group key={f} matrix={frameMatrix(f, pose)} matrixAutoUpdate={false}>
-            {moving.map((m) => (
-              <PlaneMesh key={m.id} m={m} o={o} />
-            ))}
-            {local.map((m) => (
-              <BoxMesh key={m.id} m={m} o={o} />
-            ))}
-            <BoltSet joints={frameJoints(f)} />
-          </group>
+          <FrameGroup key={f} f={f} pose={pose}>
+            <TagGroups members={moving} joints={js.filter((j) => !isAnim(j))} screws={frameScrews(f)} parent={frameMatrix(f, pose)} o={o} />
+            <AnimatedBolts joints={js.filter(isAnim)} />
+          </FrameGroup>
         );
       })}
       {/* ชิ้นที่ติดตั้งในตำแหน่งจริง (เสาหน้าจั่ว) */}
       {FRAMES.map((f) => {
         const fixed = shown.filter((m): m is PlaneMember => m.kind === 'plane' && m.frame === f && !m.moves);
         if (fixed.length === 0) return null;
+        const mx = frameMatrix(f);
         return (
-          <group key={`fixed${f}`} matrix={frameMatrix(f)} matrixAutoUpdate={false}>
-            {fixed.map((m) => (
-              <PlaneMesh key={m.id} m={m} o={o} />
-            ))}
+          <group key={`fixed${f}`} matrix={mx} matrixAutoUpdate={false}>
+            <TagGroups members={fixed} joints={[]} screws={[]} parent={mx} o={o} />
           </group>
         );
       })}
-      {shown
-        .filter((m): m is BoxMember => m.kind === 'box' && m.space.kind === 'world')
-        .map((m) => (
-          <BoxMesh key={m.id} m={m} o={o} />
-        ))}
-      <BoltSet joints={worldJoints} />
-      <ScrewSet screws={SCREWS.filter((s) => vis(s.tag))} />
+      <TagGroups
+        members={shown.filter((m) => m.kind === 'box' && m.space.kind === 'world')}
+        joints={worldJoints.filter((j) => !isAnim(j))}
+        screws={worldScrews}
+        o={o}
+      />
+      <AnimatedBolts joints={worldJoints.filter(isAnim)} />
     </>
   );
 }
-
-export const tmpObj = new THREE.Object3D();

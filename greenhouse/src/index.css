@@ -24,6 +24,14 @@ body,
   color: #f8fafc;
   border: 1px solid rgba(148, 163, 184, 0.45);
   transform: translate(-50%, -100%);
+  transition: opacity 0.25s;
+}
+.label3d.mark {
+  background: rgba(255, 255, 255, 0.9);
+  color: #111827;
+  font-weight: 700;
+  font-size: 11px;
+  transform: translate(-50%, -50%);
 }
 .label3d.big {
   font-size: 14px;
@@ -34,4 +42,24 @@ body,
 .label3d.side {
   background: rgba(124, 45, 18, 0.88);
   border-color: rgba(253, 186, 116, 0.7);
+}
+.label3d.dim {
+  background: rgba(255, 255, 255, 0.92);
+  color: #9f1239;
+  border-color: #e11d48;
+  font-weight: 700;
+  transform: translate(-50%, -50%);
+}
+.label3d.callout {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: #38bdf8;
+  font-size: 13px;
+  max-width: 260px;
+  white-space: normal;
+  width: max-content;
+  transition: opacity 0.2s;
+}
+.label3d.callout.warn {
+  border-color: #f59e0b;
+  background: rgba(120, 53, 15, 0.92);
 }
