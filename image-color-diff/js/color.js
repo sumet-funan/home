@@ -223,11 +223,18 @@ function kmeans(points, weights, k, iterations = 12) {
  * Uses the centre area (weighted towards the middle), ignores white glare unless the
  * product itself is white, and turns down colours that fill the photo's edges more
  * than its centre (the table or wall behind the product).
+ * `region` is the product area in 0..1 photo coordinates; it defaults to the middle 60 %.
  * Returns up to 3 colours, main colour first: { lab, rgb, hex, share, name }.
  */
-export function extractPalette(data, width, height) {
-  const x0 = Math.floor(width * CENTRE_MARGIN), x1 = Math.ceil(width * (1 - CENTRE_MARGIN));
-  const y0 = Math.floor(height * CENTRE_MARGIN), y1 = Math.ceil(height * (1 - CENTRE_MARGIN));
+export const DEFAULT_REGION = Object.freeze({ x: CENTRE_MARGIN, y: CENTRE_MARGIN, w: 1 - 2 * CENTRE_MARGIN, h: 1 - 2 * CENTRE_MARGIN });
+
+export function extractPalette(data, width, height, region = DEFAULT_REGION) {
+  const x0 = Math.max(0, Math.floor(width * region.x));
+  const x1 = Math.min(width, Math.max(x0 + 1, Math.ceil(width * (region.x + region.w))));
+  const y0 = Math.max(0, Math.floor(height * region.y));
+  const y1 = Math.min(height, Math.max(y0 + 1, Math.ceil(height * (region.y + region.h))));
+  const midX = region.x + region.w / 2, midY = region.y + region.h / 2;
+  const sx = 0.25 * (region.w / 0.6), sy = 0.25 * (region.h / 0.6);
   const band = Math.max(1, Math.round(Math.min(width, height) * BORDER_BAND));
   let centre = [], weights = [];
   const border = [];
@@ -241,9 +248,9 @@ export function extractPalette(data, width, height) {
       const lab = rgbToLab([data[i], data[i + 1], data[i + 2]]);
       if (inBorder) border.push(lab);
       if (inCentre) {
-        const dx = (x + 0.5) / width - 0.5, dy = (y + 0.5) / height - 0.5;
+        const dx = (x + 0.5) / width - midX, dy = (y + 0.5) / height - midY;
         centre.push(lab);
-        weights.push(Math.exp(-(dx * dx + dy * dy) / (2 * 0.25 * 0.25)));
+        weights.push(Math.exp(-((dx * dx) / (2 * sx * sx) + (dy * dy) / (2 * sy * sy))));
       }
     }
   }

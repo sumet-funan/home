@@ -155,6 +155,15 @@ test('white glare is ignored, but a white product stays white', () => {
   assert.equal(extractPalette(milk, 100, 100)[0].name, 'ขาว');
 });
 
+test('a chosen crop region picks the product that is off-centre', () => {
+  // Blue product in the top-left corner, red product in the middle.
+  const data = paint(120, 120, WOOD, [[0.05, 0.05, 0.35, 0.35, [20, 40, 200]], [0.4, 0.4, 0.7, 0.7, RED]], 6);
+  assert.equal(extractPalette(data, 120, 120)[0].name, 'แดง');
+  const pal = extractPalette(data, 120, 120, { x: 0.05, y: 0.05, w: 0.3, h: 0.3 });
+  assert.equal(pal[0].name, 'น้ำเงิน');
+  assert.ok(!pal.some((c) => c.name === 'แดง'));
+});
+
 test('palette is deterministic, at most 3 colours, main first', () => {
   const data = paint(80, 80, WOOD, [[0.2, 0.2, 0.8, 0.8, RED], [0.4, 0.45, 0.6, 0.55, YELLOW]], 10);
   const a = extractPalette(data, 80, 80);

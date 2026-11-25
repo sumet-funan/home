@@ -1,5 +1,6 @@
-import { extractPalette, colorSimilarity, paletteSimilarity } from './color.js';
+import { extractPalette, colorSimilarity, paletteSimilarity, DEFAULT_REGION } from './color.js';
 import { buildShareImage } from './share.js';
+import { openCropEditor } from './crop.js';
 
 const STORAGE_KEY = 'image-color-diff:v1';
 const MIN_PLAYERS = 2;
@@ -88,15 +89,56 @@ function scaled(img, longest) {
   return { canvas, ctx };
 }
 
+/** Colours inside `region` of an image (canvas or <img>), read at the small analysis size. */
+function paletteOf(source, region) {
+  const small = scaled(source, ANALYSIS_SIZE);
+  const { data, width, height } = small.ctx.getImageData(0, 0, small.canvas.width, small.canvas.height);
+  const palette = extractPalette(data, width, height, region);
+  if (!palette.length) throw new Error('no colours');
+  return palette;
+}
+
+const thumbImages = new Map(); // thumb data URL -> decoded <img>, so crop previews stay fast
+async function thumbImage(src) {
+  if (!thumbImages.has(src)) {
+    const img = new Image();
+    img.src = src;
+    await img.decode();
+    thumbImages.clear();
+    thumbImages.set(src, img);
+  }
+  return thumbImages.get(src);
+}
+
+// Colours are always read from the saved thumbnail, so a re-crop later gives the same
+// answer as the first reading of the same frame.
 async function readPhoto(file) {
   const img = await decode(file);
-  const small = scaled(img, ANALYSIS_SIZE);
-  const { data, width, height } = small.ctx.getImageData(0, 0, small.canvas.width, small.canvas.height);
-  const palette = extractPalette(data, width, height);
-  const thumb = scaled(img, THUMB_SIZE).canvas.toDataURL('image/jpeg', 0.78);
+  const thumbCanvas = scaled(img, THUMB_SIZE).canvas;
   if (img.close) img.close();
-  if (!palette.length) throw new Error('no colours');
+  const thumb = thumbCanvas.toDataURL('image/jpeg', 0.78);
+  const palette = paletteOf(await thumbImage(thumb), DEFAULT_REGION);
   return { thumb, palette };
+}
+
+async function editCrop(player, slot) {
+  const item = player.items[slot];
+  if (!item) return;
+  const region = await openCropEditor({
+    src: item.thumb,
+    region: item.crop || DEFAULT_REGION,
+    defaultRegion: DEFAULT_REGION,
+    preview: async (r) => paletteOf(await thumbImage(item.thumb), r),
+  });
+  if (!region) return;
+  try {
+    item.palette = paletteOf(await thumbImage(item.thumb), region);
+    item.crop = region;
+    save();
+  } catch {
+    toast('หาสีในกรอบนี้ไม่ได้ ลองขยายกรอบดูนะ');
+  }
+  render();
 }
 
 async function onPhoto(input) {
@@ -111,7 +153,7 @@ async function onPhoto(input) {
   try {
     const { thumb, palette } = await readPhoto(file);
     const old = player.items[slot];
-    player.items[slot] = { id: uid(), label: old ? old.label : '', thumb, palette };
+    player.items[slot] = { id: uid(), label: old ? old.label : '', thumb, palette, crop: { ...DEFAULT_REGION } };
     save();
   } catch {
     toast('อ่านรูปนี้ไม่ได้ ลองถ่ายใหม่อีกครั้งนะ');
@@ -178,11 +220,14 @@ function slotHTML(p, slot) {
       <span><b>ชิ้นที่ ${slot + 1}</b><small>ถ่ายรูปหรือเลือกจากคลังรูป</small></span>
     </label>`;
   }
+  const c = item.crop || DEFAULT_REGION;
+  const frame = `left:${c.x * 100}%;top:${c.y * 100}%;width:${c.w * 100}%;height:${c.h * 100}%`;
   return `<div class="slot filled">
-    <label class="photo" title="ถ่ายใหม่">${fileInput(p, slot)}
+    <button class="photo" data-action="crop" data-player="${p.id}" data-slot="${slot}" aria-label="ปรับกรอบพื้นที่สีของชิ้นที่ ${slot + 1}">
       <img src="${item.thumb}" alt="">
-      <span class="frame" aria-hidden="true"></span>
-    </label>
+      <span class="frame" style="${frame}" aria-hidden="true"></span>
+      <span class="crop-badge" aria-hidden="true">✎ ปรับกรอบ</span>
+    </button>
     <div class="info">
       <input class="label" type="text" maxlength="30" placeholder="ชิ้นที่ ${slot + 1} (ตั้งชื่อได้)"
         value="${esc(item.label)}" data-player="${p.id}" data-slot="${slot}" aria-label="ชื่อของชิ้นที่ ${slot + 1}">
@@ -217,8 +262,8 @@ function playHTML() {
         <span>จำนวนชิ้นต่อคน</span>
         <div class="seg" role="group" aria-label="จำนวนชิ้นต่อคน">${seg}</div>
       </div>
-      <p class="tip">💡 ถ่ายทุกชิ้นที่จุดเดียวกัน ใต้แสงเดียวกัน และให้สินค้าอยู่เต็มกรอบกลางจอ
-        ถ้าสีที่แอปหาได้ไม่ตรง ให้ถ่ายใหม่</p>
+      <p class="tip">💡 ถ่ายทุกชิ้นที่จุดเดียวกัน ใต้แสงเดียวกัน และให้สินค้าอยู่กลางจอ
+        ถ้าสีที่แอปหาได้ไม่ตรง แตะที่รูปเพื่อปรับกรอบ หรือถ่ายใหม่</p>
     </section>
     ${players}
     ${state.players.length < MAX_PLAYERS ? `<button class="btn add" data-action="add-player">＋ เพิ่มผู้เล่น</button>` : ''}
@@ -357,6 +402,9 @@ app.addEventListener('click', async (e) => {
       state.players.splice(i, 1);
       break;
     }
+    case 'crop':
+      await editCrop(player, Number(btn.dataset.slot));
+      return;
     case 'remove-item':
       player.items[Number(btn.dataset.slot)] = null;
       break;
